@@ -1,0 +1,163 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>it.eng.opsi.cdv</groupId>
+		<artifactId>cdv</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>service-manager</artifactId>
+	<packaging>war</packaging>
+	<name>CDV Service Manager</name>
+	<properties>
+		<jersey.version>2.25</jersey.version>
+		<jersey.scope>compile</jersey.scope>
+		<compileSource>1.8</compileSource>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+	</properties>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+			<version>2.11.4</version>
+		</dependency>
+
+		<!-- Jersey core Servlet 2.x implementation -->
+
+		<!-- <dependency> -->
+		<!-- <groupId>org.glassfish.jersey.containers</groupId> -->
+		<!-- <artifactId>jersey-container-servlet-core</artifactId> -->
+		<!-- <version>${jersey.version}</version> -->
+		<!-- <scope>${jersey.scope}</scope> -->
+		<!-- </dependency> -->
+
+
+		<!-- Jersey JSON Jackson (2.x) entity providers support module -->
+
+		<!-- <dependency> -->
+		<!-- <groupId>org.glassfish.jersey.media</groupId> -->
+		<!-- <artifactId>jersey-media-json-jackson</artifactId> -->
+		<!-- <version>${jersey.version}</version> -->
+		<!-- <scope>${jersey.scope}</scope> -->
+		<!-- </dependency> -->
+
+		<dependency>
+			<groupId>org.glassfish.jersey.core</groupId>
+			<artifactId>jersey-client</artifactId>
+			<version>${jersey.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.glassfish.jersey.core/jersey-common -->
+		<dependency>
+			<groupId>org.glassfish.jersey.core</groupId>
+			<artifactId>jersey-common</artifactId>
+			<version>${jersey.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.glassfish.jersey.core/jersey-server -->
+		<dependency>
+			<groupId>org.glassfish.jersey.core</groupId>
+			<artifactId>jersey-server</artifactId>
+			<version>${jersey.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.glassfish.jersey.containers/jersey-container-servlet -->
+		<dependency>
+			<groupId>org.glassfish.jersey.containers</groupId>
+			<artifactId>jersey-container-servlet</artifactId>
+			<version>${jersey.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.glassfish.jersey.containers/jersey-container-servlet-core -->
+		<dependency>
+			<groupId>org.glassfish.jersey.containers</groupId>
+			<artifactId>jersey-container-servlet-core</artifactId>
+			<version>${jersey.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.glassfish.jersey.bundles.repackaged/jersey-guava -->
+		<dependency>
+			<groupId>org.glassfish.jersey.bundles.repackaged</groupId>
+			<artifactId>jersey-guava</artifactId>
+			<version>${jersey.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.glassfish.jersey.media/jersey-media-jaxb -->
+		<dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-jaxb</artifactId>
+			<version>${jersey.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-json-jackson</artifactId>
+			<version>${jersey.version}</version>
+		</dependency>
+
+
+
+		<dependency>
+			<groupId>org.jhades</groupId>
+			<artifactId>jhades</artifactId>
+			<version>1.0.4</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<finalName>service-manager</finalName>
+
+		<!-- maven compiler plugin -->
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+
+			<!-- JAXB plugin to generate-sources from XSD -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jaxb2-maven-plugin</artifactId>
+				<version>1.6</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>xjc</goal><!-- xjc/generate -->
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/target/generated-sources/java</outputDirectory>
+							<schemaDirectory>${basedir}/src/main/resources/it/eng/opsi/servicemanager/entities</schemaDirectory>
+							<schemaFiles>*.xsd</schemaFiles>
+							<schemaLanguage>XMLSCHEMA</schemaLanguage>
+							<extension>true</extension>
+							<args>
+								<arg>-XtoString</arg>
+							</args>
+							<plugins>
+								<plugin>
+									<groupId>org.jvnet.jaxb2_commons</groupId>
+									<artifactId>jaxb2-basics</artifactId>
+									<version>0.6.4</version>
+								</plugin>
+							</plugins>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+
+	</build>
+	<description>Service Manager module of Citizen Data Vault</description>
+</project>
