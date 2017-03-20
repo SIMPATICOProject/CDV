@@ -3,6 +3,7 @@ package it.eng.opsi.cdv.accountmanager.dao;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.reflect.TypeToken;
 import com.mongodb.MongoWriteException;
@@ -17,9 +18,11 @@ import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+
 import static com.mongodb.client.model.Filters.*;
 
-import java.lang.reflect.Type;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -49,6 +52,14 @@ import it.eng.opsi.cdv.accountmanager.utils.DAOUtils;
 public class AccountDAO {
 
 	private String collectionName;
+
+	 static Logger root = (Logger) LoggerFactory
+	 .getLogger(Logger.ROOT_LOGGER_NAME);
+	
+	 static {
+	 root.setLevel(Level.INFO);
+	 }
+	
 
 	public AccountDAO(String collectionName) {
 		this.collectionName = collectionName;
@@ -213,6 +224,44 @@ public class AccountDAO {
 
 		} else
 			throw new AccountNotFoundException("The account with id: " + accountId + " was not found");
+	}
+
+	// AAC SIMPATICO INTEGRATION
+	public Account getAccountByAacUserId(String aacUserId) throws AccountManagerException, AccountNotFoundException {
+
+		MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
+		MongoDatabase db = dbSingleton.getDB();
+		MongoCollection<Document> collection = db.getCollection(collectionName);
+		MongoCursor<Document> cursor = null;
+		try {
+
+			// try with _id as accountId
+			cursor = collection.find(eq("aacUserId", aacUserId)).iterator();
+
+		} catch (IllegalArgumentException e) {
+
+			// try with username as accountId
+			if (e.getMessage().contains("invalid hexadecimal representation of an ObjectId"))
+				cursor = collection.find(eq("aacUserId", aacUserId)).iterator();
+			else
+				throw new AccountManagerException("There was an error while getting the Account");
+
+		}
+
+		if (cursor.hasNext()) {
+			Document current = cursor.next();
+			// current.append("_id", current.remove("_id").toString());
+			current.remove("_id");
+			current.remove("password");
+
+			try {
+				return DAOUtils.json2Obj(current.toJson(), Account.class);
+			} catch (AccountUtilsException e) {
+				throw new AccountManagerException("There was an error while getting the Account");
+			}
+
+		} else
+			throw new AccountNotFoundException("The account with aacUserId: " + aacUserId + " was not found");
 	}
 
 	public Telephone addTelephone(Telephone phone, String accountId)
@@ -936,8 +985,8 @@ public class AccountDAO {
 			ObjectId accountDocId = new ObjectId(accountId);
 
 			result = collection.updateOne(eq("_id", accountDocId),
-					new Document("$addToSet", new Document("particulars", docToAdd)).append("$set",
-							new Document("modified", DAOUtils.formatDate(ZonedDateTime.now(ZoneOffset.UTC)))),
+					new Document("$set", new Document("particular", docToAdd).append(
+							"modified", DAOUtils.formatDate(ZonedDateTime.now(ZoneOffset.UTC)))),
 					new UpdateOptions().upsert(false));
 
 		} catch (IllegalArgumentException e) {
@@ -945,8 +994,8 @@ public class AccountDAO {
 			// try with username as accountId
 			if (e.getMessage().contains("invalid hexadecimal representation of an ObjectId"))
 				result = collection.updateOne(eq("username", accountId),
-						new Document("$addToSet", new Document("particulars", docToAdd)).append("$set",
-								new Document("modified", DAOUtils.formatDate(ZonedDateTime.now(ZoneOffset.UTC)))),
+						new Document("$set", new Document("particular", docToAdd).append(
+								"modified", DAOUtils.formatDate(ZonedDateTime.now(ZoneOffset.UTC)))),
 						new UpdateOptions().upsert(false));
 			else
 				throw new AccountManagerException("There was an error while getting the Account");
@@ -964,8 +1013,7 @@ public class AccountDAO {
 		return particular;
 	}
 
-	public Particular getParticular(String accountId, String particularId)
-			throws AccountManagerException, ParticularNotFoundException {
+	public Particular getParticular(String accountId) throws AccountManagerException, ParticularNotFoundException {
 
 		AggregateIterable<Document> output = null;
 		MongoCollection<Document> collection = null;
@@ -976,24 +1024,24 @@ public class AccountDAO {
 			MongoDatabase db = dbSingleton.getDB();
 			collection = db.getCollection(collectionName);
 
-			Document filterFields = new Document("input", "$particulars");
-			filterFields.append("as", "item").append("cond",
-					new Document("$eq", Arrays.asList("$$item._id", particularId)));
+			// Document filterFields = new Document("input", "$particular");
+			// filterFields.append("as", "item").append("cond",
+			// new Document("$eq", Arrays.asList("$$item._id", particularId)));
 
-			Document filter = new Document("$filter", filterFields);
-			Document project = new Document("$project", new Document("particulars", filter));
-			Document unwind = new Document("$unwind", "$particulars");
+			// Document filter = new Document("$filter", filterFields);
+			Document project = new Document("$project", new Document("particular", "$particular"));
+			// Document unwind = new Document("$unwind", "$particular");
 
 			try {
 
 				match = new Document("$match", new Document("_id", new ObjectId(accountId)));
-				output = collection.aggregate(Arrays.asList(match, project, unwind));
+				output = collection.aggregate(Arrays.asList(match, project));
 			} catch (IllegalArgumentException e) {
 
 				// try with username as accountId
 				if (e.getMessage().contains("invalid hexadecimal representation of an ObjectId")) {
 					match = new Document("$match", new Document("username", accountId));
-					output = collection.aggregate(Arrays.asList(match, project, unwind));
+					output = collection.aggregate(Arrays.asList(match, project));
 				} else
 					throw new AccountManagerException("There was an error while getting the Account");
 
@@ -1008,68 +1056,73 @@ public class AccountDAO {
 		if (output != null && (d = output.first()) != null) {
 
 			try {
-				return DAOUtils.json2Obj(((Document) (d.get("particulars"))).toJson(), Particular.class);
+				return DAOUtils.json2Obj(((Document) (d.get("particular"))).toJson(), Particular.class);
+
 			} catch (AccountUtilsException e) {
 				e.printStackTrace();
 				throw new AccountManagerException("There was an error while getting the Particular");
 			}
 
 		} else
-			throw new ParticularNotFoundException(
-					"The Particular with id: " + particularId + " for the Account Id: " + accountId + " was not found");
+			throw new ParticularNotFoundException("The Particular for the Account Id: " + accountId + " was not found");
 
 	}
 
-	public List<Particular> getParticulars(String accountId)
-			throws AccountManagerException, ParticularNotFoundException {
+	// public List<Particular> getParticulars(String accountId)
+	// throws AccountManagerException, ParticularNotFoundException {
+	//
+	// AggregateIterable<Document> output = null;
+	// ArrayList<Particular> result = new ArrayList<Particular>();
+	// Document match = null;
+	// try {
+	//
+	// MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
+	// MongoDatabase db = dbSingleton.getDB();
+	// MongoCollection<Document> collection = db.getCollection(collectionName);
+	//
+	// Document unwind = new Document("$unwind", "$particulars");
+	//
+	// try {
+	// match = new Document("$match", new Document("_id", new
+	// ObjectId(accountId)));
+	// output = collection.aggregate(Arrays.asList(match, unwind));
+	//
+	// } catch (IllegalArgumentException e) {
+	//
+	// // try with username as accountId
+	// if (e.getMessage().contains("invalid hexadecimal representation of an
+	// ObjectId")) {
+	//
+	// match = new Document("$match", new Document("username", accountId));
+	// output = collection.aggregate(Arrays.asList(match, unwind));
+	//
+	// } else
+	// throw new AccountManagerException("There was an error while getting
+	// particulars");
+	//
+	// }
+	//
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// throw new AccountManagerException("There was an error while getting
+	// particulars");
+	// }
+	//
+	// for (Document d : output) {
+	// try {
+	// result.add(DAOUtils.json2Obj(((Document)
+	// (d.get("particulars"))).toJson(), Particular.class));
+	// } catch (AccountUtilsException e) {
+	// e.printStackTrace();
+	// throw new AccountManagerException("There was an error while getting
+	// particulars");
+	// }
+	// }
+	//
+	// return result;
+	// }
 
-		AggregateIterable<Document> output = null;
-		ArrayList<Particular> result = new ArrayList<Particular>();
-		Document match = null;
-		try {
-
-			MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
-			MongoDatabase db = dbSingleton.getDB();
-			MongoCollection<Document> collection = db.getCollection(collectionName);
-
-			Document unwind = new Document("$unwind", "$particulars");
-
-			try {
-				match = new Document("$match", new Document("_id", new ObjectId(accountId)));
-				output = collection.aggregate(Arrays.asList(match, unwind));
-
-			} catch (IllegalArgumentException e) {
-
-				// try with username as accountId
-				if (e.getMessage().contains("invalid hexadecimal representation of an ObjectId")) {
-
-					match = new Document("$match", new Document("username", accountId));
-					output = collection.aggregate(Arrays.asList(match, unwind));
-
-				} else
-					throw new AccountManagerException("There was an error while getting particulars");
-
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AccountManagerException("There was an error while getting particulars");
-		}
-
-		for (Document d : output) {
-			try {
-				result.add(DAOUtils.json2Obj(((Document) (d.get("particulars"))).toJson(), Particular.class));
-			} catch (AccountUtilsException e) {
-				e.printStackTrace();
-				throw new AccountManagerException("There was an error while getting particulars");
-			}
-		}
-
-		return result;
-	}
-
-	public void deleteParticular(String particularId, String accountId)
-			throws AccountManagerException, ParticularNotFoundException {
+	public void deleteParticular(String accountId) throws AccountManagerException, ParticularNotFoundException {
 
 		UpdateResult result = null;
 		MongoCollection<Document> collection = null;
@@ -1081,7 +1134,7 @@ public class AccountDAO {
 			ObjectId accountDocId = new ObjectId(accountId);
 
 			result = collection.updateOne(eq("_id", accountDocId),
-					new Document("$pull", new Document("particulars", new Document("_id", particularId))).append("$set",
+					new Document("$unset", new Document("particular", "")).append("$set",
 							new Document("modified", DAOUtils.formatDate(ZonedDateTime.now(ZoneOffset.UTC)))),
 					new UpdateOptions().upsert(false));
 
@@ -1090,8 +1143,7 @@ public class AccountDAO {
 			// try with username as accountId
 			if (e.getMessage().contains("invalid hexadecimal representation of an ObjectId"))
 				result = collection.updateOne(eq("username", accountId),
-						new Document("$pull", new Document("particulars", new Document("_id", particularId))).append(
-								"$set",
+						new Document("$unset", new Document("particular", "")).append("$set",
 								new Document("modified", DAOUtils.formatDate(ZonedDateTime.now(ZoneOffset.UTC)))),
 						new UpdateOptions().upsert(false));
 			else
@@ -1103,56 +1155,60 @@ public class AccountDAO {
 		}
 
 		if (result.getModifiedCount() == 0)
-			throw new ParticularNotFoundException(
-					"The Particular with id: " + particularId + " for the Account Id: " + accountId + " was not found");
+			throw new AccountManagerException("There was an error while deleting the Particular");
 
 	}
 
-	public Particular updateParticular(Particular particular, String accountId)
-			throws AccountManagerException, ParticularNotFoundException {
-
-		UpdateResult result = null;
-		Document doc = null;
-		MongoCollection<Document> collection = null;
-		try {
-			MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
-			MongoDatabase db = dbSingleton.getDB();
-			collection = db.getCollection(collectionName);
-
-			doc = Document.parse(DAOUtils.obj2Json(particular, Particular.class));
-
-			ObjectId accountObjId = new ObjectId(accountId);
-
-			result = collection.updateOne(and(eq("_id", accountObjId), eq("particulars._id", doc.get("_id"))),
-					new Document("$set",
-							new Document("particulars.$", doc).append("modified",
-									DAOUtils.formatDate(ZonedDateTime.now(ZoneOffset.UTC)))),
-					new UpdateOptions().upsert(false));
-
-		} catch (IllegalArgumentException e) {
-
-			// try with username as accountId
-			if (e.getMessage().contains("invalid hexadecimal representation of an ObjectId"))
-				result = collection.updateOne(and(eq("username", accountId), eq("particulars._id", doc.get("_id"))),
-						new Document("$set",
-								new Document("particulars.$", doc).append("modified",
-										DAOUtils.formatDate(ZonedDateTime.now(ZoneOffset.UTC)))),
-						new UpdateOptions().upsert(false));
-			else
-				throw new AccountManagerException("There was an error while getting the Account");
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AccountManagerException("There was an error while updating the Particular");
-		}
-
-		if (result.getMatchedCount() == 0 && result.getModifiedCount() == 0)
-			throw new ParticularNotFoundException("The Particular with id: " + particular.get_id()
-					+ " for the Account Id: " + accountId + " was not found");
-		else {
-			return particular;
-		}
-	}
+	// Viene utilizzato addParticular, essendocene solo uno
+	// public Particular updateParticular(Particular particular, String
+	// accountId)
+	// throws AccountManagerException, ParticularNotFoundException {
+	//
+	// UpdateResult result = null;
+	// Document doc = null;
+	// MongoCollection<Document> collection = null;
+	// try {
+	// MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
+	// MongoDatabase db = dbSingleton.getDB();
+	// collection = db.getCollection(collectionName);
+	//
+	// doc = Document.parse(DAOUtils.obj2Json(particular, Particular.class));
+	//
+	// ObjectId accountObjId = new ObjectId(accountId);
+	//
+	// result = collection.updateOne(eq("_id", accountObjId),
+	// new Document("$set",
+	// new Document("particular", doc).append("modified",
+	// DAOUtils.formatDate(ZonedDateTime.now(ZoneOffset.UTC)))),
+	// new UpdateOptions().upsert(false));
+	//
+	// } catch (IllegalArgumentException e) {
+	//
+	// // try with username as accountId
+	// if (e.getMessage().contains("invalid hexadecimal representation of an
+	// ObjectId"))
+	// result = collection.updateOne(eq("username", accountId),
+	// new Document("$set",
+	// new Document("particular", doc).append("modified",
+	// DAOUtils.formatDate(ZonedDateTime.now(ZoneOffset.UTC)))),
+	// new UpdateOptions().upsert(false));
+	// else
+	// throw new AccountManagerException("There was an error while getting the
+	// Account");
+	//
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// throw new AccountManagerException("There was an error while updating the
+	// Particular");
+	// }
+	//
+	// if (result.getMatchedCount() == 0 && result.getModifiedCount() == 0)
+	// throw new AccountManagerException("There was an error while updating the
+	// Particular");
+	// else {
+	// return particular;
+	// }
+	// }
 
 	public ServiceLinkRecord addServiceLinkRecord(String accountId, ServiceLinkRecord record)
 			throws AccountManagerException, AccountNotFoundException {
@@ -1167,7 +1223,7 @@ public class AccountDAO {
 
 			Account a = getAccount(accountId);
 			record.setUsername(a.getUsername());
-			record.setAccountId(a.getId());
+			record.setAccountId(accountId);
 			docToAdd = Document.parse(DAOUtils.obj2Json(record, ServiceLinkRecord.class));
 			docToAdd.put("_id", new ObjectId().toString());
 
@@ -1212,7 +1268,8 @@ public class AccountDAO {
 	}
 
 	public ServiceLinkStatusRecord addServiceLinkStatusRecord(String accountId, String slrId,
-			ServiceLinkStatusRecord statusRecord) throws AccountManagerException, ServiceLinkRecordNotFoundException, AccountNotFoundException {
+			ServiceLinkStatusRecord statusRecord)
+			throws AccountManagerException, ServiceLinkRecordNotFoundException, AccountNotFoundException {
 
 		UpdateResult result = null;
 		Document docToAdd = null;
@@ -1258,12 +1315,11 @@ public class AccountDAO {
 				e.printStackTrace();
 				throw new AccountManagerException("There was an error while adding the ServiceLinkStatusRecord");
 			}
-		
-		
+
 		} else {
 			throw new AccountNotFoundException("The account with id: " + accountId + " was not found");
 		}
-		
+
 		if (result.getModifiedCount() == 0)
 			throw new ServiceLinkRecordNotFoundException(
 					"The ServiceLinkRecord with id: " + slrId + " for the Account Id: " + accountId + " was not found");
@@ -1360,7 +1416,53 @@ public class AccountDAO {
 
 	}
 
-	public ServiceLinkRecord getServiceLinkRecordBySurrogateId(String surrogateId, String serviceId)
+	public ServiceLinkRecord getServiceLinkRecordBySurrogateId(String surrogateId)
+			throws ServiceLinkRecordNotFoundException, AccountManagerException {
+
+		AggregateIterable<Document> output = null;
+		MongoCollection<Document> collection = null;
+		Document match = null;
+		try {
+
+			MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
+			MongoDatabase db = dbSingleton.getDB();
+			collection = db.getCollection(collectionName);
+
+			Document project = new Document("$project", new Document("serviceLinkRecords", "$serviceLinkRecords"));
+
+			Document unwind = new Document("$unwind", "$serviceLinkRecords");
+
+			try {
+
+				match = new Document("$match", new Document("serviceLinkRecords.surrogateId", surrogateId));
+				output = collection.aggregate(Arrays.asList(match, project, unwind));
+
+			} catch (IllegalArgumentException e) {
+				throw new AccountManagerException("There was an error while getting the Account");
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new AccountManagerException("There was an error while getting the Service Link Record");
+		}
+
+		Document d = null;
+		if (output != null && (d = output.first()) != null) {
+
+			try {
+				return DAOUtils.json2Obj(((Document) (d.get("serviceLinkRecords"))).toJson(), ServiceLinkRecord.class);
+			} catch (AccountUtilsException e) {
+				e.printStackTrace();
+				throw new AccountManagerException("There was an error while getting the Service Link Record");
+			}
+
+		} else {
+			throw new ServiceLinkRecordNotFoundException(
+					"The Service Link Record for the User (surrogate) Id: " + surrogateId + " was not found");
+		}
+	}
+
+	public ServiceLinkRecord getServiceLinkRecordBySurrogateIdAndServiceId(String surrogateId, String serviceId)
 			throws ServiceLinkRecordNotFoundException, AccountManagerException {
 
 		AggregateIterable<Document> output = null;
@@ -1407,6 +1509,57 @@ public class AccountDAO {
 
 		} else {
 			throw new ServiceLinkRecordNotFoundException("The Service Link Record with serviceId: " + serviceId
+					+ " for the User (surrogate) Id: " + surrogateId + " was not found");
+		}
+	}
+
+	public ServiceLinkRecord getServiceLinkRecordByUsernameAndSurrogateId(String username, String surrogateId)
+			throws ServiceLinkRecordNotFoundException, AccountManagerException {
+
+		AggregateIterable<Document> output = null;
+		MongoCollection<Document> collection = null;
+		Document match = null;
+		try {
+
+			MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
+			MongoDatabase db = dbSingleton.getDB();
+			collection = db.getCollection(collectionName);
+
+			Document filterFields = new Document("input", "$serviceLinkRecords");
+			filterFields.append("as", "item").append("cond",
+					new Document("$eq", Arrays.asList("$$item.surrogateId", surrogateId)));
+
+			Document filter = new Document("$filter", filterFields);
+			Document project = new Document("$project", new Document("serviceLinkRecords", filter));
+
+			Document unwind = new Document("$unwind", "$serviceLinkRecords");
+
+			try {
+
+				match = new Document("$match", new Document("username", username));
+				output = collection.aggregate(Arrays.asList(match, project, unwind));
+
+			} catch (IllegalArgumentException e) {
+				throw new AccountManagerException("There was an error while getting the Account");
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new AccountManagerException("There was an error while getting the Service Link Record");
+		}
+
+		Document d = null;
+		if (output != null && (d = output.first()) != null) {
+
+			try {
+				return DAOUtils.json2Obj(((Document) (d.get("serviceLinkRecords"))).toJson(), ServiceLinkRecord.class);
+			} catch (AccountUtilsException e) {
+				e.printStackTrace();
+				throw new AccountManagerException("There was an error while getting the Service Link Record");
+			}
+
+		} else {
+			throw new ServiceLinkRecordNotFoundException("The Service Link Record with username (Account): " + username
 					+ " for the User (surrogate) Id: " + surrogateId + " was not found");
 		}
 	}
@@ -1613,7 +1766,7 @@ public class AccountDAO {
 
 	}
 
-	public void deleteServiceLinkRecordBySurrogateId(String serviceId, String surrogateId)
+	public void deleteServiceLinkRecordBySurrogateIdAndServiceId(String surrogateId, String serviceId)
 			throws AccountManagerException, ServiceLinkRecordNotFoundException {
 
 		AggregateIterable<Document> output = null;

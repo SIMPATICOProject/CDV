@@ -1,11 +1,16 @@
 package it.eng.opsi.cdv.accountmanager.model;
 
+import it.eng.opsi.cdv.accountmanager.utils.JsonRequired;
+
 public class Telephone {
 
 	private String _id;
+	@JsonRequired
 	private String tel;
+	@JsonRequired
 	private TypeEnum type;
-	private boolean primary;
+	
+	private boolean primary = true;
 
 	public String get_id() {
 		return _id;

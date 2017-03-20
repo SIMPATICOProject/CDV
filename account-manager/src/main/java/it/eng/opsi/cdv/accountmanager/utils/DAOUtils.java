@@ -1,13 +1,11 @@
 package it.eng.opsi.cdv.accountmanager.utils;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -17,11 +15,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import com.google.gson.reflect.TypeToken;
-
-import it.eng.opsi.cdv.accountmanager.model.AccountManagerException;
-import it.eng.opsi.cdv.accountmanager.model.AccountUtilsException;
-import it.eng.opsi.cdv.accountmanager.model.Telephone;
+import it.eng.opsi.cdv.accountmanager.model.*;
 
 public final class DAOUtils {
 
@@ -41,16 +35,20 @@ public final class DAOUtils {
 					DateTimeFormatter fmt = DateTimeFormatter.ISO_OFFSET_DATE_TIME.withZone(ZoneOffset.UTC);
 					return new JsonPrimitive(fmt.format(zonedDateTime.truncatedTo(ChronoUnit.SECONDS)));
 				}
-			}).create();
+			}).registerTypeAdapter(Account.class, new AnnotatedDeserializer<Account>())
+			.registerTypeAdapter(Contact.class, new AnnotatedDeserializer<Contact>())
+			.registerTypeAdapter(Email.class, new AnnotatedDeserializer<Email>())
+			.registerTypeAdapter(Particular.class, new AnnotatedDeserializer<Particular>())
+			.registerTypeAdapter(ServiceLinkRecord.class, new AnnotatedDeserializer<ServiceLinkRecord>())
+			.registerTypeAdapter(Telephone.class, new AnnotatedDeserializer<Telephone>()).create();
 
 	public static <T> T json2Obj(String json, Class<T> t) throws AccountUtilsException {
-
 		T obj = null;
 		try {
 			obj = gson.fromJson(json, t);
 		} catch (Exception e) {
 
-			throw new AccountUtilsException("JSON to OBJECT failed");
+			throw new AccountUtilsException("JSON to OBJECT failed: " + e.getMessage());
 		}
 		return obj;
 	}
@@ -62,7 +60,7 @@ public final class DAOUtils {
 			obj = gson.fromJson(json, t);
 		} catch (Exception e) {
 
-			throw new AccountUtilsException("JSON to OBJECT failed");
+			throw new AccountUtilsException("JSON to OBJECT failed: " + e.getMessage());
 		}
 		return obj;
 	}
@@ -73,7 +71,7 @@ public final class DAOUtils {
 		try {
 			json = gson.toJson(obj, t);
 		} catch (Exception e) {
-			throw new AccountUtilsException("Object to JSON failed");
+			throw new AccountUtilsException("Object to JSON failed: " + e.getMessage());
 		}
 		return json;
 	}
@@ -84,16 +82,53 @@ public final class DAOUtils {
 		try {
 			json = gson.toJson(obj, t);
 		} catch (Exception e) {
-			throw new AccountUtilsException("Object to JSON failed");
+			throw new AccountUtilsException("Object to JSON failed: " + e.getMessage());
 		}
 		return json;
 	}
 
-	public static String formatDate(ZonedDateTime dt){
-		
-			DateTimeFormatter fmt = DateTimeFormatter.ISO_OFFSET_DATE_TIME.withZone(ZoneOffset.UTC);
-			return fmt.format(dt.truncatedTo(ChronoUnit.SECONDS));
-		
+	public static String formatDate(ZonedDateTime dt) {
+
+		DateTimeFormatter fmt = DateTimeFormatter.ISO_OFFSET_DATE_TIME.withZone(ZoneOffset.UTC);
+		return fmt.format(dt.truncatedTo(ChronoUnit.SECONDS));
+
+	}
+
+	static class AnnotatedDeserializer<T> implements JsonDeserializer<T> {
+
+		public T deserialize(JsonElement je, Type type, JsonDeserializationContext jdc) throws JsonParseException {
+			T pojo = new GsonBuilder().registerTypeAdapter(ZonedDateTime.class, new JsonDeserializer<ZonedDateTime>() {
+				public ZonedDateTime deserialize(JsonElement jsonElement, Type type,
+						JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+					DateTimeFormatter fmt = DateTimeFormatter.ISO_OFFSET_DATE_TIME.withZone(ZoneOffset.UTC);
+					return ZonedDateTime.from(fmt.parse(jsonElement.getAsString()));
+				}
+			}).registerTypeAdapter(ZonedDateTime.class, new JsonSerializer<ZonedDateTime>() {
+				@Override
+				public JsonElement serialize(ZonedDateTime zonedDateTime, Type type,
+						JsonSerializationContext jsonSerializationContext) {
+					DateTimeFormatter fmt = DateTimeFormatter.ISO_OFFSET_DATE_TIME.withZone(ZoneOffset.UTC);
+					return new JsonPrimitive(fmt.format(zonedDateTime.truncatedTo(ChronoUnit.SECONDS)));
+				}
+			}).create().fromJson(je, type);
+
+			Field[] fields = pojo.getClass().getDeclaredFields();
+			for (Field f : fields) {
+				if (f.getAnnotation(JsonRequired.class) != null) {
+					try {
+						f.setAccessible(true);
+						if (f.get(pojo) == null) {
+							throw new JsonParseException("Missing field in JSON: " + f.getName());
+						}
+					} catch (IllegalArgumentException | IllegalAccessException ex) {
+						throw new JsonParseException("There was an exception while deserializing the json object: "
+								+ AnnotatedDeserializer.class.getName());
+					}
+				}
+			}
+			return pojo;
+
+		}
 	}
 
 }

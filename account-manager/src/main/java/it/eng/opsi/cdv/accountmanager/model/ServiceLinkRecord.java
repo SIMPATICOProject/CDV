@@ -5,15 +5,25 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.annotations.SerializedName;
+
+import it.eng.opsi.cdv.accountmanager.utils.JsonRequired;
+
 public class ServiceLinkRecord {
 
 	private String _id;
+	@JsonRequired
 	private String serviceId;
+	@JsonRequired
 	private String serviceUri;
+	
+	@JsonRequired
 	private String surrogateId;
 	private String accountId;
+
 	private String username;
 
+	
 	private ZonedDateTime created;
 	private List<ServiceLinkStatusRecord> serviceLinkStatusRecords;
 

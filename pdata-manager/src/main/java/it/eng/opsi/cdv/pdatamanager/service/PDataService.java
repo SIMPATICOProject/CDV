@@ -53,12 +53,12 @@ import it.eng.opsi.cdv.pdatarepository.model.PDataValueAlreadyPresentException;
 import it.eng.opsi.cdv.pdatarepository.model.PDataWriteMode;
 import it.eng.opsi.cdv.pdatarepository.utils.DAOUtils;
 
-@Component
+//@Component
 @Path("/v1")
 public class PDataService implements IPDataService {
 
 	private static PDataRepository repo = new PDataRepository(
-			PropertyManager.getProperty("PDATA_REPOSITORY_COLLECTION"));
+			PropertyManager.getProperty("PDATA_REPOSITORY_COLLECTION"),PropertyManager.getProperties());
 	static final String api_version = "1.0";
 
 	@POST
@@ -91,7 +91,7 @@ public class PDataService implements IPDataService {
 						mode = PDataWriteMode.OVERWRITE;
 					}
 
-					// TODO CALL to Data Security Manager
+			
 					List<PDataEntry> created = null;
 					if (entries.size() == 1)
 						(created = new ArrayList<PDataEntry>()).add(repo.storePData(accountId, entries.get(0), mode));
@@ -205,7 +205,7 @@ public class PDataService implements IPDataService {
 	}
 
 	@Override
-	@POST
+	@GET
 	@Path("/pData/{conceptId}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
@@ -320,7 +320,7 @@ public class PDataService implements IPDataService {
 							"The account with Id: " + accountId + " was not found in Account Manager");
 					return Response.status(Response.Status.NOT_FOUND).entity(error.toJson()).build();
 				}
-				
+
 			} catch (PDataNotFoundException e) {
 				ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.NOT_FOUND.getStatusCode()),
 						e.getClass().getSimpleName(), e.getMessage());
@@ -505,6 +505,55 @@ public class PDataService implements IPDataService {
 				if (callExistsAccount(accountId)) {
 
 					repo.deletePData(conceptId, accountId);
+					return Response.status(Response.Status.OK).build();
+				} else {
+
+					ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.NOT_FOUND.getStatusCode()),
+							"AccountNotFound",
+							"The account with Id: " + accountId + " was not found in Account Manager");
+					return Response.status(Response.Status.NOT_FOUND).entity(error.toJson()).build();
+				}
+
+			} catch (PDataNotFoundException e) {
+
+				System.out.println(e.getMessage());
+				ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.NOT_FOUND.getStatusCode()),
+						e.getClass().getSimpleName(), e.getMessage());
+
+				return Response.status(Response.Status.NOT_FOUND).entity(error.toJson()).build();
+			} catch (Exception e) {
+
+				e.printStackTrace();
+				ErrorResponse error = new ErrorResponse(
+						String.valueOf(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()),
+						e.getClass().getSimpleName(), e.getMessage());
+
+				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error.toJson()).build();
+			}
+
+		} else {
+
+			ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
+					"AccountIdMissing", "The account Id is empty or missing");
+
+			return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
+
+		}
+	}
+
+	@Override
+	@DELETE
+	@Path("/pData/{conceptId}/{value}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response deletePDataValue(@PathParam("conceptId") String conceptId,
+			@HeaderParam("accountId") String accountId, @PathParam("value") String value) {
+
+		if (StringUtils.isNotBlank(accountId)) {
+
+			try {
+				if (callExistsAccount(accountId)) {
+
+					repo.deletePDataValue(conceptId, accountId, value);
 					return Response.status(Response.Status.OK).build();
 				} else {
 
@@ -834,7 +883,7 @@ public class PDataService implements IPDataService {
 
 	}
 
-	private static HashMap<String, String> callVerifySLR(String slrId, String surrogateId)
+	public static HashMap<String, String> callVerifySLR(String slrId, String surrogateId)
 			throws AccountManagerCallException {
 
 		HashMap<String, String> result = new HashMap<String, String>();
@@ -887,13 +936,66 @@ public class PDataService implements IPDataService {
 		return result;
 	}
 
+	public static HashMap<String, String> callVerifySLRByUsernameAndSurrogateId(String username, String surrogateId)
+			throws AccountManagerCallException {
+
+		HashMap<String, String> result = new HashMap<String, String>();
+
+		try {
+
+			Client client = ClientBuilder.newClient();
+			WebTarget webTarget = client.target(PropertyManager.getProperty("ACCOUNTMANAGER_HOST")
+					+ "/api/internal/verifySLRByUsernameAndSurrogateId");
+
+			JSONObject payload = new JSONObject();
+			payload.put("username", username);
+			payload.put("surrogateId", surrogateId);
+
+			Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
+			Response response = invocationBuilder.post(Entity.entity(payload.toString(), MediaType.APPLICATION_JSON));
+
+			int status = response.getStatus();
+			String res = response.readEntity(String.class);
+			response.close();
+			JSONObject resJson = new JSONObject(res);
+
+			if (status == 200) {
+				if (resJson.getString("result").equalsIgnoreCase("success")) {
+
+					// result.put("accountId", resJson.getString("accountId"));
+					result.put("serviceId", resJson.getString("serviceId"));
+					result.put("username", resJson.getString("username"));
+					result.put("result", resJson.getString("result"));
+					result.put("message", resJson.getString("message"));
+
+				} else {
+
+					result.put("result", resJson.getString("result"));
+					result.put("message", resJson.getString("message"));
+
+				}
+			} else {
+				throw new AccountManagerCallException(
+						"There was an error while verifying the SLR against Account Manager");
+
+			}
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+			throw new AccountManagerCallException(
+					"There was an error while verifying the SLR against Account Manager ");
+		}
+
+		return result;
+	}
+
 	private static boolean callExistsAccount(String accountId) throws AccountManagerCallException {
 
 		try {
 
 			Client client = ClientBuilder.newClient();
-			WebTarget webTarget = client
-					.target(PropertyManager.getProperty("ACCOUNTMANAGER_HOST") + "/api/internal/accounts/{accountId}/exists")
+			WebTarget webTarget = client.target(
+					PropertyManager.getProperty("ACCOUNTMANAGER_HOST") + "/api/internal/accounts/{accountId}/exists")
 					.resolveTemplate("accountId", accountId);
 
 			Invocation.Builder invocationBuilder = webTarget.request();
@@ -923,6 +1025,7 @@ public class PDataService implements IPDataService {
 
 	
 
+	
 	// Get the actual account Id from Account Manager, in order to retrieve the
 	// id starting from username
 	// private static String callGetRealAccountId(String accountId) throws

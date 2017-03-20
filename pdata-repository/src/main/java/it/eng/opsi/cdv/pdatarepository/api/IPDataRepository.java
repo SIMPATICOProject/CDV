@@ -20,14 +20,17 @@ public interface IPDataRepository {
 	public abstract List<PDataEntry> getPData(List<String> conceptIds, String accountId)
 			throws PDataRepositoryException, PDataUtilsException;
 
-	
 	public abstract List<PDataEntry> storePData(String accountId, List<PDataEntry> values, PDataWriteMode mode)
 			throws PDataRepositoryException;
 
 	public abstract PDataEntry storePData(String accountId, PDataEntry value, PDataWriteMode mode)
 			throws PDataRepositoryException;
 
-	public abstract void deletePData(String conceptId, String accountId) throws PDataNotFoundException, PDataRepositoryException;
+	public abstract void deletePData(String conceptId, String accountId)
+			throws PDataNotFoundException, PDataRepositoryException;
+
+	public abstract void deletePDataValue(String conceptId, String accountId, String value)
+			throws PDataNotFoundException, PDataRepositoryException;
 
 	public abstract void deleteAllPData(String accountId) throws PDataNotFoundException, PDataRepositoryException;
 

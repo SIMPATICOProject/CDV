@@ -1,32 +1,38 @@
 package it.eng.opsi.cdv.accountmanager.model;
 
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.List;
 
+import it.eng.opsi.cdv.accountmanager.utils.JsonRequired;
+
 public class Account {
 
+	
 	private String _id;
-	private boolean activated = false;
+	
+	private boolean activated = true;
+	
 	private ZonedDateTime created;
 	private ZonedDateTime modified;
-	
 	private List<Telephone> telephones;
 	private List<Email> emails;
 	private List<Contact> contacts;
-	private List<Particular> particulars;
+	private Particular particular;
 	private List<ServiceLinkRecord> serviceLinkRecords;
 
 	// Local identity
+	@JsonRequired
 	private String username;
+	
 	private String password;
 
+	
 	public Account(){
 	}
 	
 	public Account(String username, String password, List<Telephone> telephones, List<Email> emails,
-			List<Contact> contacts, List<Particular> particulars) {
+			List<Contact> contacts, Particular particular) {
 
 		this.username = username;
 		this.password = password;
@@ -34,7 +40,7 @@ public class Account {
 		this.telephones = telephones;
 		this.emails = emails;
 		this.contacts = contacts;
-		this.particulars = particulars;
+		this.particular = particular;
 		this.created = ZonedDateTime.now(ZoneOffset.UTC);
 		this.modified = ZonedDateTime.now(ZoneOffset.UTC);
 		
@@ -97,12 +103,12 @@ public class Account {
 		this.contacts = contacts;
 	}
 
-	public List<Particular> getParticulars() {
-		return particulars;
+	public Particular getParticular() {
+		return particular;
 	}
 
-	public void setParticulars(List<Particular> particulars) {
-		this.particulars = particulars;
+	public void setParticular(Particular particular) {
+		this.particular = particular;
 	}
 
 	public List<ServiceLinkRecord> getServiceLinkRecords() {
@@ -128,14 +134,14 @@ public class Account {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
+	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("class Account {\n");
 		sb.append("    _id: ").append(toIndentedString(_id)).append("\n");
 		sb.append("    Particulars: ").append("\n");
-		particulars.stream().forEach(item -> sb.append(item));
+		sb.append(particular);
 		sb.append("    Contacts: ").append("\n");
 		contacts.stream().forEach(item -> sb.append(item));
 		sb.append("    Emails: ").append("\n");

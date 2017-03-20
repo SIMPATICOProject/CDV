@@ -1,9 +1,5 @@
 package it.eng.opsi.cdv.accountmanager.service;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,15 +12,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.StreamingOutput;
-
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -854,7 +847,7 @@ public class AccountService implements IAccountService {
 
 	@Override
 	@POST
-	@Path("/accounts/{accountId}/particulars")
+	@Path("/accounts/{accountId}/particular")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response addParticular(String input, @PathParam("accountId") String accountId) {
@@ -893,14 +886,13 @@ public class AccountService implements IAccountService {
 
 	@Override
 	@GET
-	@Path("/accounts/{accountId}/particulars/{particularId}")
+	@Path("/accounts/{accountId}/particular")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getParticular(@PathParam("accountId") String accountId,
-			@PathParam("particularId") String particularId) {
+	public Response getParticular(@PathParam("accountId") String accountId) {
 
 		try {
 
-			Particular particular = dao.getParticular(accountId, particularId);
+			Particular particular = dao.getParticular(accountId);
 
 			return Response.status(Response.Status.OK).entity(DAOUtils.obj2Json(particular, Particular.class)).build();
 
@@ -930,96 +922,64 @@ public class AccountService implements IAccountService {
 
 	}
 
-	@Override
-	@GET
-	@Path("/accounts/{accountId}/particulars")
-	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getParticulars(@PathParam("accountId") String accountId) {
-
-		try {
-
-			List<Particular> particulars = dao.getParticulars(accountId);
-
-			return Response.status(Response.Status.OK)
-					.entity(DAOUtils.obj2Json(particulars, new TypeToken<ArrayList<Particular>>() {
-					}.getType())).build();
-
-		} catch (AccountUtilsException e) {
-
-			e.printStackTrace();
-			ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
-					e.getClass().getSimpleName(), e.getMessage());
-
-			return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
-
-		} catch (ParticularNotFoundException e) {
-			System.out.println(e.getMessage());
-			ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.NOT_FOUND.getStatusCode()),
-					e.getClass().getSimpleName(), e.getMessage());
-
-			return Response.status(Response.Status.NOT_FOUND).entity(error.toJson()).build();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			ErrorResponse error = new ErrorResponse(
-					String.valueOf(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()), e.getClass().getSimpleName(),
-					e.getMessage());
-
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error.toJson()).build();
-		}
-
-	}
-
-	@Override
-	@PUT
-	@Path("/accounts/{accountId}/particulars/{particularId}")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	@Produces({ MediaType.APPLICATION_JSON })
-	public Response updateParticular(String input, @PathParam("accountId") String accountId,
-			@PathParam("particularId") String particularId) {
-
-		try {
-
-			Particular particular = DAOUtils.json2Obj(input, Particular.class);
-			particular.set_id(particularId);
-
-			Particular updated = dao.updateParticular(particular, accountId);
-
-			return Response.status(Response.Status.OK).entity(DAOUtils.obj2Json(updated, Particular.class).toString())
-					.build();
-
-		} catch (AccountUtilsException e) {
-			e.printStackTrace();
-			ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
-					e.getClass().getSimpleName(), e.getMessage());
-			return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
-
-		} catch (ParticularNotFoundException e) {
-			e.printStackTrace();
-			ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.NOT_FOUND.getStatusCode()),
-					e.getClass().getSimpleName(), e.getMessage());
-			return Response.status(Response.Status.NOT_FOUND).entity(error.toJson()).build();
-
-		} catch (AccountManagerException e) {
-			e.printStackTrace();
-			ErrorResponse error = new ErrorResponse(
-					String.valueOf(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()), e.getClass().getSimpleName(),
-					e.getMessage());
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error.toJson()).build();
-
-		}
-
-	}
+	// Viene utilizzato addParticular, essendocene solo uno
+	// @Override
+	// @PUT
+	// @Path("/accounts/{accountId}/particular")
+	// @Consumes({ MediaType.APPLICATION_JSON })
+	// @Produces({ MediaType.APPLICATION_JSON })
+	// public Response updateParticular(String input, @PathParam("accountId")
+	// String accountId) {
+	//
+	// try {
+	//
+	// Particular particular = DAOUtils.json2Obj(input, Particular.class);
+	//
+	//
+	// Particular updated = dao.updateParticular(particular, accountId);
+	//
+	// return
+	// Response.status(Response.Status.OK).entity(DAOUtils.obj2Json(updated,
+	// Particular.class).toString())
+	// .build();
+	//
+	// } catch (AccountUtilsException e) {
+	// e.printStackTrace();
+	// ErrorResponse error = new
+	// ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
+	// e.getClass().getSimpleName(), e.getMessage());
+	// return
+	// Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
+	//
+	// } catch (ParticularNotFoundException e) {
+	// e.printStackTrace();
+	// ErrorResponse error = new
+	// ErrorResponse(String.valueOf(Response.Status.NOT_FOUND.getStatusCode()),
+	// e.getClass().getSimpleName(), e.getMessage());
+	// return
+	// Response.status(Response.Status.NOT_FOUND).entity(error.toJson()).build();
+	//
+	// } catch (AccountManagerException e) {
+	// e.printStackTrace();
+	// ErrorResponse error = new ErrorResponse(
+	// String.valueOf(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()),
+	// e.getClass().getSimpleName(),
+	// e.getMessage());
+	// return
+	// Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error.toJson()).build();
+	//
+	// }
+	//
+	// }
 
 	@Override
 	@DELETE
-	@Path("/accounts/{accountId}/particulars/{particularId}")
+	@Path("/accounts/{accountId}/particular")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response deleteParticular(@PathParam("accountId") String accountId,
-			@PathParam("particularId") String particularId) {
+	public Response deleteParticular(@PathParam("accountId") String accountId) {
 
 		try {
-			dao.deleteParticular(particularId, accountId);
+			dao.deleteParticular(accountId);
 			return Response.status(Response.Status.OK).build();
 
 		} catch (ParticularNotFoundException e) {
@@ -1145,8 +1105,8 @@ public class AccountService implements IAccountService {
 				return Response.status(Response.Status.OK).build();
 			} else {
 				ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.CONFLICT.getStatusCode()),
-						"ServiceLinkRecordAlreadyDisabled",
-						"The Service Link Record with id: " + slrId + " for the Account id: " + accountId + "is already disabled");
+						"ServiceLinkRecordAlreadyDisabled", "The Service Link Record with id: " + slrId
+								+ " for the Account id: " + accountId + "is already disabled");
 				return Response.status(Response.Status.CONFLICT).entity(error.toJson()).build();
 
 			}
@@ -1292,14 +1252,57 @@ public class AccountService implements IAccountService {
 
 	@Override
 	@GET
-	@Path("/services/{serviceId}/users/{surrogateId}/serviceLink")
+	@Path("/users/{surrogateId}/services/{serviceId}/serviceLink")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getServiceLinkRecordBySurrogateId(@PathParam("surrogateId") String surrogateId,
+	public Response getServiceLinkRecordBySurrogateIdAndServiceId(@PathParam("surrogateId") String surrogateId,
 			@PathParam("serviceId") String serviceId) {
 
 		try {
 
-			ServiceLinkRecord record = dao.getServiceLinkRecordBySurrogateId(surrogateId, serviceId);
+			ServiceLinkRecord record = dao.getServiceLinkRecordBySurrogateIdAndServiceId(surrogateId, serviceId);
+			record.setAccountId(null);
+			return Response.status(Response.Status.OK).entity(DAOUtils.obj2Json(record, ServiceLinkRecord.class))
+					.build();
+		} catch (JSONException e) {
+			ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
+					e.getClass().getSimpleName(), e.getMessage());
+			return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
+
+		} catch (AccountUtilsException e) {
+
+			e.printStackTrace();
+			ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
+					e.getClass().getSimpleName(), e.getMessage());
+
+			return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
+
+		} catch (ServiceLinkRecordNotFoundException e) {
+			System.out.println(e.getMessage());
+			ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.NOT_FOUND.getStatusCode()),
+					e.getClass().getSimpleName(), e.getMessage());
+
+			return Response.status(Response.Status.NOT_FOUND).entity(error.toJson()).build();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			ErrorResponse error = new ErrorResponse(
+					String.valueOf(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()), e.getClass().getSimpleName(),
+					e.getMessage());
+
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error.toJson()).build();
+		}
+
+	}
+
+	@Override
+	@GET
+	@Path("/users/{surrogateId}/serviceLink")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response getServiceLinkRecordBySurrogateId(@PathParam("surrogateId") String surrogateId) {
+
+		try {
+
+			ServiceLinkRecord record = dao.getServiceLinkRecordBySurrogateId(surrogateId);
 			record.setAccountId(null);
 			return Response.status(Response.Status.OK).entity(DAOUtils.obj2Json(record, ServiceLinkRecord.class))
 					.build();
@@ -1407,13 +1410,13 @@ public class AccountService implements IAccountService {
 
 	@Override
 	@DELETE
-	@Path("/services/{serviceId}/users/{surrogateId}/serviceLink")
+	@Path("/users/{surrogateId}/services/{serviceId}/serviceLink")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response deleteServiceLinkRecordBySurrogateId(@PathParam("serviceId") String serviceId,
-			@PathParam("surrogateId") String surrogateId) {
+	public Response deleteServiceLinkRecordBySurrogateIdAndServiceId(@PathParam("surrogateId") String surrogateId,
+			@PathParam("serviceId") String serviceId) {
 
 		try {
-			dao.deleteServiceLinkRecordBySurrogateId(serviceId, surrogateId);
+			dao.deleteServiceLinkRecordBySurrogateIdAndServiceId(surrogateId, serviceId);
 			return Response.status(Response.Status.OK).build();
 
 		} catch (ServiceLinkRecordNotFoundException e) {

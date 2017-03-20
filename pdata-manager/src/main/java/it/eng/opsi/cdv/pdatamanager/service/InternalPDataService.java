@@ -23,17 +23,19 @@ import com.google.gson.reflect.TypeToken;
 
 import it.eng.opsi.cdv.pdatamanager.model.ErrorResponse;
 import it.eng.opsi.cdv.pdatamanager.utils.PDataConverter;
+import it.eng.opsi.cdv.pdatamanager.utils.PropertyManager;
 import it.eng.opsi.cdv.pdatarepository.api.PDataRepository;
 import it.eng.opsi.cdv.pdatarepository.model.PDataEntry;
 import it.eng.opsi.cdv.pdatarepository.model.PDataNotFoundException;
 import it.eng.opsi.cdv.pdatarepository.utils.DAOUtils;
 
-@Component
+//@Component
 @Path("/internal")
 public class InternalPDataService {
 
 	private static PDataRepository repo = new PDataRepository(
-			it.eng.opsi.cdv.pdatamanager.utils.PropertyManager.getProperty("PDATA_REPOSITORY_COLLECTION"));
+			it.eng.opsi.cdv.pdatamanager.utils.PropertyManager.getProperty("PDATA_REPOSITORY_COLLECTION"),
+			PropertyManager.getProperties());
 
 	@DELETE
 	@Path("/pData")

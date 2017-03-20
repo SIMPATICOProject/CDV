@@ -1,6 +1,6 @@
 package it.eng.opsi.servicemanager.service;
 
-import it.eng.opsi.servicemanager.common.DAOUtils;
+import it.eng.opsi.servicemanager.utils.DAOUtils;
 import it.eng.opsi.servicemanager.data.DataMapping;
 import it.eng.opsi.servicemanager.data.PDataField;
 import it.eng.opsi.servicemanager.data.ServiceEntry;
@@ -70,6 +70,7 @@ public class ServiceEntryDAO {
 				
 		MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
         DB db = dbSingleton.getDB();
+		system.out.println(db)
         DBCollection coll = db.getCollection("serviceRegistry"); 
         DBObject service = coll.findOne(new BasicDBObject("serviceId", id));
         List<DataMapping> list = new ArrayList<DataMapping>();

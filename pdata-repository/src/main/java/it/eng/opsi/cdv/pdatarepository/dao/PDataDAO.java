@@ -3,12 +3,23 @@ package it.eng.opsi.cdv.pdatarepository.dao;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 import java.util.stream.Collectors;
+
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
+import org.slf4j.LoggerFactory;
 
+import com.google.gson.reflect.TypeToken;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -20,6 +31,7 @@ import static com.mongodb.client.model.Filters.*;
 
 import it.eng.opsi.cdv.pdatarepository.connection.MongoDBConnection;
 import it.eng.opsi.cdv.pdatarepository.model.AccountPData;
+import it.eng.opsi.cdv.pdatarepository.model.DataSecurityManagerCallException;
 import it.eng.opsi.cdv.pdatarepository.model.PDataEntry;
 import it.eng.opsi.cdv.pdatarepository.model.PDataNotFoundException;
 import it.eng.opsi.cdv.pdatarepository.model.PDataRepositoryException;
@@ -27,12 +39,22 @@ import it.eng.opsi.cdv.pdatarepository.model.PDataUtilsException;
 import it.eng.opsi.cdv.pdatarepository.model.PDataValueAlreadyPresentException;
 import it.eng.opsi.cdv.pdatarepository.model.PDataWriteMode;
 import it.eng.opsi.cdv.pdatarepository.utils.DAOUtils;
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
 
 public class PDataDAO {
 
 	private String collectionName;
+	private static Properties props;
+	
+	static Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
 
-	public PDataDAO(String collectionName) {
+	static {
+		root.setLevel(Level.INFO);
+	}
+
+	public PDataDAO(String collectionName, Properties props) {
+		this.props = props;
 		this.collectionName = collectionName;
 	}
 
@@ -64,35 +86,63 @@ public class PDataDAO {
 			result.add(DAOUtils.json2Obj(((Document) (d.get("pData"))).toJson(), PDataEntry.class));
 		}
 
-		if (result.size() != 0)
-			return result;
-		else
+		if (result.size() != 0) {
+
+			// CALL to Data Security Manager for values decryption
+			try {
+				return callDecryptPDataList(result, accountId);
+			} catch (DataSecurityManagerCallException e) {
+				e.printStackTrace();
+				throw new PDataRepositoryException("There was an error while decrypting PData");
+			}
+
+		} else
 			throw new PDataNotFoundException("No PData were found for the Account Id: " + accountId);
 
 	}
 
 	public PDataEntry getPData(String conceptId, String accountId)
 			throws PDataRepositoryException, PDataNotFoundException, PDataUtilsException {
-		MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
-		MongoDatabase db = dbSingleton.getDB();
-		MongoCollection<Document> coll = db.getCollection(collectionName);
 
-		Document filterFields = new Document("input", "$pData");
-		filterFields.append("as", "item").append("cond",
-				new Document("$eq", Arrays.asList("$$item.conceptId", conceptId)));
+		Document d = null;
 
-		Document filter = new Document("$filter", filterFields);
-		Document project = new Document("$project", new Document("pData", filter));
+		try {
+			MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
+			MongoDatabase db = dbSingleton.getDB();
+			MongoCollection<Document> coll = db.getCollection(collectionName);
 
-		Document match = new Document("$match", new Document("accountId", accountId));
-		Document unwind = new Document("$unwind", "$pData");
+			Document filterFields = new Document("input", "$pData");
+			filterFields.append("as", "item").append("cond",
+					new Document("$eq", Arrays.asList("$$item.conceptId", conceptId)));
 
-		AggregateIterable<Document> output = coll.aggregate(Arrays.asList(match, project, unwind));
+			Document filter = new Document("$filter", filterFields);
+			Document project = new Document("$project", new Document("pData", filter));
 
-		Document d = output.first();
-		if (d != null)
-			return DAOUtils.json2Obj(((Document) (d.get("pData"))).toJson(), PDataEntry.class);
-		else
+			Document match = new Document("$match", new Document("accountId", accountId));
+			Document unwind = new Document("$unwind", "$pData");
+
+			AggregateIterable<Document> output = coll.aggregate(Arrays.asList(match, project, unwind));
+
+			d = output.first();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new PDataRepositoryException("There was an error while getting PData");
+		}
+
+		if (d != null) {
+
+			PDataEntry encEntry = DAOUtils.json2Obj(((Document) (d.get("pData"))).toJson(), PDataEntry.class);
+
+			// CALL to Data Security Manager for values decryption
+			try {
+				return callDecryptPData(encEntry, accountId);
+			} catch (DataSecurityManagerCallException e) {
+				e.printStackTrace();
+				throw new PDataRepositoryException("There was an error while decrypting PData");
+			}
+
+		} else
 			throw new PDataNotFoundException(
 					"There was not found any PDataEntry value for the passed conceptID: " + conceptId);
 
@@ -152,18 +202,29 @@ public class PDataDAO {
 		Document match = new Document("$match", new Document("accountId", accountId));
 		Document unwind = new Document("$unwind", "$pData");
 		AggregateIterable<Document> output = coll.aggregate(Arrays.asList(match, project, unwind));
-		for (Document d : output) {
 
+		for (Document d : output) {
 			result.add(DAOUtils.json2Obj(((Document) (d.get("pData"))).toJson(), PDataEntry.class));
 		}
 
-		return result;
+		// CALL to Data Security Manager for values decryption
+		try {
+			return callDecryptPDataList(result, accountId);
+		} catch (DataSecurityManagerCallException e) {
+			e.printStackTrace();
+			throw new PDataRepositoryException("There was an error while decrypting PData");
+		}
+
 	}
 
 	public PDataEntry storePData(String accountId, PDataEntry entry, PDataWriteMode mode)
 			throws PDataRepositoryException {
 
 		try {
+
+			// CALL to Data Security Manager for encryption
+			entry = callEncryptPData(entry, accountId);
+
 			MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
 			MongoDatabase db = dbSingleton.getDB();
 			MongoCollection<Document> collection = db.getCollection(collectionName);
@@ -220,6 +281,7 @@ public class PDataDAO {
 			}
 
 			return entry;
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new PDataRepositoryException("There was an error while storing the PDataEntry value");
@@ -231,6 +293,10 @@ public class PDataDAO {
 			throws PDataRepositoryException {
 
 		try {
+
+			// CALL to Data Security Manager for encryption
+			entries = callEncryptPDataList(entries, accountId);
+
 			MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
 			MongoDatabase db = dbSingleton.getDB();
 			MongoCollection<Document> collection = db.getCollection(collectionName);
@@ -291,6 +357,7 @@ public class PDataDAO {
 			}
 
 			return entries;
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new PDataRepositoryException("There was an error while storing the PDataEntry value");
@@ -372,6 +439,52 @@ public class PDataDAO {
 
 	}
 
+	public void deletePDataValue(String conceptId, String accountId, String value)
+			throws PDataNotFoundException, PDataRepositoryException {
+
+		UpdateResult result = null;
+
+		try {
+
+			// CALL to Data Security Manager for encryption
+			value = callEncryptValue(value, accountId);
+
+			MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
+			MongoDatabase db = dbSingleton.getDB();
+			MongoCollection<Document> collection = db.getCollection(collectionName);
+
+			result = collection.updateOne(and(eq("accountId", accountId), eq("pData.conceptId", conceptId)),
+					new Document("$pull", new Document("pData.$.values", value)), new UpdateOptions().upsert(false));
+
+			if (result != null && result.getModifiedCount() == 0)
+				throw new PDataNotFoundException("PData entry not found with value: " + value + " for conceptId "
+						+ conceptId + " and accountId: " + accountId);
+
+			// else if (result.getModifiedCount() == 1){
+			//
+			// Document match = new Document("$match", and(eq("accountId",
+			// accountId), eq("pData.conceptId", conceptId)));
+			// Document project = new Document("$project", new Document("pData."
+			// collection.aggregate(new
+			// Document("$group")arg0)count(and(eq("accountId", accountId),
+			// eq("pData.conceptId", conceptId)
+			//
+			//
+			//
+			// }
+
+		} catch (Exception e) {
+			if (e.getClass().equals(PDataNotFoundException.class))
+				throw new PDataNotFoundException(e.getMessage());
+			else {
+				e.printStackTrace();
+				throw new PDataRepositoryException("There was an error while deleting the PDataEntry value");
+			}
+
+		}
+
+	}
+
 	public void deleteAllPData(String accountId) throws PDataNotFoundException, PDataRepositoryException {
 
 		DeleteResult result = null;
@@ -417,48 +530,209 @@ public class PDataDAO {
 		}
 	}
 
-	/*
-	 * TEST
-	 */
-	// public static void main(String[] args) {
-	//
-	// PDataEntry value = new PDataEntry();
-	// value.setConceptId("1");
-	// value.setName("address");
-	// value.setTimestamp(ZonedDateTime.ofInstant(Instant.now(),
-	// ZoneId.of("Z")));
-	// ArrayList<String> values = new ArrayList<String>();
-	// values.add("via Libertà");
-	// value.setValues(values);
-	// value.setAccountId("user");
-	//
-	// PDataEntry value1 = new PDataEntry();
-	// value1.setConceptId("1");
-	// value1.setName("address");
-	// value1.setTimestamp(ZonedDateTime.ofInstant(Instant.now(),
-	// ZoneId.of("Z")));
-	// ArrayList<String> values1 = new ArrayList<String>();
-	// values1.add("via Libertà");
-	// value1.setValues(values1);
-	// value1.setAccountId("user");
-	//
-	//
-	//
-	// PDataDAO dao = new PDataDAO("pDataValues");
-	// try {
-	// dao.storePData(value, PDataWriteMode.APPEND);
-	//
-	// dao.storePData(value1, PDataWriteMode.APPEND);
-	//
-	// System.out.println(dao.getPData(Arrays.asList("1", "2"),
-	// "user").toString());
-	// dao.deleteAllPData("user");
-	// } catch (PDataNotFoundException e) {
-	// e.printStackTrace();
-	// } catch (PDataRepositoryException e) {
-	// e.printStackTrace();
-	// }
-	// }
+	private static String callEncryptValue(String value, String accountId) throws DataSecurityManagerCallException {
+
+		try {
+
+			Client client = ClientBuilder.newClient();
+			WebTarget webTarget = client
+					.target(props.getProperty("DATASECURITYMANAGER_HOST") + "/api/internal/encryptValue");
+
+			Invocation.Builder invocationBuilder = webTarget.request(MediaType.TEXT_PLAIN).header("accountId",
+					accountId);
+			Response response = invocationBuilder.post(Entity.entity(value, MediaType.TEXT_PLAIN));
+
+			int status = response.getStatus();
+			String res = response.readEntity(String.class);
+			response.close();
+
+			if (status == 200) {
+				return res;
+
+			} else {
+				throw new DataSecurityManagerCallException(
+						"There was an error while calling the Data Security Manager");
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new DataSecurityManagerCallException("There was an error while calling the Data Security Manager");
+		}
+
+	}
+
+	private static String callDecryptValue(String value, String accountId) throws DataSecurityManagerCallException {
+
+		try {
+
+			Client client = ClientBuilder.newClient();
+			WebTarget webTarget = client
+					.target(props.getProperty("DATASECURITYMANAGER_HOST") + "/api/internal/decryptValue");
+
+			Invocation.Builder invocationBuilder = webTarget.request(MediaType.TEXT_PLAIN).header("accountId",
+					accountId);
+			Response response = invocationBuilder.post(Entity.entity(value, MediaType.TEXT_PLAIN));
+
+			int status = response.getStatus();
+			String res = response.readEntity(String.class);
+			response.close();
+
+			if (status == 200) {
+				return res;
+
+			} else {
+				throw new DataSecurityManagerCallException(
+						"There was an error while calling the Data Security Manager");
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new DataSecurityManagerCallException("There was an error while calling the Data Security Manager");
+		}
+
+	}
+
+	private static PDataEntry callEncryptPData(PDataEntry entry, String accountId)
+			throws DataSecurityManagerCallException {
+
+		try {
+
+			Client client = ClientBuilder.newClient();
+			WebTarget webTarget = client
+					.target(props.getProperty("DATASECURITYMANAGER_HOST") + "/api/internal/encryptPData");
+
+			Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON).header("accountId",
+					accountId);
+			Response response = invocationBuilder
+					.post(Entity.entity(DAOUtils.obj2Json(entry, PDataEntry.class), MediaType.APPLICATION_JSON));
+
+			int status = response.getStatus();
+			String res = response.readEntity(String.class);
+			response.close();
+
+			if (status == 200) {
+				return DAOUtils.json2Obj(res, PDataEntry.class);
+
+			} else {
+				throw new DataSecurityManagerCallException(
+						"There was an error while calling the Data Security Manager");
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new DataSecurityManagerCallException("There was an error while calling the Data Security Manager");
+		}
+
+	}
+
+	private static PDataEntry callDecryptPData(PDataEntry entry, String accountId)
+			throws DataSecurityManagerCallException {
+
+		try {
+
+			Client client = ClientBuilder.newClient();
+			WebTarget webTarget = client
+					.target(props.getProperty("DATASECURITYMANAGER_HOST") + "/api/internal/decryptPData");
+
+			Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON).header("accountId",
+					accountId);
+			Response response = invocationBuilder
+					.post(Entity.entity(DAOUtils.obj2Json(entry, PDataEntry.class), MediaType.APPLICATION_JSON));
+
+			int status = response.getStatus();
+			String res = response.readEntity(String.class);
+			response.close();
+
+			if (status == 200) {
+				return DAOUtils.json2Obj(res, PDataEntry.class);
+
+			} else {
+				throw new DataSecurityManagerCallException(
+						"There was an error while calling the Data Security Manager");
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new DataSecurityManagerCallException("There was an error while calling the Data Security Manager");
+		}
+
+	}
+
+	private static List<PDataEntry> callEncryptPDataList(List<PDataEntry> entries, String accountId)
+			throws DataSecurityManagerCallException {
+
+		try {
+
+			Client client = ClientBuilder.newClient();
+			WebTarget webTarget = client
+					.target(props.getProperty("DATASECURITYMANAGER_HOST") + "/api/internal/encryptPDataList");
+
+			Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON).header("accountId",
+					accountId);
+			Response response = invocationBuilder
+					.post(Entity.entity(DAOUtils.obj2Json(entries, new TypeToken<List<PDataEntry>>() {
+					}.getType()), MediaType.APPLICATION_JSON));
+
+			int status = response.getStatus();
+			String res = response.readEntity(String.class);
+			response.close();
+
+			if (status == 200) {
+				return DAOUtils.json2Obj(res, new TypeToken<List<PDataEntry>>() {
+				}.getType());
+
+			} else {
+				throw new DataSecurityManagerCallException(
+						"There was an error while calling the Data Security Manager");
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new DataSecurityManagerCallException("There was an error while calling the Data Security Manager");
+		}
+
+	}
+
+	private static List<PDataEntry> callDecryptPDataList(List<PDataEntry> entries, String accountId)
+			throws DataSecurityManagerCallException {
+
+		try {
+
+			Client client = ClientBuilder.newClient();
+			WebTarget webTarget = client
+					.target(props.getProperty("DATASECURITYMANAGER_HOST") + "/api/internal/decryptPDataList");
+
+			Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON).header("accountId",
+					accountId);
+			Response response = invocationBuilder
+					.post(Entity.entity(DAOUtils.obj2Json(entries, new TypeToken<List<PDataEntry>>() {
+					}.getType()), MediaType.APPLICATION_JSON));
+
+			int status = response.getStatus();
+			String res = response.readEntity(String.class);
+			response.close();
+
+			if (status == 200) {
+				return DAOUtils.json2Obj(res, new TypeToken<List<PDataEntry>>() {
+				}.getType());
+
+			} else {
+				throw new DataSecurityManagerCallException(
+						"There was an error while calling the Data Security Manager");
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new DataSecurityManagerCallException("There was an error while calling the Data Security Manager");
+		}
+
+	}
 
 	public void finalizeDAO() {
 		MongoDBConnection.onFinalize();

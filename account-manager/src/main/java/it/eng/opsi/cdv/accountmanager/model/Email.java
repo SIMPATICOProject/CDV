@@ -1,11 +1,17 @@
 package it.eng.opsi.cdv.accountmanager.model;
 
+import it.eng.opsi.cdv.accountmanager.utils.JsonRequired;
+
 public class Email {
 
 	private String _id;
+	
+	@JsonRequired
 	private String email;
+	@JsonRequired
 	private TypeEnum type;
-	private boolean primary;
+	
+	private boolean primary = true;
 
 	public String get_id() {
 		return _id;

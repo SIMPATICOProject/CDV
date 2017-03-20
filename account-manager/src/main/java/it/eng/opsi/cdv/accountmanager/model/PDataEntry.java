@@ -7,11 +7,17 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.eng.opsi.cdv.accountmanager.utils.JsonRequired;
+
 public class PDataEntry {
 
+	@JsonRequired
 	private String name;
+	@JsonRequired
 	private String conceptId;
+	
 	private ZonedDateTime timestamp;
+	
 	private String type = "http://www.w3.org/2001/XMLSchema#string";
 
 	// PUT HERE ADDITIONAL PROPERTIES; BEFORE values PROPERTY !!!

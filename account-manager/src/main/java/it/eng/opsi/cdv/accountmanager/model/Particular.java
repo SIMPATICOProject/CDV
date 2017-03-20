@@ -2,12 +2,18 @@ package it.eng.opsi.cdv.accountmanager.model;
 
 import java.time.ZonedDateTime;
 
+import it.eng.opsi.cdv.accountmanager.utils.JsonRequired;
+
 public class Particular {
 
 	private String _id;
+	@JsonRequired
 	private String firstname;
+	@JsonRequired
 	private String lastname;
+	@JsonRequired
 	private ZonedDateTime dateOfBirth;
+	
 	private String imgUrl;
 
 	public String get_id() {

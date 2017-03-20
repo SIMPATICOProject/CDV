@@ -1,13 +1,13 @@
 package it.eng.opsi.cdv.pdatarepository.api;
 
 import java.util.List;
+import java.util.Properties;
 
 import it.eng.opsi.cdv.pdatarepository.dao.PDataDAO;
 import it.eng.opsi.cdv.pdatarepository.model.PDataEntry;
 import it.eng.opsi.cdv.pdatarepository.model.PDataNotFoundException;
 import it.eng.opsi.cdv.pdatarepository.model.PDataRepositoryException;
 import it.eng.opsi.cdv.pdatarepository.model.PDataUtilsException;
-import it.eng.opsi.cdv.pdatarepository.model.PDataValueAlreadyPresentException;
 import it.eng.opsi.cdv.pdatarepository.model.PDataWriteMode;
 
 public class PDataRepository implements IPDataRepository {
@@ -16,8 +16,8 @@ public class PDataRepository implements IPDataRepository {
 	// PropertyManager.getProperty("MONGO_COLLECTION");
 	private PDataDAO dao;
 
-	public PDataRepository(String collectionName) {
-		dao = new PDataDAO(collectionName);
+	public PDataRepository(String collectionName, Properties props) {
+		dao = new PDataDAO(collectionName, props);
 	}
 
 	public void finalizeRepository() {
@@ -25,11 +25,12 @@ public class PDataRepository implements IPDataRepository {
 	}
 
 	@Override
-	public List<PDataEntry> getAllPData(String accountId) throws PDataRepositoryException, PDataNotFoundException, PDataUtilsException {
-		
+	public List<PDataEntry> getAllPData(String accountId)
+			throws PDataRepositoryException, PDataNotFoundException, PDataUtilsException {
+
 		return dao.getAllPData(accountId);
 	}
-	
+
 	@Override
 	public PDataEntry getPData(String conceptId, String accountId)
 			throws PDataRepositoryException, PDataNotFoundException, PDataUtilsException {
@@ -38,7 +39,8 @@ public class PDataRepository implements IPDataRepository {
 	}
 
 	@Override
-	public List<PDataEntry> getPData(List<String> conceptIds, String accountId) throws PDataRepositoryException, PDataUtilsException {
+	public List<PDataEntry> getPData(List<String> conceptIds, String accountId)
+			throws PDataRepositoryException, PDataUtilsException {
 
 		return dao.getPData(conceptIds, accountId);
 	}
@@ -62,11 +64,16 @@ public class PDataRepository implements IPDataRepository {
 		dao.deletePData(conceptId, accountId);
 
 	}
-	
-	
+
 	@Override
-	public void deleteAllPData(String accountId)
+	public void deletePDataValue(String conceptId, String accountId, String value)
 			throws PDataNotFoundException, PDataRepositoryException {
+		dao.deletePDataValue(conceptId, accountId, value);
+
+	}
+
+	@Override
+	public void deleteAllPData(String accountId) throws PDataNotFoundException, PDataRepositoryException {
 		dao.deleteAllPData(accountId);
 	}
 
@@ -75,7 +82,5 @@ public class PDataRepository implements IPDataRepository {
 		return dao.existsPData(conceptId, accountId);
 
 	}
-
-	
 
 }

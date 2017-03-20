@@ -12,7 +12,7 @@ public class PropertyManager {
 	static{
 		props = new Properties();
 		try {
-			props.load(PropertyManager.class.getClassLoader().getResourceAsStream("configuration.properties"));
+			props.load(PropertyManager.class.getClassLoader().getResourceAsStream("application.properties"));
 			
 		} catch (IOException e) {
 			e.printStackTrace();

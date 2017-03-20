@@ -44,13 +44,9 @@ public interface IAccountService {
 
 	public abstract Response addParticular(String input, String accountId);
 
-	public abstract Response getParticular(String accountId, String particularId);
+	public abstract Response getParticular(String accountId);
 
-	public abstract Response getParticulars(String accountId);
-
-	public abstract Response updateParticular(String input, String accountId, String particularId);
-
-	public abstract Response deleteParticular(String accountId, String particularId);
+	public abstract Response deleteParticular(String accountId);
 
 	public abstract Response createServiceLinkRecord(String input, String accountId);
 
@@ -58,13 +54,17 @@ public interface IAccountService {
 
 	public abstract Response deleteServiceLinkRecordById(String accountId, String telephoneId);
 
-	public abstract Response deleteServiceLinkRecordBySurrogateId(String accountId, String slrId);
+	public abstract Response deleteServiceLinkRecordBySurrogateIdAndServiceId(String surrogateId, String serviceId);
 
 	public abstract Response getServiceLinkRecords(String accountId);
 
 	public abstract Response getServiceLinkRecord(String accountId, String slrId);
 
 	public abstract Response getServiceLinkRecordByServiceId(String accountId, String slrId);
+
+	public abstract Response getServiceLinkRecordBySurrogateIdAndServiceId(String surrogateId, String serviceId);
+
+	public abstract Response getServiceLinkRecordBySurrogateId(String surrogateId);
 
 	public abstract Response getServiceLinkStatusRecords(String accountId, String slrId);
 
@@ -73,8 +73,6 @@ public interface IAccountService {
 	public abstract Response verifyServiceLinkRecord(String input);
 
 	public abstract Response existsAccount(String accountId);
-
-	public abstract Response getServiceLinkRecordBySurrogateId(String accountId, String serviceId);
 
 	public abstract Response downloadAccountAndPData(String accountId);
 

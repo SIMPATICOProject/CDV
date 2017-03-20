@@ -1,16 +1,27 @@
 package it.eng.opsi.cdv.accountmanager.model;
 
+import it.eng.opsi.cdv.accountmanager.utils.JsonRequired;
+
 public class Contact {
 
 	private String _id;
+	@JsonRequired
 	private String address1;
 	private String address2;
+	
+	@JsonRequired
 	private String postalCode;
+	
+	@JsonRequired
 	private String city;
+	@JsonRequired
 	private String state;
+	@JsonRequired
 	private String country;
+	@JsonRequired
 	private TypeEnum type;
-	private boolean primary;
+	
+	private boolean primary = true;
 
 	public String get_id() {
 		return _id;

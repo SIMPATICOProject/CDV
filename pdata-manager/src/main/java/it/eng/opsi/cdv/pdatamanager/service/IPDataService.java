@@ -15,7 +15,9 @@ public interface IPDataService {
 	public abstract Response updatePData(String input, String accountId, String conceptId, String modeString);
 
 	public abstract Response deleteAllPData(String accountId);
-	
+
+	public abstract Response deletePDataValue(String conceptId, String accountId, String value);
+
 	public Response deletePData(String conceptId, String accountId);
 
 	public abstract Response postServicePData(String input, String modeString);

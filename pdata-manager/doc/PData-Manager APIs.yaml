@@ -1,0 +1,527 @@
+# Example YAML to get you started quickly.
+# Be aware that YAML has indentation based scoping.
+# Code completion support is available so start typing for available options.
+swagger: '2.0'
+
+
+info:
+  version: "0.0.1"
+  title: PData Manager APIs
+  description: Technical specification of PData Manager APIs. These APis provide functionalities for managing the Personal Data of an Account Owner. In addition, they provide functionalities for storing and getting these Personal Data, starting from the properties required by a previously linked service.
+
+basePath: /CDV/pdata-manager/api/v1 
+
+schemes:
+  - https
+  
+paths:
+
+  /pData:
+    post:
+      description: Stores one or more Account owner's Personal Data
+      summary: Stores one or more Account owner's Personal Data
+      operationId: storePData
+      produces:
+        - application/json
+      parameters:
+        - name: accountId
+          in: header
+          description: The identifier of the Account owner
+          required: true
+          type: string
+        - name: mode
+          in: query
+          description: The write mode of the Personal Data into its values array
+          required: false
+          type: string
+          default: "OVERWRITE"
+          enum:
+          - OVERWRITE
+          - APPEND
+        - name: request
+          in: body
+          description: An array of objects containing the Personal Data to be stored
+          required: true
+          schema:
+            type: array
+            items:
+               $ref: "#/definitions/PData"  
+      responses:
+        '201':
+          description: Successful Response; the PData was stored successfully
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/PData"
+        '400':
+          description: Bad request
+          schema:
+            $ref: '#/definitions/ErrorResponse' 
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+       
+    get:
+      description: Gets all the Account owner's Personal Data in several formats. By default, the method returns a JSON array. If CSV format is specified, the response is the CSV representation of Personal Data as plain text (The first row contains the fields names, the following rows contain the related values).
+      summary: Get all the Account owner's Personal Data in several formats.
+      operationId: getAllPData
+      produces:
+        - application/json
+        - text/plain
+      parameters:
+        - name: accountId
+          in: header
+          description: The identifier of the Account owner
+          required: true
+          type: string
+        - name: format
+          in: query
+          description: The required format of Personal Data (JSON or CSV)
+          required: false
+          type: string
+          default: "JSON"
+          enum:
+          - JSON
+          - CSV
+      responses:
+        '200':
+          description: Successful response; the required Personal Data (JSON or CSV)
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/PData"
+        '404':
+          description: Account with provided username was not found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'   
+    put:
+      description: Updates one or more Account owner's Personal Data
+      summary: Update one or more Account owner's Personal Data
+      operationId: updatePData
+      produces:
+        - application/json
+      parameters:
+        - name: accountId
+          in: header
+          description: The identifier of the Account owner
+          required: true
+          type: string
+        - name: mode
+          in: query
+          description: The write mode of the Personal Data for its values array
+          required: false
+          type: string
+          default: "OVERWRITE"
+          enum:
+          - OVERWRITE
+          - APPEND
+        - name: request
+          in: body
+          description: An array of objects containing the Personal Data to be updated
+          required: true
+          schema:
+            type: array
+            items:
+               $ref: "#/definitions/PData"  
+      responses:
+        200:
+          description: Successful response; the PData was updated successfully
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/PData"
+        404:
+          description: Account with provided username was not found 
+            | No PData found for the provided Account
+          schema:
+            $ref:  "#/definitions/ErrorResponse"
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    delete:
+      description: Deletes all the Account owner's Personal Data
+      summary: Delete all the Personal Data of the Account owner
+      operationId: deleteAllPData
+      parameters:
+        - name: accountId
+          in: header
+          description: The identifier of the Account owner
+          required: true
+          type: string
+      responses:
+        200:
+          description: Successful Response; the PData were deleted successfully
+        404:
+          description: Account with provided username was not found 
+            | No PData found for the provided Account
+          schema:
+            $ref:  "#/definitions/ErrorResponse"
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'            
+            
+    
+  /pData/download:
+    get:
+      description: Gets the dump file of all the Account and related Personal Data, in either CSV or JSON.  By default, the method returns a JSON file. If CSV format is specified, the file returned is a CSV representation of Account and related Personal Data as plain text (The first row contains the fields names, the following rows contain the related values). 
+      summary: Get dump file of all the Account owner's Personal Data.
+      operationId: downloadAllPData
+      produces:
+        - application/octet-stream
+      parameters:
+        - name: accountId
+          in: header
+          description: The identifier of the Account owner
+          required: true
+          type: string
+        - name: fileFormat
+          in: query
+          description: The required file format of Personal Data (JSON or CSV)
+          required: false
+          type: string
+          default: "JSON"
+          enum:
+          - JSON
+          - CSV
+      responses:
+        '200':
+          description: Successful response; the required dump file of Personal Data 
+          schema:
+            type: string
+        '400':
+          description: Bad request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '404':
+          description: Account with provided username was not found | No PData found for the provided Account
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'   
+         
+   
+            
+            
+  /pData/{conceptId}:
+    get:
+      description: Gets a specific Account owner's Personal Data
+      summary: Get a specific Account owner's Personal Data
+      operationId: getPData
+      produces:
+        - application/json
+      parameters:
+        - name: accountId
+          in: header
+          description: The identifier of the Account owner
+          required: true
+          type: string
+        - name: conceptId
+          in: path
+          description: The identifier of the semantic concept related to Personal Data
+          required: true
+          type: string
+      responses:
+        200:
+          description: Successful response; the required Personal Data 
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/PData"
+        404:
+          description: Account with provided username was not found 
+            | No PData found for the provided Account
+          schema:
+            $ref:  "#/definitions/ErrorResponse"
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    put:
+      description: Updates a specific Account owner's Personal Data
+      operationId: updateSinglePData
+      produces:
+        - application/json
+      parameters:
+        - name: accountId
+          in: header
+          description: The identifier of the Account owner
+          required: true
+          type: string
+        - name: conceptId
+          in: path
+          description: The identifier of the semantic concept related to Personal Data
+          required: true
+          type: string
+        - name: mode
+          in: query
+          description: The write mode of the Personal Data for its values array
+          required: false
+          type: string
+          default: "OVERWRITE"
+          enum:
+          - OVERWRITE
+          - APPEND
+        - name: request
+          in: body
+          description: The object representing the Personal Data to be updated
+          required: true
+          schema:
+            $ref: "#/definitions/PData"
+        
+      responses:
+        200:
+          description: Successful Response; the PData was updated successfully
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/PData"
+        404:
+          description: Account with provided username was not found 
+            | No PData found for the provided Account
+          schema:
+            $ref:  "#/definitions/ErrorResponse"
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'  
+    delete:
+      description: Deletes all the values of a specific Personal Data of Account owner
+      operationId: deletePData
+      parameters:
+        - name: accountId
+          in: header
+          description: The identifier of the Account owner
+          required: true
+          type: string
+        - name: conceptId
+          in: path
+          description: The identifier of the semantic concept related to Personal Data
+          required: true
+          type: string
+      responses:
+        200:
+          description: Successful Response; the PData was deleted successfully
+        404:
+          description: Account with provided username was not found 
+            | No PData found for the provided Account and PData semantic concept
+          schema:
+            $ref:  "#/definitions/ErrorResponse"
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+            
+  /pData/{conceptId}/{value}:        
+    delete:
+      description: Deletes a specific value of a Personal Data of Account owner
+      operationId: deletePDataValue
+      parameters:
+        - name: accountId
+          in: header
+          description: The identifier of the Account owner
+          required: true
+          type: string
+        - name: conceptId
+          in: path
+          description: The identifier of the semantic concept related to Personal Data
+          required: true
+          type: string
+        - name: value
+          in: path
+          description: The specific value of the specified Personal Data to be removed 
+          required: true
+          type: string
+           
+      responses:
+        200:
+          description: Successful Response; the PData value was deleted successfully
+        404:
+          description: Account with provided identifier was not found 
+            | No PData found for the provided Account and PData semantic concept
+          schema:
+            $ref:  "#/definitions/ErrorResponse"
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'   
+            
+            
+  /postPData:
+    post:
+      description: Stores one or more Account Owner's Personal Data for the linked Service, starting from service properties and Service Link Record. Resolves the service properties to the mapped Account owner's Personal Data. The service must be already linked through the Account Manager APIs.
+      summary: Stores one or more Account Owner's Personal Data for the linked Service
+      operationId: postServicePData
+      produces:
+        - application/json
+      parameters:
+        - name: mode
+          in: query
+          description: The write mode of the Personal Data into its values array
+          required: false
+          type: string
+          default: "OVERWRITE"
+          enum:
+          - OVERWRITE
+          - APPEND
+        - name: request
+          in: body
+          description: An object containing the service properties to be stored as Account Owner's Personal Data, after resolving the mapping. 
+          required: true
+          schema:
+            type: object
+            properties:
+              slr_id:
+                type: string
+                description: The identifier of the Service Link Record related to the service and the Account Owner that started the process.
+              user_id:
+                type: string
+                description: The surrogate identifier of the Account Owner. It is a pseudonym that associates Account Owner to his/her account at the service calling this method.
+              properties:
+                type: array
+                description: The array containing key-value pairs, representing properties name and values to be stored as related Personal Data values.
+                items:
+                  type: object
+                  properties:
+                    key:
+                      type: string
+                    values:
+                      type: array
+                      items:
+                        type: string
+      responses:
+        '200':
+          description: Successful Response. The properties values ot the service were successfully stored as values of the corresponding Account Owner's Personal Data.
+        '400':
+          description: Bad request - The input JSON is not valid | The input SLR is not valid
+          schema:
+            $ref: '#/definitions/ErrorResponse' 
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  
+  /getPData:
+    post:
+      description: Gets one or more Account owner's Personal Data for the linked Service, starting from service properties and Service Link Record. Resolves the service properties to the mapped Account owner's Personal Data. The service must be already linked through the Account Manager APIs.
+      summary: Gets one or more Account owner's Personal Data for the linked Service
+      operationId: getServicePData
+      produces:
+        - application/json
+      parameters:
+        - name: request
+          in: body
+          description: An object containing the service properties to be retrieved from Account Owner's Personal Data, after resolving the mapping. 
+          required: true
+          schema:
+            type: object
+            properties:
+              slr_id:
+                type: string
+                description: The identifier of the Service Link Record related to the service and the Account Owner that started the process.
+              user_id:
+                type: string
+                description: The surrogate identifier of the Account Owner. It is a pseudonym that associates Account Owner to his/her account at the service.
+              properties:
+                type: array
+                description: An array containing the property names whose values are to be retrieved.
+                items:
+                  type: string
+    
+      responses:
+        '200':
+          description: Successful Response. Properties required by the service, with the corresponding values retrieved by the mapped Personal Data of the Account Owner
+          schema:
+            type: object
+            properties:
+              slr_id:
+                type: string
+                description: The identifier of the Service Link Record related to the service and the Account Owner that started the process.
+              user_id:
+                type: string
+                description: The surrogate identifier of the Account Owner. It is a pseudonym that associates Account Owner to his/her account at the service.
+              properties:
+                type: array
+                description: The list of required user properties and relative values.
+                items:
+                  type: object
+                  properties:
+                    key:
+                      type: string
+                    values:
+                      type: array
+                      items:
+                        type: string
+        '400':
+          description: Bad request - The input JSON is not valid | The input SLR is not valid
+          schema:
+            $ref: '#/definitions/ErrorResponse' 
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'        
+    
+            
+definitions:
+
+  PData:
+    type: object
+    description: The Object representing a Account owner's Personal Data.
+    properties:
+      conceptId:
+        type: string
+        description: The identifier of the semantic concept related to Personal Data
+      name:
+        type: string
+        description: The user-friendly name of the Personal Data
+      type:
+        type: string
+        description: The semantic type of the Personal Data value
+      values:
+        type: array
+        description: The array of multiple values of the Personal Data
+        items:
+          type: string
+      timestamp:
+        type: string
+        description: The last edit timestamp of Personal Data in ISO 8601 format. E.g. 'yyyy-MM-ddTHH:mm:ssZ'
+        format: date-time
+  
+  
+  ErrorResponse:
+    type: object
+    description: The Object representing the Error information
+    properties:
+      statusCode:
+        type: string
+        description: The HTTP status code
+      error:
+        type: string
+        description: The detailed runtime error
+      message:
+        type: string
+        description: The message related to runtime error
+        
+securityDefinitions:
+  Oauth:
+    type: oauth2
+    tokenUrl: "https://simpatico.eng.it/CDV/account-manager/oauth/token"
+    flow: password
+    scopes:
+      write: write scope
+      read: read scope
+      
+security:
+  - Oauth:
+    - write
+    - read        
+  
+

@@ -34,7 +34,7 @@
 		<dependency>
 			<groupId>org.mongodb</groupId>
 			<artifactId>mongo-java-driver</artifactId>
-			<version>2.11.4</version>
+			<version>3.3.0</version>
 		</dependency>
 
 		<!-- Jersey core Servlet 2.x implementation -->
@@ -102,7 +102,12 @@
 			<artifactId>jersey-media-json-jackson</artifactId>
 			<version>${jersey.version}</version>
 		</dependency>
-
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.5</version>
+		</dependency> 
 
 
 		<dependency>
@@ -123,6 +128,7 @@
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
+					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
 
@@ -137,6 +143,7 @@
 							<goal>xjc</goal><!-- xjc/generate -->
 						</goals>
 						<configuration>
+							<encoding>UTF-8</encoding>
 							<outputDirectory>${basedir}/target/generated-sources/java</outputDirectory>
 							<schemaDirectory>${basedir}/src/main/resources/it/eng/opsi/servicemanager/entities</schemaDirectory>
 							<schemaFiles>*.xsd</schemaFiles>
