@@ -18,37 +18,123 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import com.mongodb.WriteResult;
 
 public class ServiceEntryDAO {
 	public List<ServiceEntry> findAll() {
-		return null;
+		MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
+        DB db = dbSingleton.getDB();
+		DBCollection coll = db.getCollection("serviceRegistry"); 
+        DBCursor services = coll.find();
+        List<ServiceEntry> list = new ArrayList<ServiceEntry>();
+       
+        while (services.hasNext() ) { 
+            DBObject o =  (DBObject) services.next();
+            ServiceEntry service;
+			try {
+				System.out.println(o.toString());
+				service = DAOUtils.dbObj2obj(o, ServiceEntry.class);
+				list.add(service);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}  	
+         }
+   	
+		return list;
     }
 
     
     public List<ServiceEntry> findByName(String regex) {
-    	 return null;
+    	MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
+        DB db = dbSingleton.getDB();
+		DBCollection coll = db.getCollection("serviceRegistry"); 
+		BasicDBObject regexQuery = new BasicDBObject();
+        regexQuery.put("serviceDescriptionTitle",
+        	new BasicDBObject("$regex", regex)
+        	.append("$options", "i"));
+        DBCursor services = coll.find(regexQuery).sort(new BasicDBObject("id", 1));
+        List<ServiceEntry> list = new ArrayList<ServiceEntry>();
+       
+        while (services.hasNext() ) { 
+            DBObject o =  (DBObject) services.next();
+            ServiceEntry service;
+			try {
+				System.out.println(o.toString());
+				service = DAOUtils.dbObj2obj(o, ServiceEntry.class);
+				list.add(service);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}  	
+         }
+   	
+		return list;
     }
     
     public ServiceEntry findById(String id) {
-    	 return null;
+    	MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
+        DB db = dbSingleton.getDB();
+        DBCollection coll = db.getCollection("serviceRegistry"); 
+        DBObject service = coll.findOne(new BasicDBObject("serviceId", id));
+        ServiceEntry serviceEntry=new ServiceEntry();
+		try {
+			serviceEntry = DAOUtils.dbObj2obj(service, ServiceEntry.class);
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+        
+       return serviceEntry;
     }
 
 
-	public void remove(int id) {
+	public void remove(String id) {
 		// TODO Auto-generated method stub
-		
+		MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
+        DB db = dbSingleton.getDB();
+        DBCollection coll = db.getCollection("serviceRegistry"); 
+        DBObject service2remove = coll.findOne(new BasicDBObject("serviceId", id));
+        WriteResult result = coll.remove(service2remove);
+       
+             
 	}
 
 
-	public void update(ServiceEntry service) {
+	public void update(ServiceEntry service,String id) {
 		// TODO Auto-generated method stub
+		MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
+        DB db = dbSingleton.getDB();
+        DBCollection coll = db.getCollection("serviceRegistry"); 
+        DBObject newService=null;
+		try {
+			newService = DAOUtils.obj2DBobj(service, ServiceEntry.class);
+			WriteResult result = coll.update(new BasicDBObject("serviceId", id), newService, true, false);
+						
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
 		
 	}
 
 
 	public ServiceEntry create(ServiceEntry service) {
 		// TODO Auto-generated method stub
-		return null;
+				MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
+		        DB db = dbSingleton.getDB();
+		        DBCollection coll = db.getCollection("serviceRegistry"); 
+		        DBObject newService=null;
+				try {
+					newService = DAOUtils.obj2DBobj(service, ServiceEntry.class);
+					WriteResult result = coll.insert(newService);
+					
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return service;
 	}
 
 	public ServiceEntry createDataDescription(ServiceEntry service) {
@@ -70,8 +156,7 @@ public class ServiceEntryDAO {
 				
 		MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
         DB db = dbSingleton.getDB();
-		system.out.println(db)
-        DBCollection coll = db.getCollection("serviceRegistry"); 
+       	DBCollection coll = db.getCollection("serviceRegistry"); 
         DBObject service = coll.findOne(new BasicDBObject("serviceId", id));
         List<DataMapping> list = new ArrayList<DataMapping>();
 		DBObject serviceDataDescription= (DBObject) ((DBObject) service.get("serviceDataDescription")).get("dataset");

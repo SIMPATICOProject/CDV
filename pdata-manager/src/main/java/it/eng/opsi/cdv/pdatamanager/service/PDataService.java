@@ -34,8 +34,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.stereotype.Component;
-
 import com.google.gson.reflect.TypeToken;
 
 import it.eng.opsi.cdv.pdatamanager.model.AccountManagerCallException;
@@ -49,7 +47,6 @@ import it.eng.opsi.cdv.pdatarepository.model.PDataEntry;
 import it.eng.opsi.cdv.pdatarepository.model.PDataNotFoundException;
 import it.eng.opsi.cdv.pdatarepository.model.PDataRepositoryException;
 import it.eng.opsi.cdv.pdatarepository.model.PDataUtilsException;
-import it.eng.opsi.cdv.pdatarepository.model.PDataValueAlreadyPresentException;
 import it.eng.opsi.cdv.pdatarepository.model.PDataWriteMode;
 import it.eng.opsi.cdv.pdatarepository.utils.DAOUtils;
 

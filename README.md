@@ -14,7 +14,7 @@ With CDV Citizens have a practical mean to manage their data and privacy.
 # CDV Architecture
 All the above features are provided by a set of components. The CDV architecture, multilayered and service based is depicted in the figure below. A set of internal and external APIs are provided by the Service Data Service enabling the interaction with the data owner (user) via the CDV Dashboard or with external modules/services via a set of secure REST API.
 
-![CDV Architecture](architecture.png)
+![CDV Architecture](doc/architecture.png)
 
 # CDV Components
 

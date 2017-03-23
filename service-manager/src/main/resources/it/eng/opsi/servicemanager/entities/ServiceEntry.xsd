@@ -51,7 +51,7 @@
 			<xsd:element name="modifiedByUserId" type="xsd:string" minOccurs="1" maxOccurs="1"/>
 			<xsd:element name="createdByUserId" type="xsd:string" minOccurs="1" maxOccurs="1"/>
 			<xsd:element name="serviceProviderId" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-			<xsd:element name="humanReadableDescription" type="tns:HumanReadableDescription" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="humanReadableDescription" type="tns:HumanReadableDescription" minOccurs="1" maxOccurs="unbounded"/>
 			<xsd:element name="technicalDescriptionId" type="xsd:string" minOccurs="1" maxOccurs="1"/>
 			<xsd:element name="serviceDataDescription" type="tns:ServiceDataDescription" minOccurs="1" maxOccurs="1"/>
 					
@@ -146,6 +146,11 @@
 			<xsd:element name="keyword" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
 				<xsd:annotation>
 					<xsd:documentation>a keyword describing a dataset, possibly in multiple languages</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="purpose" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>a list of purpose of usage of the dataset</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
 			<xsd:element name="language" type="xsd:string" minOccurs="1" maxOccurs="1">

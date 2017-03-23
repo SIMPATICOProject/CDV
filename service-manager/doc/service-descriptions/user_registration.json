@@ -1,0 +1,93 @@
+{
+    "_id" : ObjectId("5836ec2e6fc6f6cfe1eb5722"),
+    "serviceId" : "1",
+    "serviceDescriptionTitle" : "User Service Registration",
+    "serviceDescriptionVersion" : "0.0.1",
+    "serviceIconURI" : null,
+    "keywords" : [ 
+        "service provider", 
+        "health profile"
+    ],
+    "serviceProviderId" : "26473754",
+    "createdOnDate" : 1465478287000,
+    "modifiedOnDate" : 1465547695915,
+    "modifiedByUserId" : "12dfsr34",
+    "createdByUserId" : "12dfsr34",
+    "technicalDescriptionId" : "12dfsr34",
+    "humanReadableDescription" : [ 
+        {
+            "locale" : "EN_en",
+            "description" : "a human readable service description"
+        }
+    ],
+    "serviceDataDescription" : {
+        "schemaId" : "http://serviceprofile.eng.it/ontologies/servicemanager/ServiceData",
+        "description" : "a service data description",
+        "title" : "User base data",
+        "serviceDataDescriptionUri" : "aURI",
+        "taxonomy" : "http://semantics.eng.it/ontologies/personaldata",
+        "issued" : 1453031943,
+        "modified" : 1453118343,
+        "dataset" : {
+            "description" : "User registration base data",
+            "title" : "User Data Registration",
+            "publisher" : "publisher",
+            "issued" : 1453031943,
+            "modified" : 1453118343,
+            "serviceDataType" : "input",
+            "keyword" : [ 
+                "Personal Profile", 
+                "Passwords", 
+                "Contact Info"
+            ],
+            "language" : "EN_en",
+            "purpose" : [ 
+                "Research", 
+                "Service development", 
+                "Providing personalised service", 
+                "Creating personal health and fitness profiles"
+            ],
+            "contactPoint" : null,
+            "spatial" : null,
+            "dataStructureSpecification" : null,
+            "dataMapping" : [ 
+                {
+                    "property" : "name",
+                    "conceptId" : "identity_first_name",
+                    "name" : "First Name",
+                    "type" : "string"
+                }, 
+                {
+                    "property" : "lastname",
+                    "conceptId" : "identity_last_name",
+                    "name" : "Last Name",
+                    "type" : "string"
+                }, 
+                {
+                    "property" : "username",
+                    "conceptId" : "account_logins_user_name",
+                    "name" : "Username/Email",
+                    "type" : "string"
+                }, 
+                {
+                    "property" : "email",
+                    "conceptId" : "personal_email",
+                    "name" : "Email",
+                    "type" : "string"
+                }, 
+                {
+                    "property" : "sex",
+                    "conceptId" : "birth_details_sex",
+                    "name" : "Sex",
+                    "type" : "string"
+                }, 
+                {
+                    "property" : "birth_date",
+                    "conceptId" : "birth_certificate_birthday",
+                    "name" : "Birth Date",
+                    "type" : "date"
+                }
+            ]
+        }
+    }
+}

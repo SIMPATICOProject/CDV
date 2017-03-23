@@ -38,7 +38,6 @@ public class ServiceRegistryService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public ServiceEntry create(ServiceEntry service) {
-		System.out.println("creating wine");
 		return dao.create(service);
 	}
 
@@ -60,16 +59,16 @@ public class ServiceRegistryService {
 	@Path("/services/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public ServiceEntry update(ServiceEntry service) {
+	public ServiceEntry update(ServiceEntry service,@PathParam("id") String id) {
 		System.out.println("Updating service: " + service.getServiceDescriptionTitle());
-		dao.update(service);
+		dao.update(service,id);
 		return service;
 	}
 
 	@DELETE
 	@Path("/services/{id}")
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	public void remove(@PathParam("id") int id) {
+	public void remove(@PathParam("id") String id) {
 		dao.remove(id);
 	}
 

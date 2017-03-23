@@ -21,8 +21,6 @@ import javax.ws.rs.core.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.stereotype.Component;
-
 import com.google.gson.reflect.TypeToken;
 import it.eng.opsi.cdv.accountmanager.dao.AccountDAO;
 import it.eng.opsi.cdv.accountmanager.model.Account;
@@ -49,7 +47,6 @@ import it.eng.opsi.cdv.accountmanager.model.TelephoneNotFoundException;
 import it.eng.opsi.cdv.accountmanager.utils.DAOUtils;
 import it.eng.opsi.cdv.accountmanager.utils.PropertyManager;
 
-@Component
 @Path("/v1")
 public class AccountService implements IAccountService {
 

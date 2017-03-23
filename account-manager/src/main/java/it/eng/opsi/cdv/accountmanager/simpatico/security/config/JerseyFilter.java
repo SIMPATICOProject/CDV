@@ -2,8 +2,6 @@ package it.eng.opsi.cdv.accountmanager.simpatico.security.config;
 
 import java.io.IOException;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.HttpHeaders;
@@ -12,19 +10,12 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
-import org.springframework.http.HttpStatus;
 
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 import it.eng.opsi.cdv.accountmanager.dao.AccountDAO;
-import it.eng.opsi.cdv.accountmanager.model.Account;
-import it.eng.opsi.cdv.accountmanager.model.AccountNotFoundException;
-import it.eng.opsi.cdv.accountmanager.model.AccountUtilsException;
 import it.eng.opsi.cdv.accountmanager.model.ErrorResponse;
-import it.eng.opsi.cdv.accountmanager.model.ServiceLinkRecord;
 import it.eng.opsi.cdv.accountmanager.model.ServiceLinkRecordNotFoundException;
-import it.eng.opsi.cdv.accountmanager.model.ServiceLinkStatusRecordNotFoundException;
-import it.eng.opsi.cdv.accountmanager.utils.DAOUtils;
 import it.eng.opsi.cdv.accountmanager.utils.PropertyManager;
 
 @Provider

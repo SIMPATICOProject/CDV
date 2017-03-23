@@ -4,7 +4,7 @@
 This is a part of CDV implementation.
 
 ## Description
-
+Module responsible for  data encryption
 
 
 ## Prerequisites
@@ -17,10 +17,7 @@ The following tools should be properly installed on your computer:
 
 
 ## Documentation
-- [Documentation ](doc/)
 - [Deployment](doc/deployment.md)
-- [API documentation](doc/api/)
-- [Database documentation](doc/database/)
 
 
 ## Support 

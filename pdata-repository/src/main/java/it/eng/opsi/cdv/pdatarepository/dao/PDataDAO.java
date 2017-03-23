@@ -19,6 +19,7 @@ import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import org.slf4j.LoggerFactory;
 
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
@@ -46,7 +47,7 @@ public class PDataDAO {
 
 	private String collectionName;
 	private static Properties props;
-	
+
 	static Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
 
 	static {
@@ -551,7 +552,8 @@ public class PDataDAO {
 
 			} else {
 				throw new DataSecurityManagerCallException(
-						"There was an error while calling the Data Security Manager");
+						"There was an error while calling the Data Security Manager with Status: " + status
+								+ " and Response: " + res);
 
 			}
 
@@ -583,7 +585,8 @@ public class PDataDAO {
 
 			} else {
 				throw new DataSecurityManagerCallException(
-						"There was an error while calling the Data Security Manager");
+						"There was an error while calling the Data Security Manager with Status: " + status
+								+ " and Response: " + res);
 
 			}
 
@@ -591,7 +594,6 @@ public class PDataDAO {
 			e.printStackTrace();
 			throw new DataSecurityManagerCallException("There was an error while calling the Data Security Manager");
 		}
-
 	}
 
 	private static PDataEntry callEncryptPData(PDataEntry entry, String accountId)
@@ -617,8 +619,8 @@ public class PDataDAO {
 
 			} else {
 				throw new DataSecurityManagerCallException(
-						"There was an error while calling the Data Security Manager");
-
+						"There was an error while calling the Data Security Manager with Status: " + status
+								+ " and Response: " + res);
 			}
 
 		} catch (Exception e) {
@@ -651,7 +653,8 @@ public class PDataDAO {
 
 			} else {
 				throw new DataSecurityManagerCallException(
-						"There was an error while calling the Data Security Manager");
+						"There was an error while calling the Data Security Manager with Status: " + status
+								+ " and Response: " + res);
 
 			}
 
@@ -687,7 +690,8 @@ public class PDataDAO {
 
 			} else {
 				throw new DataSecurityManagerCallException(
-						"There was an error while calling the Data Security Manager");
+						"There was an error while calling the Data Security Manager with Status: " + status
+								+ " and Response: " + res);
 
 			}
 
@@ -723,7 +727,8 @@ public class PDataDAO {
 
 			} else {
 				throw new DataSecurityManagerCallException(
-						"There was an error while calling the Data Security Manager");
+						"There was an error while calling the Data Security Manager with Status: " + status
+								+ " and Response: " + res);
 
 			}
 

@@ -4,11 +4,8 @@
 This is a part of CDV implementation.
 
 ## Description
+The PData Manager is responsible of providing a set of secure API for the retrieval and the storage of personal data by means of the CDV. Each external service, once registered with the CDV and associated with an account, can interact directly with the PData Manager.
 
-
-
-## Prerequisites
-TBD
 
 ## Documentation
 - [Documentation ](doc/)

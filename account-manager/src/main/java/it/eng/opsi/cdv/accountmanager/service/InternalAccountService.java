@@ -2,27 +2,19 @@ package it.eng.opsi.cdv.accountmanager.service;
 
 import java.util.List;
 
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.stereotype.Component;
-
 import it.eng.opsi.cdv.accountmanager.dao.AccountDAO;
-import it.eng.opsi.cdv.accountmanager.model.Account;
-import it.eng.opsi.cdv.accountmanager.model.AccountManagerException;
-import it.eng.opsi.cdv.accountmanager.model.AccountNotFoundException;
 import it.eng.opsi.cdv.accountmanager.model.AccountUtilsException;
 import it.eng.opsi.cdv.accountmanager.model.ErrorResponse;
-import it.eng.opsi.cdv.accountmanager.model.PDataEntry;
 import it.eng.opsi.cdv.accountmanager.model.ServiceLinkRecord;
 import it.eng.opsi.cdv.accountmanager.model.ServiceLinkRecordNotFoundException;
 import it.eng.opsi.cdv.accountmanager.model.ServiceLinkStatusEnum;

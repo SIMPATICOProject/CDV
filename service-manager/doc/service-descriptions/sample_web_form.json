@@ -1,0 +1,73 @@
+{
+    "serviceId" : "2",
+    "serviceDescriptionTitle" : "Test Web Form",
+    "serviceDescriptionVersion" : "0.0.2",
+    "serviceIconURI" : null,
+    "keywords" : [ 
+        "service provider", 
+        "Child"
+    ],
+    "createdOnDate" : 1465478287000,
+    "modifiedOnDate" : 1465547695915,
+    "modifiedByUserId" : "12dfsr34",
+    "createdByUserId" : "12dfsr34",
+    "serviceProviderId" : "26473754",
+    "humanReadableDescription" : [ 
+        {
+            "locale" : "EN_en",
+            "description" : "a human readable service description"
+        }
+    ],
+    "technicalDescriptionId" : "12dfsr34",
+    "serviceDataDescription" : {
+        "dataset" : {
+            "contactPoint" : null,
+            "description" : "kindergaten Registration  base data",
+            "issued" : 1453031943,
+            "keyword" : [ 
+                "Personal Profile", 
+                "Passwords", 
+                "Contact Info"
+            ],
+            "purpose" : [ 
+                "Research", 
+                "Service development", 
+                "Providing personalised service"
+            ],
+            "language" : "EN_en",
+            "modified" : 1453118343,
+            "publisher" : "publisher",
+            "serviceDataType" : "input",
+            "spatial" : null,
+            "title" : "User Data Registration",
+            "dataStructureSpecification" : null,
+            "dataMapping" : [ 
+                {
+                    "property" : "AventeTitolo_Fax",
+                    "conceptId" : "fax_number_for_support",
+                    "name" : "First Name",
+                    "type" : "string"
+                }, 
+                {
+                    "property" : "AventeTitolo_EMail",
+                    "conceptId" : "personal_email",
+                    "name" : "Email",
+                    "type" : "string"
+                }, 
+                {
+                    "property" : "AventeTitolo_EMailPEC",
+                    "conceptId" : "personal_other_email",
+                    "name" : "Other Email",
+                    "type" : "string"
+                }
+            ]
+        },
+        "description" : "a service data description",
+        "schemaId" : "http://serviceprofile.eng.it/ontologies/servicemanager/ServiceData",
+        "serviceDataDescriptionUri" : "aURI",
+        "taxonomy" : "http://semantics.eng.it/ontologies/personaldata",
+        "title" : "User base data",
+        "issued" : 1453031943,
+        "modified" : 1453118343
+    }
+}
