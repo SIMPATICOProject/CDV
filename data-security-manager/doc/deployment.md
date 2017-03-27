@@ -82,6 +82,10 @@ Tomcat “webapps” folder.
     -  **ks.path** with the keystore location selected in the previous keystore creation step.
     -  **ks.password** with the keystore password selected in the previous keystore creation step.
     - **crypt.masterkey.alias** with the masterkey alias selected in the previous [Keystore creation](#keystore-creation) step. (i.e. "masterkey")
+-   **\data-security-manager\WEB-INF\classes\it\eng\opsi\cdv\datasecuritymanager\crypt\config\hibernate\hibernate.cfg.xml** set your db configuration properties:
+    -  **hibernate.connection.url**
+	-  **hibernate.connection.username**
+	-  **hibernate.connection.password**	
 
 
 ### Server Restart and Data Security Manager access
