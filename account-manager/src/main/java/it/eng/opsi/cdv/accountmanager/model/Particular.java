@@ -11,7 +11,7 @@ public class Particular {
 	private String firstname;
 	@JsonRequired
 	private String lastname;
-	@JsonRequired
+	
 	private ZonedDateTime dateOfBirth;
 	
 	private String imgUrl;
