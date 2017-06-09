@@ -48,6 +48,7 @@ import it.eng.opsi.cdv.accountmanager.model.ServiceLinkStatusRecordNotFoundExcep
 import it.eng.opsi.cdv.accountmanager.model.Telephone;
 import it.eng.opsi.cdv.accountmanager.model.TelephoneNotFoundException;
 import it.eng.opsi.cdv.accountmanager.utils.DAOUtils;
+import it.eng.opsi.cdv.accountmanager.utils.JWTUtils;
 
 public class AccountDAO {
 
@@ -1224,6 +1225,7 @@ public class AccountDAO {
 			Account a = getAccount(accountId);
 			record.setUsername(a.getUsername());
 			record.setAccountId(accountId);
+			record.setSlrToken(JWTUtils.createJWT(record));
 			docToAdd = Document.parse(DAOUtils.obj2Json(record, ServiceLinkRecord.class));
 			docToAdd.put("_id", new ObjectId().toString());
 

@@ -13,12 +13,14 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
 import org.apache.commons.io.IOUtils;
+import org.json.JSONException;
 import org.json.JSONObject;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 import it.eng.opsi.cdv.pdatamanager.model.ErrorResponse;
 import it.eng.opsi.cdv.pdatamanager.service.PDataService;
 import it.eng.opsi.cdv.pdatamanager.utils.PropertyManager;
+import it.eng.opsi.cdv.pdatarepository.model.PDataUtilsException;
 
 @Provider
 public class JerseyFilter implements ContainerRequestFilter {
@@ -34,7 +36,7 @@ public class JerseyFilter implements ContainerRequestFilter {
 
 				String authToken = extractToken(request);
 
-				if (!method.equals(" OPTIONS") && authToken != null && !authToken.isEmpty()) {
+				if (!method.equals("OPTIONS") && authToken != null && !authToken.isEmpty()) {
 
 					BasicProfile basicProfile = new BasicProfileService(PropertyManager.getProperty("AAC_URL"))
 							.getBasicProfile(authToken);
@@ -92,7 +94,7 @@ public class JerseyFilter implements ContainerRequestFilter {
 							ErrorResponse errorResponse = new ErrorResponse("400", "BadJsonRequest",
 									"The input body is not a valid json");
 
-							request.abortWith(Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+							request.abortWith(Response.status(Response.Status.BAD_REQUEST)
 									.type(MediaType.APPLICATION_JSON).entity(errorResponse.toJson().toString())
 									.build());
 
@@ -129,9 +131,7 @@ public class JerseyFilter implements ContainerRequestFilter {
 
 			}
 
-		} catch (
-
-		SecurityException e) {
+		} catch (SecurityException e) {
 
 			ErrorResponse errorResponse = new ErrorResponse("401", "TokenNotValid",
 					"The provided token is not valid or expired: " + e.getMessage());
@@ -141,6 +141,12 @@ public class JerseyFilter implements ContainerRequestFilter {
 
 			// ((HttpServletResponse) response).addHeader("Content-Type",
 			// "application/json");
+		} catch (JSONException e) {
+			e.printStackTrace();
+			ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
+					e.getClass().getSimpleName(), e.getMessage());
+			request.abortWith(Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON)
+					.entity(error.toJson().toString()).build());
 
 		} catch (Exception e) {
 

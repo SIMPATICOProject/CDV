@@ -21,6 +21,11 @@
 					<xsd:documentation>Well descriptive title of the service description</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
+			<xsd:element name="serviceUri" type="xsd:string" minOccurs="1" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>Service URI</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
 			<xsd:element name="serviceDescriptionVersion" type="xsd:string" minOccurs="1" maxOccurs="1">
 				<xsd:annotation>
 					<xsd:documentation>Version identifier of the service description following developer's own format</xsd:documentation>

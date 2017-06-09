@@ -1,0 +1,208 @@
+ <div class="text-right export"> 	 
+	 <div class="btn-group" ngbDropdown>
+      <button type="button" class="btn btn-primary" ngbDropdownToggle>
+        Export Data
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownBasic1">
+        <button class="dropdown-item" (click)="exportData('csv')" value="csv">Export as CSV</button>
+        <button class="dropdown-item" (click)="exportData('json')" value="csv">Export as JSON</button>
+      </div>
+    </div>
+</div>
+<form (ngSubmit)="onSubmit(myForm)" [formGroup]="myForm" (formUpdated)="updateForm($event)">
+	<ba-card title="General Information" baCardClass="with-scroll" >    
+	<div class="row" > 
+	<div class="col-sm-6"> 
+	 <div class="form-group" > 
+	   <label for="inputUsername">Username</label> 
+	   <input type="text" class="form-control" id="inputUsername" placeholder="Username" formControlName="username"  disabled> 
+	 </div> 
+   </div>
+   </div>
+	<div formGroupName="particular">   
+	 <div class="row" >  
+	<!--	 <div class="col-md-4 img-container" >
+			 <ba-picture-uploader  [picture]="imgUrl" [canUpload]="false" [defaultPicture]="defaultPicture" ></ba-picture-uploader> 
+		 </div>	-->	 
+	 </div> 
+	 <div class="row"> 
+	   <div class="col-sm-6"> 
+		 <div class="form-group" > 
+		   <label for="inputFirstName">First Name</label> 
+		   <input type="text" class="form-control" id="inputFirstName" placeholder="First Name"  formControlName="firstname" > 
+		 </div> 
+	   </div> 
+	   <div class="col-sm-6"> 
+		 <div class="form-group"> 
+		   <label for="inputLastName">Last Name</label> 
+		   <input type="text" class="form-control" id="inputLastName" placeholder="Last Name" formControlName="lastname" > 
+		 </div> 
+	   </div> 
+	 </div> 
+	 <div class="row"> 
+	   <div class="col-sm-6"> 
+		 <div class="form-group"> 
+		   <label for="inputBirth">Date of Birth</label> 
+		      <input  class="form-control" name="inputBirth" formControlName="dateOfBirth"  [dpDayPicker]="config" theme="dp-material" format="YYYY-MM-DD" placeholder="YYYY-MM-DD">
+		 </div> 
+	   </div> 
+	 </div>
+	</div>	 
+	 </ba-card> 
+	<ba-card title="Email" baCardClass="with-scroll" >   
+	<!-- <h3 class="with-line">Contact Information</h3> -->
+	<div formArrayName="emails" *ngIf="emails; else elseEmails">
+		<div *ngFor="let item of emails.controls; let i=index" [formGroupName]="i" >	
+			<div class="row">
+			  <div class="col-md-4">
+				<div class="form-group">
+				  <label for="inputEmail">Email</label>
+				  <input type="text" class="form-control" id="inputEmail_{{i}}" formControlName="email" >
+				</div>
+			  </div>
+			  <div class="col-md-2">
+				<div class="form-group">
+				  <label for="inputEmailType">Type</label>
+				  <input type="text" class="form-control" id="inputEmailType_{{i}}" formControlName="type" >
+				</div>
+			  </div>
+			  <div class="col-md-1">
+				<div class="form-group">
+					<div class="checkbox" >
+						<label class="custom-checkbox custom-input-success">
+							<input type="checkbox" formControlName="primary"  >
+							<span class="cut-with-dots">Primary</span>
+						 </label>
+					 </div>
+				</div>
+			 </div>
+			  <div class="col-md-3" style=" margin-top: 20px;">
+				<div class="form-group">
+					<button type="button" class="btn btn-danger btn-with-icon" (click)="removeEmail(i)"><i class="ion-minus-round"></i>Remove Email</button>
+				</div>
+				</div>
+			  </div>
+		</div>
+	</div>	
+	<div>
+	<template #elseEmails>No Emails</template>
+	</div>	
+	<button type="button" class="btn btn-primary btn-icon" (click)="addEmail()"><i class="ion-plus-round"></i></button>
+	</ba-card>
+	 <ba-card title="Phones" baCardClass="with-scroll">
+	 <div  formArrayName="telephones" *ngIf="telephones?.length>0; else elseTelephones"> 
+		 <div  *ngFor="let item of telephones.controls; let i=index" [formGroupName]="i" >	 
+			 <div class="row"> 
+				   <div class="col-sm-4"> 
+					 <div class="form-group"> 
+					   <label for="inputTel_{{i}}">Telephone</label> 
+					   <input type="text" class="form-control" id="inputTel_{{i}}" formControlName="tel" > 
+					 </div> 
+				   </div> 
+				   <div class="col-sm-2"> 
+					 <div class="form-group"> 
+					   <label for="inputTelType_{{i}}">Type</label> 
+					   <input type="text" class="form-control" id="inputTelType_{{i}}" formControlName="type" > 
+					 </div> 
+				   </div> 
+				  <div class="col-md-1">
+					<div class="form-group">
+						<div class="checkbox" >
+							<label class="custom-checkbox custom-input-success">
+								<input type="checkbox" formControlName="primary"  >
+								<span class="cut-with-dots">Primary</span>
+							 </label>
+						 </div>
+					</div>
+				 </div>
+				   
+				   <div class="col-sm-3"> 
+					   <div class="form-group" style="margin-top: 20px;">
+						 <button type="button" class="btn btn-danger btn-with-icon" (click)="removeTelephone(i)"><i class="ion-minus-round"></i>Remove Telephone</button>
+						</div>
+					</div>
+			</div> 
+		 </div> 
+	 </div> 
+	 <div> 
+	 <template #elseTelephones>No Telephones</template> 
+	 </div> 
+	 <button type="button" class="btn btn-primary btn-icon" (click)="addTelephone()"><i class="ion-plus-round"></i></button>
+	 </ba-card> 
+	 <ba-card title="Contacts" baCardClass="with-scroll">  
+	 <div  formArrayName="contacts" *ngIf="contacts?.length>0; else elseContacts"> 
+		 <div  *ngFor="let item of contacts.controls; let i=index" [formGroupName]="i" >
+			  <fieldset class="well">
+				<legend class="well-legend">Contact {{i+1}}</legend>
+				<div class="row"> 
+				   <div class="col-sm-6"> 
+					 <div class="form-group"> 
+					   <label for="inputAddress_{{i}}">Address1</label> 
+					   <input type="text" class="form-control" id="inputAddress_{{i}}" placeholder="Address" formControlName="address1"> 
+					 </div> 
+				   </div>
+					 <div class="col-sm-6">
+						<div class="form-group"> 
+							<label for="inputAddress2_{{i}}">Address2</label> 
+							<input type="text" class="form-control" id="inputAddress2_{{i}}" placeholder="Address" formControlName="address2"> 
+						</div> 
+					 </div>
+				   <div class="col-sm-6"> 
+					 <div class="form-group"> 
+					   <label for="inputPostCode_{{i}}">Postal Code</label> 
+					   <input type="text" class="form-control" id="inputPostCode_{{i}}" placeholder="Postal Code" formControlName="postalCode"> 
+					 </div> 
+				   </div> 
+				   <div class="col-sm-6"> 
+					 <div class="form-group"> 
+					   <label for="inputCity_{{i}}">City</label> 
+					   <input type="text" class="form-control" id="inputCity_{{i}}" placeholder="City" formControlName="city"> 
+					 </div> 
+				   </div> 
+				   <div class="col-sm-6"> 
+					 <div class="form-group"> 
+					   <label for="inputState_{{i}}">State</label> 
+					   <input type="text" class="form-control" id="inputState_{{i}}" placeholder="State" formControlName="state"> 
+					 </div> 
+				   </div>			   
+				   <div class="col-sm-6"> 
+					 <div class="form-group"> 
+					   <label for="inputCountry_{{i}}">Country</label> 
+					   <input type="text" class="form-control" id="inputCountry_{{i}}" placeholder="Country" formControlName="country"> 
+					 </div> 
+				   </div>			  			   
+				   <div class="col-sm-6"> 
+					 <div class="form-group"> 
+					   <label for="inputContactType">Type</label> 
+					   <input type="text" class="form-control" id="inputContactType{{i}}" placeholder="Contact Type" formControlName="type"> 
+					 </div> 
+				   </div> 
+				 </div> 
+				  <div class="col-md-1">
+					<div class="form-group">
+						<div class="checkbox" >
+							<label class="custom-checkbox custom-input-success">
+								<input type="checkbox" formControlName="primary"  >
+								<span class="cut-with-dots">Primary</span>
+							 </label>
+						 </div>
+					</div>
+				 </div>
+				 
+				 <div class="col-sm-4 offset-md-10">
+				  <button type="button" class="btn btn-danger btn-with-icon" (click)="removeContact(i)"><i class="ion-minus-round"></i>Remove Contact</button>
+				 </div>
+			</fieldset>	
+		 </div> 
+	 </div> 
+	 <div> 
+	 <template #elseContacts>No Contacts</template> 
+	 </div> 
+	 <button type="button" class="btn btn-primary btn-icon" (click)="addContact()"><i class="ion-plus-round"></i></button>
+	 </ba-card>
+	<div class=" text-left">
+		<button type="submit" class="btn btn-primary" [disabled]="!myForm.valid">Update Account</button>
+		<button type="button" (click)="removeAccount()" class="btn btn-danger" >Remove Account</button>
+	</div>   
+</form>
+ 

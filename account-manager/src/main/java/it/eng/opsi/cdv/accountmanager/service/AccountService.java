@@ -22,6 +22,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import com.google.gson.reflect.TypeToken;
+
+import io.jsonwebtoken.MalformedJwtException;
 import it.eng.opsi.cdv.accountmanager.dao.AccountDAO;
 import it.eng.opsi.cdv.accountmanager.model.Account;
 import it.eng.opsi.cdv.accountmanager.model.AccountAlreadyPresentException;
@@ -45,6 +47,7 @@ import it.eng.opsi.cdv.accountmanager.model.ServiceLinkStatusRecordNotFoundExcep
 import it.eng.opsi.cdv.accountmanager.model.Telephone;
 import it.eng.opsi.cdv.accountmanager.model.TelephoneNotFoundException;
 import it.eng.opsi.cdv.accountmanager.utils.DAOUtils;
+import it.eng.opsi.cdv.accountmanager.utils.JWTUtils;
 import it.eng.opsi.cdv.accountmanager.utils.PropertyManager;
 
 @Path("/v1")
@@ -1010,10 +1013,12 @@ public class AccountService implements IAccountService {
 			JSONObject jsonInput = new JSONObject(input);
 			String serviceId = jsonInput.optString("serviceId");
 			String serviceUri = jsonInput.optString("serviceUri");
+			String serviceName = jsonInput.optString("serviceName");
+
 			String surrogateId = jsonInput.optString("userId");
 
 			if (StringUtils.isNotBlank(serviceId) && StringUtils.isNotBlank(serviceUri)
-					&& StringUtils.isNotBlank(surrogateId)) {
+					&& StringUtils.isNotBlank(surrogateId) && StringUtils.isNotBlank(serviceName)) {
 
 				ServiceLinkStatusRecord statusRecord = new ServiceLinkStatusRecord(ServiceLinkStatusEnum.ACTIVE);
 				ServiceLinkRecord record;
@@ -1032,7 +1037,7 @@ public class AccountService implements IAccountService {
 
 				} else {
 					record = dao.addServiceLinkRecord(accountId,
-							new ServiceLinkRecord(serviceId, serviceUri, surrogateId));
+							new ServiceLinkRecord(serviceId, serviceUri, serviceName, surrogateId));
 				}
 
 				ServiceLinkStatusRecord createdStatusRecord = dao.addServiceLinkStatusRecord(accountId, record.get_id(),
@@ -1049,7 +1054,8 @@ public class AccountService implements IAccountService {
 								: " SurrogateIdMissing",
 						StringUtils.isNotBlank(surrogateId)
 								? StringUtils.isBlank(serviceId) ? "The serviceId is empty or missing"
-										: "The serviceUri is empty or missing"
+										: StringUtils.isBlank(serviceUri) ? "The serviceUri is empty or missing"
+												: "The serviceName is empty or missing"
 								: "The userId (surrogate) is empty or missing");
 				return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
 
@@ -1084,7 +1090,6 @@ public class AccountService implements IAccountService {
 	@Override
 	@PUT
 	@Path("/accounts/{accountId}/serviceLinks/{slrId}")
-	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response disableServiceLinkRecord(@PathParam("accountId") String accountId,
 			@PathParam("slrId") String slrId) {
@@ -1485,21 +1490,27 @@ public class AccountService implements IAccountService {
 
 			JSONObject inputJson = new JSONObject(input);
 			String slrId = inputJson.getString("slrId");
+			String slrToken = inputJson.getString("slrToken");
 			String surrogateId = inputJson.getString("surrogateId");
 
 			ServiceLinkRecord record = dao.getServiceLinkRecordById(slrId);
 			List<ServiceLinkStatusRecord> slrStatuses = record.getServiceLinkStatusRecords();
 
-			// TODO hash match checking of the input SLR with the stored one
+			// JWT token checking of the input SLR token with the stored one
+
+			JWTUtils.verifyJWT(slrToken);
 
 			// check if SLR has active SSR
 			// check if input slrId and surrogateId matches with the retrieved
 			// ones
 
 			if (slrId.equals(record.get_id()) && surrogateId.equals(record.getSurrogateId())
-					&& slrStatuses.stream()
-							.filter(status -> status.getServiceLinkStatus().equals(ServiceLinkStatusEnum.ACTIVE))
-							.count() != 0
+			// && slrStatuses.stream()
+			// .filter(status ->
+			// status.getServiceLinkStatus().equals(ServiceLinkStatusEnum.ACTIVE))
+			// .count() != 0
+					&& slrStatuses.get(slrStatuses.size() - 1).getServiceLinkStatus()
+							.equals(ServiceLinkStatusEnum.ACTIVE)
 					&& surrogateId.equals(record.getSurrogateId())) {
 
 				JSONObject result = new JSONObject();
@@ -1530,10 +1541,18 @@ public class AccountService implements IAccountService {
 
 		} catch (ServiceLinkRecordNotFoundException e) {
 
-			System.out.println(e.getMessage());
+			System.out.println(e.getClass().toString() + ": " + e.getMessage());
 			JSONObject result = new JSONObject();
 			result.put("result", "failed");
 			result.put("message", "The provided SLR Id does not match with any SLR");
+			return Response.status(Response.Status.OK).entity(result.toString()).build();
+
+		} catch (SecurityException | MalformedJwtException e) {
+
+			System.out.println(e.getClass().toString() + ": " + e.getMessage());
+			JSONObject result = new JSONObject();
+			result.put("result", "failed");
+			result.put("message", "The provided SLR JWT token is not valid");
 			return Response.status(Response.Status.OK).entity(result.toString()).build();
 
 		} catch (Exception e) {

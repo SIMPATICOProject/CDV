@@ -1,0 +1,39 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h3 class="modal-title">{{modalHeader}}</h3>
+    <button class="close" aria-label="Close" (click)="closeModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="section-block light-text">
+	 {{modalContent}}
+	</div>
+	<div class="separator"></div>
+	<div class="accent"><i><b>Keywords: </b>  {{keywords}}</i> </div>
+         
+	
+	<div class="accent"><i><b>Provider: </b>  {{provider}}</i> </div>
+          
+	
+	<div class="accent"><i><b>Purpose: </b> {{purpose}}</i> </div>
+	
+	<div class="accent"><i><b>Link: </b> <a href={{serviceUri}} target="_blank">{{serviceUri}}</a></i> </div>
+          
+	
+	
+	<div class="separator"></div>
+	<div class="section-block regular-text">
+	<i><b>Data Processed: </b></i>
+	<ul *ngFor="let concept of data; let i = index" [attr.data-index]="i">
+        <li>{{concept}}</li>
+    </ul>
+	
+	</div>
+	
+	</div>
+  
+  <div class="modal-footer">
+    <button class="btn btn-primary confirm-btn" (click)="closeModal()">Close</button>
+  </div>
+</div>

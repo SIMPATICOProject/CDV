@@ -1,6 +1,7 @@
 {
     "serviceId" : "2",
     "serviceDescriptionTitle" : "Test Web Form",
+    "serviceUri" : "http://localhost:8080/IFE/index_demo.html",
     "serviceDescriptionVersion" : "0.0.2",
     "serviceIconURI" : null,
     "keywords" : [ 

@@ -55,7 +55,7 @@ import it.eng.opsi.cdv.pdatarepository.utils.DAOUtils;
 public class PDataService implements IPDataService {
 
 	private static PDataRepository repo = new PDataRepository(
-			PropertyManager.getProperty("PDATA_REPOSITORY_COLLECTION"),PropertyManager.getProperties());
+			PropertyManager.getProperty("PDATA_REPOSITORY_COLLECTION"), PropertyManager.getProperties());
 	static final String api_version = "1.0";
 
 	@POST
@@ -88,7 +88,6 @@ public class PDataService implements IPDataService {
 						mode = PDataWriteMode.OVERWRITE;
 					}
 
-			
 					List<PDataEntry> created = null;
 					if (entries.size() == 1)
 						(created = new ArrayList<PDataEntry>()).add(repo.storePData(accountId, entries.get(0), mode));
@@ -650,6 +649,7 @@ public class PDataService implements IPDataService {
 			// INPUT
 			JSONObject in = new JSONObject(input);
 			String slrId = in.getString("slr_id");
+			String slrToken = in.getString("slr_token");
 			String userId = in.getString("user_id");
 			JSONArray properties = in.getJSONArray("properties");
 			PDataWriteMode mode;
@@ -665,7 +665,7 @@ public class PDataService implements IPDataService {
 			}
 
 			// Verify SLR and get the related accountId from AccountManager
-			verifyRes = callVerifySLR(slrId, userId);
+			verifyRes = callVerifySLR(slrId, slrToken, userId);
 			verifyResult = verifyRes.get("result");
 
 			if (verifyResult.equalsIgnoreCase("success")) {
@@ -704,7 +704,7 @@ public class PDataService implements IPDataService {
 			} else {
 
 				ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
-						"SLRNotValid", "The input SLR or user Id (surrogate) are not valid");
+						"SLRNotValid", verifyRes.get("message"));
 
 				return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
 
@@ -747,6 +747,7 @@ public class PDataService implements IPDataService {
 			// INPUT
 			JSONObject in = new JSONObject(input);
 			String slrId = in.getString("slr_id");
+			String slrToken = in.getString("slr_token");
 			String userId = in.getString("user_id"); // userId is the
 														// surrogateId!
 			JSONArray propertiesKeys = in.getJSONArray("properties");
@@ -756,7 +757,7 @@ public class PDataService implements IPDataService {
 			String accountId, serviceId, verifyResult;
 
 			// Verify SLR and get the related accountId from AccountManager
-			verifyRes = callVerifySLR(slrId, userId);
+			verifyRes = callVerifySLR(slrId, slrToken, userId);
 			verifyResult = verifyRes.get("result");
 
 			if (verifyResult.equalsIgnoreCase("success")) {
@@ -819,7 +820,7 @@ public class PDataService implements IPDataService {
 			} else {
 
 				ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
-						"SLRNotValid", "The input SLR or user Id (surrogate) are not valid");
+						"SLRNotValid", verifyRes.get("message"));
 				return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
 
 			}
@@ -880,7 +881,7 @@ public class PDataService implements IPDataService {
 
 	}
 
-	public static HashMap<String, String> callVerifySLR(String slrId, String surrogateId)
+	public static HashMap<String, String> callVerifySLR(String slrId, String slrToken, String surrogateId)
 			throws AccountManagerCallException {
 
 		HashMap<String, String> result = new HashMap<String, String>();
@@ -893,6 +894,7 @@ public class PDataService implements IPDataService {
 
 			JSONObject payload = new JSONObject();
 			payload.put("slrId", slrId);
+			payload.put("slrToken", slrToken);
 			payload.put("surrogateId", surrogateId);
 
 			Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
@@ -1020,9 +1022,6 @@ public class PDataService implements IPDataService {
 
 	}
 
-	
-
-	
 	// Get the actual account Id from Account Manager, in order to retrieve the
 	// id starting from username
 	// private static String callGetRealAccountId(String accountId) throws

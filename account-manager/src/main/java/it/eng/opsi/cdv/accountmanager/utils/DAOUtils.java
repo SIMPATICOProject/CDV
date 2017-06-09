@@ -2,6 +2,7 @@ package it.eng.opsi.cdv.accountmanager.utils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
+import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -21,21 +22,9 @@ public final class DAOUtils {
 
 	private static GsonBuilder gsonBuilder = new GsonBuilder();
 
-	private static Gson gson = gsonBuilder
-			.registerTypeAdapter(ZonedDateTime.class, new JsonDeserializer<ZonedDateTime>() {
-				public ZonedDateTime deserialize(JsonElement jsonElement, Type type,
-						JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-					DateTimeFormatter fmt = DateTimeFormatter.ISO_OFFSET_DATE_TIME.withZone(ZoneOffset.UTC);
-					return ZonedDateTime.from(fmt.parse(jsonElement.getAsString()));
-				}
-			}).registerTypeAdapter(ZonedDateTime.class, new JsonSerializer<ZonedDateTime>() {
-				@Override
-				public JsonElement serialize(ZonedDateTime zonedDateTime, Type type,
-						JsonSerializationContext jsonSerializationContext) {
-					DateTimeFormatter fmt = DateTimeFormatter.ISO_OFFSET_DATE_TIME.withZone(ZoneOffset.UTC);
-					return new JsonPrimitive(fmt.format(zonedDateTime.truncatedTo(ChronoUnit.SECONDS)));
-				}
-			}).registerTypeAdapter(Account.class, new AnnotatedDeserializer<Account>())
+	private static Gson gson = gsonBuilder.registerTypeAdapter(ZonedDateTime.class, new ZonedDateTimeAdapter())
+			.registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+			.registerTypeAdapter(Account.class, new AnnotatedDeserializer<Account>())
 			.registerTypeAdapter(Contact.class, new AnnotatedDeserializer<Contact>())
 			.registerTypeAdapter(Email.class, new AnnotatedDeserializer<Email>())
 			.registerTypeAdapter(Particular.class, new AnnotatedDeserializer<Particular>())
@@ -97,20 +86,8 @@ public final class DAOUtils {
 	static class AnnotatedDeserializer<T> implements JsonDeserializer<T> {
 
 		public T deserialize(JsonElement je, Type type, JsonDeserializationContext jdc) throws JsonParseException {
-			T pojo = new GsonBuilder().registerTypeAdapter(ZonedDateTime.class, new JsonDeserializer<ZonedDateTime>() {
-				public ZonedDateTime deserialize(JsonElement jsonElement, Type type,
-						JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-					DateTimeFormatter fmt = DateTimeFormatter.ISO_OFFSET_DATE_TIME.withZone(ZoneOffset.UTC);
-					return ZonedDateTime.from(fmt.parse(jsonElement.getAsString()));
-				}
-			}).registerTypeAdapter(ZonedDateTime.class, new JsonSerializer<ZonedDateTime>() {
-				@Override
-				public JsonElement serialize(ZonedDateTime zonedDateTime, Type type,
-						JsonSerializationContext jsonSerializationContext) {
-					DateTimeFormatter fmt = DateTimeFormatter.ISO_OFFSET_DATE_TIME.withZone(ZoneOffset.UTC);
-					return new JsonPrimitive(fmt.format(zonedDateTime.truncatedTo(ChronoUnit.SECONDS)));
-				}
-			}).create().fromJson(je, type);
+			T pojo = new GsonBuilder().registerTypeAdapter(ZonedDateTime.class, new ZonedDateTimeAdapter())
+					.registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create().fromJson(je, type);
 
 			Field[] fields = pojo.getClass().getDeclaredFields();
 			for (Field f : fields) {
@@ -129,6 +106,39 @@ public final class DAOUtils {
 			return pojo;
 
 		}
+	}
+
+}
+
+class LocalDateAdapter implements JsonSerializer<LocalDate>, JsonDeserializer<LocalDate> {
+
+	@Override
+	public JsonElement serialize(LocalDate date, Type typeOfSrc, JsonSerializationContext context) {
+		return new JsonPrimitive(date.format(DateTimeFormatter.ISO_LOCAL_DATE)); // "yyyy-mm-dd"
+	}
+
+	@Override
+	public LocalDate deserialize(JsonElement jsonElement, Type typeOfSrc,
+			JsonDeserializationContext jsonDeserializationContext) {
+		return LocalDate.from((DateTimeFormatter.ISO_LOCAL_DATE.parse(jsonElement.getAsString()))); // "yyyy-mm-dd"
+	}
+
+}
+
+class ZonedDateTimeAdapter implements JsonSerializer<ZonedDateTime>, JsonDeserializer<ZonedDateTime> {
+
+	@Override
+	public ZonedDateTime deserialize(JsonElement jsonElement, Type type,
+			JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+		DateTimeFormatter fmt = DateTimeFormatter.ISO_OFFSET_DATE_TIME.withZone(ZoneOffset.UTC);
+		return ZonedDateTime.from(fmt.parse(jsonElement.getAsString()));
+	}
+
+	@Override
+	public JsonElement serialize(ZonedDateTime zonedDateTime, Type type,
+			JsonSerializationContext jsonSerializationContext) {
+		DateTimeFormatter fmt = DateTimeFormatter.ISO_OFFSET_DATE_TIME.withZone(ZoneOffset.UTC);
+		return new JsonPrimitive(fmt.format(zonedDateTime.truncatedTo(ChronoUnit.SECONDS)));
 	}
 
 }

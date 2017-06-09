@@ -10,7 +10,6 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
-
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 import it.eng.opsi.cdv.accountmanager.dao.AccountDAO;
@@ -87,9 +86,7 @@ public class JerseyFilter implements ContainerRequestFilter {
 
 			}
 
-		} catch (
-
-		ServiceLinkRecordNotFoundException e) {
+		} catch (ServiceLinkRecordNotFoundException e) {
 
 			ErrorResponse errorResponse = new ErrorResponse("400", "ServiceLinkRecordNotFoundException",
 					e.getMessage());

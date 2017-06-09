@@ -12,6 +12,8 @@ import javax.ws.rs.core.Response;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import io.jsonwebtoken.MalformedJwtException;
 import it.eng.opsi.cdv.accountmanager.dao.AccountDAO;
 import it.eng.opsi.cdv.accountmanager.model.AccountUtilsException;
 import it.eng.opsi.cdv.accountmanager.model.ErrorResponse;
@@ -20,6 +22,7 @@ import it.eng.opsi.cdv.accountmanager.model.ServiceLinkRecordNotFoundException;
 import it.eng.opsi.cdv.accountmanager.model.ServiceLinkStatusEnum;
 import it.eng.opsi.cdv.accountmanager.model.ServiceLinkStatusRecord;
 import it.eng.opsi.cdv.accountmanager.utils.DAOUtils;
+import it.eng.opsi.cdv.accountmanager.utils.JWTUtils;
 import it.eng.opsi.cdv.accountmanager.utils.PropertyManager;
 
 //@Component
@@ -91,21 +94,25 @@ public class InternalAccountService {
 
 			JSONObject inputJson = new JSONObject(input);
 			String slrId = inputJson.getString("slrId");
+			String slrToken = inputJson.getString("slrToken");
 			String surrogateId = inputJson.getString("surrogateId");
 
 			ServiceLinkRecord record = dao.getServiceLinkRecordById(slrId);
 			List<ServiceLinkStatusRecord> slrStatuses = record.getServiceLinkStatusRecords();
 
-			// TODO hash match checking of the input SLR with the stored one
+			// JWT token checking of the input SLR token with the stored one
+			JWTUtils.verifyJWT(slrToken);
 
 			// check if SLR has active SSR
 			// check if input slrId and surrogateId matches with the retrieved
 			// ones
-
 			if (slrId.equals(record.get_id()) && surrogateId.equals(record.getSurrogateId())
-					&& slrStatuses.stream()
-							.filter(status -> status.getServiceLinkStatus().equals(ServiceLinkStatusEnum.ACTIVE))
-							.count() != 0
+			// && slrStatuses.stream()
+			// .filter(status ->
+			// status.getServiceLinkStatus().equals(ServiceLinkStatusEnum.ACTIVE))
+			// .count() != 0
+					&& slrStatuses.get(slrStatuses.size() - 1).getServiceLinkStatus()
+							.equals(ServiceLinkStatusEnum.ACTIVE)
 					&& surrogateId.equals(record.getSurrogateId())) {
 
 				JSONObject result = new JSONObject();
@@ -136,10 +143,18 @@ public class InternalAccountService {
 
 		} catch (ServiceLinkRecordNotFoundException e) {
 
-			System.out.println(e.getMessage());
+			System.out.println(e.getClass().toString() + ": " + e.getMessage());
 			JSONObject result = new JSONObject();
 			result.put("result", "failed");
 			result.put("message", "The provided SLR Id does not match with any SLR");
+			return Response.status(Response.Status.OK).entity(result.toString()).build();
+
+		} catch (SecurityException | MalformedJwtException e) {
+
+			System.out.println(e.getClass().toString() + ": " + e.getMessage());
+			JSONObject result = new JSONObject();
+			result.put("result", "failed");
+			result.put("message", "The provided SLR JWT token is not valid");
 			return Response.status(Response.Status.OK).entity(result.toString()).build();
 
 		} catch (Exception e) {
@@ -155,7 +170,6 @@ public class InternalAccountService {
 
 	}
 
-	
 	@POST
 	@Path("/verifySLRByUsernameAndSurrogateId")
 	@Produces({ MediaType.APPLICATION_JSON })
@@ -170,15 +184,17 @@ public class InternalAccountService {
 			ServiceLinkRecord record = dao.getServiceLinkRecordByUsernameAndSurrogateId(username, surrogateId);
 			List<ServiceLinkStatusRecord> slrStatuses = record.getServiceLinkStatusRecords();
 
-		
 			// check if SLR has active SSR
 			// check if input slrId and surrogateId matches with the retrieved
 			// ones
 
 			if (username.equals(record.getUsername()) && surrogateId.equals(record.getSurrogateId())
-					&& slrStatuses.stream()
-							.filter(status -> status.getServiceLinkStatus().equals(ServiceLinkStatusEnum.ACTIVE))
-							.count() != 0
+			// && slrStatuses.stream()
+			// .filter(status ->
+			// status.getServiceLinkStatus().equals(ServiceLinkStatusEnum.ACTIVE))
+			// .count() != 0
+					&& slrStatuses.get(slrStatuses.size() - 1).getServiceLinkStatus()
+							.equals(ServiceLinkStatusEnum.ACTIVE)
 					&& surrogateId.equals(record.getSurrogateId())) {
 
 				JSONObject result = new JSONObject();
@@ -227,11 +243,7 @@ public class InternalAccountService {
 		}
 
 	}
-	
-	
-	
-	
-	
+
 	@GET
 	@Path("/accounts/{accountId}/services/{serviceId}/serviceLinks")
 	@Produces({ MediaType.APPLICATION_JSON })
@@ -270,7 +282,5 @@ public class InternalAccountService {
 		}
 
 	}
-	
-	
 
 }

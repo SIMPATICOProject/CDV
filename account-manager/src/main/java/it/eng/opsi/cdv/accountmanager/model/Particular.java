@@ -1,6 +1,6 @@
 package it.eng.opsi.cdv.accountmanager.model;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 
 import it.eng.opsi.cdv.accountmanager.utils.JsonRequired;
 
@@ -12,7 +12,7 @@ public class Particular {
 	@JsonRequired
 	private String lastname;
 	
-	private ZonedDateTime dateOfBirth;
+	private LocalDate dateOfBirth;
 	
 	private String imgUrl;
 
@@ -40,11 +40,11 @@ public class Particular {
 		this.lastname = lastname;
 	}
 
-	public ZonedDateTime getDateOfBirth() {
+	public LocalDate getDateOfBirth() {
 		return dateOfBirth;
 	}
 
-	public void setDateOfBirth(ZonedDateTime dateOfBirth) {
+	public void setDateOfBirth(LocalDate dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
 

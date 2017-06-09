@@ -61,7 +61,6 @@
 
 	<build>
 		<finalName>pdata-repository</finalName>
-
 		<!-- maven compiler plugin -->
 		<plugins>
 			<plugin>

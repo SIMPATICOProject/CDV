@@ -16,21 +16,25 @@ public class ServiceLinkRecord {
 	private String serviceId;
 	@JsonRequired
 	private String serviceUri;
+	@JsonRequired
+	private String serviceName;
+	
 	
 	@JsonRequired
 	private String surrogateId;
 	private String accountId;
 
 	private String username;
+	private String slrToken;
 
-	
 	private ZonedDateTime created;
 	private List<ServiceLinkStatusRecord> serviceLinkStatusRecords;
 
-	public ServiceLinkRecord(String serviceId, String serviceUri, String surrogateId) {
+	public ServiceLinkRecord(String serviceId, String serviceUri, String serviceName, String surrogateId) {
 		super();
 		this.serviceId = serviceId;
 		this.serviceUri = serviceUri;
+		this.serviceName = serviceName;
 		this.surrogateId = surrogateId;
 		this.serviceLinkStatusRecords = new ArrayList<ServiceLinkStatusRecord>();
 		this.created = ZonedDateTime.now(ZoneId.of("UTC"));
@@ -58,6 +62,14 @@ public class ServiceLinkRecord {
 
 	public void setServiceUri(String serviceUri) {
 		this.serviceUri = serviceUri;
+	}
+	
+	public String getServiceName() {
+		return serviceName;
+	}
+
+	public void setServiceName(String serviceName) {
+		this.serviceName = serviceName;
 	}
 
 	public String getSurrogateId() {
@@ -100,21 +112,26 @@ public class ServiceLinkRecord {
 		this.created = created;
 	}
 
+	public String getSlrToken() {
+		return slrToken;
+	}
+
+	public void setSlrToken(String slrToken) {
+		this.slrToken = slrToken;
+	}
+
 	public void addServiceLinkStatusRecord(ServiceLinkStatusRecord statusRecord) {
 		this.serviceLinkStatusRecords.add(statusRecord);
 	}
 
+	
+
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("class ServiceLinkRecord {\n");
-		sb.append("    serviceId ").append(toIndentedString(serviceId)).append("\n");
-		sb.append("    accountId: ").append(toIndentedString(accountId)).append("\n");
-		sb.append("    surrogateId: ").append(toIndentedString(surrogateId)).append("\n");
-		sb.append("    ServiceLinkStatusRecords: ").append("\n");
-		serviceLinkStatusRecords.stream().forEach(item -> sb.append(item));
-		sb.append("}");
-		return sb.toString();
+		return "ServiceLinkRecord [_id=" + _id + ", serviceId=" + serviceId + ", serviceUri=" + serviceUri
+				+ ", serviceName=" + serviceName + ", surrogateId=" + surrogateId + ", accountId=" + accountId
+				+ ", username=" + username + ", slrToken=" + slrToken + ", created=" + created
+				+ ", serviceLinkStatusRecords=" + serviceLinkStatusRecords + "]";
 	}
 
 	/**
@@ -127,5 +144,5 @@ public class ServiceLinkRecord {
 		}
 		return o.toString().replace("\n", "\n    ");
 	}
-
+	
 }
