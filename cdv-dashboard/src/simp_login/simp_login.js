@@ -1,4 +1,4 @@
-var host = "https://localhost:8080";
+var host = "http://localhost:8080";
 
 var endpoint = host+"" ;
 
@@ -76,8 +76,12 @@ this.cdv_getAccount = function (callback) {
 		},
 		error: function (jqxhr, textStatus, err) {
 			console.log(textStatus + ", " + err);
-			alert("Sorry! No CDV Account Associated to You!")
-			callback(false);
+			if (confirm("Sorry! No CDV Account Associated to You! Create?")){
+				cdv_createAccount(callback);
+			} else{
+				callback(false);
+			}
+			
 
 		},
 		beforeSend: function (xhr) {
@@ -86,8 +90,104 @@ this.cdv_getAccount = function (callback) {
 		}
 
 	});
-
 }
+
+this.cdv_createAccount = function (callback) {
+
+			var data = JSON.parse(localStorage.userData || 'null');
+			var url = endpoint + "/account-manager/api/v1/accounts";
+			var tokenData = JSON.parse(localStorage.aacTokenData || 'null');
+			console.log(tokenData);
+			var account = accountToJSON(data.userId, data.name, data.surname);
+
+			$.ajax({
+				url: url,
+				type: 'POST',
+				data: account,
+				contentType: "application/json; charset=utf-8",
+				success: function (resp) {
+					console.log("account created");
+					username = resp.username;
+					localStorage.accountData=username;
+					cdv_createSLR(callback);
+					
+
+				},
+				error: function (jqxhr, textStatus, err) {
+					console.log(textStatus + ", " + err);
+					callback(false);
+				},
+				beforeSend: function (xhr) {
+					xhr.setRequestHeader('Authorization', 'Bearer ' + tokenData.access_token);
+
+				}
+
+			});
+
+		}
+
+		this.cdv_createSLR = function (callback) {
+
+			var data = JSON.parse(localStorage.userData || 'null');
+			var url = endpoint + "/account-manager/api/v1/accounts/" + username + "/serviceLinks";
+			var tokenData = JSON.parse(localStorage.aacTokenData || 'null');
+			console.log(tokenData);
+			var slr = slrToJSON(data.userId, "_cdv", host+cdvDashboardURL,"_cdv");
+
+			$.ajax({
+				url: url,
+				type: 'POST',
+				data: slr,
+				contentType: "application/json; charset=utf-8",
+				success: function (resp) {
+					console.log("slr saved!");
+					callback(true);
+
+				},
+				error: function (jqxhr, textStatus, err) {
+					console.log(textStatus + ", " + err);
+					callback(false);
+				},
+				beforeSend: function (xhr) {
+					xhr.setRequestHeader('Authorization', 'Bearer ' + tokenData.access_token);
+
+				}
+
+			});
+
+		}
+
+// Helper function to serialize all account fields into a JSON string
+		function accountToJSON(userId, firstname, lastname) {
+			var properties = [];
+			var jsonStr = JSON.stringify({
+					"username": firstname + "." + lastname + userId 
+					
+				});
+			var partStr = JSON.stringify({
+					"firstname": firstname,
+					"lastname": lastname
+				});
+			var obj = JSON.parse(jsonStr);
+			var part = JSON.parse(partStr);
+			obj['particular'] = part;
+
+			jsonStr = JSON.stringify(obj);
+			return jsonStr;
+		}
+
+		// Helper function to serialize all slr fields into a JSON string
+		function slrToJSON(userId, serviceId, serviceURL, serviceName) {
+			var properties = [];
+			var jsonStr = JSON.stringify({
+					"serviceId": serviceId,
+					"serviceUri": serviceURL,
+					"userId": userId,
+					"serviceName":serviceName
+				});
+			return jsonStr;
+		}
+
 
 function storeAccount() {
 	return function (account_exist) {

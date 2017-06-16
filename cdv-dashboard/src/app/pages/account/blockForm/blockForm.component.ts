@@ -340,17 +340,17 @@ export class BlockForm {
 				'Your data will be permanently deleted and cannot be recovered. Remember to save your data first.\n' +
 				'Press OK to continue...')) {
 			console.log("remove");
-			/*	this.service.deleteAccount().subscribe(
+			this.service.deleteAccount().subscribe(
 			result => {
 			console.log(result);
 			window.alert('Account removed');
-
+            this.router.navigate(['/login']);
 			},
 			err => {
 			let errorJson=eval('('+err._body+')');
 			console.log(eval('('+err._body+')'));
 			this.router.navigate(['/login']);
-			}); */
+			}); 
 		} else {
 			console.log("no remove");
 		}

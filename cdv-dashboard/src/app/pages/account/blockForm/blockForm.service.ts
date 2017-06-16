@@ -37,7 +37,7 @@ export class BlockFormService {
    	headers.append('Authorization', this.token);
    	headers.append('accountId', this.accountId);
    	return this.http
-   	.get(this.environment.host + this.environment.account + this.accountId, {
+   	.delete(this.environment.host + this.environment.account + this.accountId, {
    		headers: headers
    	}) /*.map((responseData) => responseData.json())*/;
    }

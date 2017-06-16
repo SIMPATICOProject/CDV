@@ -118,7 +118,8 @@ export class LinkedServiceTables {
   
   onDeleteConfirm(event): void {
       
-	  if (event.source.data.length<2){
+	  
+	  if (event.source.data.length<2 || event.data.status.serviceId=="_cdv"){
 	       event.confirm.reject();
 		   return;
 	  }
