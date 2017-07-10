@@ -76,6 +76,9 @@ the cdv-dashboard/config.json configuration file:
 
 - authority:"google",  put your AAC authority type for client-  see https://github.com/SIMPATICOProject/aac
 
+- "locale": "en",  put your language locale. Currently available languages: Italian (it) and English (en). For other languages create translation files in /assets/i18n
+
+
 in cdv-dashboard/simp_login/simp_login.js modify the following variables:
 
 - var host = "https://simpatico.eng.it";

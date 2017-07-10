@@ -1,11 +1,12 @@
 import { NgModule, ApplicationRef } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import { Http, HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { removeNgStyles, createNewHosts, createInputTransfer } from '@angularclass/hmr';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
+import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { AuthGuard } from './_guards/index';
 import { ConfigModule, ConfigLoader, ConfigStaticLoader } from 'ng2-config';
 
@@ -39,6 +40,10 @@ export function configFactory() {
     return new ConfigStaticLoader('config.json'); // PATH || API ENDPOINT
 }
 
+export function createTranslateLoader(http: Http) {
+    return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
+
 /**
  * `AppModule` is the main entry point into Angular2's bootstraping process
  */
@@ -61,6 +66,15 @@ export function configFactory() {
       provide: ConfigLoader,
       useFactory: (configFactory)
     }),
+	
+	TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: createTranslateLoader,
+        deps: [Http],
+      },
+    }),
+	
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
     ENV_PROVIDERS,

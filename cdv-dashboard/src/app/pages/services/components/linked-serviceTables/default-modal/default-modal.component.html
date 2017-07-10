@@ -10,12 +10,12 @@
 	 {{modalContent}}
 	</div>
 	<div class="separator"></div>
-	<div class="accent"><i><b>created: </b>  {{created}}</i> </div>
-    <div class="accent"><i><b>Link: </b>  {{serviceUri}}</i> </div>    
+	<div class="accent"><i><b>{{'general.services.created' | translate}}: </b>  {{created}}</i> </div>
+    <div class="accent"><i><b>{{'general.services.url_link' | translate}}: </b>  {{serviceUri}}</i> </div>    
 	
 	<div class="separator"></div>
 	<div class="section-block regular-text">
-	<i><b>Data Consent: </b></i>
+	<i><b>{{'general.services.data_consent' | translate}}: </b></i>
 	
 	
 	</div>
@@ -23,6 +23,6 @@
 	</div>
   
   <div class="modal-footer">
-    <button class="btn btn-primary confirm-btn" (click)="closeModal()">Close</button>
+    <button class="btn btn-primary confirm-btn" (click)="closeModal()">{{'general.services.close' | translate}}</button>
   </div>
 </div>

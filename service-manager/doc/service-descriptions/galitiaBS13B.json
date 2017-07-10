@@ -1,0 +1,140 @@
+{
+    "serviceId" : "BS613B",
+    "serviceDescriptionTitle" : "Ayudas individuales para personas con discapacidad",
+    "serviceUri" : "http://localhost:8080/IFE/BS613B.html",
+    "serviceDescriptionVersion" : "0.0.1",
+    "serviceIconURI" : null,
+    "keywords" : [ 
+        "Autonomy", 
+        "grant", 
+        "galicia", 
+        "Xunta", 
+        "Spanish", 
+        "dependency", 
+        "disability"
+    ],
+    "createdOnDate" : 1465478287000,
+    "modifiedOnDate" : 1465547695915,
+    "modifiedByUserId" : "12dfsr34",
+    "createdByUserId" : "12dfsr34",
+    "serviceProviderId" : "26473754",
+    "humanReadableDescription" : [ 
+        {
+            "locale" : "ES_es",
+            "description" : "Individual Grants for acquisition of services for the promotion of the personal dependence."
+        }
+    ],
+    "technicalDescriptionId" : "12dfsr34",
+    "serviceDataDescription" : {
+        "dataset" : {
+            "contactPoint" : null,
+            "description" : "User registration base data",
+            "issued" : 1453031943,
+            "keyword" : [ 
+                "Personal Profile", 
+                "Passwords", 
+                "Contact Info"
+            ],
+            "purpose" : [ 
+                "Research", 
+                "Service development", 
+                "Providing personalised service", 
+                "personal health "
+            ],
+            "language" : "ES_es",
+            "modified" : 1453118343,
+            "publisher" : "publisher",
+            "serviceDataType" : "input",
+            "spatial" : null,
+            "title" : "User Data Registration",
+            "dataStructureSpecification" : null,
+            "dataMapping" : [ 
+                {
+                    "property" : "BS613B.Entidad.txtNombre",
+                    "conceptId" : "identity_first_name",
+                    "name" : "First Name",
+                    "type" : "string"
+                }, 
+                {
+                    "property" : "BS613B.Entidad.txtApel2",
+                    "conceptId" : "identity_last_name",
+                    "name" : "Last Name",
+                    "type" : "string"
+                }, 
+                {
+                    "property" : "BS613B.Entidad.txtApel1",
+                    "conceptId" : "preferred_middle_name",
+                    "name" : "Middle Name",
+                    "type" : "string"
+                }, 
+                {
+                    "property" : "BS613B.Entidad.txtNifCif",
+                    "conceptId" : "passport_number",
+                    "name" : "Passport Number",
+                    "type" : "string"
+                }, 
+                {
+                    "property" : "BS613B.Entidad.txtDireccion",
+                    "conceptId" : "previous_address_street",
+                    "name" : "Street Address",
+                    "type" : "string"
+                }, 
+                {
+                    "property" : "BS613B.Entidad.txtParroquia",
+                    "conceptId" : "home_neighborhood",
+                    "name" : "Neighborhood",
+                    "type" : "string"
+                }, 
+                {
+                    "property" : "BS613B.Entidad.txtLugar",
+                    "conceptId" : "place_detail_place_name",
+                    "name" : "Place Name",
+                    "type" : "string"
+                }, 
+                {
+                    "property" : "BS613B.Entidad.txtCodigoPostal",
+                    "conceptId" : "previous_address_zip_code",
+                    "name" : "Postal Code",
+                    "type" : "string"
+                }, 
+                {
+                    "property" : "BS613B.Entidad.txtLocalidad",
+                    "conceptId" : "previous_address_city",
+                    "name" : "City",
+                    "type" : "string"
+                }, 
+                {
+                    "property" : "BS613B.Entidad.txtPais",
+                    "conceptId" : "previous_address_country",
+                    "name" : "Country",
+                    "type" : "string"
+                }, 
+                {
+                    "property" : "BS613B.Entidad.txtTelefono",
+                    "conceptId" : "phone_number",
+                    "name" : "Phone Number",
+                    "type" : "string"
+                }, 
+                {
+                    "property" : "BS613B.Entidad.txtMovil",
+                    "conceptId" : "mobile_number",
+                    "name" : "Mobile Number",
+                    "type" : "string"
+                }, 
+                {
+                    "property" : "BS613B.Entidad.txtEmail",
+                    "conceptId" : "personal_email",
+                    "name" : "Email",
+                    "type" : "string"
+                }
+            ]
+        },
+        "description" : "a service data description",
+        "schemaId" : "http://serviceprofile.eng.it/ontologies/servicemanager/ServiceData",
+        "serviceDataDescriptionUri" : "aURI",
+        "taxonomy" : "http://semantics.eng.it/ontologies/personaldata",
+        "title" : "User base data",
+        "issued" : 1453031943,
+        "modified" : 1453118343
+    }
+}

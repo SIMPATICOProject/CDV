@@ -4,6 +4,8 @@ var endpoint = host+"" ;
 
 var cdvDashboardURL= "/cdv-dashboard/";
 
+var no_account_message="Sorry! No CDV Account Associated to You! Create?"
+
 
 
 function processAuthParams(input) {
@@ -76,7 +78,7 @@ this.cdv_getAccount = function (callback) {
 		},
 		error: function (jqxhr, textStatus, err) {
 			console.log(textStatus + ", " + err);
-			if (confirm("Sorry! No CDV Account Associated to You! Create?")){
+			if (confirm(no_account_message)){
 				cdv_createAccount(callback);
 			} else{
 				callback(false);

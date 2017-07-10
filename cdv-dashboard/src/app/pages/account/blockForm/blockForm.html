@@ -1,20 +1,23 @@
  <div class="text-right export"> 	 
 	 <div class="btn-group" ngbDropdown>
       <button type="button" class="btn btn-primary" ngbDropdownToggle>
-        Export Data
+         {{'general.account.export_data' | translate}} 
       </button>
       <div class="dropdown-menu" aria-labelledby="dropdownBasic1">
-        <button class="dropdown-item" (click)="exportData('csv')" value="csv">Export as CSV</button>
-        <button class="dropdown-item" (click)="exportData('json')" value="csv">Export as JSON</button>
+        <button class="dropdown-item" (click)="exportData('csv')" value="csv">{{'general.account.export_csv' | translate}}</button>
+        <button class="dropdown-item" (click)="exportData('json')" value="csv">{{'general.account.export_json' | translate}}</button>
       </div>
-    </div>
+	 </div>
+	 <button type="button" (click)="removeAccount()" class="btn btn-danger" >{{'general.account.remove_account' | translate}}</button>
 </div>
+
+
 <form (ngSubmit)="onSubmit(myForm)" [formGroup]="myForm" (formUpdated)="updateForm($event)">
-	<ba-card title="General Information" baCardClass="with-scroll" >    
+	<ba-card title="general.menu.account" baCardClass="with-scroll" >    
 	<div class="row" > 
 	<div class="col-sm-6"> 
 	 <div class="form-group" > 
-	   <label for="inputUsername">Username</label> 
+	   <label for="inputUsername">{{'general.account.username' | translate}}</label> 
 	   <input type="text" class="form-control" id="inputUsername" placeholder="Username" formControlName="username"  disabled> 
 	 </div> 
    </div>
@@ -28,41 +31,41 @@
 	 <div class="row"> 
 	   <div class="col-sm-6"> 
 		 <div class="form-group" > 
-		   <label for="inputFirstName">First Name</label> 
-		   <input type="text" class="form-control" id="inputFirstName" placeholder="First Name"  formControlName="firstname" > 
+		   <label for="inputFirstName">{{'general.account.first_name' | translate}}</label> 
+		   <input type="text" class="form-control" id="inputFirstName" placeholder="{{'general.account.first_name' | translate}}"  formControlName="firstname" > 
 		 </div> 
 	   </div> 
 	   <div class="col-sm-6"> 
 		 <div class="form-group"> 
-		   <label for="inputLastName">Last Name</label> 
-		   <input type="text" class="form-control" id="inputLastName" placeholder="Last Name" formControlName="lastname" > 
+		   <label for="inputLastName">{{'general.account.last_name' | translate}}</label> 
+		   <input type="text" class="form-control" id="inputLastName" placeholder="{{'general.account.last_name' | translate}}" formControlName="lastname" > 
 		 </div> 
 	   </div> 
 	 </div> 
 	 <div class="row"> 
 	   <div class="col-sm-6"> 
 		 <div class="form-group"> 
-		   <label for="inputBirth">Date of Birth</label> 
+		   <label for="inputBirth">{{'general.account.date_of_birth' | translate}}</label> 
 		      <input  class="form-control" name="inputBirth" formControlName="dateOfBirth"  [dpDayPicker]="config" theme="dp-material" format="YYYY-MM-DD" placeholder="YYYY-MM-DD">
 		 </div> 
 	   </div> 
 	 </div>
 	</div>	 
 	 </ba-card> 
-	<ba-card title="Email" baCardClass="with-scroll" >   
+	<ba-card title="general.account.emails" baCardClass="with-scroll" >   
 	<!-- <h3 class="with-line">Contact Information</h3> -->
-	<div formArrayName="emails" *ngIf="emails; else elseEmails">
+	<div formArrayName="emails" *ngIf="emails?.length>0; else elseEmails">
 		<div *ngFor="let item of emails.controls; let i=index" [formGroupName]="i" >	
 			<div class="row">
 			  <div class="col-md-4">
 				<div class="form-group">
-				  <label for="inputEmail">Email</label>
+				  <label for="inputEmail">{{'general.account.email' | translate}}</label>
 				  <input type="text" class="form-control" id="inputEmail_{{i}}" formControlName="email" >
 				</div>
 			  </div>
 			  <div class="col-md-2">
 				<div class="form-group">
-				  <label for="inputEmailType">Type</label>
+				  <label for="inputEmailType">{{'general.account.email_type' | translate}}</label>
 				  <input type="text" class="form-control" id="inputEmailType_{{i}}" formControlName="type" >
 				</div>
 			  </div>
@@ -71,37 +74,37 @@
 					<div class="checkbox" >
 						<label class="custom-checkbox custom-input-success">
 							<input type="checkbox" formControlName="primary"  >
-							<span class="cut-with-dots">Primary</span>
+							<span class="cut-with-dots">{{'general.account.email_primary' | translate}}</span>
 						 </label>
 					 </div>
 				</div>
 			 </div>
 			  <div class="col-md-3" style=" margin-top: 20px;">
 				<div class="form-group">
-					<button type="button" class="btn btn-danger btn-with-icon" (click)="removeEmail(i)"><i class="ion-minus-round"></i>Remove Email</button>
+					<button type="button" class="btn btn-danger btn-with-icon" (click)="removeEmail(i)"><i class="ion-minus-round"></i>{{'general.account.remove_email' | translate}}</button>
 				</div>
 				</div>
 			  </div>
 		</div>
 	</div>	
 	<div>
-	<template #elseEmails>No Emails</template>
+	<template #elseEmails>{{'general.account.no_email' | translate}}</template>
 	</div>	
 	<button type="button" class="btn btn-primary btn-icon" (click)="addEmail()"><i class="ion-plus-round"></i></button>
 	</ba-card>
-	 <ba-card title="Phones" baCardClass="with-scroll">
+	 <ba-card title="general.account.phones" baCardClass="with-scroll">
 	 <div  formArrayName="telephones" *ngIf="telephones?.length>0; else elseTelephones"> 
 		 <div  *ngFor="let item of telephones.controls; let i=index" [formGroupName]="i" >	 
 			 <div class="row"> 
 				   <div class="col-sm-4"> 
 					 <div class="form-group"> 
-					   <label for="inputTel_{{i}}">Telephone</label> 
+					   <label for="inputTel_{{i}}">{{'general.account.phone' | translate}}</label> 
 					   <input type="text" class="form-control" id="inputTel_{{i}}" formControlName="tel" > 
 					 </div> 
 				   </div> 
 				   <div class="col-sm-2"> 
 					 <div class="form-group"> 
-					   <label for="inputTelType_{{i}}">Type</label> 
+					   <label for="inputTelType_{{i}}">{{'general.account.phone_type' | translate}}</label> 
 					   <input type="text" class="form-control" id="inputTelType_{{i}}" formControlName="type" > 
 					 </div> 
 				   </div> 
@@ -110,7 +113,7 @@
 						<div class="checkbox" >
 							<label class="custom-checkbox custom-input-success">
 								<input type="checkbox" formControlName="primary"  >
-								<span class="cut-with-dots">Primary</span>
+								<span class="cut-with-dots">{{'general.account.phone_primary' | translate}}</span>
 							 </label>
 						 </div>
 					</div>
@@ -118,63 +121,63 @@
 				   
 				   <div class="col-sm-3"> 
 					   <div class="form-group" style="margin-top: 20px;">
-						 <button type="button" class="btn btn-danger btn-with-icon" (click)="removeTelephone(i)"><i class="ion-minus-round"></i>Remove Telephone</button>
+						 <button type="button" class="btn btn-danger btn-with-icon" (click)="removeTelephone(i)"><i class="ion-minus-round"></i>{{'general.account.remove_phone' | translate}}</button>
 						</div>
 					</div>
 			</div> 
 		 </div> 
 	 </div> 
 	 <div> 
-	 <template #elseTelephones>No Telephones</template> 
+	 <template #elseTelephones>{{'general.account.no_phone' | translate}}</template> 
 	 </div> 
 	 <button type="button" class="btn btn-primary btn-icon" (click)="addTelephone()"><i class="ion-plus-round"></i></button>
 	 </ba-card> 
-	 <ba-card title="Contacts" baCardClass="with-scroll">  
+	 <ba-card title="general.account.contacts" baCardClass="with-scroll">  
 	 <div  formArrayName="contacts" *ngIf="contacts?.length>0; else elseContacts"> 
 		 <div  *ngFor="let item of contacts.controls; let i=index" [formGroupName]="i" >
 			  <fieldset class="well">
-				<legend class="well-legend">Contact {{i+1}}</legend>
+				<legend class="well-legend">{{'general.account.contact' | translate}} {{i+1}}</legend>
 				<div class="row"> 
 				   <div class="col-sm-6"> 
 					 <div class="form-group"> 
-					   <label for="inputAddress_{{i}}">Address1</label> 
-					   <input type="text" class="form-control" id="inputAddress_{{i}}" placeholder="Address" formControlName="address1"> 
+					   <label for="inputAddress_{{i}}">{{'general.account.address1' | translate}}</label> 
+					   <input type="text" class="form-control" id="inputAddress_{{i}}" placeholder="{{'general.account.address1' | translate}}" formControlName="address1"> 
 					 </div> 
 				   </div>
 					 <div class="col-sm-6">
 						<div class="form-group"> 
-							<label for="inputAddress2_{{i}}">Address2</label> 
-							<input type="text" class="form-control" id="inputAddress2_{{i}}" placeholder="Address" formControlName="address2"> 
+							<label for="inputAddress2_{{i}}">{{'general.account.address2' | translate}}</label> 
+							<input type="text" class="form-control" id="inputAddress2_{{i}}" placeholder="{{'general.account.address2' | translate}}" formControlName="address2"> 
 						</div> 
 					 </div>
 				   <div class="col-sm-6"> 
 					 <div class="form-group"> 
-					   <label for="inputPostCode_{{i}}">Postal Code</label> 
-					   <input type="text" class="form-control" id="inputPostCode_{{i}}" placeholder="Postal Code" formControlName="postalCode"> 
+					   <label for="inputPostCode_{{i}}">{{'general.account.postal_code' | translate}}</label> 
+					   <input type="text" class="form-control" id="inputPostCode_{{i}}" placeholder="{{'general.account.postal_code' | translate}}" formControlName="postalCode"> 
 					 </div> 
 				   </div> 
 				   <div class="col-sm-6"> 
 					 <div class="form-group"> 
-					   <label for="inputCity_{{i}}">City</label> 
-					   <input type="text" class="form-control" id="inputCity_{{i}}" placeholder="City" formControlName="city"> 
+					   <label for="inputCity_{{i}}">{{'general.account.contact_city' | translate}}</label> 
+					   <input type="text" class="form-control" id="inputCity_{{i}}" placeholder="{{'general.account.contact_city' | translate}}" formControlName="city"> 
 					 </div> 
 				   </div> 
 				   <div class="col-sm-6"> 
 					 <div class="form-group"> 
-					   <label for="inputState_{{i}}">State</label> 
-					   <input type="text" class="form-control" id="inputState_{{i}}" placeholder="State" formControlName="state"> 
+					   <label for="inputState_{{i}}">{{'general.account.contact_state' | translate}}</label> 
+					   <input type="text" class="form-control" id="inputState_{{i}}" placeholder="{{'general.account.contact_state' | translate}}" formControlName="state"> 
 					 </div> 
 				   </div>			   
 				   <div class="col-sm-6"> 
 					 <div class="form-group"> 
-					   <label for="inputCountry_{{i}}">Country</label> 
-					   <input type="text" class="form-control" id="inputCountry_{{i}}" placeholder="Country" formControlName="country"> 
+					   <label for="inputCountry_{{i}}">{{'general.account.contact_country' | translate}}</label> 
+					   <input type="text" class="form-control" id="inputCountry_{{i}}" placeholder="{{'general.account.contact_country' | translate}}" formControlName="country"> 
 					 </div> 
 				   </div>			  			   
 				   <div class="col-sm-6"> 
 					 <div class="form-group"> 
-					   <label for="inputContactType">Type</label> 
-					   <input type="text" class="form-control" id="inputContactType{{i}}" placeholder="Contact Type" formControlName="type"> 
+					   <label for="inputContactType">{{'general.account.contact_type' | translate}}</label> 
+					   <input type="text" class="form-control" id="inputContactType{{i}}" placeholder="{{'general.account.contact_type' | translate}}" formControlName="type"> 
 					 </div> 
 				   </div> 
 				 </div> 
@@ -183,26 +186,26 @@
 						<div class="checkbox" >
 							<label class="custom-checkbox custom-input-success">
 								<input type="checkbox" formControlName="primary"  >
-								<span class="cut-with-dots">Primary</span>
+								<span class="cut-with-dots">{{'general.account.contact_primary' | translate}}</span>
 							 </label>
 						 </div>
 					</div>
 				 </div>
 				 
 				 <div class="col-sm-4 offset-md-10">
-				  <button type="button" class="btn btn-danger btn-with-icon" (click)="removeContact(i)"><i class="ion-minus-round"></i>Remove Contact</button>
+				  <button type="button" class="btn btn-danger btn-with-icon" (click)="removeContact(i)"><i class="ion-minus-round"></i>{{'general.account.remove_contact' | translate}}</button>
 				 </div>
 			</fieldset>	
 		 </div> 
 	 </div> 
 	 <div> 
-	 <template #elseContacts>No Contacts</template> 
+	 <template #elseContacts>{{'general.account.no_contact' | translate}}</template> 
 	 </div> 
 	 <button type="button" class="btn btn-primary btn-icon" (click)="addContact()"><i class="ion-plus-round"></i></button>
 	 </ba-card>
 	<div class=" text-left">
-		<button type="submit" class="btn btn-primary" [disabled]="!myForm.valid">Update Account</button>
-		<button type="button" (click)="removeAccount()" class="btn btn-danger" >Remove Account</button>
+		<button type="submit" class="btn btn-primary" [disabled]="!myForm.valid">{{'general.account.update_account' | translate}}</button>
+		
 	</div>   
 </form>
  

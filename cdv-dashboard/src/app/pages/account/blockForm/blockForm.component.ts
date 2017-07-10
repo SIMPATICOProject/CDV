@@ -1,7 +1,8 @@
 import {Component,Output,EventEmitter} from '@angular/core';
-import {ConfigService } from 'ng2-config';
 import {IDatePickerConfig} from 'ng2-date-picker';
 import { Router} from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { ConfigService } from 'ng2-config';
 
 import {BlockFormService} from './blockForm.service';
 import {
@@ -77,10 +78,15 @@ export class BlockForm {
 	
 	formUpdated: EventEmitter < any >  = new EventEmitter < any > ();
 	saveSuccess = false;
+	message='';
+	
 	public myForm: FormGroup; // our form model
 	
-	constructor(private fb: FormBuilder, private service: BlockFormService, private myconfig: ConfigService,private router: Router) {
+	constructor(private fb: FormBuilder, private service: BlockFormService,private translate: TranslateService, private myconfig: ConfigService,private router: Router) {
 		
+		translate.setDefaultLang('en');
+	
+	    this.translate.use(this.myconfig.getSettings('i18n').locale);
 		this.createForm();
 		//this.user=new Account();
 		service.getAccount()
@@ -329,16 +335,23 @@ export class BlockForm {
 		},
 			err => {
 			let errorJson = eval('(' + err._body + ')');
+			console.log(errorJson);
 			console.log('Error\n' + errorJson['message']);
-			this.router.navigate(['/login']);
+			if(errorJson['statusCode']=="404" && errorJson['title']=="PDataNotFoundException") 
+			 {window.alert('No Personal Data to export');}
+			else{
+				this.router.navigate(['/login']);
+			}
+			
+			
+			
 		}); 
 	} 
 	removeAccount() {
-
+        
+		this.translate.get('general.account.remove_alert_msg').subscribe(label => this.message = label);
 		console.log(event);
-		if (window.confirm('Are you sure to remove your account?\n' +
-				'Your data will be permanently deleted and cannot be recovered. Remember to save your data first.\n' +
-				'Press OK to continue...')) {
+		if (window.confirm(this.message)) {
 			console.log("remove");
 			this.service.deleteAccount().subscribe(
 			result => {

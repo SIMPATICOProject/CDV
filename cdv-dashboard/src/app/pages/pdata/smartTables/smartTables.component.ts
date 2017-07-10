@@ -3,6 +3,8 @@ import { Component,ViewChild,ElementRef} from '@angular/core';
 import { SmartTablesService } from './smartTables.service';
 import { LocalDataSource } from 'ng2-smart-table';
 import {PData} from "../../account/models/account";
+import { TranslateService } from '@ngx-translate/core';
+import { ConfigService } from 'ng2-config';
 import { Router} from '@angular/router';
 import * as _ from "lodash";
 import 'style-loader!./smartTables.scss';
@@ -17,10 +19,14 @@ export class SmartTables {
   pDataFields:any[];
   modifArr:any[];
   settings: any;
-
+  name:string = 'Name';
+  values: string = 'Values';
 
  loadTableSettings(){
-    return {
+    this.translate.get('general.personal_data.name').subscribe(label => this.name = label);
+	this.translate.get('general.personal_data.values').subscribe(label => this.values = label)
+	
+	return {
     noDataMessage:"Loading personal data...",
     actions:{
         add:false,
@@ -49,7 +55,7 @@ export class SmartTables {
 		editable:false
       },*/
       name: {
-        title: 'Name',
+        title: this.name,
         type: 'string',
         width:'10px',
         valuePrepareFunction: (cell,row) => { /*console.log(cell); console.log(row); */return cell;},
@@ -73,7 +79,7 @@ export class SmartTables {
 		editable:false
       },*/
       values: {
-        title: 'Values',
+        title: this.values,
         type: 'array',
         width:'10px'
       }
@@ -83,9 +89,11 @@ export class SmartTables {
  
   source: LocalDataSource = new LocalDataSource();
   
-    constructor(private service: SmartTablesService,private router: Router) {
+    constructor(private service: SmartTablesService,private router: Router,private translate: TranslateService,private myconfig: ConfigService) {
     let pDataFields=service.getPDataFields();
- 
+    translate.setDefaultLang('en');
+	
+	this.translate.use(this.myconfig.getSettings('i18n').locale);
     //retrieve all personal data of the account
 		service.getConcepts() .subscribe(
               result => {

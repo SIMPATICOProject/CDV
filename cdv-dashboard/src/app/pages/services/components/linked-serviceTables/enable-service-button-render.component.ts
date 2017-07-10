@@ -6,7 +6,7 @@ import { Router} from '@angular/router';
 
 @Component({
  template: `
-    <slide-toggle style="font-style:normal;background:rgb(32, 158, 145);" [onText]="'ENABLED'" [offText]="'DISABLED'" [onColor]="'#2ecc71'" [value]="toggleValue" (change)="onToggle()"></slide-toggle>
+    <slide-toggle style="font-style:normal;background:rgb(32, 158, 145);" [onText]="'ON'" [offText]="'OFF'" [onColor]="'#2ecc71'" [value]="toggleValue" (change)="onToggle()"></slide-toggle>
     
   `,
 })
@@ -27,6 +27,7 @@ export class EnableServiceButtonRenderComponent implements OnInit {
   ngOnInit() {
     this.renderValue = this.value;
 	this.toggleValue= this.isEnabled(this.value.status);
+	
   }
 
   onToggle() {

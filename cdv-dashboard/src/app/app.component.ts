@@ -4,6 +4,8 @@ import { GlobalState } from './global.state';
 import { BaImageLoaderService, BaThemePreloader, BaThemeSpinner } from './theme/services';
 import { BaThemeConfig } from './theme/theme.config';
 import { layoutPaths } from './theme/theme.constants';
+import { TranslateService } from '@ngx-translate/core';
+import { ConfigService } from 'ng2-config';
 
 import 'style-loader!./app.scss';
 import 'style-loader!./theme/initial.scss';
@@ -29,10 +31,12 @@ export class App {
               private _imageLoader: BaImageLoaderService,
               private _spinner: BaThemeSpinner,
               private viewContainerRef: ViewContainerRef,
-              private themeConfig: BaThemeConfig) {
+              private themeConfig: BaThemeConfig, private translate: TranslateService,private myconfig: ConfigService) {
 
     themeConfig.config();
-
+    translate.setDefaultLang('en');
+	
+	this.translate.use(this.myconfig.getSettings('i18n').locale);
     this._loadImages();
 
     this._state.subscribe('menu.isCollapsed', (isCollapsed) => {

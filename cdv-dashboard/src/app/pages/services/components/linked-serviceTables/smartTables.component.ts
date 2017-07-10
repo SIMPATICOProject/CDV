@@ -6,6 +6,8 @@ import {EnableServiceButtonRenderComponent} from './enable-service-button-render
 import {ServiceConsentLinkRenderComponent} from './service-consent-link-render.component';
 import {LinkRenderComponent} from './link-render.component';
 import {SlideToggleModule } from 'ng2-slide-toggle';
+import { TranslateService } from '@ngx-translate/core';
+import { ConfigService } from 'ng2-config';
 import { Router} from '@angular/router';
 import 'style-loader!./smartTables.scss'; 
 
@@ -18,9 +20,23 @@ import 'style-loader!./smartTables.scss';
 
 export class LinkedServiceTables {
 
+  service_label:string = 'Service';
+  url: string = 'URL';
+  created: string='Created';
+  
   query: string = '';
 
-  settings = {
+   settings: any;
+
+  
+  loadTableSettings()
+  {
+  
+  this.translate.get('general.services.service').subscribe(label => this.service_label = label);
+	this.translate.get('general.services.url').subscribe(label => this.url = label);
+	this.translate.get('general.services.created').subscribe(label => this.created = label);
+  
+  return {
     
     actions: {
 		add:false,
@@ -47,17 +63,17 @@ export class LinkedServiceTables {
     columns: {
     
       serviceName: {
-        title: 'Service',
+        title: this.service_label,
         type: 'string'
       },
       serviceUri: {
-        title: 'URL',
+        title: this.url,
         type: 'custom',
 		valuePrepareFunction: (cell, row) => row,
 		renderComponent: LinkRenderComponent 
       },
 	  created: {
-        title: 'Created',
+        title: this.created,
         type: 'string'
       },
       viewInfo: {
@@ -75,7 +91,7 @@ export class LinkedServiceTables {
        }
     }
 	
-	
+	}
 	
   };
 
@@ -83,7 +99,7 @@ export class LinkedServiceTables {
   
   source: LocalDataSource = new LocalDataSource();
 
-  constructor(protected service: LinkedServicesTablesService,private router: Router) {
+  constructor(protected service: LinkedServicesTablesService,private router: Router,private translate: TranslateService,private myconfig: ConfigService) {
    	
 	this.service.getServices().subscribe(
 		 result => { 
@@ -92,6 +108,11 @@ export class LinkedServiceTables {
 		   })); 
 		} 
       );
+	translate.setDefaultLang('en');
+	
+	this.translate.use(this.myconfig.getSettings('i18n').locale); 
+    this.settings = this.loadTableSettings();	
+	
   }
   
   

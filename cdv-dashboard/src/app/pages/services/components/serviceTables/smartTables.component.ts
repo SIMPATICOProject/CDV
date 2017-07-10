@@ -1,9 +1,11 @@
-import { Component, OnInit, Input, Output, EventEmitter  } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 import { ServicesTablesService } from './smartTables.service';
 import { LocalDataSource, ViewCell } from 'ng2-smart-table';
 import {LinkButtonRenderComponent} from './link-button-render.component';
 import {ServiceInfoLinkRenderComponent} from './serviceinfo-link-render.component';
+import { ConfigService } from 'ng2-config';
+import { TranslateService } from '@ngx-translate/core';
 
 
 import 'style-loader!./smartTables.scss';
@@ -18,8 +20,18 @@ import 'style-loader!./smartTables.scss';
 export class ServiceTables {
 
   query: string = '';
+  service_label:string = 'Service';
+  description: string = 'Description';
 
-  settings = {
+  settings: any;
+
+  
+  loadTableSettings(){
+
+   this.translate.get('general.services.service').subscribe(label => this.service_label = label);
+	this.translate.get('general.services.description').subscribe(label => this.description = label); 
+
+   return {
      actions: {
 	add:false,
 	edit:false,
@@ -45,11 +57,11 @@ export class ServiceTables {
     columns: {
     
       serviceName: {
-        title: 'Service',
+        title: this.service_label,
         type: 'string'
       },
       serviceDescr: {
-        title: 'Description',
+        title: this.description,
         editor: {
           type: 'textarea',
         },
@@ -69,11 +81,13 @@ export class ServiceTables {
         }
      }
 
-  };
+  }
 
+  };
+  
   source: LocalDataSource = new LocalDataSource();
 
-  constructor(protected service: ServicesTablesService) {
+  constructor(protected service: ServicesTablesService,private translate: TranslateService,private myconfig: ConfigService) {
     // this.services= this.service.getData();
 	//this.source.load(this.service.getData());
 	
@@ -84,6 +98,13 @@ export class ServiceTables {
 		   })); 
 		} 
       );
+	  
+	translate.setDefaultLang('en');
+	
+	this.translate.use(this.myconfig.getSettings('i18n').locale);  
+	
+	this.settings = this.loadTableSettings();
+	 
   }
   
 

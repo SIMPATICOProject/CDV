@@ -3,6 +3,8 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormGroup,FormArray, FormControl,FormBuilder, Validators   } from '@angular/forms';
 import {CompleterCmp, CompleterService, CompleterData, CompleterItem } from 'ng2-completer';
 import { SmartTablesService } from '../smartTables/smartTables.service';
+import { TranslateService } from '@ngx-translate/core';
+import { ConfigService } from 'ng2-config';
 import { PData } from '../../account/models/account.ts';
 import { Router} from '@angular/router';
 
@@ -27,11 +29,18 @@ export class pDataModal implements OnInit {
   private dataService: CompleterData;
   private pDataFieldSelected:boolean=false;
   private pDataNew:any;
-  constructor(private fb: FormBuilder,private completerService: CompleterService, private st_service: SmartTablesService,private activeModal: NgbActiveModal,private router: Router) {
-    this.createForm();
+  
+  constructor(private fb: FormBuilder,private completerService: CompleterService, private st_service: SmartTablesService,private activeModal: NgbActiveModal,private router: Router,private translate: TranslateService,private myconfig: ConfigService) {
+   this.createForm();
    let pDataFieldArray:any[]= st_service.getPDataFields();
+   translate.setDefaultLang('en');
+	
+	this.translate.use(this.myconfig.getSettings('i18n').locale);
    
     this.dataService = completerService.local(pDataFieldArray, 'name', 'name');
+	
+	this.translate.get('general.personal_data.add_new_title').subscribe(label => this.modalHeader = label);
+	this.translate.get('general.personal_data.search').subscribe(label => this.placeholder = label)
   }
 
   ngOnInit() {}

@@ -329,7 +329,7 @@ export const PAGES_MENU = [
 	    path: 'account',  // path for our page
 		data: { // custom menu declaration
 		  menu: {
-			title: 'Account', // menu title
+			title: 'general.menu.account', // menu title
 			icon: 'ion-person', // menu icon
 			pathMatch: 'prefix', // use it if item children not displayed in menu
 			selected: false,
@@ -342,7 +342,7 @@ export const PAGES_MENU = [
 	    path: 'pdata',  // path for our page
         data: { // custom menu declaration
           menu: {
-            title: 'Personal Data', // menu title
+            title: 'general.menu.personaldata', // menu title
             icon: 'ion-ios-list-outline', // menu icon
             pathMatch: 'prefix', // use it if item children not displayed in menu
             selected: false,
@@ -355,7 +355,7 @@ export const PAGES_MENU = [
 	    path: 'services',  // path for our page
         data: { // custom menu declaration
           menu: {
-            title: 'My Services', // menu title
+            title: 'general.menu.myservices', // menu title
             icon: 'ion-toggle-filled', // menu icon
             pathMatch: 'prefix', // use it if item children not displayed in menu
             selected: false,
@@ -368,7 +368,7 @@ export const PAGES_MENU = [
             path: 'services',
             data: {
               menu: {
-                title: 'Available services',
+                title: 'general.menu.availableservices',
               }
             }
           },
@@ -376,7 +376,7 @@ export const PAGES_MENU = [
             path: 'linked_services',
             data: {
               menu: {
-                title: 'Linked services',
+                title: 'general.menu.linkedservices',
               }
             }
           }

@@ -1,13 +1,13 @@
 <div class="modal-content">
   <div class="modal-header">
-    <h4 class="modal-title">{{modalHeader}}</h4>
+    <h4 class="modal-title">{{'general.personal_data.add_new_title' | translate}}</h4>
     <button class="close" aria-label="Close" (click)="closeModal()">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body">
     <div class="form-group col-sm-3"> 
-      <label for="pDataField">Select a new personal data: </label> 
+      <label for="pDataField">{{'general.personal_data.add_new_subtitle' | translate}} </label> 
       <ng2-completer name="pDataField"
                      [inputClass]="'form-control'"
                      [(ngModel)]="searchStr" 
@@ -20,15 +20,15 @@
       </ng2-completer>
     </div>
     <div class="form-group " *ngIf="pDataFieldSelected">
-        You selected personale Data: <span>{{pDataNew.name}}</span>
+        {{'general.personal_data.selected' | translate}}  <span>{{pDataNew.name}}</span>
         <div>
-          <span>Category: </span>{{pDataNew.category || "Category not provided"}}
+          <span>{{'general.personal_data.category' | translate}}: </span>{{pDataNew.category || 'general.personal_data.no_category'}}
         </div>
         <div>
-          <span>Description: </span>{{pDataNew.description || "Description not provided"}}
+          <span>{{'general.personal_data.description' | translate}}: </span>{{pDataNew.description || 'general.personal_data.no_description'}}
         </div>
         <div>
-          <span>Type: </span>{{pDataNew.type || "Type not provided"}}
+          <span>{{'general.personal_data.type' | translate}}: </span>{{pDataNew.type || 'general.personal_data.no_type'}}
         </div>
 
     </div>
@@ -40,7 +40,7 @@
       <input type="email" class="form-control" formControlName="value" id="pDataValue"  placeholder="Value">
     </div>
     <div class="form-group">
-      <button type="submit" class="btn btn-primary">Add personal data</button>
+      <button type="submit" class="btn btn-primary">{{'general.personal_data.add_personal_data' | translate}}</button>
     </div>
   </form>
   </div>

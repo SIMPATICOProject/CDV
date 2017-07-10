@@ -10,21 +10,21 @@
 	 {{modalContent}}
 	</div>
 	<div class="separator"></div>
-	<div class="accent"><i><b>Keywords: </b>  {{keywords}}</i> </div>
+	<div class="accent"><i><b>{{'general.services.keywords' | translate}}: </b>  {{keywords}}</i> </div>
          
 	
-	<div class="accent"><i><b>Provider: </b>  {{provider}}</i> </div>
+	<div class="accent"><i><b>{{'general.services.provider' | translate}}: </b>  {{provider}}</i> </div>
           
 	
-	<div class="accent"><i><b>Purpose: </b> {{purpose}}</i> </div>
+	<div class="accent"><i><b>{{'general.services.purpose' | translate}}: </b> {{purpose}}</i> </div>
 	
-	<div class="accent"><i><b>Link: </b> <a href={{serviceUri}} target="_blank">{{serviceUri}}</a></i> </div>
+	<div class="accent"><i><b>{{'general.services.url_link' | translate}}: </b> <a href={{serviceUri}} target="_blank">{{serviceUri}}</a></i> </div>
           
 	
 	
 	<div class="separator"></div>
 	<div class="section-block regular-text">
-	<i><b>Data Processed: </b></i>
+	<i><b>{{'general.services.data_processed' | translate}}: </b></i>
 	<ul *ngFor="let concept of data; let i = index" [attr.data-index]="i">
         <li>{{concept}}</li>
     </ul>

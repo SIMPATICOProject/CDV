@@ -7,7 +7,7 @@ import { Router} from '@angular/router';
 @Component({
  template: `
     
-	<button type="button" class="btn btn-primary btn-with-icon" (click)="linkService()"><i class="ion-link"></i>Link</button>
+	<button type="button" class="btn btn-primary btn-with-icon" (click)="linkService()"><i class="ion-link"></i>{{'general.services.link' | translate}}</button>
   `,
 })
 export class LinkButtonRenderComponent implements OnInit {

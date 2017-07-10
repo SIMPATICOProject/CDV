@@ -14,6 +14,6 @@ export class pDataComponent {
 
   
     const activeModal = this.modalService.open(pDataModal, {size: 'lg'});
-    activeModal.componentInstance.modalHeader = 'Add new Personal Data';
+    activeModal.componentInstance.modalHeader = 'general.personal_data.add_new_title';
   }
 }
