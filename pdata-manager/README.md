@@ -11,7 +11,7 @@ The PData Manager is responsible of providing a set of secure API for the retrie
 - [Documentation ](doc/)
 - [Deployment](doc/deployment.md)
 - [API documentation](doc/api/)
-- [Database documentation](doc/database/)
+
 
 
 ## Support 

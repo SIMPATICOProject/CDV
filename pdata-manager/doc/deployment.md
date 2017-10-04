@@ -92,4 +92,4 @@ where is exposed the runtime environment
 
 ## Copying and License
 
-This code is licensed under XXX licence
+This code is licensed under MIT licence
