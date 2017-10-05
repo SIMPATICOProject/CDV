@@ -73,6 +73,18 @@ In this folder you will find the CDV modules subfolders. In order to create all 
 
 All generated war packages will be located inside each module "target" subfolder. Copy all the WAR artifacts to the “webapps” folder of Tomcat installation, start it up and wait until they are deployed.
 
+Currently the implemented and mandatory modules are the following:
+
+-   CDV APIs
+    -   account-manager.war
+    -   data-security-manager.war
+    -   pdata-manager.war
+    -   service-manager.war
+
+-   CDV Dashboard
+    -   cdv-dashboard
+
+
 ## Deployment
 
 Deployment and configuration instructions for each component can be found in each module's documentation.
