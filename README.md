@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/SIMPATICOProject/CDV.svg?branch=master)](https://travis-ci.org/SIMPATICOProject/CDV)
+
 # Citizen Data Vault 
 Citizen Data Vault (CDV) is a Personal Data Service and Repository that enables citizen (and company) to gather, store, update, correct, analyse, and share personal data.
 Of particular importance is the ability to grant and withdraw consent to third parties for access to data about oneself.
