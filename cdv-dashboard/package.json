@@ -115,7 +115,7 @@
     "ts-node": "3.0.2",
     "tslint": "5.0.0",
     "typedoc": "0.5.10",
-    "typescript": "2.2.2",
+    "typescript": "2.3",
     "typogr": "0.6.6",
     "underscore": "1.8.3",
     "url-loader": "0.5.8",
