@@ -50,7 +50,7 @@ public class ServiceEntryDAO {
         DB db = dbSingleton.getDB();
 		DBCollection coll = db.getCollection("serviceRegistry"); 
 		BasicDBObject regexQuery = new BasicDBObject();
-        regexQuery.put("serviceDescriptionTitle",
+        regexQuery.put("publicServiceName",
         	new BasicDBObject("$regex", regex)
         	.append("$options", "i"));
         DBCursor services = coll.find(regexQuery).sort(new BasicDBObject("id", 1));
@@ -76,7 +76,7 @@ public class ServiceEntryDAO {
     	MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
         DB db = dbSingleton.getDB();
         DBCollection coll = db.getCollection("serviceRegistry"); 
-        DBObject service = coll.findOne(new BasicDBObject("serviceId", id));
+        DBObject service = coll.findOne(new BasicDBObject("publicServiceID", id));
         ServiceEntry serviceEntry=new ServiceEntry();
 		try {
 			serviceEntry = DAOUtils.dbObj2obj(service, ServiceEntry.class);
@@ -94,7 +94,7 @@ public class ServiceEntryDAO {
 		MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
         DB db = dbSingleton.getDB();
         DBCollection coll = db.getCollection("serviceRegistry"); 
-        DBObject service2remove = coll.findOne(new BasicDBObject("serviceId", id));
+        DBObject service2remove = coll.findOne(new BasicDBObject("publicServiceID", id));
         WriteResult result = coll.remove(service2remove);
        
              
@@ -109,7 +109,7 @@ public class ServiceEntryDAO {
         DBObject newService=null;
 		try {
 			newService = DAOUtils.obj2DBobj(service, ServiceEntry.class);
-			WriteResult result = coll.update(new BasicDBObject("serviceId", id), newService, true, false);
+			WriteResult result = coll.update(new BasicDBObject("publicServiceID", id), newService, true, false);
 						
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -157,9 +157,9 @@ public class ServiceEntryDAO {
 		MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
         DB db = dbSingleton.getDB();
        	DBCollection coll = db.getCollection("serviceRegistry"); 
-        DBObject service = coll.findOne(new BasicDBObject("serviceId", id));
+        DBObject service = coll.findOne(new BasicDBObject("publicServiceID", id));
         List<DataMapping> list = new ArrayList<DataMapping>();
-		DBObject serviceDataDescription= (DBObject) ((DBObject) service.get("serviceDataDescription")).get("dataset");
+		DBObject serviceDataDescription= (DBObject) ((BasicDBList) service.get("publicServiceIsDescribedAt")).get(0);
 		BasicDBList datamapping= (BasicDBList)serviceDataDescription.get("dataMapping");
 		Iterator<Object> mapping=datamapping.iterator();
         while (mapping.hasNext() ) { 

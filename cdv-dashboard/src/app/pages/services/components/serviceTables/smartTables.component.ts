@@ -94,7 +94,7 @@ export class ServiceTables {
 	this.service.getData().subscribe(
 		 result => { 
 			 this.source.load(result.map(function(elem){
-			 return { id : elem.serviceId, serviceName : elem.serviceDescriptionTitle, serviceDescr:elem.humanReadableDescription[0].description, viewInfo:elem  }
+			 return { id : elem.publicServiceID, serviceName : elem.publicServiceName, serviceDescr:elem.humanReadableDescription[0].description, viewInfo:elem  }
 		   })); 
 		} 
       );

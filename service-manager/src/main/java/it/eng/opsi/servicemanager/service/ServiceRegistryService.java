@@ -60,7 +60,7 @@ public class ServiceRegistryService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public ServiceEntry update(ServiceEntry service,@PathParam("id") String id) {
-		System.out.println("Updating service: " + service.getServiceDescriptionTitle());
+		System.out.println("Updating service: " + service.getPublicServiceName());
 		dao.update(service,id);
 		return service;
 	}

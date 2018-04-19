@@ -1,52 +1,42 @@
 {
-    "serviceId" : "BS613B",
-    "serviceDescriptionTitle" : "Ayudas individuales para personas con discapacidad",
+    "publicServiceID" : "BS613B",
+    "publicServiceName" : "Ayudas individuales para personas con discapacidad",
     "serviceUri" : "http://localhost:8080/IFE/BS613B.html",
-    "serviceDescriptionVersion" : "0.0.1",
-    "serviceIconURI" : null,
-    "keywords" : [ 
-        "Autonomy", 
-        "grant", 
-        "galicia", 
-        "Xunta", 
-        "Spanish", 
-        "dependency", 
-        "disability"
+    "serviceDescriptionVersion" : "0.0.2",
+    "publicServiceKeyword" : "Autonomy,grant,galicia,Xunta,Spanish,dependency,disability",
+    "publicServiceSector" : [ 
+        "26473754"
     ],
-    "createdOnDate" : 1465478287000,
-    "modifiedOnDate" : 1465547695915,
-    "modifiedByUserId" : "12dfsr34",
-    "createdByUserId" : "12dfsr34",
-    "serviceProviderId" : "26473754",
+    "publicServiceTypeProp" : [ 
+        "26473754"
+    ],
+    "publicServiceLanguage" : [ 
+        "IT_it", 
+        "EN_en"
+    ],
+    "publicServiceStatus" : "26473754",
+    "technicalDescriptionId" : "12dfsr34",
     "humanReadableDescription" : [ 
         {
             "locale" : "ES_es",
             "description" : "Individual Grants for acquisition of services for the promotion of the personal dependence."
         }
     ],
-    "technicalDescriptionId" : "12dfsr34",
-    "serviceDataDescription" : {
-        "dataset" : {
-            "contactPoint" : null,
-            "description" : "User registration base data",
-            "issued" : 1453031943,
-            "keyword" : [ 
-                "Personal Profile", 
-                "Passwords", 
-                "Contact Info"
-            ],
+    "publicServiceIsDescribedAt" : [ 
+        {
+            "title" : "User base data",
+            "serviceDataDescriptionUri" : "aURI",
+            "taxonomy" : "http://semantics.eng.it/ontologies/personaldata",
+            "issued" : "1453031943",
+            "modified" : "1453118343",
+            "publicServiceDatasetID" : "123456",
+            "serviceDataType" : "input",
             "purpose" : [ 
                 "Research", 
                 "Service development", 
                 "Providing personalised service", 
                 "personal health "
             ],
-            "language" : "ES_es",
-            "modified" : 1453118343,
-            "publisher" : "publisher",
-            "serviceDataType" : "input",
-            "spatial" : null,
-            "title" : "User Data Registration",
             "dataStructureSpecification" : null,
             "dataMapping" : [ 
                 {
@@ -128,13 +118,6 @@
                     "type" : "string"
                 }
             ]
-        },
-        "description" : "a service data description",
-        "schemaId" : "http://serviceprofile.eng.it/ontologies/servicemanager/ServiceData",
-        "serviceDataDescriptionUri" : "aURI",
-        "taxonomy" : "http://semantics.eng.it/ontologies/personaldata",
-        "title" : "User base data",
-        "issued" : 1453031943,
-        "modified" : 1453118343
-    }
+        }
+    ]
 }

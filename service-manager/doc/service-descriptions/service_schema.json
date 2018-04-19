@@ -1,0 +1,283 @@
+{
+  "$id": "http://example.com/example.json",
+  "type": "object",
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "publicServiceID": {
+      "$id": "/properties/publicServiceID",
+      "type": "string",
+      "title": "The Publicserviceid Schema ",
+      "default": "",
+      "examples": [
+        "3"
+      ]
+    },
+    "publicServiceName": {
+      "$id": "/properties/publicServiceName",
+      "type": "string",
+      "title": "The Publicservicename Schema ",
+      "default": "",
+      "examples": [
+        "kindergaten Registration"
+      ]
+    },
+    "serviceUri": {
+      "$id": "/properties/serviceUri",
+      "type": "string",
+      "title": "The Serviceuri Schema ",
+      "default": "",
+      "examples": [
+        "http://localhost:8080/IFE/M1876-ISCRIZIONE-NIDO-SIMPATICO_v0.3.html"
+      ]
+    },
+    "serviceDescriptionVersion": {
+      "$id": "/properties/serviceDescriptionVersion",
+      "type": "string",
+      "title": "The Servicedescriptionversion Schema ",
+      "default": "",
+      "examples": [
+        "0.0.1"
+      ]
+    },
+    "publicServiceKeyword": {
+      "$id": "/properties/publicServiceKeyword",
+      "type": "string",
+      "title": "The Publicservicekeyword Schema ",
+      "default": "",
+      "examples": [
+        "service provider,Child"
+      ]
+    },
+    "publicServiceSector": {
+      "$id": "/properties/publicServiceSector",
+      "type": "array",
+      "items": {
+        "$id": "/properties/publicServiceSector/items",
+        "type": "string",
+        "title": "The 0th Schema ",
+        "default": "",
+        "examples": [
+          "26473754"
+        ]
+      }
+    },
+    "publicServiceTypeProp": {
+      "$id": "/properties/publicServiceTypeProp",
+      "type": "array",
+      "items": {
+        "$id": "/properties/publicServiceTypeProp/items",
+        "type": "string",
+        "title": "The 0th Schema ",
+        "default": "",
+        "examples": [
+          "26473754"
+        ]
+      }
+    },
+    "publicServiceLanguage": {
+      "$id": "/properties/publicServiceLanguage",
+      "type": "array",
+      "items": {
+        "$id": "/properties/publicServiceLanguage/items",
+        "type": "string",
+        "title": "The 0th Schema ",
+        "default": "",
+        "examples": [
+          "IT_it",
+          "EN_en"
+        ]
+      }
+    },
+    "publicServiceStatus": {
+      "$id": "/properties/publicServiceStatus",
+      "type": "string",
+      "title": "The Publicservicestatus Schema ",
+      "default": "",
+      "examples": [
+        "26473754"
+      ]
+    },
+    "technicalDescriptionId": {
+      "$id": "/properties/technicalDescriptionId",
+      "type": "string",
+      "title": "The Technicaldescriptionid Schema ",
+      "default": "",
+      "examples": [
+        "12dfsr34"
+      ]
+    },
+    "humanReadableDescription": {
+      "$id": "/properties/humanReadableDescription",
+      "type": "array",
+      "items": {
+        "$id": "/properties/humanReadableDescription/items",
+        "type": "object",
+        "properties": {
+          "locale": {
+            "$id": "/properties/humanReadableDescription/items/properties/locale",
+            "type": "string",
+            "title": "The Locale Schema ",
+            "default": "",
+            "examples": [
+              "EN_en"
+            ]
+          },
+          "description": {
+            "$id": "/properties/humanReadableDescription/items/properties/description",
+            "type": "string",
+            "title": "The Description Schema ",
+            "default": "",
+            "examples": [
+              "kindergaten Registration  web form provided by Trento Sportello Telematico"
+            ]
+          }
+        }
+      }
+    },
+    "publicServiceIsDescribedAt": {
+      "$id": "/properties/publicServiceIsDescribedAt",
+      "type": "array",
+      "items": {
+        "$id": "/properties/publicServiceIsDescribedAt/items",
+        "type": "object",
+        "properties": {
+          "title": {
+            "$id": "/properties/publicServiceIsDescribedAt/items/properties/title",
+            "type": "string",
+            "title": "The Title Schema ",
+            "default": "",
+            "examples": [
+              "User base data"
+            ]
+          },
+          "serviceDataDescriptionUri": {
+            "$id": "/properties/publicServiceIsDescribedAt/items/properties/serviceDataDescriptionUri",
+            "type": "string",
+            "title": "The Servicedatadescriptionuri Schema ",
+            "default": "",
+            "examples": [
+              "aURI"
+            ]
+          },
+          "taxonomy": {
+            "$id": "/properties/publicServiceIsDescribedAt/items/properties/taxonomy",
+            "type": "string",
+            "title": "The Taxonomy Schema ",
+            "default": "",
+            "examples": [
+              "http://semantics.eng.it/ontologies/personaldata"
+            ]
+          },
+          "issued": {
+            "$id": "/properties/publicServiceIsDescribedAt/items/properties/issued",
+            "type": "string",
+            "title": "The Issued Schema ",
+            "default": "",
+            "examples": [
+              "1453031943"
+            ]
+          },
+          "modified": {
+            "$id": "/properties/publicServiceIsDescribedAt/items/properties/modified",
+            "type": "string",
+            "title": "The Modified Schema ",
+            "default": "",
+            "examples": [
+              "1453118343"
+            ]
+          },
+          "publicServiceDatasetID": {
+            "$id": "/properties/publicServiceIsDescribedAt/items/properties/publicServiceDatasetID",
+            "type": "string",
+            "title": "The Publicservicedatasetid Schema ",
+            "default": "",
+            "examples": [
+              "123456"
+            ]
+          },
+          "serviceDataType": {
+            "$id": "/properties/publicServiceIsDescribedAt/items/properties/serviceDataType",
+            "type": "string",
+            "title": "The Servicedatatype Schema ",
+            "default": "",
+            "examples": [
+              "input"
+            ]
+          },
+          "purpose": {
+            "$id": "/properties/publicServiceIsDescribedAt/items/properties/purpose",
+            "type": "array",
+            "items": {
+              "$id": "/properties/publicServiceIsDescribedAt/items/properties/purpose/items",
+              "type": "string",
+              "title": "The 0th Schema ",
+              "default": "",
+              "examples": [
+                "Research",
+                "Service development",
+                "Providing personalised service",
+                "Creating personal health and fitness profiles"
+              ]
+            }
+          },
+          "dataStructureSpecification": {
+            "$id": "/properties/publicServiceIsDescribedAt/items/properties/dataStructureSpecification",
+            "type": "null",
+            "title": "The Datastructurespecification Schema ",
+            "default": null,
+            "examples": [
+              null
+            ]
+          },
+          "dataMapping": {
+            "$id": "/properties/publicServiceIsDescribedAt/items/properties/dataMapping",
+            "type": "array",
+            "items": {
+              "$id": "/properties/publicServiceIsDescribedAt/items/properties/dataMapping/items",
+              "type": "object",
+              "properties": {
+                "property": {
+                  "$id": "/properties/publicServiceIsDescribedAt/items/properties/dataMapping/items/properties/property",
+                  "type": "string",
+                  "title": "The Property Schema ",
+                  "default": "",
+                  "examples": [
+                    "AventeTitolo_Fax"
+                  ]
+                },
+                "conceptId": {
+                  "$id": "/properties/publicServiceIsDescribedAt/items/properties/dataMapping/items/properties/conceptId",
+                  "type": "string",
+                  "title": "The Conceptid Schema ",
+                  "default": "",
+                  "examples": [
+                    "fax_number_for_support"
+                  ]
+                },
+                "name": {
+                  "$id": "/properties/publicServiceIsDescribedAt/items/properties/dataMapping/items/properties/name",
+                  "type": "string",
+                  "title": "The Name Schema ",
+                  "default": "",
+                  "examples": [
+                    "Fax"
+                  ]
+                },
+                "type": {
+                  "$id": "/properties/publicServiceIsDescribedAt/items/properties/dataMapping/items/properties/type",
+                  "type": "string",
+                  "title": "The Type Schema ",
+                  "default": "",
+                  "examples": [
+                    "string"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

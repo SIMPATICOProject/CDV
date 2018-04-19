@@ -24,7 +24,7 @@ export class LinkButtonRenderComponent implements OnInit {
 
   linkService() {
     	
-	this.service.createServiceLink(this.renderValue.viewInfo.serviceId,this.renderValue.viewInfo.serviceUri,this.renderValue.serviceName ).subscribe(
+	this.service.createServiceLink(this.renderValue.viewInfo.publicServiceID,this.renderValue.viewInfo.serviceUri,this.renderValue.serviceName ).subscribe(
                 result => {                       
                     window.alert('Service Linked!');
 					                   

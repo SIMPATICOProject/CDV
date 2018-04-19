@@ -3,27 +3,26 @@
             xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
             xmlns:tns="data.servicemanager.opsi.eng.it" 
             elementFormDefault="qualified">
-	
-	
+		
 	<xsd:element name="ServiceEntry">	
 	<xsd:complexType >
 		<xsd:annotation>
 			<xsd:documentation>Main entity of the registered service containing its description</xsd:documentation>
 		</xsd:annotation>
 		<xsd:sequence>
-			<xsd:element name="serviceId" type="xsd:string" minOccurs="1" maxOccurs="1">
+			<xsd:element name="publicServiceID" type="xsd:string" minOccurs="1" maxOccurs="1">
 				<xsd:annotation>
-					<xsd:documentation>Service's unique identifier issued by the service registry</xsd:documentation>
+					<xsd:documentation>This property represents a formally-issued Identifier for the Public Service</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
-			<xsd:element name="serviceDescriptionTitle" type="xsd:string" minOccurs="1" maxOccurs="1">
+			<xsd:element name="publicServiceName" type="xsd:string" minOccurs="1" maxOccurs="1">
 				<xsd:annotation>
-					<xsd:documentation>Well descriptive title of the service description</xsd:documentation>
+					<xsd:documentation>This property represents the official Name of the Public Service</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
 			<xsd:element name="serviceUri" type="xsd:string" minOccurs="1" maxOccurs="1">
 				<xsd:annotation>
-					<xsd:documentation>Service URI</xsd:documentation>
+					<xsd:documentation>Service instance URI</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
 			<xsd:element name="serviceDescriptionVersion" type="xsd:string" minOccurs="1" maxOccurs="1">
@@ -31,34 +30,57 @@
 					<xsd:documentation>Version identifier of the service description following developer's own format</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
-			<xsd:element name="serviceIconURI" type="xsd:string" minOccurs="1" maxOccurs="1">
-				<xsd:annotation>
-					<xsd:documentation>URI to the logo representing the service in the registry</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
-			<xsd:element name="keywords" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+			<xsd:element name="publicServiceKeyword" type="xsd:string" minOccurs="1" maxOccurs="1">
 				<xsd:annotation>
 					<xsd:documentation>Selected set of keywords describing the service</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
-			
-			<xsd:element name="createdOnDate" type="xsd:long" minOccurs="1" maxOccurs="1">
+			<xsd:element name="publicServiceSector" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
 				<xsd:annotation>
-					<xsd:documentation>Date this service description was created</xsd:documentation>
+					<xsd:documentation>
+						This property represents the industry or sector a Public Service relates to, or is intended for.
+					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
-			<xsd:element name="modifiedOnDate" type="xsd:long" minOccurs="1" maxOccurs="1">
+			<xsd:element name="publicServiceTypeProp" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
 				<xsd:annotation>
-					<xsd:documentation>Date this service description was modified last time</xsd:documentation>
+					<xsd:documentation>
+						This property represents the type of a Public Service as described in a controlled vocabulary.
+					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
-		
-			<xsd:element name="modifiedByUserId" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-			<xsd:element name="createdByUserId" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-			<xsd:element name="serviceProviderId" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="publicServiceLanguage" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>
+						This property represents the language(s) in which the Public Service is available.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="publicServiceStatus" type="xsd:string" minOccurs="0" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>
+						Indicates whether a Public Service is active, inactive, under development etc. according to a controlled vocabulary.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="serviceType" type="xsd:string" minOccurs="1" maxOccurs="1">
+			<xsd:annotation>
+					<xsd:documentation>Type of service role: source, sink or both</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="serviceProviderId" type="xsd:string" minOccurs="1" maxOccurs="1">
+			<xsd:annotation>
+					<xsd:documentation>Service Provider id, stored in  any register </xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="organizationId" type="xsd:string" minOccurs="1" maxOccurs="1">
+			<xsd:annotation>
+					<xsd:documentation>Organization who provides service instance in "serviceUri"</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>		
 			<xsd:element name="humanReadableDescription" type="tns:HumanReadableDescription" minOccurs="1" maxOccurs="unbounded"/>
 			<xsd:element name="technicalDescriptionId" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-			<xsd:element name="serviceDataDescription" type="tns:ServiceDataDescription" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="publicServiceIsDescribedAt" type="tns:PublicServiceDatasetType" minOccurs="1" maxOccurs="unbounded"/>
 					
 		</xsd:sequence>
 	</xsd:complexType>
@@ -81,120 +103,59 @@
 		</xsd:sequence>
 	</xsd:complexType>
 		
-	<xsd:complexType name="ServiceDataDescription">
+	<xsd:complexType name="PublicServiceDatasetType">
 		<xsd:annotation>
-			<xsd:documentation>Collection of metadata about service data</xsd:documentation>
+			<xsd:documentation>Collection of metadata about service data. It reuses the Data Catalog Vocabulary (DCAT) for the creation of the Public Service Dataset class.</xsd:documentation>
 		</xsd:annotation>
 		<xsd:sequence>		
-					
-			<xsd:element name="dataset" type="tns:Dataset" minOccurs="1" maxOccurs="1">
-				<xsd:annotation>
-					<xsd:documentation>Reference to a dataset that is part of service data (dcat:Dataset)</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
-			<xsd:element name="description" type="xsd:string" minOccurs="1" maxOccurs="1">
-				<xsd:annotation>
-					<xsd:documentation>Free Text description of service data description</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
-			<xsd:element name="schemaId" type="xsd:string" minOccurs="1" maxOccurs="1">
-				<xsd:annotation>
-					<xsd:documentation>Link (URI) to a schema used by a service registry to create a unified service data</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
-			<xsd:element name="serviceDataDescriptionUri" type="xsd:string" minOccurs="1" maxOccurs="1">
-				<xsd:annotation>
-					<xsd:documentation>Link to a document that describes the service data description based on the defined schema (schemaID) (=serviceDataDescriptionDocument)</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
-			<xsd:element name="taxonomy" type="xsd:string" minOccurs="1" maxOccurs="1">
-				<xsd:annotation>
-					<xsd:documentation>Link to a taxonomy that is used to describe data of a service (dcat:tmeneTaxonomy &amp; qb:codeList)</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
-			<xsd:element name="title" type="xsd:string" minOccurs="1" maxOccurs="1">
-				<xsd:annotation>
-					<xsd:documentation>A name given to a service data description</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
-			<xsd:element name="issued" type="xsd:long" minOccurs="1" maxOccurs="1">
-				<xsd:annotation>
-					<xsd:documentation>Date when this dataset description was created</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>			
-			<xsd:element name="modified" type="xsd:long" minOccurs="1" maxOccurs="1">
-				<xsd:annotation>
-					<xsd:documentation>Date when this dataset description was modified</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>			
-		</xsd:sequence>
-	</xsd:complexType>
-	<xsd:complexType name="Dataset">
-		<xsd:sequence>
-						
-			
-			<xsd:element name="contactPoint" type="xsd:string" minOccurs="1" maxOccurs="1">
-				<xsd:annotation>
-					<xsd:documentation>Relevant Contact Information of a dataset</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
-			<xsd:element name="description" type="xsd:string" minOccurs="1" maxOccurs="1">
-				<xsd:annotation>
-					<xsd:documentation>Free text description of the dataset. Possibly in multiple languages</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
-			<xsd:element name="issued" type="xsd:long" minOccurs="1" maxOccurs="1">
-				<xsd:annotation>
-					<xsd:documentation>Date when this dataset description was created</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
-			<xsd:element name="keyword" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
-				<xsd:annotation>
-					<xsd:documentation>a keyword describing a dataset, possibly in multiple languages</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
-			<xsd:element name="purpose" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+	<xsd:element name="publicServiceDatasetID" type="xsd:string" minOccurs="1" maxOccurs="1">
+		<xsd:annotation>
+			<xsd:documentation>
+				This property represents an Identifier for the Public Service Dataset.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="serviceDataDescriptionUri" type="xsd:string" minOccurs="1" maxOccurs="1">
+	   <xsd:annotation>
+		<xsd:documentation>Link to a document that describes the service data description based on the defined schema (schemaID) (=serviceDataDescriptionDocument)</xsd:documentation>
+	   </xsd:annotation>
+    </xsd:element>
+	<xsd:element name="taxonomy" type="xsd:string" minOccurs="1" maxOccurs="1">
+		<xsd:annotation>
+			<xsd:documentation>Link to a taxonomy that is used to describe data of a service (ex. dcat:themeTaxonomy)</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="title" type="xsd:string" minOccurs="1" maxOccurs="1">
+		<xsd:annotation>
+			<xsd:documentation>A name given to a service data description</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="issued" type="xsd:long" minOccurs="1" maxOccurs="1">
+		<xsd:annotation>
+			<xsd:documentation>Date when this dataset description was created</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>			
+	<xsd:element name="modified" type="xsd:long" minOccurs="1" maxOccurs="1">
+		<xsd:annotation>
+			<xsd:documentation>Date when this dataset description was modified</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	
+	<xsd:element name="purpose" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
 				<xsd:annotation>
 					<xsd:documentation>a list of purpose of usage of the dataset</xsd:documentation>
 				</xsd:annotation>
-			</xsd:element>
-			<xsd:element name="language" type="xsd:string" minOccurs="1" maxOccurs="1">
-				<xsd:annotation>
-					<xsd:documentation>the language of the dataset</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
-			<xsd:element name="modified" type="xsd:long" minOccurs="1" maxOccurs="1">
-				<xsd:annotation>
-					<xsd:documentation>Date when this dataset description was modified</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
-			<xsd:element name="publisher" type="xsd:string" minOccurs="1" maxOccurs="1">
-				<xsd:annotation>
-					<xsd:documentation>entity responsible for making the dataset online</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
-			<xsd:element name="serviceDataType" type="xsd:string" minOccurs="1" maxOccurs="1">
+			</xsd:element>	
+	<xsd:element name="serviceDataType" type="xsd:string" minOccurs="1" maxOccurs="1">
 				<xsd:annotation>
 					<xsd:documentation>input or output data (data sink or data source)</xsd:documentation>
-				</xsd:annotation>
+			</xsd:annotation>
 			</xsd:element>
-			<xsd:element name="spatial" type="xsd:string" minOccurs="1" maxOccurs="1">
-				<xsd:annotation>
-					<xsd:documentation>spatial coverage of the dataset</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
-								
-			<xsd:element name="title" type="xsd:string" minOccurs="1" maxOccurs="1">
-				<xsd:annotation>
-					<xsd:documentation>A name given to the dataset. In multiple languages</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
-			<xsd:element name="dataStructureSpecification" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-			<xsd:element name="dataMapping" type="tns:DataMapping" minOccurs="1" maxOccurs="unbounded"/>
+	<xsd:element name="dataStructureSpecification" type="tns:DataStructureSpecification" minOccurs="0" maxOccurs="unbounded"/>
+	<xsd:element name="dataMapping" type="tns:DataMapping" minOccurs="1" maxOccurs="unbounded"/>						
 		</xsd:sequence>
 	</xsd:complexType>
 	
-
 	<xsd:complexType name="DataMapping">
 		<xsd:sequence>
 			
@@ -216,6 +177,70 @@
 			<xsd:element name="type" type="xsd:string" minOccurs="1" maxOccurs="1">
 				<xsd:annotation>
 					<xsd:documentation>type of the value of the property (e.g. xsd:int)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:complexType name="DataStructureSpecification">
+		<xsd:sequence>
+			<xsd:element name="component" type="tns:ComponentSpecification" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>reference to a specified component specification that is part of the data structure definition</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="dataStructureDefinitionId" type="xsd:string" minOccurs="1" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>unique identifier of a data structure definition</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="description" type="xsd:string" minOccurs="1" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>free text description of a data structure definition, possibly in multiple languages</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="ComponentSpecification">
+		<xsd:sequence>
+			<xsd:element name="componentProperty" type="tns:ComponentProperty" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>reference to a specified component property that is part of the component specification "hasComponentProperty"</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="componentRequired" type="xsd:boolean" minOccurs="1" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>Indicated if a component is required (true) or optional (false) by a data sink. </xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="componentSpecificationId" type="xsd:string" minOccurs="1" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>unique identifier of a component specification</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="label" type="xsd:string" minOccurs="1" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>a name of a component</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:complexType name="ComponentProperty">
+		<xsd:sequence>
+			<xsd:element name="componentPropertyId" type="xsd:string" minOccurs="1" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>unique identifier of the component property.It is the same of "property" element in dataMapping element </xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="label" type="xsd:string" minOccurs="1" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>name of the component property</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="range" type="xsd:string" minOccurs="1" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>type of the value of the propertu (e.g. xsd:int)</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
 		</xsd:sequence>

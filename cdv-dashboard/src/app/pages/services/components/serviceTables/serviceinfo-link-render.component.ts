@@ -29,12 +29,12 @@ export class ServiceInfoLinkRenderComponent implements OnInit {
   
   lgModalShow() {
     const activeModal = this.modalService.open(DefaultModal, {size: 'lg'});
-    activeModal.componentInstance.modalHeader = this.renderValue.viewInfo.serviceDescriptionTitle;
+    activeModal.componentInstance.modalHeader = this.renderValue.viewInfo.publicServiceName;
 	activeModal.componentInstance.modalContent= this.renderValue.viewInfo.humanReadableDescription[0].description;
-	activeModal.componentInstance.keywords= this.renderValue.viewInfo.serviceDataDescription.dataset.keyword;
-	activeModal.componentInstance.purpose= this.renderValue.viewInfo.serviceDataDescription.dataset.purpose;
+	activeModal.componentInstance.keywords= this.renderValue.viewInfo.publicServiceKeyword;
+	activeModal.componentInstance.purpose= this.renderValue.viewInfo.publicServiceIsDescribedAt[0].purpose;
 	activeModal.componentInstance.serviceUri= this.renderValue.viewInfo.serviceUri;
-	activeModal.componentInstance.data= this.getData(this.renderValue.viewInfo.serviceDataDescription.dataset.dataMapping);
+	activeModal.componentInstance.data= this.getData(this.renderValue.viewInfo.publicServiceIsDescribedAt[0].dataMapping);
   }
   
   getData(json){
