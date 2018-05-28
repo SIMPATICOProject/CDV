@@ -1,6 +1,6 @@
-var host = "http://localhost:8080";
+var host = "";
 
-var endpoint = host+"" ;
+var aacServer="";
 
 var cdvDashboardURL= "/cdv-dashboard/";
 
@@ -22,7 +22,7 @@ function complete() {
 	var params = processAuthParams(decodeURIComponent(document.location.hash.substring(1)));
 	localStorage.setItem('aacTokenData', JSON.stringify(params));
 	jQuery.ajax({
-		url: host + '/aac/basicprofile/me',
+		url: aacServer + '/basicprofile/me',
 		type: 'GET',
 		dataType: 'json',
 		success: function (data) {
@@ -51,6 +51,22 @@ function oncheck() {
 }
 
 function init() {
+	
+		
+	jQuery.ajax({
+		url: '../config.json',
+		type: 'GET',
+		dataType: 'json',
+		success: function (data) {
+			host=data.system.host;
+			aacServer=data.system.aacServer;
+		},
+		error: function (err) {
+			console.log(err);
+		}
+	});
+	
+	
 	if (document.location.hash && document.location.hash.substring(1)) {
 		if (localStorage.authorized == 'true') {
 			complete();
@@ -60,7 +76,7 @@ function init() {
 
 this.cdv_getAccount = function (callback) {
 	var data = JSON.parse(localStorage.userData || 'null');
-	var url = endpoint + "/account-manager/api/v1/users/" + data.userId + "/serviceLink";
+	var url = host + "/account-manager/api/v1/users/" + data.userId + "/serviceLink";
 	var tokenData = JSON.parse(localStorage.aacTokenData || 'null');
 	console.log(tokenData);
 
@@ -97,7 +113,7 @@ this.cdv_getAccount = function (callback) {
 this.cdv_createAccount = function (callback) {
 
 			var data = JSON.parse(localStorage.userData || 'null');
-			var url = endpoint + "/account-manager/api/v1/accounts";
+			var url = host + "/account-manager/api/v1/accounts";
 			var tokenData = JSON.parse(localStorage.aacTokenData || 'null');
 			console.log(tokenData);
 			var account = accountToJSON(data.userId, data.name, data.surname);
@@ -131,7 +147,7 @@ this.cdv_createAccount = function (callback) {
 		this.cdv_createSLR = function (callback) {
 
 			var data = JSON.parse(localStorage.userData || 'null');
-			var url = endpoint + "/account-manager/api/v1/accounts/" + username + "/serviceLinks";
+			var url = host + "/account-manager/api/v1/accounts/" + username + "/serviceLinks";
 			var tokenData = JSON.parse(localStorage.aacTokenData || 'null');
 			console.log(tokenData);
 			var slr = slrToJSON(data.userId, "_cdv", host+cdvDashboardURL,"_cdv");
@@ -195,7 +211,7 @@ function storeAccount() {
 	return function (account_exist) {
 		console.log("Account " + account_exist);
 		if (account_exist) {
-			window.opener.document.location.href = cdvDashboardURL;
+			window.opener.document.location.href = host+cdvDashboardURL;
 			window.close();
 		}
 	}
