@@ -1,4 +1,6 @@
-var host = "";
+var cdvServer = "";
+
+var host="";
 
 var aacServer="";
 
@@ -59,6 +61,7 @@ function init() {
 		dataType: 'json',
 		success: function (data) {
 			host=data.system.host;
+			cdvServer=data.system.cdvServer;
 			aacServer=data.system.aacServer;
 		},
 		error: function (err) {
@@ -76,7 +79,7 @@ function init() {
 
 this.cdv_getAccount = function (callback) {
 	var data = JSON.parse(localStorage.userData || 'null');
-	var url = host + "/account-manager/api/v1/users/" + data.userId + "/serviceLink";
+	var url = cdvServer + "/account-manager/api/v1/users/" + data.userId + "/serviceLink";
 	var tokenData = JSON.parse(localStorage.aacTokenData || 'null');
 	console.log(tokenData);
 
@@ -113,7 +116,7 @@ this.cdv_getAccount = function (callback) {
 this.cdv_createAccount = function (callback) {
 
 			var data = JSON.parse(localStorage.userData || 'null');
-			var url = host + "/account-manager/api/v1/accounts";
+			var url = cdvServer + "/account-manager/api/v1/accounts";
 			var tokenData = JSON.parse(localStorage.aacTokenData || 'null');
 			console.log(tokenData);
 			var account = accountToJSON(data.userId, data.name, data.surname);
@@ -147,7 +150,7 @@ this.cdv_createAccount = function (callback) {
 		this.cdv_createSLR = function (callback) {
 
 			var data = JSON.parse(localStorage.userData || 'null');
-			var url = host + "/account-manager/api/v1/accounts/" + username + "/serviceLinks";
+			var url = cdvServer + "/account-manager/api/v1/accounts/" + username + "/serviceLinks";
 			var tokenData = JSON.parse(localStorage.aacTokenData || 'null');
 			console.log(tokenData);
 			var slr = slrToJSON(data.userId, "_cdv", host+cdvDashboardURL,"_cdv");

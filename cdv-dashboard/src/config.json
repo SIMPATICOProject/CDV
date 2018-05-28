@@ -1,6 +1,7 @@
 {
   "system": {
   	"host":"http://localhost:8080",
+	"cdvServer":"http://localhost:8080"
     "aacServer":"http://localhost:8080/aac",
     "account":"/account-manager/api/v1/accounts/",
     "pData":"/pdata-manager/api/v1/pData/",
