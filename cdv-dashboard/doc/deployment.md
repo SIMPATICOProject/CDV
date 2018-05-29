@@ -9,7 +9,7 @@ The following tools should be properly installed on your computer:
 - [Git](https://git-scm.com/downloads)
 - [NodeJs (with NPM)](https://nodejs.org/en/download/)
 
-**Note**: Make sure you have Node version >= 4.0 and NPM >= 3
+**Note**: Make sure you have Node version >= 4.0 and NPM >= 3. Tested with node 6.1 and npm 3.1 
 
 ### Proxy configurations
 

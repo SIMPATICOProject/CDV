@@ -95,6 +95,31 @@ Deployment and configuration instructions for each component can be found in eac
 
 Documentation is available for each component in their respective folders.
 
+
+## Installation with docker
+
+### Configuration
+
+Configure properties in:
+* `docker/config/production.env`
+* `docker/Dockerfiles/CDV-server/config/*`
+* `docker/Dockerfiles/CDV-dashboard/config/config.json`
+
+see documentation in each component for further info for each property.
+
+
+### Build and run
+
+Go to `docker` folder from the root of the project, run:
+
+* run.sh to build and run containers
+
+after that:
+
+* to ttop the daemon execute `docker-compose stop`
+* to restart as a daemon execute `docker-compose start`
+
+
 ## Support / Contact / Contribution
 [Citizen Data Vault](Link|email|contact)
 

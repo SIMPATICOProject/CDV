@@ -1,8 +1,8 @@
-{
+ {
   "system": {
-    "host":"http://localhost:8080",
-    "dashHost":"http://localhost:8080",
-    "aacServer":"http://localhost:8080/aac",
+    "host":"http://217.172.12.161",
+    "cdvServer":"http://217.172.12.161:8080"
+    "aacServer":"http://217.172.12.161:8080/aac",
     "account":"/account-manager/api/v1/accounts/",
     "pData":"/pdata-manager/api/v1/pData/",
     "downloadPData":"/pdata-manager/api/v1/pData/download",
@@ -18,5 +18,3 @@
   	"locale": "it"
   }
 }
-
-  

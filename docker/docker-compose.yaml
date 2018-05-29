@@ -9,7 +9,7 @@ services:
             - mysql_db
             - mongo_db
         volumes:
-            - ./volumes/cdvapptest:/usr/mytemp:rw
+            - ./volumes/cdvapp:/usr/mytemp:rw
         links: 
             - mysql_db:${CDV_MYSQL_HOST}
             - mongo_db:${CDV_MONGO_HOST}
@@ -40,6 +40,20 @@ services:
         volumes:
             - ./volumes/mongodb:/bitnami:rw
         restart: always
+    
+    cdv_dashboard:
+        container_name: "cdv-dashboard"
+        build:
+            context: ./Dockerfiles/CDV-dashboard
+        depends_on:
+            - cdv_server
+            - mysql_db
+            - mongo_db
+        volumes:
+            - ./volumes/cdvdash:/usr/mytemp:rw
+        ports:
+            - 80:8080
+
        
 networks:
   default:

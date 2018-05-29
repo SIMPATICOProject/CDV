@@ -1,6 +1,7 @@
-var cdvServer = "";
 
-var host="";
+var cdvServer="";
+
+var dashHost="";
 
 var aacServer="";
 
@@ -60,8 +61,8 @@ function init() {
 		type: 'GET',
 		dataType: 'json',
 		success: function (data) {
-			host=data.system.host;
-			cdvServer=data.system.cdvServer;
+			cdvServer=data.system.host;
+			dashHost=data.system.dashHost;
 			aacServer=data.system.aacServer;
 		},
 		error: function (err) {
@@ -153,7 +154,7 @@ this.cdv_createAccount = function (callback) {
 			var url = cdvServer + "/account-manager/api/v1/accounts/" + username + "/serviceLinks";
 			var tokenData = JSON.parse(localStorage.aacTokenData || 'null');
 			console.log(tokenData);
-			var slr = slrToJSON(data.userId, "_cdv", host+cdvDashboardURL,"_cdv");
+			var slr = slrToJSON(data.userId, "_cdv", dashHost+cdvDashboardURL,"_cdv");
 
 			$.ajax({
 				url: url,
@@ -214,7 +215,7 @@ function storeAccount() {
 	return function (account_exist) {
 		console.log("Account " + account_exist);
 		if (account_exist) {
-			window.opener.document.location.href = host+cdvDashboardURL;
+			window.opener.document.location.href = dashHost+cdvDashboardURL;
 			window.close();
 		}
 	}
