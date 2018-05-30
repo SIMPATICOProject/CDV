@@ -128,7 +128,7 @@ public class ServiceEntryDAO {
 		        DBObject newService=null;
 				try {
 					newService = DAOUtils.obj2DBobj(service, ServiceEntry.class);
-					WriteResult result = coll.insert(newService);
+					WriteResult result = coll.update(new BasicDBObject("publicServiceID", service.getPublicServiceID()), newService, true, false);
 					
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
