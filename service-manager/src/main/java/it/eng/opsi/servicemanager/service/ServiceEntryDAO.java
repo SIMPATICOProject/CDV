@@ -32,7 +32,6 @@ public class ServiceEntryDAO {
             DBObject o =  (DBObject) services.next();
             ServiceEntry service;
 			try {
-				System.out.println(o.toString());
 				service = DAOUtils.dbObj2obj(o, ServiceEntry.class);
 				list.add(service);
 			} catch (Exception e) {
@@ -60,7 +59,6 @@ public class ServiceEntryDAO {
             DBObject o =  (DBObject) services.next();
             ServiceEntry service;
 			try {
-				System.out.println(o.toString());
 				service = DAOUtils.dbObj2obj(o, ServiceEntry.class);
 				list.add(service);
 			} catch (Exception e) {

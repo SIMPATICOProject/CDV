@@ -351,6 +351,32 @@ export const PAGES_MENU = [
           }
         }
 	  },
+      {
+        path: 'logs',  // path for our page
+        data: { // custom menu declaration
+          menu: {
+            title: 'general.menu.logs', // menu title
+            icon: 'ion-ios-paper', // menu icon
+            pathMatch: 'prefix', // use it if item children not displayed in menu
+            selected: false,
+            expanded: false,
+            order: 0
+          }
+        }
+      },
+	  {
+        path: 'consents',  // path for our page
+        data: { // custom menu declaration
+          menu: {
+            title: 'general.menu.consents', // menu title
+            icon: 'ion-ios-paper', // menu icon
+            pathMatch: 'prefix', // use it if item children not displayed in menu
+            selected: false,
+            expanded: false,
+            order: 0
+          }
+        }
+      },
 	  {
 	    path: 'services',  // path for our page
         data: { // custom menu declaration

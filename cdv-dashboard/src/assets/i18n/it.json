@@ -55,7 +55,9 @@
 	  "linkedservices": "Servizi collegati",
 	  "personaldata": "Dati Personali",
 	  "configuration": "Configura",
-	  "sign_out": "Disconnetti"
+	  "sign_out": "Disconnetti",
+	  "logs": "Data Log",
+	  "consents": "Consensi"
     },
 	"account":{
 	  "export_data": "Esporta i tuoi dati",

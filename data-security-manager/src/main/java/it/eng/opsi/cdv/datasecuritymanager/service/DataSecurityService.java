@@ -1,6 +1,7 @@
 package it.eng.opsi.cdv.datasecuritymanager.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -19,6 +20,7 @@ import it.eng.opsi.cdv.datasecuritymanager.crypt.annotation.Encryption.Encryptio
 import it.eng.opsi.cdv.datasecuritymanager.model.ErrorResponse;
 import it.eng.opsi.cdv.datasecuritymanager.model.PDataEntry;
 import it.eng.opsi.cdv.datasecuritymanager.model.PDataUtilsException;
+import it.eng.opsi.cdv.datasecuritymanager.model.AuditLog;
 import it.eng.opsi.cdv.datasecuritymanager.utils.DAOUtils;
 
 @Path("/internal")
@@ -144,6 +146,40 @@ public class DataSecurityService {
 					e.getMessage());
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error.toJson()).build();
 
+}
+
+	}
+	
+	
+	@POST
+	@Path("/decryptAuditLogList")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON })
+	public static Response decryptAuditLogList(String input, @HeaderParam("accountId") String accountId) {
+		try {
+			List<AuditLog> entries = DAOUtils.json2Obj(input,  new TypeToken<List<AuditLog>>() {
+			}.getType());
+			String crypted;
+			String decrypted;
+			for (AuditLog entry : entries) {	
+				crypted = entry.getObjectJson();
+				decrypted = (String) Crypto.decryptField((Object) crypted, EncryptionLevel.USER, "", accountId);
+				entry.setObjectJson(decrypted);	
+			}
+			return Response.status(Response.Status.OK).entity(DAOUtils.obj2Json(entries, new TypeToken<List<AuditLog>>() {
+			}.getType())).build();
+
+		} catch (PDataUtilsException e) {
+			e.printStackTrace();
+			ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
+					e.getClass().getSimpleName(), e.getMessage());
+			return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			ErrorResponse error = new ErrorResponse(
+					String.valueOf(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()), e.getClass().getSimpleName(),
+					e.getMessage());
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error.toJson()).build();
 		}
 
 	}

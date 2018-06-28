@@ -34,5 +34,6 @@
 		<module>pdata-repository</module>
 		<module>data-security-manager</module>
 		<module>pdata-source-connectors</module>
+		<module>auditlog-manager</module>
 	</modules>
 </project>

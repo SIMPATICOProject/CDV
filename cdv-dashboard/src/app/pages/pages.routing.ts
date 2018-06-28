@@ -30,6 +30,8 @@ export const routes: Routes = [
       { path: 'maps', loadChildren: 'app/pages/maps/maps.module#MapsModule' },
 	  { path: 'account',  loadChildren: 'app/pages/account/account.module#AccountModule', canActivate: [AuthGuard] },
 	  { path: 'pdata',  loadChildren: 'app/pages/pdata/pdata.module#pDataModule', canActivate: [AuthGuard] },
+	  { path: 'logs',  loadChildren: 'app/pages/logs/logs.module#logsModule', canActivate: [AuthGuard]},      
+      { path: 'consents',  loadChildren: 'app/pages/consents/consents.module#consentsModule', canActivate: [AuthGuard] },
 	  { path: 'configuration',  loadChildren: 'app/pages/configuration/configuration.module#configurationModule', canActivate: [AuthGuard] },
 	  { path: 'services',  loadChildren: 'app/pages/services/services.module#servicesModule', canActivate: [AuthGuard] }
     ]

@@ -1,0 +1,331 @@
+.btn {
+  padding: 5px 12px !important;
+}
+
+.btn.btn-primary:hover,
+.btn.btn-primary:focus,
+.btn.btn-primary.focus,
+.btn.btn-primary:active,
+.btn.btn-primary.active {
+  background: #397173 !important;
+  border-color: #21595b !important;
+  color: white !important;
+}
+
+.btn.btn-primary:active,
+.btn.btn-primary:target {
+  background-color: #306062 !important;
+}
+
+.btn-group-toggle label {
+  margin-bottom: 0;
+}
+
+.card-header, .card-footer {
+  height: auto;
+}
+
+.card-footer > div:last-child {
+  padding: 12px 22px;
+  margin-left: -22px;
+  margin-right: -22px;
+  margin-bottom: -16px;
+  border-radius: 0 0 calc(0.25rem - 1px) calc(0.25rem - 1px);
+  background: #fef4ec !important;
+  /*
+  background-image: -ms-linear-gradient(bottom, #FFFFFF 0%, #feefe3 100%);
+  background-image: -moz-linear-gradient(bottom, #FFFFFF 0%, #feefe3 100%);
+  background-image: -o-linear-gradient(bottom, #FFFFFF 0%, #feefe3 100%);
+  background-image: -webkit-gradient(linear, top, bottom, color-stop(0, #FFFFFF), color-stop(1, #feefe3));
+  background-image: -webkit-linear-gradient(bottom, #FFFFFF 0%, #feefe3 100%);
+  background-image: linear-gradient(to bottom, #FFFFFF 0%, #feefe3 100%);
+  */
+}
+
+.card-footer > div:last-child table {
+  background: #fff;
+}
+
+.margintop12 {
+  margin-top: 12px;
+}
+
+.marginbottom0 {
+  margin-bottom: 0px;
+}
+
+/******** .btn-update START ********/
+.btn-update.to-update .btn, .btn-update.to-update .btn:hover {
+  border: 3px solid #f79646 !important;
+}
+
+.btn-update:not(.to-update) .tooltip {
+  display: none;
+}
+
+.btn-update .tooltip {
+  opacity: 1;
+  left: 50%;
+  margin-left: 80px;
+  margin-top: 3px;
+}
+
+@media only screen and (max-width: 439px) {
+  .btn-update .tooltip {
+    margin-top: -8px;
+  }
+}
+
+.btn-update .tooltip .tooltip-inner {
+  background: #f79646;
+}
+
+.btn-update .tooltip .arrow {
+  top: calc(50% - 0.4rem);
+  position: absolute;
+}
+
+.btn-update .tooltip .arrow:before {
+  position: absolute;
+  content: "";
+  border-color: transparent;
+  border-style: solid;
+  border-width: .4rem .4rem .4rem 0;
+  border-right-color: #f79646;
+  left: -6px;
+}
+/******** .btn-update END ********/
+
+label.btn-primary {
+  background: #86a2a3;
+  border-color: #86a2a3;
+}
+
+label.btn-primary:not(:disabled):not(.disabled).active,
+label.btn-primary:not(:disabled):not(.disabled):active,
+.show>label.btn-primary.dropdown-toggle {
+  color: #fff;
+  background-color: #467073;
+  border-color: #467073;
+}
+
+label.btn {
+  padding-top: 5px;
+  padding-bottom: 7px;
+  padding-left: 6px;
+  padding-right: 6px;
+  font-size: 12px;
+}
+
+table {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #606c71;
+  border-collapse: collapse;
+  border-spacing: 0;
+  display: table;
+  width: 100%;
+  max-width: 100%;
+  overflow: auto;
+  word-break: normal;
+  word-break: keep-all;
+}
+
+table * {
+  box-sizing: border-box;
+  font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+table tr td, table tr th {
+  font-size: .875rem;
+  margin: 0;
+  padding: .5rem 1rem;
+  border: 1px solid #e9ebec;
+}
+
+.card-header button:not(.pull-right) {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+h4.modal-title {
+  color: #666666;
+}
+
+.modal-header {
+  padding-bottom: 0;
+}
+
+.modal-footer {
+  padding-top: 0;
+}
+
+.close-row {
+  opacity: 1;
+  border-radius: 17px;
+  padding: 9px 12px 10px;
+}
+
+.close-row:hover {
+  opacity: 1;
+}
+
+@media only screen and (max-width: 767px) {
+  .col-12.col-md-2 button {
+    margin-top: 10px;
+    float: none !important;
+  }
+
+  .btn-group-toggle {
+    display: inline-grid;
+  }
+
+  .btn-group-toggle label {
+    border-radius: 0;
+    padding: 5px;
+    font-size: 12px;
+    width: 100%;
+  }
+
+  .btn-group-toggle label:first-of-type {
+    border-radius: 5px 5px 0 0 !important;
+    margin-left: -1px;
+  }
+
+  .btn-group-toggle label:last-of-type {
+    border-radius: 0 0 5px 5px !important;
+  }
+
+  .p-update::before {
+
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .collapse .col-12.col-lg-6:first-of-type {
+    margin-bottom: 15px;
+  }
+}
+
+.pull-right.btn.btn-danger {
+  font-size: 13px !important;
+}
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  margin: 0 0 -5px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  display: none;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #397173;
+  opacity: .65;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #397173;
+  opacity: 1;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #397173;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+/* Striped Table */
+tr.tr-striped:nth-of-type(odd) {
+  background-color: #dae2e3;
+}
+
+tr.tr-striped:nth-of-type(even) {
+  background-color: #ecf0f1;
+}
+
+.td-with-table-inside {
+  padding: 0 !important;
+}
+
+/* Inside Table */
+.table-inside tr:first-of-type td {
+  border-top: none !important;
+}
+
+.table-inside tr:last-of-type td {
+  border-bottom: none !important;
+}
+
+.table-inside tr td:first-of-type {
+  border-left: none !important;
+}
+
+.table-inside tr td:last-of-type {
+  border-right: none !important;
+}
+
+.table-inside tr td span {
+  background: #86a2a3;
+  color: #fff;
+  padding: 2px 8px 4px;
+  border-radius: 10px;
+  margin: 3px;
+  float: left;
+}
+
+/* Scrolling Modal */
+.modal-header-scroll {
+  padding-bottom: 10px;
+}
+
+.modal-body-scroll {
+  max-height: 550px;
+  overflow-y: scroll;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.modal-footer-scroll {
+  padding-top: 15px;
+}

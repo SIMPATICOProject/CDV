@@ -1,4 +1,4 @@
-{
+{ 
   "general": { 
     "home": "Home",
     "dashboard": {
@@ -55,7 +55,10 @@
 	  "linkedservices": "Linked Services",
 	  "personaldata": "Personal Data",
 	  "configuration": "Configuration",
-	  "sign_out": "Sign out"
+	  "sign_out": "Sign out",
+	  "logs": "Data Logs",
+	  "consents": "Data Consents"
+	  
     },
 	"account":{
 	  "export_data": "Export Data",
