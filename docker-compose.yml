@@ -1,0 +1,51 @@
+version: '3.3'
+
+services:    
+    mysql_db:
+        container_name: "cdv-mysql-db"
+        image: mariadb
+        env_file: ./.env
+        volumes:
+            - ./volumes/mysqldb:/var/lib/mysql:rw
+        restart: always
+    mongo_db:
+        container_name: "cdv-mongo-db"
+        image: "bitnami/mongodb:latest"
+        env_file: ./.env
+        environment:
+           MONGODB_ROOT_PASSWORD: ${CDV_MONGO_ROOT_PASSWORD}
+           MONGODB_USERNAME: ${CDV_MONGO_USERNAME}
+           MONGODB_PASSWORD: ${CDV_MONGO_PASSWORD}
+           MONGODB_DATABASE: ${CDV_MONGO_DATABASE}
+        volumes:
+            - ./volumes/mongodb:/bitnami:rw
+        restart: always
+    cdv_dashboard:
+        container_name: "cdv-dashboard"
+        build:
+            context: ./cdv-dashboard
+        depends_on:
+            - cdv_server
+            - mysql_db
+            - mongo_db
+        volumes:
+            - ./volumes/cdvdash:/usr/mytemp:rw
+        ports:
+            - 7868:8080
+    cdv_server:
+        container_name: "cdv-server"
+        build:
+            context: ./cdv-server
+        depends_on:
+            - mysql_db
+            - mongo_db
+        volumes:
+            - ./volumes/cdvapp:/usr/mytemp:rw
+        ports:
+            - 7867:8080
+
+networks:
+  default:
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 1400
