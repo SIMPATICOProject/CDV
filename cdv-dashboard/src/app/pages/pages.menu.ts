@@ -2,7 +2,7 @@ export const PAGES_MENU = [
   {
     path: 'pages',
     children: [
-     /* {
+      {
         path: 'dashboard',
         data: {
           menu: {
@@ -14,7 +14,7 @@ export const PAGES_MENU = [
           }
         }
       },
-      {
+      /*{
         path: 'editors',
         data: {
           menu: {

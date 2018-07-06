@@ -12,23 +12,23 @@ export class PieChartService {
     return [
       {
         color: pieColor,
-        description: 'general.dashboard.newVisits',
-        stats: '57,820',
+        description: 'general.dashboard.pdata',
+        stats: '300',
         icon: 'person',
       }, {
         color: pieColor,
-        description: 'general.dashboard.purchases',
-        stats: '$ 89,745',
+        description: 'general.dashboard.services',
+        stats: '4',
         icon: 'money',
       }, {
         color: pieColor,
-        description: 'general.dashboard.activeUsers',
-        stats: '178,391',
+        description: 'general.dashboard.linkedServices',
+        stats: '4',
         icon: 'face',
       }, {
         color: pieColor,
-        description: 'general.dashboard.returned',
-        stats: '32,592',
+        description: 'general.dashboard.consents',
+        stats: '5',
         icon: 'refresh',
       }
     ];

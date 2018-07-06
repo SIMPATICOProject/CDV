@@ -1,4 +1,4 @@
-package it.eng.opsi.cdv.consentmanager.simpatico.security.config;
+package it.eng.opsi.cdv.consentmanager.security.config;
 //package it.eng.opsi.cdv.accountmanager.simpatico.security.config;
 //
 //import java.net.Authenticator;

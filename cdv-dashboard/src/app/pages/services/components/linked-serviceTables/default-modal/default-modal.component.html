@@ -11,14 +11,30 @@
 	</div>
 	<div class="separator"></div>
 	<div class="accent"><i><b>{{'general.services.created' | translate}}: </b>  {{created}}</i> </div>
-    <div class="accent"><i><b>{{'general.services.url_link' | translate}}: </b>  {{serviceUri}}</i> </div>    
+    <div class="accent"><i><b>{{'general.services.url_link' | translate}}: </b> <a href={{serviceUri}} target="_blank">{{serviceUri}}</a></i> </div>
+	<div class="accent"><i><b>{{'general.services.keywords' | translate}}: </b>  {{keywords}}</i> </div>
+    <div class="accent"><i><b>{{'general.services.provider' | translate}}: </b>  {{provider}}</i> </div>
+   <div class="accent"><i><b>{{'general.services.purpose' | translate}}: </b> {{purpose}}</i> </div>
 	
 	<div class="separator"></div>
+	
+	<div class="accent"><i><b>{{'general.services.data_processed' | translate}}: </b></i></div>
 	<div class="section-block regular-text">
-	<i><b>{{'general.services.data_consent' | translate}}: </b></i>
-	
-	
+	<div *ngFor="let concept of data; let i = index" [attr.data-index]="i">{{concept}}</div>
 	</div>
+	
+	
+	
+	<div class="separator"></div>
+			
+	
+	<div class="accent"><i><b>{{'general.services.data_consent' | translate}}: </b></i></div>
+	
+	<div class="text-left services"> 
+    <button class="btn btn-success btn-with-icon" (click)="openConsents()"><i class="ion-android-checkmark-circle"></i>View Consents</button>
+  </div>
+	
+	
 	
 	</div>
   

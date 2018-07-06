@@ -1265,6 +1265,69 @@ public class ConsentService implements IConsentService {
 		}
 
 	}
+	
+	
+	
+	@Override
+	@GET
+	@Path("/consents/{accountId}/{slr}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response getAllConsentByAccountIdSlr(@PathParam("accountId") String accountId,@PathParam("slr") String slr) {
+
+		List<ConsentRecordSink> consentRecordSink;
+		List consentData = new ArrayList();
+		try {
+			consentRecordSink = dao.getSinkConsentRecords(accountId);
+
+			for (ConsentRecordSink crk : consentRecordSink) {
+				
+				if (crk.getCommon_part().getSlr_id().equalsIgnoreCase(slr)) {
+					Map m = new HashMap();
+					ConsentRecordSource crs = dao.findSourceConsentRecordByRes_id(
+							crk.getCommon_part().getRs_description().getResource_set().getRs_id(), accountId);
+
+					String slr_id = crk.getCommon_part().getSlr_id();
+
+					ServiceEntry sinkService=this.findById(crk.getCommon_part().getSubject_id());
+					ServiceEntry sourceService=this.findById(crs.getCommon_part().getSubject_id());
+					
+					m.put("sinkService", sinkService);
+					m.put("sourceService", sourceService);
+					m.put("rs_id", crk.getCommon_part().getRs_description().getResource_set().getRs_id());
+					m.put("account_id", accountId);
+					m.put("sink", crk);
+					m.put("source", crs);
+					consentData.add(m);
+					
+				}
+					
+
+			}
+
+			String array = new Gson().toJson(consentData);
+
+			return Response.status(Response.Status.OK).entity(array).build();
+
+		} catch (AccountUtilsException e) {
+
+			e.printStackTrace();
+			ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
+					e.getClass().getSimpleName(), e.getMessage());
+
+			return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			ErrorResponse error = new ErrorResponse(
+					String.valueOf(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()), e.getClass().getSimpleName(),
+					e.getMessage());
+
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error.toJson()).build();
+		}
+
+	}
+	
+	
 
 	/*
 	 * @Override

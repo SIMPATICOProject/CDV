@@ -24,12 +24,13 @@
 	
 	<div class="separator"></div>
 	<div class="section-block regular-text">
-	<i><b>{{'general.services.data_processed' | translate}}: </b></i>
-	<ul *ngFor="let concept of data; let i = index" [attr.data-index]="i">
-        <li>{{concept}}</li>
-    </ul>
+	<div><b>{{'general.services.data_processed' | translate}}: </b></div>
+	
+	<div *ngFor="let concept of data; let i = index" [attr.data-index]="i">{{concept}}</div>
 	
 	</div>
+	
+	<div class="separator"></div>
 	
 	</div>
   

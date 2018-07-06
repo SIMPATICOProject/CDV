@@ -21,6 +21,7 @@ export class ServiceInfoLinkRenderComponent implements OnInit {
 
   ngOnInit() {
     this.renderValue = this.value;
+	console.log("this.value INFO "+ this.value);
   }
  
  example() {

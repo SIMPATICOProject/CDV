@@ -1,8 +1,6 @@
-
-var cdvServer="";
+var cdvServer = "";
 
 var dashHost="";
-
 var aacServer="";
 
 var cdvDashboardURL= "/cdv-dashboard/";

@@ -27,7 +27,6 @@ import { UsersMapService } from './usersMap/usersMap.service';
   imports: [
     CommonModule,
     FormsModule,
-    AppTranslationModule,
     NgaModule,
     routing
   ],

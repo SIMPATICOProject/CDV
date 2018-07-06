@@ -14,5 +14,6 @@ public interface IConsentService {
 	public Response getAllConsentByAccountId(String accountId);
 	public Response changeConsentRecordStatus(String accountId , String rs_id, String status);
 	public Response withDrawConsentByServiceid(String serviceId);
+	public Response getAllConsentByAccountIdSlr(String accountId,String slr);
 
 }

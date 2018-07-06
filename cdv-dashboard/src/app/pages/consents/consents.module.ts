@@ -1,6 +1,6 @@
 import { NgModule }      from '@angular/core';
 import { CommonModule }  from '@angular/common';
-import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule,NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { FormsModule,ReactiveFormsModule } from '@angular/forms';
 import { consentsComponent } from './consents.component';
@@ -14,6 +14,7 @@ import { ConsentsService } from './consents.service';
     routing,
     NgaModule,
     NgbModalModule,
+	NgbDropdownModule,
     FormsModule
     ],
   declarations: [

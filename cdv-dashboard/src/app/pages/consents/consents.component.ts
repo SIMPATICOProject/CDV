@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { ConsentsService } from './consents.service';
 import { ConfigService } from 'ng2-config';
 import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import * as _ from "lodash";
 import { BaThemeSpinner } from '../../theme/services';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
@@ -40,25 +41,42 @@ export class consentsComponent {
 
   private consents: any[];
   private res: any[];
+  private services: any[];
+  private sub: any;
 
   //private tempSink: any = {};
   //private tempSource: any = {};
   //private tempIndex: number = 0;
 
   ngOnInit() {
-    this.onGetConsent();
+     this.onGetConsent();
+	 this.getServices();
+     this.sub = this.route.params.subscribe(params => {
+       
+       console.log(params);
+	   if (params['serviceId']&&params['serviceName']){
+		this.onFilterConsents(params['serviceId'], params['serviceName']);
+	   }
+	   
+	   
+    });
+    
+  }
+  
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
-  constructor(private service: ConsentsService, private router: Router, private myconfig: ConfigService, private modalService: NgbModal) { }
+  constructor(private route: ActivatedRoute, private service: ConsentsService, private router: Router, private myconfig: ConfigService, private modalService: NgbModal) { }
 
   onGetConsent() {
-
+    this.message ="";
     this.service.getConsents().subscribe(
       (consents: any[]) => {
         this.consents = consents;
         this.loading = false;
         if (consents.length == 0) {
-          this.message = "No Consent Saved!!!"
+          this.message = "No Consent Saved!!!";
         }
       },
       err => {
@@ -70,6 +88,57 @@ export class consentsComponent {
       }
     );
 
+  }
+  
+  getServices() {
+
+    this.service.getServices().subscribe(
+      (services: any[]) => {
+        this.services = services;
+        this.loading = false;        
+      },
+      err => {
+
+        let errorJson = eval('(' + err._body + ')');
+        if (err.status === 401) {
+          this.router.navigate(['/login']);
+        }
+      }
+    );
+
+  }
+  
+  onFilterConsents(serviceId, serviceName){
+      this.loading = true;
+	  console.log("serviceId "+serviceId);
+	    this.service.getConsents().subscribe(
+      (consents: any[]) => {
+        this.consents = [];
+			   	   
+	   for (var t = 0; t < consents.length; t++){
+	   
+	        if ((serviceId==consents[t].sourceService.publicServiceID) || (serviceId==consents[t].sinkService.publicServiceID)){
+				this.consents.push(consents[t]);
+			}
+			
+	   } 
+		
+        this.loading = false;
+        if (this.consents.length == 0) {
+          this.message = "No Consent Saved!!!"
+        } else {
+		  this.message = "Consents for service: "+ serviceName;
+		}
+      },
+      err => {
+
+        let errorJson = eval('(' + err._body + ')');
+        if (err.status === 401) {
+          this.router.navigate(['/login']);
+        }
+      }
+    );
+	
   }
 
   updateStatus(rsid: string, status: string) {  
@@ -237,7 +306,7 @@ export class consentsComponent {
     var mapping = serviceDs.dataMapping;
     
 	var new_mapping = new Array();
-    let input: HTMLElement
+    let input: HTMLInputElement
 
 
     delete snk.consentStatusList
@@ -267,7 +336,7 @@ export class consentsComponent {
       var ele = mapping[t]
       //console.log(ele)
       //console.log(ind + "||" + ele.conceptId)
-      input = document.getElementById(ind + "||" + ele.conceptId);
+      input = document.getElementById(ind + "||" + ele.conceptId) as HTMLInputElement;
         if (input != null) {
 
             //if (input.checked != true)
@@ -466,8 +535,8 @@ export class consentsComponent {
     console.log("getPurposeByDatasetIdAndServiceId "+ JSON.stringify(this.consents));
 	var index = _.findIndex(this.consents, function (o) { return o.sinkService.publicServiceID == serviceId; });
     var snkservice = this.consents[index].sinkService;
-    console.log("snkservice: "+JSON.stringify(snkservice));
-    var index2 = _.findIndex(snkservice.publicServiceIsDescribedAt, function (o) { return o.id == datasetId; });
+    var snkServiceDescr:any[] = snkservice.publicServiceIsDescribedAt;
+    var index2 = _.findIndex(snkServiceDescr, function (o) { return o.id == datasetId; });
     //console.log(datasetId)
     //console.log(index)
 
@@ -478,13 +547,14 @@ export class consentsComponent {
 
   findActiveDataMappingByConsentIndex(cind) {
     //return this.findActiveDataMappingByresId(this.consents[cind].sink.common_part.rs_description.resource_set.rs_id)
-	var datasets= this.consents[cind].sink.common_part.rs_description.resource_set.dataset;
+	var datasets: any[]= this.consents[cind].sink.common_part.rs_description.resource_set.dataset;
 	var i2 = _.findIndex(datasets, function (o) { return o.status == true; });
 	
 	console.log("cind "+cind);
 	console.log("i2 "+i2);
 	console.log("datasets[i2].id "+datasets[i2].id);
-	var serviceMappingIndex = _.findIndex(this.consents[cind].sinkService.publicServiceIsDescribedAt, function (o) { return o.publicServiceDatasetID == datasets[i2].id; });
+	var snkServiceDescr:any[] = this.consents[cind].sinkService.publicServiceIsDescribedAt
+	var serviceMappingIndex = _.findIndex(snkServiceDescr, function (o) { return o.publicServiceDatasetID == datasets[i2].id; });
 	console.log("serviceMappingIndex "+serviceMappingIndex);
 	var serviceDM=this.servicesDataMapping(this.consents[cind].sinkService.publicServiceIsDescribedAt[serviceMappingIndex].dataMapping,this.consents[cind].sourceService.publicServiceIsDescribedAt[serviceMappingIndex].dataMapping);
 	
@@ -497,12 +567,13 @@ export class consentsComponent {
     //console.log(rs_id)
     var i1 = _.findIndex(this.consents, function (o) { return o.sink.common_part.rs_description.resource_set.rs_id == rs_id; });
     //console.log(i1)
-    var datasets = this.consents[i1].sink.common_part.rs_description.resource_set.dataset;
+    var datasets :any[] = this.consents[i1].sink.common_part.rs_description.resource_set.dataset;
     //console.log(datasets)
     var i2 = _.findIndex(datasets, function (o) { return o.status == true; });
     //find dataset of service
-    var serviceMappingIndex = _.findIndex(this.consents[i1].sinkService.publicServiceIsDescribedAt, function (o) { return o.publicServiceDatasetID == datasets[i2].id; });
-    var serviceDM=servicesDataMapping(this.consents[i1].sinkService.publicServiceIsDescribedAt[serviceMappingIndex].dataMapping,this.consents[i1].sourceService.publicServiceIsDescribedAt[serviceMappingIndex].dataMapping);
+	var snkServiceDescr:any[] = this.consents[i1].sinkService.publicServiceIsDescribedAt;
+    var serviceMappingIndex = _.findIndex(snkServiceDescr, function (o) { return o.publicServiceDatasetID == datasets[i2].id; });
+    var serviceDM=this.servicesDataMapping(this.consents[i1].sinkService.publicServiceIsDescribedAt[serviceMappingIndex].dataMapping,this.consents[i1].sourceService.publicServiceIsDescribedAt[serviceMappingIndex].dataMapping);
 	
     //return this.compareDataMapping(this.consents[i1].sinkService.publicServiceIsDescribedAt[serviceMappingIndex].dataMapping, datasets[i2].dataMapping);
     return this.compareDataMapping(serviceDM, datasets[i2].dataMapping);
@@ -510,14 +581,14 @@ export class consentsComponent {
   }
 
   findActiveDataSet(index) {
-    var datasets = this.consents[index].sink.common_part.rs_description.resource_set.dataset;
+    var datasets :any[] = this.consents[index].sink.common_part.rs_description.resource_set.dataset;
     var i2 = _.findIndex(datasets, function (o) { return o.status == true; });
     return datasets[i2];
 
   }
   
   findServiceActiveDataSet(index,dsId) {
-    var datasets = this.consents[index].sinkService.publicServiceIsDescribedAt;
+    var datasets :any[]= this.consents[index].sinkService.publicServiceIsDescribedAt;
     var i2 = _.findIndex(datasets, function (o) { return o.publicServiceDatasetID == dsId; });
 	return datasets[i2];
   }
@@ -580,25 +651,25 @@ export class consentsComponent {
 
   changeMe(event: any) {
     //console.log(event)
-    let element: HTMLElement = event.target;
+    let element: HTMLInputElement = event.target;
     let id = element.id;
     let value = element.checked;
 
-    let updateButton: HTMLElement;
-    let disableButton: HTMLElement;
+    let updateButton: HTMLInputElement;
+    let disableButton: HTMLInputElement;
     let nmb = id.split("||")[0];
    // console.log("nmb: " + nmb)
    // console.log("this.lastindex: " + this.lastIndex)
    // console.log(this.lastDataMapping)
-    let input: HTMLElement
+    let input: HTMLInputElement
 
-    if (nmb == this.lastIndex) {
+    if (nmb == ''+this.lastIndex) {
 
       var isChanged = false;
       for (var p = 0; p < this.lastDataMapping.length; p++) {
         var ele = this.lastDataMapping[p]
         // console.log(this.lastIndex + "||" + ele.conceptId)
-        input = document.getElementById(this.lastIndex + "||" + ele.conceptId);
+        input = document.getElementById(this.lastIndex + "||" + ele.conceptId) as HTMLInputElement;
         if (input != null) {
           if (!ele.isIn) {
             if (input.checked != false)
@@ -613,8 +684,8 @@ export class consentsComponent {
           break;
         //console.log(ele.isIn)
       }
-      updateButton = document.getElementById("updateButton" + this.lastIndex);
-      disableButton = document.getElementById("disableButton" + this.lastIndex);
+      updateButton = document.getElementById("updateButton" + this.lastIndex) as HTMLInputElement;
+      disableButton = document.getElementById("disableButton" + this.lastIndex) as HTMLInputElement;
 
       //console.log(updateButton)
 
@@ -639,17 +710,16 @@ export class consentsComponent {
   openDetails(ind) {
 
     let button: HTMLElement;
-    let updateButton: HTMLElement;
     let nmb = ind;
    // console.log("nmb: " + nmb)
    // console.log("this.lastindex: " + this.lastIndex)
    // console.log(this.lastDataMapping)
-    let input: HTMLElement
+    let input: HTMLInputElement
     let div: HTMLElement
     var selector = 'show'
     var className = " " + selector + " ";
-    let updateButton: HTMLElement;
-    let disableButton: HTMLElement;
+    let updateButton: HTMLInputElement;
+    let disableButton: HTMLInputElement;
 
 
     if (this.lastIndex == -1) {
@@ -662,7 +732,7 @@ export class consentsComponent {
         for (var p = 0; p < this.lastDataMapping.length; p++) {
           var ele = this.lastDataMapping[p]
           console.log(this.lastIndex + "||" + ele.conceptId)
-          input = document.getElementById(this.lastIndex + "||" + ele.conceptId);
+          input = document.getElementById(this.lastIndex + "||" + ele.conceptId) as HTMLInputElement;
           if (input != null) {
             if (!ele.isIn == null) {
               input.checked = true
@@ -688,8 +758,8 @@ export class consentsComponent {
         this.lastIndex = nmb;
         this.lastDataMapping = this.findActiveDataMappingByConsentIndex(ind);
 
-        updateButton = document.getElementById("updateButton" + this.lastIndex);
-        disableButton = document.getElementById("disableButton" + this.lastIndex);
+        updateButton = document.getElementById("updateButton" + this.lastIndex) as HTMLInputElement;
+        disableButton = document.getElementById("disableButton" + this.lastIndex) as HTMLInputElement;
 
         if(disableButton != null)
           disableButton.disabled = true

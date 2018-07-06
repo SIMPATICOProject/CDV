@@ -6,6 +6,10 @@ const routes: Routes = [
     path: '',
     component: consentsComponent,
 
+  },
+  {
+    path: ':serviceId/:serviceName',
+    component: consentsComponent
   }
 ];
 

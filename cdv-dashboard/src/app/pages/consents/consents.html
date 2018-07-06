@@ -13,7 +13,30 @@
 
 </div> -->
 
-    <div class="card-consents animated fadeIn card" *ngFor="let consent of consents; let idx = index">
+    
+	
+	
+	 <div class="text-left services"> 	 
+	 <div class="btn-group" ngbDropdown>
+      <button type="button" class="btn btn-primary" ngbDropdownToggle>
+         {{'general.services.service' | translate}} 
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownBasic1">
+            <button *ngFor="let service of services"
+                    class="dropdown-item"
+                    (click)="onFilterConsents(service.serviceId, service.serviceName)"
+                     value={{service.serviceName}}>
+                    {{service.serviceName}}
+            </button>
+			<li class="dropdown-divider"></li>
+			<button class="dropdown-item" (click)="onGetConsent()">All</button>
+      </div>
+	 </div>
+	
+     </div>
+	
+	
+	<div class="card-consents animated fadeIn card" *ngFor="let consent of consents; let idx = index">
       <div class="card-header">
 
         <div class="row justify-content-end text-center marginbottom0">

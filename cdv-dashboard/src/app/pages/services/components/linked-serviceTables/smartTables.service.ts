@@ -33,6 +33,13 @@ export class LinkedServicesTablesService {
 			headers: headers
 		}).map((responseData) => responseData.json());
 	}
+	
+	getServiceData(serviceId): Observable<any> {
+		
+	return this.http
+		.get(this.environment.host+this.environment.services+ "/" + serviceId
+		).map((responseData) => responseData.json());  
+	}
 
 	deleteServiceLink(event): Observable < any > {
 		var headers = new Headers();

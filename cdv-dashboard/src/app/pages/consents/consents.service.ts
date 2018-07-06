@@ -64,6 +64,19 @@ export class ConsentsService {
     console.log("get consent-service: " + res)
     return res;
   }
+  
+  getServices(): Observable < any[] > {
+		var headers = new Headers();
+		headers.append('Authorization', this.token);
+		headers.append('Content-Type', "application/json");
+
+		return this.http
+		.get(this.environment.host + this.environment.account + this.accountId + "/serviceLinks", {
+			headers: headers
+		}).map((responseData) => responseData.json());
+	}
+  
+  
   updateConsentStatus(rsid: string, status: string): Observable<any[]> {
     var body = {}
     let headers = new Headers();
