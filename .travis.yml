@@ -1,6 +1,8 @@
 language: java
 sudo: false
-script: "mvn test"
+script:
+  - "cd cdv-server/"
+  - "mvn test"
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
