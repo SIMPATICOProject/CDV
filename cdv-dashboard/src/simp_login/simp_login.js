@@ -1,4 +1,3 @@
-
 var cdvServer="";
 
 var dashHost="";

@@ -10,7 +10,6 @@
 	"services":"/service-manager/api/v1/services",
     "clientId":"80e7a735-04bf-4737-b6ca-46caac64f823",
     "authority":"google",
-   
     "cdvDashboardUrl":"/cdv-dashboard/simp_login/login2.html",
     "disable_auth":"false"
   },
