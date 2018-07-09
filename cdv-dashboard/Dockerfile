@@ -1,6 +1,7 @@
 FROM node:6.10
 
-LABEL name="SIMPATICO CDV-Dashboard" \
+LABEL name="SIMPATICO CDV Dashboard" \
+      maintainer="SIMPATICO Project" \
       version="1.0"
 
 # Create app directory

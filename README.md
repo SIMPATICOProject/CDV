@@ -22,14 +22,14 @@ All the above features are provided by a set of components. The CDV architecture
 
 CDV Components are split to their own folders
 
-- [ Account Manager ](account-manager/README.md)
-- [ Service Manager ](service-manager/)
-- [ Consent Manager ](consent-Manager/)
-- [ PData Manager ](pdata-manager/)
-- [ Auth Manager ](auth-manager/)
-- [ PData Repository ](pdata-repository/)
-- [ Data Security Manager ](data-security-manager/)
-- [ PData Source Connectors ](pdata-source-connectors/)
+- [ Account Manager ](cdv-server/account-manager/README.md)
+- [ Service Manager ](cdv-server/service-manager/)
+- [ Consent Manager ](cdv-server/consent-Manager/)
+- [ PData Manager ](cdv-server/pdata-manager/)
+- [ Auth Manager ](cdv-server/auth-manager/)
+- [ PData Repository ](cdv-server/pdata-repository/)
+- [ Data Security Manager ](cdv-server/data-security-manager/)
+- [ PData Source Connectors ](cdv-server/pdata-source-connectors/)
 
 ## Prerequisites
 
@@ -100,25 +100,18 @@ Documentation is available for each component in their respective folders.
 
 ### Configuration
 
-Configure properties in:
-* `docker/config/production.env`
-* `docker/Dockerfiles/CDV-server/config/*`
-* `docker/Dockerfiles/CDV-dashboard/config/config.json`
+Configure your project the same as above.
 
-see documentation in each component for further info for each property.
+### build and run
 
+create a `.env` file using `example.env` as your base,
+input your database credentials (should be the same as the ones you used to configure the component)
 
-### Build and run
+* to start the daemon execute `docker-compose start`
+* to force rebuilding of the docker containers, use `docker-compose start --build`
 
-Go to `docker` folder from the root of the project, run:
-
-* run.sh to build and run containers
-
-after that:
-
-* to ttop the daemon execute `docker-compose stop`
+* to stop the daemon execute `docker-compose stop`
 * to restart as a daemon execute `docker-compose start`
-
 
 ## Support / Contact / Contribution
 [Citizen Data Vault](Link|email|contact)

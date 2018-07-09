@@ -12,11 +12,6 @@ services:
         container_name: "cdv-mongo-db"
         image: "bitnami/mongodb:latest"
         env_file: ./.env
-        environment:
-           MONGODB_ROOT_PASSWORD: ${CDV_MONGO_ROOT_PASSWORD}
-           MONGODB_USERNAME: ${CDV_MONGO_USERNAME}
-           MONGODB_PASSWORD: ${CDV_MONGO_PASSWORD}
-           MONGODB_DATABASE: ${CDV_MONGO_DATABASE}
         volumes:
             - ./volumes/mongodb:/bitnami:rw
         restart: always
