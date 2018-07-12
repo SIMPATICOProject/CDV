@@ -178,14 +178,14 @@ public class PDataFieldServiceTest {
            when( dao.findById(Mockito.anyString())).thenReturn( pDataField );
        	   	     
            // Call create method    	
-          List<PDataField> result= pDataFieldService.findPDataFieldByName("");
+          PDataField result= pDataFieldService.getPDataFieldById("");
                  
           // Assert expected results
           Assert.assertNotNull( result );
-          Assert.assertTrue(result.size()==1);
-          Assert.assertNotNull(result.get(0).getName());
-          Assert.assertNotNull(result.get(0).getDescription());
-          Assert.assertNotNull( result.get(0).getId());
+          
+          Assert.assertNotNull(result.getName());
+          Assert.assertNotNull(result.getDescription());
+          Assert.assertNotNull( result.getId());
 	  
    }
    
