@@ -1,18 +1,25 @@
 /*******************************************************************************
- * Copyright 2012-2013 Trento RISE
- * 
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- * 
- *        http://www.apache.org/licenses/LICENSE-2.0
- * 
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- ******************************************************************************/
+ * The MIT License (MIT)
+ * Copyright (c) 2016, 2018  Engineering Ingegneria Informatica S.p.A
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *******************************************************************************/
 package it.eng.opsi.cdv.auditlogmanager.utils;
 
 import java.io.IOException;
@@ -50,7 +57,7 @@ import eu.trentorise.smartcampus.profileservice.model.BasicProfiles;
  * Class used to connect with the profile service.
  * 
  */
-public class CityEnablerBasicProfileService  {
+public class CityEnablerBasicProfileService {
 
 	private static String profileManagerURL;
 
@@ -68,7 +75,8 @@ public class CityEnablerBasicProfileService  {
 	 */
 	public CityEnablerBasicProfileService(String serverURL) {
 		this.profileManagerURL = serverURL;
-		if (!profileManagerURL.endsWith("/")) profileManagerURL += '/';
+		if (!profileManagerURL.endsWith("/"))
+			profileManagerURL += '/';
 	}
 
 	/**
@@ -79,11 +87,10 @@ public class CityEnablerBasicProfileService  {
 	 * @return a basic profile
 	 * @throws ProfileServiceException
 	 */
-	public BasicProfile getBasicProfile(String token) throws SecurityException,
-			ProfileServiceException {
+	public BasicProfile getBasicProfile(String token) throws SecurityException, ProfileServiceException {
 		try {
-			String json = RemoteConnector.getJSON(profileManagerURL, BASIC_PROFILE+"?access_token="+token, token);
-			System.out.println("json in getBasicProfile in auditlogmanager"+json);
+			String json = RemoteConnector.getJSON(profileManagerURL, BASIC_PROFILE + "?access_token=" + token, token);
+			System.out.println("json in getBasicProfile in auditlogmanager" + json);
 			JSONObject jsonObj = new JSONObject(json);
 			jsonObj.put("userId", jsonObj.get("id"));
 			jsonObj.put("name", jsonObj.get("displayName"));
@@ -95,52 +102,42 @@ public class CityEnablerBasicProfileService  {
 		}
 	}
 	/*
-	public String removeProfile(String token) throws SecurityException,
-			ProfileServiceException {
-		try {
-			System.out.println("removeProfile");
-			BasicProfile basicProfile = getBasicProfile(token);
-			System.out.println("basicProfile.getUserId(): "+basicProfile.getUserId());
-			
-			final HttpResponse resp;
-			//final HttpDelete delete = new HttpDelete("http://217.172.12.145:5000/"+"v3/OS-SCIM/v2/Users/"+basicProfile.getUserId());
-			final HttpDelete delete = new HttpDelete(PropertyManager.getProperty("KEYSTONE_URL")+"v3/users/"+basicProfile.getUserId());
-			
-			
-			System.out.println("url: "+PropertyManager.getProperty("KEYSTONE_URL")+"v3/users/"+basicProfile.getUserId());
-			
-			//delete.setHeader("Accept", "application/json");
-			delete.setHeader("X-Auth-token", token);
-			System.out.println("removeProfile 2");
-			resp = new DefaultHttpClient().execute(delete);
-			System.out.println("removeProfile 3 "+resp.getStatusLine().getStatusCode() );
-			System.out.println("removeProfile 4 "+resp.getEntity().toString());
-			//String response = EntityUtils.toString(resp.getEntity(),"\"UTF-8\"");
-			
-			//System.out.println("response "+response);
-			if (resp.getStatusLine().getStatusCode() == 204) {
-					return "";
-			}
-			if (resp.getStatusLine().getStatusCode() == HttpStatus.SC_FORBIDDEN
-					|| resp.getStatusLine().getStatusCode() == HttpStatus.SC_UNAUTHORIZED) {
-					throw new SecurityException();
-				}
-			throw new SecurityException("Error validating "
-						+ resp.getStatusLine());
-						
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-			throw new SecurityException(e.getMessage(), e);
-		} catch (ParseException e) {
-			e.printStackTrace();
-			throw new SecurityException(e.getMessage(), e);
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new SecurityException(e.getMessage(), e);
-		}
-	}
-	*/
-	
+	 * public String removeProfile(String token) throws SecurityException,
+	 * ProfileServiceException { try { System.out.println("removeProfile");
+	 * BasicProfile basicProfile = getBasicProfile(token);
+	 * System.out.println("basicProfile.getUserId(): "+basicProfile.getUserId());
+	 * 
+	 * final HttpResponse resp; //final HttpDelete delete = new
+	 * HttpDelete("http://217.172.12.145:5000/"+"v3/OS-SCIM/v2/Users/"+basicProfile.
+	 * getUserId()); final HttpDelete delete = new
+	 * HttpDelete(PropertyManager.getProperty("KEYSTONE_URL")+"v3/users/"+
+	 * basicProfile.getUserId());
+	 * 
+	 * 
+	 * System.out.println("url: "+PropertyManager.getProperty("KEYSTONE_URL")+
+	 * "v3/users/"+basicProfile.getUserId());
+	 * 
+	 * //delete.setHeader("Accept", "application/json");
+	 * delete.setHeader("X-Auth-token", token);
+	 * System.out.println("removeProfile 2"); resp = new
+	 * DefaultHttpClient().execute(delete);
+	 * System.out.println("removeProfile 3 "+resp.getStatusLine().getStatusCode() );
+	 * System.out.println("removeProfile 4 "+resp.getEntity().toString()); //String
+	 * response = EntityUtils.toString(resp.getEntity(),"\"UTF-8\"");
+	 * 
+	 * //System.out.println("response "+response); if
+	 * (resp.getStatusLine().getStatusCode() == 204) { return ""; } if
+	 * (resp.getStatusLine().getStatusCode() == HttpStatus.SC_FORBIDDEN ||
+	 * resp.getStatusLine().getStatusCode() == HttpStatus.SC_UNAUTHORIZED) { throw
+	 * new SecurityException(); } throw new SecurityException("Error validating " +
+	 * resp.getStatusLine());
+	 * 
+	 * } catch (ClientProtocolException e) { e.printStackTrace(); throw new
+	 * SecurityException(e.getMessage(), e); } catch (ParseException e) {
+	 * e.printStackTrace(); throw new SecurityException(e.getMessage(), e); } catch
+	 * (IOException e) { e.printStackTrace(); throw new
+	 * SecurityException(e.getMessage(), e); } }
+	 */
 
 	/**
 	 * Return the account profile associated to the access token owner
@@ -150,8 +147,7 @@ public class CityEnablerBasicProfileService  {
 	 * @return a basic profile
 	 * @throws ProfileServiceException
 	 */
-	public AccountProfile getAccountProfile(String token) throws SecurityException,
-			ProfileServiceException {
+	public AccountProfile getAccountProfile(String token) throws SecurityException, ProfileServiceException {
 		try {
 			String json = RemoteConnector.getJSON(profileManagerURL, ACCOUNT_PROFILE + "me", token);
 			return AccountProfile.valueOf(json);
@@ -168,10 +164,10 @@ public class CityEnablerBasicProfileService  {
 	 * @return a basic profile
 	 * @throws ProfileServiceException
 	 */
-	public BasicProfile getBasicProfileBySocialId(String socialId, String token) throws SecurityException,
-			ProfileServiceException {
+	public BasicProfile getBasicProfileBySocialId(String socialId, String token)
+			throws SecurityException, ProfileServiceException {
 		try {
-			String json = RemoteConnector.getJSON(profileManagerURL, BASIC_PROFILE + "social/"+socialId, token);
+			String json = RemoteConnector.getJSON(profileManagerURL, BASIC_PROFILE + "social/" + socialId, token);
 			return JsonUtils.toObject(json, BasicProfile.class);
 		} catch (RemoteException e) {
 			throw new ProfileServiceException(e);
@@ -188,17 +184,15 @@ public class CityEnablerBasicProfileService  {
 	 * @return a basic profile
 	 * @throws ProfileServiceException
 	 */
-	public BasicProfile getBasicProfile(String userId, String token)
-			throws SecurityException, ProfileServiceException {
+	public BasicProfile getBasicProfile(String userId, String token) throws SecurityException, ProfileServiceException {
 		try {
-			String json = RemoteConnector.getJSON(profileManagerURL,
-					BASIC_PROFILE+ ALL + userId + "/", token);
+			String json = RemoteConnector.getJSON(profileManagerURL, BASIC_PROFILE + ALL + userId + "/", token);
 			JSONObject jsonObj = new JSONObject(json);
 			jsonObj.put("userId", jsonObj.get("id"));
 			jsonObj.put("name", jsonObj.get("displayName"));
 			jsonObj.put("surname", "");
 			jsonObj.put("socialId", "");
-			
+
 			return JsonUtils.toObject(jsonObj.toString(), BasicProfile.class);
 		} catch (RemoteException e) {
 			throw new ProfileServiceException(e);
@@ -209,8 +203,7 @@ public class CityEnablerBasicProfileService  {
 	 * Return a (filtered) list of profiles
 	 * 
 	 * @param filter
-	 *            if not null, filter the results by full name (name and
-	 *            surname)
+	 *            if not null, filter the results by full name (name and surname)
 	 * @param token
 	 *            an user or client access token
 	 * @return a list of basic profile
@@ -221,8 +214,7 @@ public class CityEnablerBasicProfileService  {
 		String query = null;
 		if (filter != null) {
 			try {
-				query = "?filter="
-						+ URLEncoder.encode(filter == null ? "" : filter, "utf8");
+				query = "?filter=" + URLEncoder.encode(filter == null ? "" : filter, "utf8");
 			} catch (UnsupportedEncodingException e1) {
 				throw new ProfileServiceException(e1);
 			}
@@ -232,7 +224,7 @@ public class CityEnablerBasicProfileService  {
 
 		String json;
 		try {
-			json = RemoteConnector.getJSON(profileManagerURL, BASIC_PROFILE+ALL + query, token);
+			json = RemoteConnector.getJSON(profileManagerURL, BASIC_PROFILE + ALL + query, token);
 		} catch (RemoteException e1) {
 			throw new ProfileServiceException(e1);
 		}
@@ -248,42 +240,44 @@ public class CityEnablerBasicProfileService  {
 	 * Returns the list of basic profiles of a list of users
 	 * 
 	 * @param userIds
-	 * @param token a user or client access token
+	 * @param token
+	 *            a user or client access token
 	 * @return
 	 * @throws ProfileServiceException
 	 */
-	public List<BasicProfile> getBasicProfilesByUserId(List<String> userIds, String token) throws ProfileServiceException {
+	public List<BasicProfile> getBasicProfilesByUserId(List<String> userIds, String token)
+			throws ProfileServiceException {
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("userIds", userIds);
 		try {
-			String json = RemoteConnector.getJSON(profileManagerURL,
-					BASIC_PROFILE+"profiles", token, parameters);
+			String json = RemoteConnector.getJSON(profileManagerURL, BASIC_PROFILE + "profiles", token, parameters);
 			return JsonUtils.toObject(json, BasicProfiles.class).getProfiles();
 		} catch (RemoteException e) {
 			throw new ProfileServiceException(e);
 		}
 	}
-	
+
 	/**
 	 * Returns the list of account profiles of a list of users
 	 * 
 	 * @param userIds
-	 * @param token a user or client access token
+	 * @param token
+	 *            a user or client access token
 	 * @return
 	 * @throws ProfileServiceException
 	 */
-	public List<AccountProfile> getAccountProfilesByUserId(List<String> userIds, String token) throws ProfileServiceException {
+	public List<AccountProfile> getAccountProfilesByUserId(List<String> userIds, String token)
+			throws ProfileServiceException {
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("userIds", userIds);
 		try {
-			String json = RemoteConnector.getJSON(profileManagerURL,
-					ACCOUNT_PROFILE+ "profiles", token, parameters);
-			Map<String,Object> map = JsonUtils.toObject(json, Map.class);
+			String json = RemoteConnector.getJSON(profileManagerURL, ACCOUNT_PROFILE + "profiles", token, parameters);
+			Map<String, Object> map = JsonUtils.toObject(json, Map.class);
 			List<Object> list = (List<Object>) map.get("profiles");
 			List<AccountProfile> profiles = new ArrayList<AccountProfile>();
 			if (list != null) {
 				for (Object o : list) {
-					profiles.add(AccountProfile.valueOf((Map)o));
+					profiles.add(AccountProfile.valueOf((Map) o));
 				}
 			}
 			return profiles;
@@ -291,7 +285,5 @@ public class CityEnablerBasicProfileService  {
 			throw new ProfileServiceException(e);
 		}
 	}
-	
 
-	
 }

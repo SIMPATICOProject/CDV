@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE hibernate-mapping PUBLIC 
  "-//Hibernate/Hibernate Mapping DTD//EN"
- "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+ "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-   <class name="it.eng.opsi.cdv.datasecuritymanager.crypt.model.UserKey" table="user_keys">
-      <meta attribute="class-description">
-         This class contains the User keys details. 
-      </meta>
-      <id name="userid" type="string" column="userid"/>
-      <property name="key" column="enc_key" type="string"/>
-   </class>
+	<class name="it.eng.opsi.cdv.datasecuritymanager.crypt.model.UserKey"
+		table="user_keys">
+		<meta attribute="class-description">
+			This class contains the User keys details.
+		</meta>
+		<id name="userid" type="string" column="userid" />
+		<property name="key" column="enc_key" type="string" />
+	</class>
 </hibernate-mapping>

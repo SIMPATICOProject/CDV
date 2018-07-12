@@ -1,3 +1,25 @@
+/*******************************************************************************
+ * The MIT License (MIT)
+ * Copyright (c) 2016, 2018  Engineering Ingegneria Informatica S.p.A
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *******************************************************************************/
 package it.eng.opsi.cdv.accountmanager.dao;
 
 import org.bson.Document;
@@ -54,13 +76,11 @@ public class AccountDAO {
 
 	private String collectionName;
 
-	 static Logger root = (Logger) LoggerFactory
-	 .getLogger(Logger.ROOT_LOGGER_NAME);
-	
-	 static {
-	 root.setLevel(Level.INFO);
-	 }
-	
+	static Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+
+	static {
+		root.setLevel(Level.INFO);
+	}
 
 	public AccountDAO(String collectionName) {
 		this.collectionName = collectionName;
@@ -986,8 +1006,9 @@ public class AccountDAO {
 			ObjectId accountDocId = new ObjectId(accountId);
 
 			result = collection.updateOne(eq("_id", accountDocId),
-					new Document("$set", new Document("particular", docToAdd).append(
-							"modified", DAOUtils.formatDate(ZonedDateTime.now(ZoneOffset.UTC)))),
+					new Document("$set",
+							new Document("particular", docToAdd).append("modified",
+									DAOUtils.formatDate(ZonedDateTime.now(ZoneOffset.UTC)))),
 					new UpdateOptions().upsert(false));
 
 		} catch (IllegalArgumentException e) {
@@ -995,8 +1016,9 @@ public class AccountDAO {
 			// try with username as accountId
 			if (e.getMessage().contains("invalid hexadecimal representation of an ObjectId"))
 				result = collection.updateOne(eq("username", accountId),
-						new Document("$set", new Document("particular", docToAdd).append(
-								"modified", DAOUtils.formatDate(ZonedDateTime.now(ZoneOffset.UTC)))),
+						new Document("$set",
+								new Document("particular", docToAdd).append("modified",
+										DAOUtils.formatDate(ZonedDateTime.now(ZoneOffset.UTC)))),
 						new UpdateOptions().upsert(false));
 			else
 				throw new AccountManagerException("There was an error while getting the Account");
@@ -1826,8 +1848,8 @@ public class AccountDAO {
 				match = new Document("$match",
 						new Document("$and",
 								Arrays.asList(new Document("_id", new ObjectId(accountId)),
-										new Document("serviceLinkRecords._id", slrId), new Document(
-												"serviceLinkRecords.serviceLinkStatusRecords._id", ssrId))));
+										new Document("serviceLinkRecords._id", slrId),
+										new Document("serviceLinkRecords.serviceLinkStatusRecords._id", ssrId))));
 
 				output = collection.aggregate(Arrays.asList(match, unwindSlr, unwindSsr));
 
@@ -1839,8 +1861,8 @@ public class AccountDAO {
 					match = new Document("$match",
 							new Document("$and",
 									Arrays.asList(new Document("username", accountId),
-											new Document("serviceLinkRecords._id", slrId), new Document(
-													"serviceLinkRecords.serviceLinkStatusRecords._id", ssrId))));
+											new Document("serviceLinkRecords._id", slrId),
+											new Document("serviceLinkRecords.serviceLinkStatusRecords._id", ssrId))));
 					output = collection.aggregate(Arrays.asList(match, unwindSlr, unwindSsr));
 
 				} else

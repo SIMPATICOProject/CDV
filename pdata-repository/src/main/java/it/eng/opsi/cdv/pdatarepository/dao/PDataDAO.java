@@ -1,3 +1,25 @@
+/*******************************************************************************
+ * The MIT License (MIT)
+ * Copyright (c) 2016, 2018  Engineering Ingegneria Informatica S.p.A
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *******************************************************************************/
 package it.eng.opsi.cdv.pdatarepository.dao;
 
 import java.util.ArrayList;
@@ -172,18 +194,17 @@ public class PDataDAO {
 
 		/*
 		 * 
-		 * db.getCollection('pDataValues').aggregate([ {$match:
-		 * {'pData.conceptId': "identity_first_name"}}, { $project: { 'pData': {
-		 * $filter:{ input: '$pData', as: 'item', cond: { $or:[
-		 * {$eq:["$$item.conceptId", "identity_first_name"]},
-		 * {$eq:["$$item.conceptId", "identity_last_name"]} ] } } } } },
-		 * {$unwind: "$pData"} ])
+		 * db.getCollection('pDataValues').aggregate([ {$match: {'pData.conceptId':
+		 * "identity_first_name"}}, { $project: { 'pData': { $filter:{ input: '$pData',
+		 * as: 'item', cond: { $or:[ {$eq:["$$item.conceptId", "identity_first_name"]},
+		 * {$eq:["$$item.conceptId", "identity_last_name"]} ] } } } } }, {$unwind:
+		 * "$pData"} ])
 		 * 
 		 */
 
 		/*
-		 * Create an aggregate query with filtered projection, in order to get
-		 * ONLY the matched elements in Pdata array
+		 * Create an aggregate query with filtered projection, in order to get ONLY the
+		 * matched elements in Pdata array
 		 * 
 		 */
 
@@ -239,9 +260,8 @@ public class PDataDAO {
 
 				if (existsPData(entry.getConceptId(), accountId)) {
 					/*
-					 * If WriteMode is APPEND and there is a matching
-					 * PDataEntry, the values in the input PDataEntry are pushed
-					 * into the stored values array
+					 * If WriteMode is APPEND and there is a matching PDataEntry, the values in the
+					 * input PDataEntry are pushed into the stored values array
 					 */
 					if (mode.equals(PDataWriteMode.APPEND)) {
 						UpdateResult result = collection.updateOne(updateQuery,
@@ -312,9 +332,8 @@ public class PDataDAO {
 
 					if (existsPData(entry.getConceptId(), accountId)) {
 						/*
-						 * If WriteMode is APPEND and there is a matching
-						 * PDataEntry, the values in the input PDataEntry are
-						 * pushed into the stored values array
+						 * If WriteMode is APPEND and there is a matching PDataEntry, the values in the
+						 * input PDataEntry are pushed into the stored values array
 						 */
 						if (mode.equals(PDataWriteMode.APPEND)) {
 							UpdateResult result = collection.updateOne(updateQuery,

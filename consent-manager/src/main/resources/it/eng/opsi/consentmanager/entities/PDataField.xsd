@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<xsd:schema targetNamespace="data.servicemanager.opsi.eng.it" 
-            xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
-            xmlns:tns="data.servicemanager.opsi.eng.it" 
-            elementFormDefault="qualified">
+<xsd:schema targetNamespace="data.servicemanager.opsi.eng.it"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="data.servicemanager.opsi.eng.it"
+	elementFormDefault="qualified">
 
-	<!-- PDataField object  -->
+	<!-- PDataField object -->
 	<xsd:element name="PDataField">
 		<xsd:complexType>
 			<xsd:sequence>
@@ -20,6 +19,6 @@
 		</xsd:complexType>
 	</xsd:element>
 
-	
+
 
 </xsd:schema>

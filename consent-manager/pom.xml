@@ -1,13 +1,14 @@
 <?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <modelVersion>4.0.0</modelVersion>
- <parent>
-    <groupId>it.eng.opsi.cdv</groupId>
-    <artifactId>cdv</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-  </parent>
-  <artifactId>consent-manager</artifactId>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>it.eng.opsi.cdv</groupId>
+		<artifactId>cdv</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>consent-manager</artifactId>
 	<packaging>war</packaging>
 	<name>CDV Consent Manager</name>
 	<repositories>
@@ -16,8 +17,8 @@
 			<url>http://repository.smartcommunitylab.it/content/repositories/releases</url>
 		</repository>
 	</repositories>
-  
-  <properties>
+
+	<properties>
 		<jersey.version>2.25</jersey.version>
 		<commons-lang3.version>3.5</commons-lang3.version>
 		<commons-io.version>2.5</commons-io.version>
@@ -27,24 +28,24 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<jersey-spring>2.25</jersey-spring>
 		<servlet-version>3.0.1</servlet-version>
-   </properties>
-  
-  
-  <dependencies>
-    <dependency>
+	</properties>
+
+
+	<dependencies>
+		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-lgpl</artifactId>
 			<version>1.9.4</version>
 			<type>jar</type>
 			<scope>compile</scope>
-	</dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>asm</groupId>
 			<artifactId>asm-all</artifactId>
 			<version>3.3.1</version>
@@ -136,7 +137,7 @@
 			<artifactId>commons-logging</artifactId>
 			<version>1.1.1</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt</artifactId>
@@ -153,8 +154,8 @@
 			<artifactId>profileservice.client</artifactId>
 			<version>2.2</version>
 		</dependency>
-  </dependencies>
-  <build>
+	</dependencies>
+	<build>
 		<finalName>consent-manager</finalName>
 		<plugins>
 			<plugin>

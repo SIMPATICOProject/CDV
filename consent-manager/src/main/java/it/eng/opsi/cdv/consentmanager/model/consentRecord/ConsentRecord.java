@@ -1,3 +1,25 @@
+/*******************************************************************************
+ * The MIT License (MIT)
+ * Copyright (c) 2016, 2018  Engineering Ingegneria Informatica S.p.A
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *******************************************************************************/
 package it.eng.opsi.cdv.consentmanager.model.consentRecord;
 
 import java.util.ArrayList;
@@ -7,35 +29,41 @@ import it.eng.opsi.cdv.consentmanager.utils.JsonRequired;
 
 public class ConsentRecord {
 
-	
 	private String _id;
 	@JsonRequired
 	private CommonPart common_part;
 	private List<ConsentRecordStatus> consentStatusRecords;
-	
+
 	private String consentSignedToken;
-	
+
 	public CommonPart getCommon_part() {
 		return common_part;
 	}
+
 	public void setCommon_part(CommonPart common_part) {
 		this.common_part = common_part;
 	}
+
 	public String getConsentSignedToken() {
 		return consentSignedToken;
 	}
+
 	public void setConsentSignedToken(String consentSignedToken) {
 		this.consentSignedToken = consentSignedToken;
 	}
+
 	public String get_id() {
 		return _id;
 	}
+
 	public void set_id(String _id) {
 		this._id = _id;
 	}
+
 	public CommonPart getCommont_part() {
 		return common_part;
 	}
+
 	public void setCommont_part(CommonPart common_part) {
 		this.common_part = common_part;
 	}
@@ -43,11 +71,14 @@ public class ConsentRecord {
 	public List<ConsentRecordStatus> getConsentStatusRecords() {
 		return consentStatusRecords;
 	}
+
 	public void setConsentStatusRecords(List<ConsentRecordStatus> consentStatusRecords) {
 		this.consentStatusRecords = consentStatusRecords;
 	}
+
 	public void addConsentStatusRecords(ConsentRecordStatus consentStatusRecords) {
-		if (this.consentStatusRecords==null) this.consentStatusRecords=new ArrayList<ConsentRecordStatus>();
+		if (this.consentStatusRecords == null)
+			this.consentStatusRecords = new ArrayList<ConsentRecordStatus>();
 		this.consentStatusRecords.add(consentStatusRecords);
 	}
 }

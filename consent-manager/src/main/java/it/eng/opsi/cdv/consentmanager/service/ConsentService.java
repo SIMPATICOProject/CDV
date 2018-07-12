@@ -1,3 +1,25 @@
+/*******************************************************************************
+ * The MIT License (MIT)
+ * Copyright (c) 2016, 2018  Engineering Ingegneria Informatica S.p.A
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *******************************************************************************/
 package it.eng.opsi.cdv.consentmanager.service;
 
 import java.io.UnsupportedEncodingException;
@@ -63,7 +85,6 @@ public class ConsentService implements IConsentService {
 
 	private static AccountDAO dao = new AccountDAO(PropertyManager.getProperty("ACCOUNT_REPOSITORY_COLLECTION"));
 
-	
 	@Override
 	@POST
 	@Path("/findConsent/serviceId")
@@ -547,11 +568,11 @@ public class ConsentService implements IConsentService {
 		String res = response.readEntity(String.class);
 
 		if (status == 200) {
-			
+
 			return DAOUtils.json2Obj(res, ServiceEntry.class);
 
 		} else {
-			
+
 			throw new ConsentManagerException(
 					"There was an error while retrieving Service Description from Service Manager");
 		}
@@ -570,11 +591,11 @@ public class ConsentService implements IConsentService {
 		String res = response.readEntity(String.class);
 
 		if (status == 200) {
-			
+
 			return DAOUtils.json2Obj(res, ServiceEntry.class);
 
 		} else {
-			
+
 			throw new ConsentManagerException(
 					"There was an error while retrieving Service Data Mapping from Service Manager");
 		}
@@ -595,11 +616,11 @@ public class ConsentService implements IConsentService {
 		String res = response.readEntity(String.class);
 
 		if (status == 200) {
-			
+
 			return DAOUtils.json2Obj(res, ServiceLinkRecord.class);
 
 		} else {
-			
+
 			throw new ConsentManagerException(
 					"There was an error while retrieving Service link record from consent Manager");
 		}
@@ -619,7 +640,6 @@ public class ConsentService implements IConsentService {
 		details.put("operation", "entered in updateConsent method");
 		traceAuditLog(accountId, details);
 
-		
 		try {
 			ConsentRecordSink cr_sink = DAOUtils.json2Obj(consent_record_sink, ConsentRecordSink.class);
 			ConsentRecordSource cr_source = DAOUtils.json2Obj(consent_record_source, ConsentRecordSource.class);
@@ -674,8 +694,7 @@ public class ConsentService implements IConsentService {
 			dao.updateSinkConsentRecord(accountId, cr_sink_db);
 
 			// invio il consent al sink
-			ServiceEntry sinkService = dao
-					.findServiceById(cr_sink_db.getCommon_part().getSubject_id());
+			ServiceEntry sinkService = dao.findServiceById(cr_sink_db.getCommon_part().getSubject_id());
 			String sink_service_id = sinkService.getPublicServiceID();
 
 			details = new JSONObject();
@@ -706,8 +725,7 @@ public class ConsentService implements IConsentService {
 			dao.updateSourceConsentRecord(accountId, cr_source_db);
 
 			// invio il consent al sink
-			ServiceEntry sourceService = dao
-					.findServiceById(cr_source_db.getCommon_part().getSubject_id());
+			ServiceEntry sourceService = dao.findServiceById(cr_source_db.getCommon_part().getSubject_id());
 			String source_service_id = sourceService.getPublicServiceID();
 
 			sendConsentToSink(DAOUtils.obj2Json(cr_sink_db, ConsentRecordSink.class), source_service_id,
@@ -799,7 +817,6 @@ public class ConsentService implements IConsentService {
 
 			ConsentForm consentFormObj = DAOUtils.json2Obj(consentForm, ConsentForm.class);
 
-			
 			String sinkId = consentFormObj.getSinkId();
 			String sourceId = consentFormObj.getSourceId();
 
@@ -833,8 +850,7 @@ public class ConsentService implements IConsentService {
 			ConsentRecordStatusEnum lastStatus = ConsentRecordStatusEnum.WITHDRAWN;
 
 			if (consentRecords != null) {
-				
-				
+
 				ConsentRecordSink crSink = (ConsentRecordSink) consentRecords.get(0); // first is ConsentRecordSink
 				ConsentRecordSource css = (ConsentRecordSource) consentRecords.get(1); // first is ConsentRecordSink
 				// List<ConsentRecordStatus> ssrList = crs.getConsentStatusRecords();
@@ -853,13 +869,12 @@ public class ConsentService implements IConsentService {
 					return Response.status(Response.Status.ACCEPTED).entity("{}").build();
 
 				}
-				
+
 			} else { // dobbiamo controllare se esiste già consent record con altro dataset
 
-				
 				ConsentRecordSink crsiSecondDataset = dao.getConsentRecordSinkByDatasetId(accountId, datasetId);
 				ConsentRecordSource crsoSecondDataset = dao.getConsentRecordSourceByDatasetId(accountId, datasetId);
-				if (false /*crsiSecondDataset != null*/) { // esiste un altro CR
+				if (false /* crsiSecondDataset != null */) { // esiste un altro CR
 					// cambio lo stato del CR dell'altro dataset a WITHDRAW
 
 					ConsentRecordStatus sinkCSR = new ConsentRecordStatus(ConsentRecordStatusEnum.WITHDRAWN);
@@ -1034,7 +1049,6 @@ public class ConsentService implements IConsentService {
 				String sinkSign = JWTUtils.createJWT(crk);
 				String sourceSign = JWTUtils.createJWT(crs);
 
-				
 				crk.setConsentSignedToken(sinkSign);
 				crs.setConsentSignedToken(sourceSign);
 
@@ -1219,18 +1233,16 @@ public class ConsentService implements IConsentService {
 			consentRecordSink = dao.getSinkConsentRecords(accountId);
 
 			for (ConsentRecordSink crk : consentRecordSink) {
-				
+
 				Map m = new HashMap();
 				ConsentRecordSource crs = dao.findSourceConsentRecordByRes_id(
 						crk.getCommon_part().getRs_description().getResource_set().getRs_id(), accountId);
 
 				String slr_id = crk.getCommon_part().getSlr_id();
 
-				
+				ServiceEntry sinkService = this.findById(crk.getCommon_part().getSubject_id());
+				ServiceEntry sourceService = this.findById(crs.getCommon_part().getSubject_id());
 
-				ServiceEntry sinkService=this.findById(crk.getCommon_part().getSubject_id());
-				ServiceEntry sourceService=this.findById(crs.getCommon_part().getSubject_id());
-				
 				m.put("sinkService", sinkService);
 				m.put("sourceService", sourceService);
 				m.put("rs_id", crk.getCommon_part().getRs_description().getResource_set().getRs_id());
@@ -1239,8 +1251,6 @@ public class ConsentService implements IConsentService {
 				m.put("source", crs);
 				consentData.add(m);
 
-				
-
 			}
 
 			String array = new Gson().toJson(consentData);
@@ -1265,14 +1275,13 @@ public class ConsentService implements IConsentService {
 		}
 
 	}
-	
-	
-	
+
 	@Override
 	@GET
 	@Path("/consents/{accountId}/{slr}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getAllConsentByAccountIdSlr(@PathParam("accountId") String accountId,@PathParam("slr") String slr) {
+	public Response getAllConsentByAccountIdSlr(@PathParam("accountId") String accountId,
+			@PathParam("slr") String slr) {
 
 		List<ConsentRecordSink> consentRecordSink;
 		List consentData = new ArrayList();
@@ -1280,7 +1289,7 @@ public class ConsentService implements IConsentService {
 			consentRecordSink = dao.getSinkConsentRecords(accountId);
 
 			for (ConsentRecordSink crk : consentRecordSink) {
-				
+
 				if (crk.getCommon_part().getSlr_id().equalsIgnoreCase(slr)) {
 					Map m = new HashMap();
 					ConsentRecordSource crs = dao.findSourceConsentRecordByRes_id(
@@ -1288,9 +1297,9 @@ public class ConsentService implements IConsentService {
 
 					String slr_id = crk.getCommon_part().getSlr_id();
 
-					ServiceEntry sinkService=this.findById(crk.getCommon_part().getSubject_id());
-					ServiceEntry sourceService=this.findById(crs.getCommon_part().getSubject_id());
-					
+					ServiceEntry sinkService = this.findById(crk.getCommon_part().getSubject_id());
+					ServiceEntry sourceService = this.findById(crs.getCommon_part().getSubject_id());
+
 					m.put("sinkService", sinkService);
 					m.put("sourceService", sourceService);
 					m.put("rs_id", crk.getCommon_part().getRs_description().getResource_set().getRs_id());
@@ -1298,9 +1307,8 @@ public class ConsentService implements IConsentService {
 					m.put("sink", crk);
 					m.put("source", crs);
 					consentData.add(m);
-					
+
 				}
-					
 
 			}
 
@@ -1326,8 +1334,6 @@ public class ConsentService implements IConsentService {
 		}
 
 	}
-	
-	
 
 	/*
 	 * @Override
@@ -1419,7 +1425,7 @@ public class ConsentService implements IConsentService {
 		payload.put("sink_id", sinkIdToService);
 		Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
 		Response response = invocationBuilder.post(Entity.entity(payload.toString(), MediaType.APPLICATION_JSON));
-		
+
 	}
 
 	private void sendConsentToSink(String csrToService, String sourceIdToService, String datasetIdToService) {
@@ -1431,7 +1437,7 @@ public class ConsentService implements IConsentService {
 		payload.put("dataset_id", datasetIdToService);
 		Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
 		Response response = invocationBuilder.post(Entity.entity(payload.toString(), MediaType.APPLICATION_JSON));
-	
+
 	}
 
 }
