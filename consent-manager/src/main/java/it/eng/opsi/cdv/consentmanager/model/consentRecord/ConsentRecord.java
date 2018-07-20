@@ -60,9 +60,7 @@ public class ConsentRecord {
 		this._id = _id;
 	}
 
-	public CommonPart getCommont_part() {
-		return common_part;
-	}
+	
 
 	public void setCommont_part(CommonPart common_part) {
 		this.common_part = common_part;

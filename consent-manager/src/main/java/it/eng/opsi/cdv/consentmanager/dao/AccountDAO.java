@@ -64,7 +64,7 @@ import it.eng.opsi.cdv.consentmanager.model.Account;
 import it.eng.opsi.cdv.consentmanager.model.AccountManagerException;
 import it.eng.opsi.cdv.consentmanager.model.AccountNotFoundException;
 import it.eng.opsi.cdv.consentmanager.model.AccountUtilsException;
-
+import it.eng.opsi.cdv.consentmanager.model.ConsentRecordNotFoundException;
 import it.eng.opsi.cdv.consentmanager.model.ServiceLinkRecord;
 import it.eng.opsi.cdv.consentmanager.model.ServiceLinkRecordNotFoundException;
 
@@ -1024,5 +1024,6 @@ public class AccountDAO {
 			throw new Exception("There was an error while getting the Service");
 
 	}
+	
 
 }

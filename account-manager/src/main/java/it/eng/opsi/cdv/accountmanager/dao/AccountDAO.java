@@ -56,6 +56,7 @@ import it.eng.opsi.cdv.accountmanager.model.Account;
 import it.eng.opsi.cdv.accountmanager.model.AccountAlreadyPresentException;
 import it.eng.opsi.cdv.accountmanager.model.AccountNotFoundException;
 import it.eng.opsi.cdv.accountmanager.model.AccountUtilsException;
+import it.eng.opsi.cdv.accountmanager.model.ConsentRecordNotFoundException;
 import it.eng.opsi.cdv.accountmanager.model.AccountManagerException;
 import it.eng.opsi.cdv.accountmanager.model.Contact;
 import it.eng.opsi.cdv.accountmanager.model.ContactNotFoundException;
@@ -1749,8 +1750,7 @@ public class AccountDAO {
 
 	public void deleteServiceLinkRecordById(String accountId, String slrId)
 			throws AccountManagerException, ServiceLinkRecordNotFoundException {
-		;
-
+		
 		MongoCollection<Document> collection = null;
 		UpdateResult result = null;
 
@@ -1974,6 +1974,93 @@ public class AccountDAO {
 			else
 				throw new AccountManagerException("There was an error while getting the Account");
 		}
+	}
+	
+	
+	
+	public void deleteSinkConsentRecordBySLR(String accountId, String slrId)
+			throws AccountManagerException, ConsentRecordNotFoundException {
+		
+		MongoCollection<Document> collection = null;
+		UpdateResult result = null;
+
+		try {
+
+			MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
+			MongoDatabase db = dbSingleton.getDB();
+			collection = db.getCollection(collectionName);
+			ObjectId accountDocId = new ObjectId(accountId);
+
+			result = collection.updateOne(eq("_id", accountDocId),
+					new Document("$pull", new Document("sinkConsentRecords", new Document("common_part.slr_id", slrId))).append("$set",
+							new Document("modified", DAOUtils.formatDate(ZonedDateTime.now(ZoneOffset.UTC)))),
+					new UpdateOptions().upsert(false));
+
+		} catch (IllegalArgumentException e) {
+
+			// try with username as accountId
+			if (e.getMessage().contains("invalid hexadecimal representation of an ObjectId"))
+				result = collection.updateOne(eq("username", accountId),
+						new Document("$pull", new Document("sinkConsentRecords", new Document("common_part.slr_id", slrId))).append(
+								"$set",
+								new Document("modified", DAOUtils.formatDate(ZonedDateTime.now(ZoneOffset.UTC)))),
+						new UpdateOptions().upsert(false));
+
+			else
+				throw new AccountManagerException("There was an error while getting the Account");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new AccountManagerException("There was an error while getting the Consent Sink Record");
+		}
+
+		if (result.getModifiedCount() == 0)
+			throw new ConsentRecordNotFoundException("The Sink Consent Record with slr: " + slrId
+					+ " for the Account Id: " + accountId + " was not found");
+
+	}
+	
+	
+	public void deleteSourceConsentRecordBySLR(String accountId, String slrId)
+			throws AccountManagerException, ConsentRecordNotFoundException {
+		
+		MongoCollection<Document> collection = null;
+		UpdateResult result = null;
+
+		try {
+
+			MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
+			MongoDatabase db = dbSingleton.getDB();
+			collection = db.getCollection(collectionName);
+			ObjectId accountDocId = new ObjectId(accountId);
+
+			result = collection.updateOne(eq("_id", accountDocId),
+					new Document("$pull", new Document("sourceConsentRecords", new Document("common_part.slr_id", slrId))).append("$set",
+							new Document("modified", DAOUtils.formatDate(ZonedDateTime.now(ZoneOffset.UTC)))),
+					new UpdateOptions().upsert(false));
+
+		} catch (IllegalArgumentException e) {
+
+			// try with username as accountId
+			if (e.getMessage().contains("invalid hexadecimal representation of an ObjectId"))
+				result = collection.updateOne(eq("username", accountId),
+						new Document("$pull", new Document("sourceConsentRecords", new Document("common_part.slr_id", slrId))).append(
+								"$set",
+								new Document("modified", DAOUtils.formatDate(ZonedDateTime.now(ZoneOffset.UTC)))),
+						new UpdateOptions().upsert(false));
+
+			else
+				throw new AccountManagerException("There was an error while getting the Account");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new AccountManagerException("There was an error while getting the Consent Sink Record");
+		}
+
+		if (result.getModifiedCount() == 0)
+			throw new ConsentRecordNotFoundException("The Source Consent Record with slr: " + slrId
+					+ " for the Account Id: " + accountId + " was not found");
+
 	}
 
 }

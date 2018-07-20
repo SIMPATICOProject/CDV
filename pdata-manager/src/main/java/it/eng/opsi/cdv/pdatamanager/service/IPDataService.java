@@ -48,4 +48,8 @@ public interface IPDataService {
 
 	public abstract Response downloadAllPData(String accountId, String fileFormat);
 
+	public abstract Response getServicePDataByConsent(String input);
+
+	public abstract Response postServicePDataByConsent(String input, String modeString);
+
 }

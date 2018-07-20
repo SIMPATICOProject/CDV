@@ -59,6 +59,7 @@ import org.json.JSONObject;
 import com.google.gson.reflect.TypeToken;
 
 import it.eng.opsi.cdv.pdatamanager.model.AccountManagerCallException;
+import it.eng.opsi.cdv.pdatamanager.model.ConsentManagerCallException;
 import it.eng.opsi.cdv.pdatamanager.model.DataMapping;
 import it.eng.opsi.cdv.pdatamanager.model.ErrorResponse;
 import it.eng.opsi.cdv.pdatamanager.model.ServiceManagerCallException;
@@ -760,6 +761,126 @@ public class PDataService implements IPDataService {
 
 	@Override
 	@POST
+	@Path("/postPDataByConsent")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response postServicePDataByConsent(final String input, @QueryParam("mode") String modeString) {
+
+		try {
+
+			// INPUT
+			JSONObject in = new JSONObject(input);
+			String slrId = in.getString("slr_id");
+			String slrToken = in.getString("slr_token");
+			String userId = in.getString("user_id"); // userId is the surrogateId!
+			String crId = in.getString("cr_id");
+			String crToken = in.getString("cr_token");
+			JSONArray properties = in.getJSONArray("properties");
+			PDataWriteMode mode;
+
+			HashMap<String, PDataEntry> serviceMap;
+			HashMap<String, String> verifyResSLR;
+			HashMap<String, String> verifyResCR;
+			String accountId, verifySLRResult, verifyCRResult;
+
+			try {
+				mode = PDataWriteMode.valueOf(modeString.toUpperCase());
+			} catch (IllegalArgumentException | NullPointerException e) {
+				mode = PDataWriteMode.OVERWRITE;
+			}
+
+			// Verify SLR and get the related accountId from AccountManager
+			verifyResSLR = callVerifySLR(slrId, slrToken, userId);
+			verifySLRResult = verifyResSLR.get("result");
+
+			if (verifySLRResult.equalsIgnoreCase("success")) {
+				// The accountId stored by the PData Manager is the Account
+				// username of Account Manager
+				accountId = verifyResSLR.get("username");
+
+				// verify consent receipt
+				verifyResCR = callVerifyCR(slrId, crId, crToken, userId, accountId);
+				verifyCRResult = verifyResCR.get("result");
+
+				if (verifyCRResult.equalsIgnoreCase("success")) {
+
+					List<DataMapping> responseList = (List<DataMapping>) DAOUtils
+							.json2Obj(verifyResCR.get("datamapping"), new TypeToken<List<DataMapping>>() {
+							}.getType());
+
+					// Get the service Data Mapping from Service Consent
+					serviceMap = (HashMap<String, PDataEntry>) responseList.stream().collect(Collectors.toMap(
+							item -> item.getProperty(),
+							item -> new PDataEntry(item.getConceptId(), item.getName(), item.getType(), accountId)));
+
+					// Create a new PData, according to the matched property in
+					// service
+					// Data Mapping
+
+					List<PDataEntry> mappedPData = new ArrayList<PDataEntry>();
+
+					for (int i = 0; i < properties.length(); i++) {
+
+						JSONObject property = (JSONObject) properties.get(i);
+						PDataEntry resolved = serviceMap.get(property.getString("key"));
+						if (resolved != null) {
+							resolved.setValues((List<String>) DAOUtils.json2Obj(property.get("values").toString(),
+									new TypeToken<List<String>>() {
+									}.getType()));
+
+							mappedPData.add(resolved);
+						}
+					}
+
+					repo.storePData(accountId, mappedPData, mode);
+
+				} else {
+
+					ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
+							"CRNotValid", verifyResCR.get("message"));
+					return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
+
+				}
+
+				return Response.status(Response.Status.OK).build();
+
+			} else {
+
+				ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
+						"SLRNotValid", verifyResSLR.get("message"));
+
+				return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
+
+			}
+
+		} catch (JSONException | PDataUtilsException e) {
+			e.printStackTrace();
+			ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
+					e.getClass().getSimpleName(), e.getMessage());
+			return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
+
+		} catch (AccountManagerCallException | ConsentManagerCallException | PDataRepositoryException e) {
+
+			e.printStackTrace();
+			ErrorResponse error = new ErrorResponse(
+					String.valueOf(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()), e.getClass().getSimpleName(),
+					e.getMessage());
+
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error.toJson()).build();
+
+		} catch (NullPointerException e) {
+
+			e.printStackTrace();
+			ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.NOT_FOUND.getStatusCode()),
+					e.getClass().getSimpleName(), e.getMessage());
+
+			return Response.status(Response.Status.NOT_FOUND).entity(error.toJson()).build();
+		}
+
+	}
+
+	@Override
+	@POST
 	@Path("/getPData")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
@@ -771,7 +892,7 @@ public class PDataService implements IPDataService {
 			String slrId = in.getString("slr_id");
 			String slrToken = in.getString("slr_token");
 			String userId = in.getString("user_id"); // userId is the
-														// surrogateId!
+			// surrogateId!
 			JSONArray propertiesKeys = in.getJSONArray("properties");
 
 			HashMap<String, PDataEntry> serviceMap;
@@ -872,6 +993,145 @@ public class PDataService implements IPDataService {
 
 	}
 
+	@Override
+	@POST
+	@Path("/getPDataByConsent")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response getServicePDataByConsent(String input) {
+
+		try {
+			// INPUT
+			JSONObject in = new JSONObject(input);
+			String slrId = in.getString("slr_id");
+			String slrToken = in.getString("slr_token");
+			String userId = in.getString("user_id"); // userId is the surrogateId!
+			String crId = in.getString("cr_id");
+			String crToken = in.getString("cr_token");
+			JSONArray propertiesKeys = in.getJSONArray("properties");
+
+			HashMap<String, PDataEntry> serviceMap;
+			HashMap<String, String> verifyResSLR;
+			HashMap<String, String> verifyResCR;
+			String accountId, serviceId, verifySLRResult, verifyCRResult;
+
+			// Verify SLR and CR and get the related accountId from AccountManager and
+			// Consent Manager
+
+			verifyResSLR = callVerifySLR(slrId, slrToken, userId);
+
+			verifySLRResult = verifyResSLR.get("result");
+
+			if (verifySLRResult.equalsIgnoreCase("success")) {
+
+				// The accountId stored by the PData Manager is the Account
+				// username of Account Manager
+				accountId = verifyResSLR.get("username");
+				serviceId = verifyResSLR.get("serviceId");
+
+				// verify consent receipt
+				verifyResCR = callVerifyCR(slrId, crId, crToken, userId, accountId);
+				verifyCRResult = verifyResCR.get("result");
+
+				JSONArray properties = new JSONArray();
+
+				if (verifyCRResult.equalsIgnoreCase("success")) {
+
+					List<DataMapping> responseList = (List<DataMapping>) DAOUtils
+							.json2Obj(verifyResCR.get("datamapping"), new TypeToken<List<DataMapping>>() {
+							}.getType());
+
+					// Get the service Data Mapping from Service Consent
+					serviceMap = (HashMap<String, PDataEntry>) responseList.stream().collect(Collectors.toMap(
+							item -> item.getProperty(),
+							item -> new PDataEntry(item.getConceptId(), item.getName(), item.getType(), accountId)));
+
+					// Get the service Data Mapping from Service Manager
+					// serviceMap = callGetServiceMap(serviceId, accountId);
+
+					if (propertiesKeys.length() == 0) {
+						for (Entry<String, PDataEntry> entry : serviceMap.entrySet()) {
+
+							try {
+								PDataEntry repoResult = repo.getPData(entry.getValue().getConceptId(), accountId);
+								JSONObject pair = new JSONObject();
+								pair.put("key", entry.getKey());
+								pair.put("values", repoResult.getValues());
+								properties.put(pair);
+
+							} catch (PDataNotFoundException e) {
+								System.out.println(e.getMessage());
+							}
+						}
+
+					} else {
+						for (int i = 0; i < propertiesKeys.length(); i++) {
+
+							String property = (String) propertiesKeys.get(i);
+							PDataEntry resolved = serviceMap.get(property);
+
+							if (resolved != null) {
+								try {
+									PDataEntry repoResult = repo.getPData(resolved.getConceptId(), accountId);
+									JSONObject pair = new JSONObject();
+									pair.put("key", property);
+									pair.put("values", repoResult.getValues());
+									properties.put(pair);
+								} catch (PDataNotFoundException e) {
+									System.out.println(e.getMessage());
+								}
+							}
+						}
+					}
+
+				} else {
+
+					ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
+							"CRNotValid", verifyResCR.get("message"));
+					return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
+
+				}
+
+				JSONObject result = new JSONObject();
+				result.put("slr_id", slrId);
+				result.put("user_id", userId);
+				result.put("properties", properties);
+
+				return Response.status(Response.Status.OK).entity(result.toString()).build();
+
+			} else {
+
+				ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
+						"SLRNotValid", verifyResSLR.get("message"));
+				return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
+
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+			ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
+					e.getClass().getSimpleName(), e.getMessage());
+			return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
+
+		} catch (PDataUtilsException | ConsentManagerCallException | AccountManagerCallException
+				| PDataRepositoryException e) {
+			e.printStackTrace();
+			ErrorResponse error = new ErrorResponse(
+					String.valueOf(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()), e.getClass().getSimpleName(),
+					e.getMessage());
+
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error.toJson()).build();
+
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.NOT_FOUND.getStatusCode()),
+					e.getClass().getSimpleName(), e.getMessage());
+
+			return Response.status(Response.Status.NOT_FOUND).entity(error.toJson()).build();
+
+		}
+
+	}
+
 	private static HashMap<String, PDataEntry> callGetServiceMap(String serviceId, String accountId)
 			throws ServiceManagerCallException, PDataRepositoryException, PDataUtilsException {
 
@@ -929,7 +1189,6 @@ public class PDataService implements IPDataService {
 
 			if (status == 200) {
 				if (resJson.getString("result").equalsIgnoreCase("success")) {
-
 					result.put("accountId", resJson.getString("accountId"));
 					result.put("serviceId", resJson.getString("serviceId"));
 					result.put("username", resJson.getString("username"));
@@ -952,6 +1211,58 @@ public class PDataService implements IPDataService {
 			e.printStackTrace();
 			throw new AccountManagerCallException(
 					"There was an error while verifying the SLR against Account Manager ");
+		}
+
+		return result;
+	}
+
+	public static HashMap<String, String> callVerifyCR(String slrId, String crId, String crToken, String surrogateId,
+			String accountId) throws ConsentManagerCallException {
+
+		HashMap<String, String> result = new HashMap<String, String>();
+
+		try {
+
+			Client client = ClientBuilder.newClient();
+			WebTarget webTarget = client
+					.target(PropertyManager.getProperty("CONSENTMANAGER_HOST") + "/api/internal/verifySinkConsent");
+
+			JSONObject payload = new JSONObject();
+			payload.put("cr_id", crId);
+			payload.put("slr_id", slrId);
+			payload.put("surrogateId", surrogateId);
+			payload.put("crToken", crToken);
+			payload.put("accountId", accountId);
+
+			Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
+			Response response = invocationBuilder.post(Entity.entity(payload.toString(), MediaType.APPLICATION_JSON));
+
+			int status = response.getStatus();
+			String res = response.readEntity(String.class);
+			response.close();
+			JSONObject resJson = new JSONObject(res);
+
+			if (status == 200) {
+				if (resJson.getString("result").equalsIgnoreCase("success")) {
+					result.put("result", resJson.getString("result"));
+					result.put("message", resJson.getString("message"));
+					result.put("datamapping", resJson.getString("datamapping"));
+
+				} else {
+
+					result.put("result", resJson.getString("result"));
+					result.put("message", resJson.getString("message"));
+
+				}
+			} else {
+				throw new ConsentManagerCallException(
+						"There was an error while verifying the CR against Consent Manager");
+
+			}
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+			throw new ConsentManagerCallException("There was an error while verifying the CR against Consent Manager ");
 		}
 
 		return result;
@@ -1043,45 +1354,5 @@ public class PDataService implements IPDataService {
 		}
 
 	}
-
-	// Get the actual account Id from Account Manager, in order to retrieve the
-	// id starting from username
-	// private static String callGetRealAccountId(String accountId) throws
-	// AccountManagerCallException {
-	//
-	// try {
-	//
-	// Client client = ClientBuilder.newClient();
-	// WebTarget webTarget = client
-	// .target(PropertyManager.getProperty("ACCOUNTMANAGER_HOST") +
-	// "/api/v1/accounts/{accountId}")
-	// .resolveTemplate("accountId", accountId);
-	//
-	// Invocation.Builder invocationBuilder = webTarget.request();
-	// Response response = invocationBuilder.get();
-	//
-	// int status = response.getStatus();
-	// String res = response.readEntity(String.class);
-	// response.close();
-	//
-	//
-	// if (status == 200) {
-	// return DAOUtils.json2Obj(
-	//
-	// } else {
-	// throw new AccountManagerCallException(
-	// "There was an error while calling the existsAccount service of Account
-	// Manager");
-	//
-	// }
-	//
-	// } catch (JSONException e) {
-	// e.printStackTrace();
-	// throw new AccountManagerCallException(
-	// "There was an error while calling the existsAccount service of Account
-	// Manager");
-	// }
-	//
-	// }
 
 }

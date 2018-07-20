@@ -115,7 +115,7 @@ public class JWTUtils {
 
 		Jws<Claims> claims = Jwts.parser().setSigningKey(jwtSecret.getBytes("UTF-8")).parseClaimsJws(jwt);
 
-		// System.out.println(claims.getBody());
+		System.out.println(claims.getBody());
 
 	}
 

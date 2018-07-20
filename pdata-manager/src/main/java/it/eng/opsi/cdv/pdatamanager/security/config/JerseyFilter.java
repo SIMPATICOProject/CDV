@@ -87,24 +87,6 @@ public class JerseyFilter implements ContainerRequestFilter {
 									request.abortWith(Response.status(Response.Status.BAD_REQUEST)
 											.type(MediaType.APPLICATION_JSON).entity(errorResponse.toJson().toString())
 											.build());
-									// HashMap<String, String> result =
-									// PDataService.callVerifySLR(slrId,
-									// surrogateId);
-									//
-									// if
-									// (!result.get("result").equalsIgnoreCase("success"))
-									// {
-									//
-									// ErrorResponse errorResponse = new
-									// ErrorResponse("400", "SLRNotFound",
-									// "For the provided SLR id and User Id
-									// (surrogate), no active SLR was found");
-									//
-									// request.abortWith(Response.status(Response.Status.BAD_REQUEST)
-									// .type(MediaType.APPLICATION_JSON)
-									// .entity(errorResponse.toJson().toString()).build());
-									//
-									// }
 
 								}
 

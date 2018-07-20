@@ -52,6 +52,7 @@ import it.eng.opsi.cdv.accountmanager.model.AccountAlreadyPresentException;
 import it.eng.opsi.cdv.accountmanager.model.AccountManagerException;
 import it.eng.opsi.cdv.accountmanager.model.AccountNotFoundException;
 import it.eng.opsi.cdv.accountmanager.model.AccountUtilsException;
+import it.eng.opsi.cdv.accountmanager.model.ConsentRecordNotFoundException;
 import it.eng.opsi.cdv.accountmanager.model.Contact;
 import it.eng.opsi.cdv.accountmanager.model.ContactNotFoundException;
 import it.eng.opsi.cdv.accountmanager.model.Email;
@@ -1410,6 +1411,14 @@ public class AccountService implements IAccountService {
 			@PathParam("slrId") String slrId) {
 
 		try {
+			
+			try {
+				dao.deleteSourceConsentRecordBySLR(accountId, slrId);
+				dao.deleteSinkConsentRecordBySLR(accountId, slrId);
+			} catch (ConsentRecordNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			dao.deleteServiceLinkRecordById(accountId, slrId);
 			return Response.status(Response.Status.OK).build();
 

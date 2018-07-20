@@ -23,6 +23,7 @@
 package it.eng.opsi.cdv.consentmanager.service;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -49,11 +50,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.bson.types.ObjectId;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import io.jsonwebtoken.MalformedJwtException;
 import it.eng.opsi.cdv.consentmanager.dao.AccountDAO;
 import it.eng.opsi.cdv.consentmanager.model.AccountManagerException;
 import it.eng.opsi.cdv.consentmanager.model.AccountNotFoundException;
@@ -199,7 +202,7 @@ public class ConsentService implements IConsentService {
 					updateSinkConsentRecord(accountId, DAOUtils.obj2Json(cr_sink, ConsentRecordSink.class));
 
 					sendConsentToSink(DAOUtils.obj2Json(cr_sink, ConsentRecordSink.class), sourceId, cr_sink
-							.getCommont_part().getRs_description().getResource_set().getDataset().get(0).get_id());
+							.getCommon_part().getRs_description().getResource_set().getDataset().get(0).get_id());
 
 					details = new JSONObject();
 					details.put("method", "changeConsentRecordStatus");
@@ -365,116 +368,95 @@ public class ConsentService implements IConsentService {
 		return dataMappingList;
 	}
 
+
+
+
+	@Override
 	@POST
-	@Path("/verifySinkConsent/{sinkConsentId}")
+	@Path("/verifySinkConsent")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response verifySinkConsent(@PathParam("sinkConsentId") String sinkConsentId) {
+	public Response verifySinkConsent(final String input) {
 
-		return null;
+		try {
 
-		// try {
+			JSONObject inputJson = new JSONObject(input);
+			String cr_id = inputJson.getString("cr_id");
+			String slrId = inputJson.getString("slr_id");
+			String surrogateId = inputJson.getString("surrogateId");
+			String crToken = inputJson.getString("crToken");
+			String accountId = inputJson.getString("accountId");
 
-		// con record = dao.getServiceLinkRecordById(slrId);
-		// List<ServiceLinkStatusRecord> slrStatuses =
-		// record.getServiceLinkStatusRecords();
-		//
-		// // JWT token checking of the input SLR token with the stored one
-		// JWTUtils.verifyJWT(slrToken);
-		//
-		// // check if SLR has active SSR
-		// // check if input slrId and surrogateId matches with the retrieved
-		// // ones
-		// if (slrId.equals(record.get_id()) &&
-		// surrogateId.equals(record.getSurrogateId())
-		// // && slrStatuses.stream()
-		// // .filter(status ->
-		// // status.getServiceLinkStatus().equals(ServiceLinkStatusEnum.ACTIVE))
-		// // .count() != 0
-		// && slrStatuses.get(slrStatuses.size() - 1).getServiceLinkStatus()
-		// .equals(ServiceLinkStatusEnum.ACTIVE)
-		// && surrogateId.equals(record.getSurrogateId())) {
-		//
-		// JSONObject result = new JSONObject();
-		// result.put("result", "success");
-		// result.put("message", "The provided SLR has been verified successfully");
-		// result.put("accountId", record.getAccountId());
-		// result.put("serviceId", record.getServiceId());
-		// result.put("username", record.getUsername());
-		//
-		// return Response.status(Response.Status.OK).entity(result.toString()).build();
-		//
-		// } else {
-		//
-		// JSONObject result = new JSONObject();
-		// result.put("result", "failed");
-		// result.put("message", "The provided SLR has no active status");
-		// return Response.status(Response.Status.OK).entity(result.toString()).build();
-		//
-		// }
-		//
-		// } catch (JSONException e) {
-		//
-		// e.printStackTrace();
-		// ErrorResponse error = new
-		// ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
-		// e.getClass().getSimpleName(), e.getMessage());
-		//
-		// return
-		// Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
-		//
-		// } catch (ServiceLinkRecordNotFoundException e) {
-		//
-		// System.out.println(e.getClass().toString() + ": " + e.getMessage());
-		// JSONObject result = new JSONObject();
-		// result.put("result", "failed");
-		// result.put("message", "The provided SLR Id does not match with any SLR");
-		// return Response.status(Response.Status.OK).entity(result.toString()).build();
-		//
-		// } catch (SecurityException | MalformedJwtException e) {
-		//
-		// System.out.println(e.getClass().toString() + ": " + e.getMessage());
-		// JSONObject result = new JSONObject();
-		// result.put("result", "failed");
-		// result.put("message", "The provided SLR JWT token is not valid");
-		// return Response.status(Response.Status.OK).entity(result.toString()).build();
-		//
-		// } catch (Exception e) {
-		//
-		// e.printStackTrace();
-		// ErrorResponse error = new ErrorResponse(
-		// String.valueOf(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()),
-		// e.getClass().getSimpleName(),
-		// e.getMessage());
-		//
-		// return
-		// Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error.toJson()).build();
-		//
-		// }
+			ConsentRecordSink record = dao.getConsentRecordSinkByConsentId(accountId, cr_id);
+			List<ConsentRecordStatus> crStatus = record.getConsentStatusList();
+
+			// JWT token checking of the input CR token with the stored one
+
+			JWTUtils.verifyJWT(crToken);
+
+			// check if CR has active CSR
+			// check if input slrId, cr_id and surrogateId matches with the retrieved
+			// ones
+
+			if (slrId.equals(record.get_id()) && surrogateId.equals(record.getCommon_part().getSurrogate_id())
+					&& crStatus.get(crStatus.size() - 1).getConsent_status()
+					.equals(ConsentRecordStatusEnum.ACTIVE)) {
+				List<Dataset> datasets= record.getCommon_part().getRs_description().getResource_set().getDataset();
+				List<DataMapping> mapping= record.getCommon_part().getRs_description().getResource_set().getDataset().get(datasets.size()-1).getDataMapping();
+
+				String jsonMapping =  DAOUtils.obj2Json(mapping, new TypeToken<List<DataMapping>>(){}.getType());
+				JSONObject result = new JSONObject();
+				result.put("datamapping", jsonMapping);
+				result.put("result", "success");
+				result.put("message", "The provided CR has been verified successfully");
+				return Response.status(Response.Status.OK).entity(result.toString()).build();
+
+			} else {
+
+				JSONObject result = new JSONObject();
+				result.put("result", "failed");
+				result.put("message", "The provided CR has no active status");
+				return Response.status(Response.Status.OK).entity(result.toString()).build();
+
+			}
+
+		} catch (JSONException e) {
+
+			e.printStackTrace();
+			ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
+					e.getClass().getSimpleName(), e.getMessage());
+
+			return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
+
+		} catch (ServiceLinkRecordNotFoundException e) {
+
+			System.out.println(e.getClass().toString() + ": " + e.getMessage());
+			JSONObject result = new JSONObject();
+			result.put("result", "failed");
+			result.put("message", "The provided CR Id does not match with any SLR");
+			return Response.status(Response.Status.OK).entity(result.toString()).build();
+
+		} catch (SecurityException | MalformedJwtException e) {
+
+			System.out.println(e.getClass().toString() + ": " + e.getMessage());
+			JSONObject result = new JSONObject();
+			result.put("result", "failed");
+			result.put("message", "The provided SLR JWT token is not valid");
+			return Response.status(Response.Status.OK).entity(result.toString()).build();
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+			ErrorResponse error = new ErrorResponse(
+					String.valueOf(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()), e.getClass().getSimpleName(),
+					e.getMessage());
+
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error.toJson()).build();
+
+		}
 
 	}
 
-	/*
-	 * public Response getService(@PathParam("seviceId") String serviceId) {
-	 * 
-	 * try { return
-	 * Response.status(Response.Status.OK).entity(DAOUtils.obj2Json(findById(
-	 * serviceId), ServiceEntry.class).toString()) .build(); } catch
-	 * (ConsentManagerException e) { e.printStackTrace(); ErrorResponse error = new
-	 * ErrorResponse(
-	 * String.valueOf(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()),
-	 * e.getClass().getSimpleName(), e.getMessage()); return
-	 * Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error.toJson())
-	 * .build(); } catch (AccountUtilsException e) { e.printStackTrace();
-	 * ErrorResponse error = new ErrorResponse(
-	 * String.valueOf(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()),
-	 * e.getClass().getSimpleName(), e.getMessage()); return
-	 * Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error.toJson())
-	 * .build();
-	 * 
-	 * }
-	 * 
-	 * }
-	 */
+
 
 	private ConsentRecordSink storeSinkConsentRecord(String accountId, String consentJSON) {
 		ConsentRecordSink sinkCR;
@@ -753,8 +735,8 @@ public class ConsentService implements IConsentService {
 
 			return Response.status(Response.Status.CREATED)
 					.entity("{ \"sink_consent_record\": " + DAOUtils.obj2Json(cr_sink_db, ConsentRecordSink.class)
-							+ ", \"source_consent_record\": "
-							+ DAOUtils.obj2Json(cr_source_db, ConsentRecordSource.class) + "}")
+					+ ", \"source_consent_record\": "
+					+ DAOUtils.obj2Json(cr_source_db, ConsentRecordSource.class) + "}")
 					.build();
 
 		} catch (ServiceLinkRecordNotFoundException e) {
@@ -849,10 +831,12 @@ public class ConsentService implements IConsentService {
 					resorceSet.getDataset().get(0).get_id());
 			ConsentRecordStatusEnum lastStatus = ConsentRecordStatusEnum.WITHDRAWN;
 
+			ConsentRecordSink crSink=null;
+			ConsentRecordSource css=null;
 			if (consentRecords != null) {
 
-				ConsentRecordSink crSink = (ConsentRecordSink) consentRecords.get(0); // first is ConsentRecordSink
-				ConsentRecordSource css = (ConsentRecordSource) consentRecords.get(1); // first is ConsentRecordSink
+				crSink = (ConsentRecordSink) consentRecords.get(0); // first is ConsentRecordSink
+				css = (ConsentRecordSource) consentRecords.get(1); // first is ConsentRecordSink
 				// List<ConsentRecordStatus> ssrList = crs.getConsentStatusRecords();
 				List<ConsentRecordStatus> ssrList = crSink.getConsentStatusList();
 				lastStatus = ssrList.get(ssrList.size() - 1).getConsent_status();
@@ -866,7 +850,154 @@ public class ConsentService implements IConsentService {
 				} else { // if (lastStatus.equals(ConsentRecordStatusEnum.DISABLED)){
 					// si dovrebeb aggiungere alla lista dei consent record status per ciascun
 					// consent un nouovo conent record status attivo e memorizzarlo
-					return Response.status(Response.Status.ACCEPTED).entity("{}").build();
+
+					try {
+
+						details = new JSONObject();
+						details.put("method", "updateConsent");
+						details.put("date", new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
+						details.put("operation", "retrieve sinkId: " + crSink.getCommon_part().getCr_id() + " and  sourceId: "
+								+ css.getCommon_part().getCr_id());
+						traceAuditLog(accountId, details);
+
+						// modifico il Dataset del sink
+						ResourceSet rs_sink = crSink.getCommon_part().getRs_description().getResource_set();
+						List<Dataset> list_ds_sink = rs_sink.getDataset();
+						Dataset dataset_sink_new = list_ds_sink.get(list_ds_sink.size() - 1);
+
+						dataset_sink_new.setCreated(new Date());
+						dataset_sink_new.setStatus(true);
+
+
+						// modifico il Dataset del source
+						ResourceSet rs_source = css.getCommon_part().getRs_description().getResource_set();
+						List<Dataset> list_ds_source = rs_source.getDataset();
+						Dataset dataset_source_new = list_ds_source.get(list_ds_source.size() - 1);
+
+						dataset_source_new.setCreated(new Date());
+						dataset_source_new.setStatus(true);
+
+
+						// recupero il consent record relativo all'account id preso in input memorizzato
+						// nel database
+						// setto lo status dell'ultimo Dataset memorizzato nel database a False e
+						// aggiungo il dataset new alla lista dei data set
+						ConsentRecordSink cr_sink_db = dao.getConsentRecordSinkByConsentId(accountId,
+								crSink.getCommon_part().getCr_id());
+						List<Dataset> list_ds_sink_db = cr_sink_db.getCommon_part().getRs_description().getResource_set()
+								.getDataset();
+						Dataset ds_sink_db = list_ds_sink_db.get(list_ds_sink_db.size() - 1);
+						ds_sink_db.setStatus(false);
+						list_ds_sink_db.add(resorceSet.getDataset().get(0));
+						List<ConsentRecordStatus> crSinkStatuslist=cr_sink_db.getConsentStatusList();
+						crSinkStatuslist.add(new ConsentRecordStatus(ConsentRecordStatusEnum.ACTIVE));
+						dao.updateSinkConsentRecord(accountId, cr_sink_db);
+
+						// invio il consent al sink
+						ServiceEntry sinkService = dao.findServiceById(cr_sink_db.getCommon_part().getSubject_id());
+						String sink_service_id = sinkService.getPublicServiceID();
+
+						details = new JSONObject();
+						details.put("method", "updateConsent");
+						details.put("date", new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
+						details.put("operation", "Send Consent Record  to Sink (" + crSink.getCommon_part().getCr_id() + ")");
+						traceAuditLog(accountId, details);
+
+						details = new JSONObject();
+						details.put("method", "updateConsent");
+						details.put("date", new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
+						details.put("operation", "add sink dataset to sink dataset list");
+						traceAuditLog(accountId, details);
+
+						// recupero il consent record relativo all'account id preso in input memorizzato
+						// nel database
+						// setto lo status dell'ultimo Dataset memorizzato nel database a False e
+						// aggiungo il dataset new alla lista dei data set
+						ConsentRecordSource cr_source_db = dao.getConsentRecordSourceByDatasetId(accountId,
+								dataset_source_new.get_id());
+
+						List<Dataset> list_ds_source_db = cr_source_db.getCommon_part().getRs_description().getResource_set()
+								.getDataset();
+						Dataset ds_source_db = list_ds_source_db.get(list_ds_source_db.size() - 1);
+						ds_source_db.setStatus(false);
+						list_ds_source_db.add(resorceSet.getDataset().get(0));
+						List<ConsentRecordStatus> crSourceStatuslist=cr_source_db.getConsentStatusList();
+						crSourceStatuslist.add(new ConsentRecordStatus(ConsentRecordStatusEnum.ACTIVE));
+						dao.updateSourceConsentRecord(accountId, cr_source_db);
+
+						// invio il consent al sink
+						ServiceEntry sourceService = dao.findServiceById(cr_source_db.getCommon_part().getSubject_id());
+						String source_service_id = sourceService.getPublicServiceID();
+
+						sendConsentToSink(DAOUtils.obj2Json(cr_sink_db, ConsentRecordSink.class), source_service_id,
+								dataset_sink_new.get_id());
+
+						sendConsentToSource(DAOUtils.obj2Json(cr_source_db, ConsentRecordSource.class), sink_service_id);
+
+						details = new JSONObject();
+						details.put("method", "updateConsent");
+						details.put("date", new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
+						details.put("operation", "Send Consent Record  to Source (" + css.getCommon_part().getCr_id() + ")");
+						traceAuditLog(accountId, details);
+
+						details = new JSONObject();
+						details.put("method", "updateConsent");
+						details.put("date", new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
+						details.put("operation", "add source dataset to source dataset list");
+						traceAuditLog(accountId, details);
+
+						details = new JSONObject();
+						details.put("method", "updateConsent");
+						details.put("date", new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
+						details.put("operation", "exit from updateConsent method");
+						traceAuditLog(accountId, details);
+
+						return Response.status(Response.Status.CREATED)
+								.entity("{ \"sink_consent_record\": " + DAOUtils.obj2Json(cr_sink_db, ConsentRecordSink.class)
+								+ ", \"source_consent_record\": "
+								+ DAOUtils.obj2Json(cr_source_db, ConsentRecordSource.class) + "}")
+								.build();	
+
+
+					} catch (ServiceLinkRecordNotFoundException e) {
+						e.printStackTrace();
+						ErrorResponse error = new ErrorResponse(
+								String.valueOf(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()), e.getClass().getSimpleName(),
+								e.getMessage());
+
+						return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error.toJson()).build();
+					} catch (AccountManagerException e) {
+						e.printStackTrace();
+						ErrorResponse error = new ErrorResponse(
+								String.valueOf(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()), e.getClass().getSimpleName(),
+								e.getMessage());
+
+						return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error.toJson()).build();
+					} catch (AccountNotFoundException e) {
+						e.printStackTrace();
+						ErrorResponse error = new ErrorResponse(
+								String.valueOf(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()), e.getClass().getSimpleName(),
+								e.getMessage());
+						return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error.toJson()).build();
+					} catch (AccountUtilsException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						ErrorResponse error = new ErrorResponse(
+								String.valueOf(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()), e.getClass().getSimpleName(),
+								e.getMessage());
+
+						return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error.toJson()).build();
+
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						ErrorResponse error = new ErrorResponse(
+								String.valueOf(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()), e.getClass().getSimpleName(),
+								e.getMessage());
+
+						return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error.toJson()).build();
+
+					}
 
 				}
 
@@ -947,8 +1078,8 @@ public class ConsentService implements IConsentService {
 					// URL USE ONLY FOR SELECT 4TH ITERATION. TO BE DELETED AS SOON AS POSSIBLE
 					// URL TO STORE CONSENT IN SERVICES
 					sendConsentToSink(DAOUtils.obj2Json(crsiSecondDataset, ConsentRecordSink.class), sourceId,
-							crsiSecondDataset.getCommont_part().getRs_description().getResource_set().getDataset()
-									.get(0).get_id());
+							crsiSecondDataset.getCommon_part().getRs_description().getResource_set().getDataset()
+							.get(0).get_id());
 					details = new JSONObject();
 					details.put("method", "giveConsent");
 					details.put("date",
@@ -1109,8 +1240,8 @@ public class ConsentService implements IConsentService {
 
 				return Response.status(Response.Status.CREATED)
 						.entity("{ \"sink_consent_record\": " + DAOUtils.obj2Json(crk, ConsentRecordSink.class)
-								+ ", \"source_consent_record\": " + DAOUtils.obj2Json(crs, ConsentRecordSource.class)
-								+ "}")
+						+ ", \"source_consent_record\": " + DAOUtils.obj2Json(crs, ConsentRecordSource.class)
+						+ "}")
 						.build();
 			}
 
@@ -1313,6 +1444,125 @@ public class ConsentService implements IConsentService {
 			}
 
 			String array = new Gson().toJson(consentData);
+
+			return Response.status(Response.Status.OK).entity(array).build();
+
+		} catch (AccountUtilsException e) {
+
+			e.printStackTrace();
+			ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
+					e.getClass().getSimpleName(), e.getMessage());
+
+			return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			ErrorResponse error = new ErrorResponse(
+					String.valueOf(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()), e.getClass().getSimpleName(),
+					e.getMessage());
+
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error.toJson()).build();
+		}
+
+	}
+
+
+
+	@Override
+	@GET
+	@Path("/consents/active/{accountId}/{slr}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response getAllActiveConsentByAccountIdSlr(@PathParam("accountId") String accountId,
+			@PathParam("slr") String slr) {
+
+		List<ConsentRecordSink> consentRecordSink;
+		List consentData = new ArrayList();
+		try {
+			consentRecordSink = dao.getSinkConsentRecords(accountId);
+
+			for (ConsentRecordSink crk : consentRecordSink) {
+
+				if (crk.getCommon_part().getSlr_id().equalsIgnoreCase(slr) && crk.getConsentStatusList().get(crk.getConsentStatusList().size()-1).getConsent_status().toString().equalsIgnoreCase("ACTIVE")) {
+					Map m = new HashMap();
+					ConsentRecordSource crs = dao.findSourceConsentRecordByRes_id(
+							crk.getCommon_part().getRs_description().getResource_set().getRs_id(), accountId);
+
+					String slr_id = crk.getCommon_part().getSlr_id();
+
+					ServiceEntry sinkService = this.findById(crk.getCommon_part().getSubject_id());
+					ServiceEntry sourceService = this.findById(crs.getCommon_part().getSubject_id());
+
+					m.put("sinkService", sinkService);
+					m.put("sourceService", sourceService);
+					m.put("rs_id", crk.getCommon_part().getRs_description().getResource_set().getRs_id());
+					m.put("account_id", accountId);
+					m.put("sink", crk);
+					m.put("source", crs);
+					consentData.add(m);
+
+				}
+
+			}
+
+			String array = new Gson().toJson(consentData);
+
+			return Response.status(Response.Status.OK).entity(array).build();
+
+		} catch (AccountUtilsException e) {
+
+			e.printStackTrace();
+			ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
+					e.getClass().getSimpleName(), e.getMessage());
+
+			return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			ErrorResponse error = new ErrorResponse(
+					String.valueOf(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()), e.getClass().getSimpleName(),
+					e.getMessage());
+
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error.toJson()).build();
+		}
+
+	}
+
+
+	@Override
+	@GET
+	@Path("/consents/active/{accountId}/{slr}/{serviceId}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response getServiceActiveConsentByAccountIdSlr(@PathParam("accountId") String accountId,
+			@PathParam("slr") String slr, @PathParam("serviceId") String serviceId ) {
+
+		List<ConsentRecordSink> consentRecordSink;
+		Map consent = new HashMap();
+		try {
+			consentRecordSink = dao.getSinkConsentRecords(accountId);
+
+			for (ConsentRecordSink crk : consentRecordSink) {
+
+				if (crk.getCommon_part().getSlr_id().equalsIgnoreCase(slr) && crk.getConsentStatusList().get(crk.getConsentStatusList().size()-1).getConsent_status().toString().equalsIgnoreCase("ACTIVE")) {
+
+					ConsentRecordSource crs = dao.findSourceConsentRecordByRes_id(
+							crk.getCommon_part().getRs_description().getResource_set().getRs_id(), accountId);
+
+
+					if(crs.getCommon_part().getSubject_id().equalsIgnoreCase(serviceId)) {
+
+						consent.put("rs_id", crk.getCommon_part().getRs_description().getResource_set().getRs_id());
+						consent.put("account_id", accountId);
+						consent.put("sink", crk);
+
+
+					}
+
+
+				}
+
+			}
+
+			String array = new Gson().toJson(consent);
 
 			return Response.status(Response.Status.OK).entity(array).build();
 

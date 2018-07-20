@@ -20,36 +20,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *******************************************************************************/
-package it.eng.opsi.cdv.consentmanager.service;
+package it.eng.opsi.cdv.pdatamanager.model;
 
-import javax.ws.rs.core.Response;
+public class ConsentManagerCallException extends Exception {
 
-public interface IConsentService {
-	public Response giveConsent(String consentForm, String accountId);
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
-	public Response updateConsent(String consent_record_sink, String consent_record_source, String accountId);
+	public ConsentManagerCallException(String message) {
+		super(message);
 
-	public Response fetchConsentForm(String accountId, String sinkId, String sourceId, String datasetId);
-
-	public Response verifySinkConsent(String sinkConsentId);
-
-	public Response testMongo(String accountId, String sinkId, String sourceId, String datasetId);
-
-	public Response findAllSinkConsentRecord(String accountId);
-
-	public Response findAllSourceConsentRecord(String accountId);
-
-	// public Response getConsentStatusRecords(String accountId, String rs_id);
-	public Response getAllConsentByAccountId(String accountId);
-
-	public Response changeConsentRecordStatus(String accountId, String rs_id, String status);
-
-	public Response withDrawConsentByServiceid(String serviceId);
-
-	public Response getAllConsentByAccountIdSlr(String accountId, String slr);
-
-	public Response getAllActiveConsentByAccountIdSlr(String accountId, String slr);
-
-	public Response getServiceActiveConsentByAccountIdSlr(String accountId, String slr, String serviceId);
+	}
 
 }
