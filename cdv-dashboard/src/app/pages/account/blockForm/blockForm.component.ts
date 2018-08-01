@@ -355,14 +355,17 @@ export class BlockForm {
 			console.log("remove");
 			this.service.deleteAccount().subscribe(
 			result => {
-			console.log(result);
-			window.alert('Account removed');
-            this.router.navigate(['/login']);
+				console.log(result);
+				window.alert('Account removed');
+				localStorage.removeItem('userData'); 
+				localStorage.removeItem('aacTokenData');
+				localStorage.removeItem('accountData');
+				this.router.navigate(['/login']);
 			},
 			err => {
-			let errorJson=eval('('+err._body+')');
-			console.log(eval('('+err._body+')'));
-			this.router.navigate(['/login']);
+				let errorJson=eval('('+err._body+')');
+				console.log(eval('('+err._body+')'));
+				this.router.navigate(['/login']);
 			}); 
 		} else {
 			console.log("no remove");

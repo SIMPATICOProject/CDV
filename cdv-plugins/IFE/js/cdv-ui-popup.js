@@ -40,7 +40,8 @@ var cdvUI = (function () {
 			buttonManageData: "Manage your data",
 			buttonActivate: "Activate",
 			buttonCreate: "Create",
-			consentButton: "Consent"
+			consentButton: "Consent",
+			statusMessageAnonymousSelection: "Please select your preference on anonymous processing"
 
 		};
 
@@ -100,7 +101,7 @@ var cdvUI = (function () {
 			labels.buttonActivate = parameters.buttonActivate || labels.buttonActivate;
 			labels.buttonCreate = parameters.buttonCreate || labels.buttonCreate;
 			labels.consentButton = parameters.consentButton || labels.consentButton;
-
+            labels.statusMessageAnonymousSelection= parameters.statusMessageAnonymousSelection || labels.statusMessageAnonymousSelection;
 			colors.cdv = parameters.cdvColor || colors.cdv;
 
 		}
@@ -132,6 +133,7 @@ var cdvUI = (function () {
 		}
 
 		function disableComponentFeatures() {
+			
 			if (!featureEnabled)
 				return;
 			featureEnabled = false;
@@ -139,6 +141,7 @@ var cdvUI = (function () {
 			highlightFields(dataFields, false);
 			$('#plist').remove();
 			if (dialog_cdv) {
+				$("#overlay").hide();
 				dialog_cdv.dialog("destroy");
 				dialog_cdv = null;
 				$('#cdv_toolbar_buttons').remove();
@@ -184,7 +187,6 @@ var cdvUI = (function () {
 			return function (account_exist) {
 				console.log("Account " + account_exist);
 				if (account_exist) {
-					
 					var initialize= initializeConsent();
 					cdvCORE.getInstance().initializeSLR(initialize);
 				} else {
@@ -196,15 +198,14 @@ var cdvUI = (function () {
 		
 		
 		function initializeConsent() {
-			return function (servicelink_exist) {
+			return function (account_exist, servicelink_exist) {
 				console.log("ServiceLink " + servicelink_exist);
 				if (servicelink_exist) {
-					
 					var initializeDlg = initializeDialog();
                     cdvCORE.getInstance().cdv_getconsent(initializeDlg);
 				} else {
 					var initializeDlg = initializeDialog();
-					initializeDlg(false, false, false, []);
+					initializeDlg(true, false, false, []);
 				}
 			}
 		}
@@ -688,7 +689,7 @@ var cdvUI = (function () {
 							}
 						}
 						$(this).find('#mybody').append('These data will be used for surveys.')
-						$(this).find('#mybody').append('<br><br>Do you agree that your data will be processed in anonymous mode for statistical purpose?<br><center><input type="radio" name="type" id="anonymous_yes" value="yes"><b>  Yes</b></input>&nbsp;&nbsp;&nbsp<input type="radio" checked id="anonymous_no" name="type" value="no"><b>  No</b></input></center>');
+						$(this).find('#mybody').append('<br><br>Do you agree that your data will be processed in anonymous mode for statistical purpose?<br><center><input type="radio" name="type" id="anonymous_yes" value="yes"><b>  Yes</b></input>&nbsp;&nbsp;&nbsp<input type="radio" id="anonymous_no" name="type" value="no"><b>  No</b></input></center>');
 						$(this).find('#mybody2').html('You have the right to withdraw consent at any time, but that will not affect the lawfulness of processing based on consent before its withdrawal.<br>You have the right of rectification or erasure, to restrict processing or to object to processing and to lodge a complaint to a supervisory authority.<br>The data will be retained until your account on this service is active.');
 
 					});
@@ -701,34 +702,43 @@ var cdvUI = (function () {
 						modal: true,
 						buttons: [{
 								text: labels.consentButton,
+								close: function( ) {$("#overlay").hide();},
 								click: function () {
+                                  if (($(this).find('#anonymous_yes').is(':checked'))||($(this).find('#anonymous_no').is(':checked'))){
+									  
+										if ($(this).find('#anonymous_yes').is(':checked')) {
+												mydata.resourceSet.anonymousUsage = "true";
+											} else if ($(this).find('#anonymous_no').is(':checked')) {
+												mydata.resourceSet.anonymousUsage = "false";
+											}
+											var dataToRemove = [];
+											$(this).find('input[type=checkbox]:not(:checked)').each(function (index) {
+												dataToRemove.push($(this).val());
+											});
+											for (var i = dataToRemove.length - 1; i >= 0; i--)
+												mydata.resourceSet.dataset[checkdataset].dataMapping.splice(dataToRemove[i], 1);
 
-									if ($(this).find('#anonymous_yes').is(':checked')) {
-										mydata.resourceSet.anonymousUsage = "true";
-									} else if ($(this).find('#anonymous_no').is(':checked')) {
-										mydata.resourceSet.anonymousUsage = "false";
-									}
-									var dataToRemove = [];
-									$(this).find('input[type=checkbox]:not(:checked)').each(function (index) {
-										dataToRemove.push($(this).val());
-									});
-									for (var i = dataToRemove.length - 1; i >= 0; i--)
-										mydata.resourceSet.dataset[checkdataset].dataMapping.splice(dataToRemove[i], 1);
-
-									console.log("jsonforactivated: " + JSON.stringify(mydata));
-									this.consent_given = true;
-									
-									if(localStorage.accountData){
-										var activate = activateSLR(mydata);
-									    activate(true);
-									}
-									else{
-										var confirm = activateSLR(mydata);
-										cdvCORE.getInstance().createAccount(confirm);
-									}
-									
-									dialog_cdv.dialog("destroy");
-									$(this).dialog("close");
+											console.log("jsonforactivated: " + JSON.stringify(mydata));
+											this.consent_given = true;
+											
+											if(localStorage.accountData){
+												var activate = activateSLR(mydata);
+												activate(true);
+											}
+											else{
+												var confirm = activateSLR(mydata);
+												cdvCORE.getInstance().createAccount(confirm);
+											}
+											
+											dialog_cdv.dialog("destroy");
+											$(this).dialog("close");
+										
+								  } else{
+									  var $dialog_check = $('<div>'+labels.statusMessageAnonymousSelection+'</div>');
+									  $dialog_check.dialog();
+									  
+								  }
+								
 								}
 							}
 						]
@@ -795,6 +805,34 @@ function confirmRemoveAccount() {
 	dialog_saved.dialog("open");
 
 }
+
+
+function confirmConsent() {
+
+var $dialog_consent_confirm = $('<div>Confirm your Consent?</div>');
+$dialog_consent_confirm.dialog({
+	  resizable: false,
+	  width: 400,
+	  modal: true,
+	  buttons: {
+		"Confirm": function() {
+		 return true;
+		},
+		Cancel: function() {
+		  return false;
+		}
+	  }
+	});
+	
+	
+	
+}
+
+
+
+
+
+
 
 function toggleDialog() {
 
