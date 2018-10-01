@@ -1,0 +1,19 @@
+ {
+  "system": {
+    "host":"http://217.172.12.161:8080",
+    "dashHost":"http://localhost:8080",
+    "aacServer":"http://217.172.12.161:8080/aac",
+    "account":"/account-manager/api/v1/accounts/",
+    "pData":"/pdata-manager/api/v1/pData/",
+    "downloadPData":"/pdata-manager/api/v1/pData/download",
+    "pDataFields":"/service-manager/api/v1/pdatafields",
+    "services":"/service-manager/api/v1/services",
+    "clientId":"80e7a735-04bf-4737-b6ca-46caac64f823",
+    "authority":"google",
+    "cdvDashboardUrl":"/cdv-dashboard/simp_login/login2.html",
+    "disable_auth":"false"
+  },
+  "i18n":{
+  	"locale": "it"
+  }
+}

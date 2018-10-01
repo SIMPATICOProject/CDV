@@ -1,0 +1,44 @@
+version: '3.3'
+
+services:
+    cdv_server:
+        container_name: "cdv-server"
+        build:
+           context: ./Dockerfiles/CDV-server
+        depends_on:
+            - mysql_db
+            - mongo_db
+        volumes:
+            - ./volumes/cdvapp:/usr/mytemp:rw
+        ports:
+            - 8081:8080
+
+        
+    mysql_db:
+        container_name: "cdv-mysql-db"
+        image: mariadb
+        env_file: 
+            - ./cdv.env
+        volumes:
+            - ./volumes/mysqldb:/var/lib/mysql:rw
+        restart: always
+
+    mongo_db:
+        container_name: "cdv-mongo-db"
+        image: mongo
+        restart: always
+        env_file:
+            - ./cdv.env
+        volumes: 
+            - ./volumes/db:/data/db
+            - ./init-db.d:/docker-entrypoint-initdb.d
+        ports:
+            - 27017:27017
+
+
+       
+networks:
+  default:
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 1400
