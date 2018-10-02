@@ -100,11 +100,22 @@ Documentation is available for each component in their respective folders.
 
 ### Configuration
 
-Configure your project the same as above.
+Create keystore with the script:
+
+* `cdv-server/generate-keystore.sh`
+
+use the used parameters in the following properties.
+
+Configure properties :
+
+* `cdv-server/docker_config/*`
+* `cdv-dashboard/docker_config/config.json`
+
+see documentation in each component for further info for each property.
 
 ### build and run
 
-create a `.env` file using `example.env` as your base,
+update `cdv.env` file configuration.
 input your database credentials (should be the same as the ones you used to configure the component)
 
 * to start the daemon execute `docker-compose start`

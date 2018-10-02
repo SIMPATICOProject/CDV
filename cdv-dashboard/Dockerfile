@@ -7,6 +7,8 @@ LABEL name="SIMPATICO CDV Dashboard" \
 # Create app directory
 COPY ./ /app
 
+COPY docker_config/config.json src/config.json
+
 WORKDIR /app
 
 RUN npm install --global rimraf \

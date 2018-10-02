@@ -4,7 +4,7 @@ services:
     cdv_server:
         container_name: "cdv-server"
         build:
-           context: ./Dockerfiles/CDV-server
+           context: ./cdv-server
         depends_on:
             - mysql_db
             - mongo_db
