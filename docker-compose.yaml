@@ -1,7 +1,7 @@
 version: '3.3'
 
 services:
-    cdv_server:
+    cdv_server: 
         container_name: "cdv-server"
         build:
            context: ./cdv-server
@@ -34,6 +34,20 @@ services:
             - ./init-db.d:/docker-entrypoint-initdb.d
         ports:
             - 27017:27017
+    
+    cdv_dashboard:
+        container_name: "cdv-dashboard"
+        build:
+            context: ./cdv-dashboard
+        depends_on:
+            - cdv_server
+            - mysql_db
+            - mongo_db
+        volumes:
+            - ./volumes/cdvdash:/usr/mytemp:rw
+        ports:
+            - 80:8080
+
 
 
        
