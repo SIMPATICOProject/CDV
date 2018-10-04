@@ -7,7 +7,7 @@ LABEL name="SIMPATICO CDV Dashboard" \
 # Create app directory
 COPY ./ /app
 
-COPY docker_config/config.json src/config.json
+COPY docker_config/config.json /app/src/config.json 
 
 WORKDIR /app
 
