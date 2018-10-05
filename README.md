@@ -103,9 +103,12 @@ Documentation is available for each component in their respective folders.
 
 Create keystore with the script:
 
-* `cdv-server/generate-keystore.sh`
+* `cdv-server/generate-keystore.sh <alias> <password> <filename>`
 
-use the used parameters in the following properties.
+if no parameters are supplied defaults value will be: <alias>=masterkey, <password>=password, <filename>=keystore
+
+The inserted <alias> <password> <filename> should be used inside the following properties. 
+
 
 Configure properties :
 
