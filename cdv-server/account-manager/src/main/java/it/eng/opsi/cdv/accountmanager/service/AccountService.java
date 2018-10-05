@@ -21,6 +21,7 @@ import javax.ws.rs.core.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.stereotype.Service;											  
 import com.google.gson.reflect.TypeToken;
 
 import io.jsonwebtoken.MalformedJwtException;
@@ -49,6 +50,8 @@ import it.eng.opsi.cdv.accountmanager.model.TelephoneNotFoundException;
 import it.eng.opsi.cdv.accountmanager.utils.DAOUtils;
 import it.eng.opsi.cdv.accountmanager.utils.JWTUtils;
 import it.eng.opsi.cdv.accountmanager.utils.PropertyManager;
+
+@Service("AccountService")
 
 @Path("/v1")
 public class AccountService implements IAccountService {
