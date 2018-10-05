@@ -117,6 +117,8 @@ Configure properties :
 
 see documentation in each component for further info for each property.
 
+About CORS problems please see the following CORS Problems section
+
 ### build and run
 
 update `cdv.env` file configuration.
@@ -127,6 +129,55 @@ input your database credentials (should be the same as the ones you used to conf
 
 * to stop the daemon execute `docker-compose stop`
 * to restart as a daemon execute `docker-compose start`
+
+## CORS Problems
+
+To solve possible problems on Cross-Origin Resource Sharing (CORS) between CDV server modules and CDV Dashboard or other clients, you can:
+* just tell your browser to ignore CORS (for example chromium-browser --disable-web-security --user-data-dir) - this is the fastest if you just want to play around, but of course it is not a production solution.
+* set CORS headers on CDV server machine to allow access from the client ones, for example using CORS filter:
+
+```
+<!--CORS Filter-->
+  <filter>
+  <filter-name>CorsFilter</filter-name>
+  <filter-class>org.apache.catalina.filters.CorsFilter</filter-class>
+  <init-param>
+    <param-name>cors.allowed.origins</param-name>
+    <param-value>*</param-value>
+  </init-param>
+  <init-param>
+    <param-name>cors.allowed.methods</param-name>
+    <param-value>GET,POST,HEAD,OPTIONS,PUT,DELETE</param-value>
+  </init-param>
+  <init-param>
+    <param-name>cors.allowed.headers</param-name>
+    <param-value>Access-Control-Allow-Origin,Content-Type,X-Requested-With,accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization,accountId</param-value>
+  </init-param>
+  <init-param>
+    <param-name>cors.exposed.headers</param-name>
+    <param-value>Access-Control-Allow-Origin,Access-Control-Allow-Credentials</param-value>
+  </init-param>
+  <init-param>
+    <param-name>cors.support.credentials</param-name>
+    <param-value>true</param-value>
+  </init-param>
+  <init-param>
+    <param-name>cors.preflight.maxage</param-name>
+    <param-value>1800</param-value>
+  </init-param>
+</filter>
+<filter-mapping>
+  <filter-name>CorsFilter</filter-name>
+  <url-pattern>/*</url-pattern>
+</filter-mapping>
+```
+
+* use an "edge" (or "gateway") server that internally re-routes requests via reverse-proxying.
+ 
+
+
+
+
 
 ## Support / Contact / Contribution
 [Citizen Data Vault](Link|email|contact)
