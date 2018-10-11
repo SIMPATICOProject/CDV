@@ -52,6 +52,7 @@ import javax.ws.rs.core.Response;
 import org.bson.types.ObjectId;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -78,16 +79,22 @@ import it.eng.opsi.cdv.consentmanager.model.consentRecord.RSDescription;
 import it.eng.opsi.cdv.consentmanager.model.consentRecord.ResourceSet;
 import it.eng.opsi.cdv.consentmanager.model.consentRecord.SinkRoleSpecificPart;
 import it.eng.opsi.cdv.consentmanager.utils.ConsentManagerException;
+import it.eng.opsi.cdv.consentmanager.utils.ConsentServiceUtils;
 import it.eng.opsi.cdv.consentmanager.utils.DAOUtils;
 import it.eng.opsi.cdv.consentmanager.utils.JWTUtils;
 import it.eng.opsi.cdv.consentmanager.utils.PropertyManager;
 import it.eng.opsi.servicemanager.data.ServiceEntry;
 
+@Service("ConsentService")
+
 @Path("/v1")
 public class ConsentService implements IConsentService {
 
-	private static AccountDAO dao = new AccountDAO(PropertyManager.getProperty("ACCOUNT_REPOSITORY_COLLECTION"));
+	private AccountDAO dao = new AccountDAO(PropertyManager.getProperty("ACCOUNT_REPOSITORY_COLLECTION"));
 
+	private ConsentServiceUtils csu = new ConsentServiceUtils();
+	
+	
 	@Override
 	@POST
 	@Path("/findConsent/serviceId")
@@ -166,7 +173,7 @@ public class ConsentService implements IConsentService {
 							new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 					details.put("operation",
 							"Update Status for Consent Record  Sink. Status (" + sinkCSR.getConsent_status() + ")");
-					traceAuditLog(accountId, details);
+					ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 
 					details = new JSONObject();
 					details.put("method", "changeConsentRecordStatus");
@@ -174,7 +181,7 @@ public class ConsentService implements IConsentService {
 							new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 					details.put("operation",
 							"Update Status for Consent Record  Source. Status (" + sourceCSR.getConsent_status() + ")");
-					traceAuditLog(accountId, details);
+					ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 
 					String sourceSign = JWTUtils.createJWT(sourceCSR);
 					cr_source.setConsentSignedToken(sourceSign);
@@ -187,7 +194,7 @@ public class ConsentService implements IConsentService {
 							new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 					details.put("operation",
 							"Sign and Store Consent Record for Sink. Consent RecordId (" + cr_source.get_id() + ")");
-					traceAuditLog(accountId, details);
+					ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 
 					details = new JSONObject();
 					details.put("method", "changeConsentRecordStatus");
@@ -195,13 +202,13 @@ public class ConsentService implements IConsentService {
 							new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 					details.put("operation",
 							"Sign and Store Consent Record for Source. Consent RecordId (" + cr_source.get_id() + ")");
-					traceAuditLog(accountId, details);
+					ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 
 					// If enable and url available STORE CONSENT UPDATE IN SERVICES
 
 					updateSinkConsentRecord(accountId, DAOUtils.obj2Json(cr_sink, ConsentRecordSink.class));
 
-					sendConsentToSink(DAOUtils.obj2Json(cr_sink, ConsentRecordSink.class), sourceId, cr_sink
+					ConsentServiceUtils.sendConsentToSinkUTILS(DAOUtils.obj2Json(cr_sink, ConsentRecordSink.class), sourceId, cr_sink
 							.getCommon_part().getRs_description().getResource_set().getDataset().get(0).get_id());
 
 					details = new JSONObject();
@@ -209,17 +216,17 @@ public class ConsentService implements IConsentService {
 					details.put("date",
 							new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 					details.put("operation", "Send Consent Record  to Sink (" + sinkId + ")");
-					traceAuditLog(accountId, details);
+					ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 
 					updateSourceConsentRecord(accountId, DAOUtils.obj2Json(cr_source, ConsentRecordSource.class));
-					sendConsentToSource(DAOUtils.obj2Json(cr_source, ConsentRecordSource.class), sinkId);
+					ConsentServiceUtils.sendConsentToSourceUTILS(DAOUtils.obj2Json(cr_source, ConsentRecordSource.class), sinkId);
 
 					details = new JSONObject();
 					details.put("method", "changeConsentRecordStatus");
 					details.put("date",
 							new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 					details.put("operation", "Send Consent Record to Source (" + sourceId + ")");
-					traceAuditLog(accountId, details);
+					ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 
 					return Response.status(Response.Status.OK)
 							.entity("{ \"Response\": \"Consent Record Status Changed\" }").build();
@@ -275,8 +282,8 @@ public class ConsentService implements IConsentService {
 
 		try {
 
-			ServiceEntry sink = findById(sinkId);
-			ServiceEntry source = findById(sourceId);
+			ServiceEntry sink = csu.findByIdUTILS(sinkId);
+			ServiceEntry source = csu.findByIdUTILS(sourceId);
 
 			// generate resourcesetid
 			String resourcesetId = new ObjectId().toString();
@@ -368,9 +375,6 @@ public class ConsentService implements IConsentService {
 		return dataMappingList;
 	}
 
-
-
-
 	@Override
 	@POST
 	@Path("/verifySinkConsent")
@@ -456,8 +460,6 @@ public class ConsentService implements IConsentService {
 
 	}
 
-
-
 	private ConsentRecordSink storeSinkConsentRecord(String accountId, String consentJSON) {
 		ConsentRecordSink sinkCR;
 		try {
@@ -537,7 +539,7 @@ public class ConsentService implements IConsentService {
 		}
 	}
 
-	private ServiceEntry findById(String serviceId) throws ConsentManagerException, AccountUtilsException {
+	/*private ServiceEntry findById(String serviceId) throws ConsentManagerException, AccountUtilsException {
 
 		Client client = ClientBuilder.newClient();
 		WebTarget webTarget = client
@@ -559,7 +561,7 @@ public class ConsentService implements IConsentService {
 					"There was an error while retrieving Service Description from Service Manager");
 		}
 	}
-
+*/
 	private ServiceEntry findDataMappingById(String serviceId) throws ConsentManagerException, AccountUtilsException {
 
 		Client client = ClientBuilder.newClient();
@@ -620,7 +622,7 @@ public class ConsentService implements IConsentService {
 		details.put("method", "updateConsent");
 		details.put("date", new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 		details.put("operation", "entered in updateConsent method");
-		traceAuditLog(accountId, details);
+		ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 
 		try {
 			ConsentRecordSink cr_sink = DAOUtils.json2Obj(consent_record_sink, ConsentRecordSink.class);
@@ -631,7 +633,7 @@ public class ConsentService implements IConsentService {
 			details.put("date", new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 			details.put("operation", "retrieve sinkId: " + cr_sink.getCommon_part().getCr_id() + " and  sourceId: "
 					+ cr_source.getCommon_part().getCr_id());
-			traceAuditLog(accountId, details);
+			ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 
 			// modifico il Dataset del sink
 			ResourceSet rs_sink = cr_sink.getCommon_part().getRs_description().getResource_set();
@@ -645,7 +647,7 @@ public class ConsentService implements IConsentService {
 			details.put("method", "updateConsent");
 			details.put("date", new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 			details.put("operation", "modify sink dataset");
-			traceAuditLog(accountId, details);
+			ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 
 			// modifico il Dataset del source
 			ResourceSet rs_source = cr_source.getCommon_part().getRs_description().getResource_set();
@@ -659,7 +661,7 @@ public class ConsentService implements IConsentService {
 			details.put("method", "updateConsent");
 			details.put("date", new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 			details.put("operation", "modify source dataset");
-			traceAuditLog(accountId, details);
+			ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 
 			// recupero il consent record relativo all'account id preso in input memorizzato
 			// nel database
@@ -683,13 +685,13 @@ public class ConsentService implements IConsentService {
 			details.put("method", "updateConsent");
 			details.put("date", new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 			details.put("operation", "Send Consent Record  to Sink (" + cr_sink.getCommon_part().getCr_id() + ")");
-			traceAuditLog(accountId, details);
+			ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 
 			details = new JSONObject();
 			details.put("method", "updateConsent");
 			details.put("date", new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 			details.put("operation", "add sink dataset to sink dataset list");
-			traceAuditLog(accountId, details);
+			ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 
 			// recupero il consent record relativo all'account id preso in input memorizzato
 			// nel database
@@ -710,28 +712,28 @@ public class ConsentService implements IConsentService {
 			ServiceEntry sourceService = dao.findServiceById(cr_source_db.getCommon_part().getSubject_id());
 			String source_service_id = sourceService.getPublicServiceID();
 
-			sendConsentToSink(DAOUtils.obj2Json(cr_sink_db, ConsentRecordSink.class), source_service_id,
+			ConsentServiceUtils.sendConsentToSinkUTILS(DAOUtils.obj2Json(cr_sink_db, ConsentRecordSink.class), source_service_id,
 					dataset_sink_new.get_id());
 
-			sendConsentToSource(DAOUtils.obj2Json(cr_source_db, ConsentRecordSource.class), sink_service_id);
+			ConsentServiceUtils.sendConsentToSourceUTILS(DAOUtils.obj2Json(cr_source_db, ConsentRecordSource.class), sink_service_id);
 
 			details = new JSONObject();
 			details.put("method", "updateConsent");
 			details.put("date", new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 			details.put("operation", "Send Consent Record  to Source (" + cr_source.getCommon_part().getCr_id() + ")");
-			traceAuditLog(accountId, details);
+			ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 
 			details = new JSONObject();
 			details.put("method", "updateConsent");
 			details.put("date", new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 			details.put("operation", "add source dataset to source dataset list");
-			traceAuditLog(accountId, details);
+			ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 
 			details = new JSONObject();
 			details.put("method", "updateConsent");
 			details.put("date", new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 			details.put("operation", "exit from updateConsent method");
-			traceAuditLog(accountId, details);
+			ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 
 			return Response.status(Response.Status.CREATED)
 					.entity("{ \"sink_consent_record\": " + DAOUtils.obj2Json(cr_sink_db, ConsentRecordSink.class)
@@ -780,20 +782,21 @@ public class ConsentService implements IConsentService {
 		}
 
 	}
-
+	
+	//MOCKITO/JUNIT TESTED
 	@Override
 	@POST
 	@Path("/giveConsent/{accountId}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-
 	public Response giveConsent(String consentForm, @PathParam("accountId") String accountId) {
-
-		JSONObject details = new JSONObject();
+		
+		JSONObject details = new JSONObject();	
 		details.put("method", "giveConsent");
 		details.put("date", new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 		details.put("operation", "entered in giveConsent method");
-		traceAuditLog(accountId, details);
+		//GE_REFACTOR DI traceAuditLog (diverse occorrenze nel metodo) - 101018
+		ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 
 		try {
 
@@ -806,7 +809,7 @@ public class ConsentService implements IConsentService {
 			details.put("method", "giveConsent");
 			details.put("date", new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 			details.put("operation", "retrieve sinkId: " + sinkId + " and  sourceId: " + sourceId);
-			traceAuditLog(accountId, details);
+			ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 
 			ResourceSet resorceSet = consentFormObj.getResourceSet();
 			String resourcesetId = resorceSet.getRs_id();
@@ -816,13 +819,13 @@ public class ConsentService implements IConsentService {
 			details.put("date", new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 			details.put("operation", "retrieve datasetId: " + resorceSet.getDataset().get(0).get_id()
 					+ " and  ResourcesetId RS_ID: " + resourcesetId);
-			traceAuditLog(accountId, details);
+			ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 
 			details = new JSONObject();
 			details.put("method", "giveConsent");
 			details.put("date", new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 			details.put("operation", "Verify that resourceSetid exists and it is not used");
-			traceAuditLog(accountId, details);
+			ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 
 			String datasetId = resorceSet.getDataset().get(0).get_id();
 
@@ -832,13 +835,13 @@ public class ConsentService implements IConsentService {
 			ConsentRecordStatusEnum lastStatus = ConsentRecordStatusEnum.WITHDRAWN;
 
 			ConsentRecordSink crSink=null;
-			ConsentRecordSource css=null;
+			ConsentRecordSource css=null;	
+			
 			if (consentRecords != null) {
-
 				crSink = (ConsentRecordSink) consentRecords.get(0); // first is ConsentRecordSink
 				css = (ConsentRecordSource) consentRecords.get(1); // first is ConsentRecordSink
 				// List<ConsentRecordStatus> ssrList = crs.getConsentStatusRecords();
-				List<ConsentRecordStatus> ssrList = crSink.getConsentStatusList();
+				List<ConsentRecordStatus> ssrList = crSink.getConsentStatusList();			
 				lastStatus = ssrList.get(ssrList.size() - 1).getConsent_status();
 			}
 
@@ -848,9 +851,8 @@ public class ConsentService implements IConsentService {
 					return Response.status(Response.Status.ACCEPTED).entity("{}").build();
 
 				} else { // if (lastStatus.equals(ConsentRecordStatusEnum.DISABLED)){
-					// si dovrebeb aggiungere alla lista dei consent record status per ciascun
+					// si dovrebbe aggiungere alla lista dei consent record status per ciascun
 					// consent un nouovo conent record status attivo e memorizzarlo
-
 					try {
 
 						details = new JSONObject();
@@ -858,16 +860,19 @@ public class ConsentService implements IConsentService {
 						details.put("date", new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 						details.put("operation", "retrieve sinkId: " + crSink.getCommon_part().getCr_id() + " and  sourceId: "
 								+ css.getCommon_part().getCr_id());
-						traceAuditLog(accountId, details);
+						ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 
 						// modifico il Dataset del sink
 						ResourceSet rs_sink = crSink.getCommon_part().getRs_description().getResource_set();
 						List<Dataset> list_ds_sink = rs_sink.getDataset();
-						Dataset dataset_sink_new = list_ds_sink.get(list_ds_sink.size() - 1);
+						
+						//GE_REFACTOR - 091018
+						//Dataset dataset_sink_new = list_ds_sink.get(list_ds_sink.size() - 1);
+						int n = list_ds_sink.size() - 1;
+						Dataset dataset_sink_new = list_ds_sink.get(n);
 
 						dataset_sink_new.setCreated(new Date());
 						dataset_sink_new.setStatus(true);
-
 
 						// modifico il Dataset del source
 						ResourceSet rs_source = css.getCommon_part().getRs_description().getResource_set();
@@ -876,7 +881,6 @@ public class ConsentService implements IConsentService {
 
 						dataset_source_new.setCreated(new Date());
 						dataset_source_new.setStatus(true);
-
 
 						// recupero il consent record relativo all'account id preso in input memorizzato
 						// nel database
@@ -901,13 +905,13 @@ public class ConsentService implements IConsentService {
 						details.put("method", "updateConsent");
 						details.put("date", new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 						details.put("operation", "Send Consent Record  to Sink (" + crSink.getCommon_part().getCr_id() + ")");
-						traceAuditLog(accountId, details);
+						ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 
 						details = new JSONObject();
 						details.put("method", "updateConsent");
 						details.put("date", new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 						details.put("operation", "add sink dataset to sink dataset list");
-						traceAuditLog(accountId, details);
+						ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 
 						// recupero il consent record relativo all'account id preso in input memorizzato
 						// nel database
@@ -929,28 +933,29 @@ public class ConsentService implements IConsentService {
 						ServiceEntry sourceService = dao.findServiceById(cr_source_db.getCommon_part().getSubject_id());
 						String source_service_id = sourceService.getPublicServiceID();
 
-						sendConsentToSink(DAOUtils.obj2Json(cr_sink_db, ConsentRecordSink.class), source_service_id,
+						//GE_REFACTOR DI sendConsentToSink - 101018
+						ConsentServiceUtils.sendConsentToSinkUTILS(DAOUtils.obj2Json(cr_sink_db, ConsentRecordSink.class), source_service_id,
 								dataset_sink_new.get_id());
 
-						sendConsentToSource(DAOUtils.obj2Json(cr_source_db, ConsentRecordSource.class), sink_service_id);
+						ConsentServiceUtils.sendConsentToSourceUTILS(DAOUtils.obj2Json(cr_source_db, ConsentRecordSource.class), sink_service_id);
 
 						details = new JSONObject();
 						details.put("method", "updateConsent");
 						details.put("date", new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 						details.put("operation", "Send Consent Record  to Source (" + css.getCommon_part().getCr_id() + ")");
-						traceAuditLog(accountId, details);
+						ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 
 						details = new JSONObject();
 						details.put("method", "updateConsent");
 						details.put("date", new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 						details.put("operation", "add source dataset to source dataset list");
-						traceAuditLog(accountId, details);
+						ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 
 						details = new JSONObject();
 						details.put("method", "updateConsent");
 						details.put("date", new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 						details.put("operation", "exit from updateConsent method");
-						traceAuditLog(accountId, details);
+						ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 
 						return Response.status(Response.Status.CREATED)
 								.entity("{ \"sink_consent_record\": " + DAOUtils.obj2Json(cr_sink_db, ConsentRecordSink.class)
@@ -998,11 +1003,9 @@ public class ConsentService implements IConsentService {
 						return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error.toJson()).build();
 
 					}
-
 				}
 
 			} else { // dobbiamo controllare se esiste già consent record con altro dataset
-
 				ConsentRecordSink crsiSecondDataset = dao.getConsentRecordSinkByDatasetId(accountId, datasetId);
 				ConsentRecordSource crsoSecondDataset = dao.getConsentRecordSourceByDatasetId(accountId, datasetId);
 				if (false /* crsiSecondDataset != null */) { // esiste un altro CR
@@ -1025,7 +1028,7 @@ public class ConsentService implements IConsentService {
 							new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 					details.put("operation",
 							"Update Status for Consent Record  Sink. Status (" + sinkCSR.getConsent_status() + ")");
-					traceAuditLog(accountId, details);
+					ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 
 					details = new JSONObject();
 					details.put("method", "giveConsent");
@@ -1033,7 +1036,7 @@ public class ConsentService implements IConsentService {
 							new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 					details.put("operation",
 							"Update Status for Consent Record  Source. Status (" + sourceCSR.getConsent_status() + ")");
-					traceAuditLog(accountId, details);
+					ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 
 					String sinkSign = JWTUtils.createJWT(crsiSecondDataset);
 					String sourceSign = JWTUtils.createJWT(crsoSecondDataset);
@@ -1046,7 +1049,7 @@ public class ConsentService implements IConsentService {
 							new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 					details.put("operation", "Sign and Store Consent Record for Sink. Consent RecordId ("
 							+ crsiSecondDataset.get_id() + ")");
-					traceAuditLog(accountId, details);
+					ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 
 					details = new JSONObject();
 					details.put("method", "giveConsent");
@@ -1054,7 +1057,7 @@ public class ConsentService implements IConsentService {
 							new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 					details.put("operation", "Sign and Store Consent Record for Source. Consent RecordId ("
 							+ crsoSecondDataset.get_id() + ")");
-					traceAuditLog(accountId, details);
+					ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 
 					// storeSinkConsentRecord(accountId, DAOUtils.obj2Json(crsiSecondDataset,
 					// ConsentRecordSink.class));
@@ -1065,19 +1068,19 @@ public class ConsentService implements IConsentService {
 					details.put("date",
 							new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 					details.put("operation", "Update Consent Record  Sink. Sink (" + sinkId + ")");
-					traceAuditLog(accountId, details);
+					ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 
 					details = new JSONObject();
 					details.put("method", "giveConsent");
 					details.put("date",
 							new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 					details.put("operation", "Update Consent Record  Source. Source (" + sourceId + ")");
-					traceAuditLog(accountId, details);
+					ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 
 					updateSinkConsentRecord(accountId, DAOUtils.obj2Json(crsiSecondDataset, ConsentRecordSink.class));
 					// URL USE ONLY FOR SELECT 4TH ITERATION. TO BE DELETED AS SOON AS POSSIBLE
 					// URL TO STORE CONSENT IN SERVICES
-					sendConsentToSink(DAOUtils.obj2Json(crsiSecondDataset, ConsentRecordSink.class), sourceId,
+					ConsentServiceUtils.sendConsentToSinkUTILS(DAOUtils.obj2Json(crsiSecondDataset, ConsentRecordSink.class), sourceId,
 							crsiSecondDataset.getCommon_part().getRs_description().getResource_set().getDataset()
 							.get(0).get_id());
 					details = new JSONObject();
@@ -1085,20 +1088,20 @@ public class ConsentService implements IConsentService {
 					details.put("date",
 							new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 					details.put("operation", "Send Consent Record  to Sink (" + sinkId + ")");
-					traceAuditLog(accountId, details);
+					ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 					// END TO BE REMOVED
 
 					updateSourceConsentRecord(accountId,
 							DAOUtils.obj2Json(crsoSecondDataset, ConsentRecordSource.class));
 					// URL USE ONLY FOR SELECT 4TH ITERATION. TO BE DELETED AS SOON AS POSSIBLE
 					// URL TO STORE CONSENT IN SERVICES
-					sendConsentToSource(DAOUtils.obj2Json(crsoSecondDataset, ConsentRecordSource.class), sinkId);
+					ConsentServiceUtils.sendConsentToSourceUTILS(DAOUtils.obj2Json(crsoSecondDataset, ConsentRecordSource.class), sinkId);
 					details = new JSONObject();
 					details.put("method", "giveConsent");
 					details.put("date",
 							new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 					details.put("operation", "Send Consent Record to Source (" + sourceId + ")");
-					traceAuditLog(accountId, details);
+					ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 					// END TO BE REMOVED
 				}
 
@@ -1110,10 +1113,10 @@ public class ConsentService implements IConsentService {
 
 				ServiceLinkRecord sinkSLR = dao.getServiceLinkRecordByServiceId(accountId, sinkId);
 				ServiceLinkRecord sourceSLR = dao.getServiceLinkRecordByServiceId(accountId, sourceId);
-
-				ServiceEntry sinkService = this.findById(sinkId);
-				ServiceEntry sourceService = this.findById(sourceId);
-
+				//GE - Refactor 101018
+				ServiceEntry sinkService = csu.findByIdUTILS(sinkId); 
+				ServiceEntry sourceService = csu.findByIdUTILS(sourceId); 
+				//GE - Refactor 101018
 				RSDescription rs = new RSDescription();
 				rs.setResource_set(resorceSet);
 
@@ -1127,7 +1130,8 @@ public class ConsentService implements IConsentService {
 				sourceCommonPart.setSlr_id(sourceSLR.get_id());
 				sourceCommonPart.setIat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS").format(new Date()));
 				sourceCommonPart.setOperator("_cdv");
-				sourceCommonPart.setSubject_id(sourceService.getPublicServiceID());
+				String ap = sourceService.getPublicServiceID();
+				sourceCommonPart.setSubject_id(ap);
 				sourceCommonPart.setRole("source");
 				sourceCommonPart.setRs_description(rs);
 				sourceCommonPart.setAnonymousUsage(consentFormObj.getResourceSet().getAnonymousUsage());
@@ -1168,14 +1172,14 @@ public class ConsentService implements IConsentService {
 				details.put("date", new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 				details.put("operation", "Update Status for Consent Record  Sink. Status ("
 						+ sinkstatusRecord.getConsent_status() + ")");
-				traceAuditLog(accountId, details);
+				ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 
 				details = new JSONObject();
 				details.put("method", "giveConsent");
 				details.put("date", new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 				details.put("operation", "Update Status for Consent Record  Source. Status ("
 						+ sinkstatusRecord.getConsent_status() + ")");
-				traceAuditLog(accountId, details);
+				ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 
 				String sinkSign = JWTUtils.createJWT(crk);
 				String sourceSign = JWTUtils.createJWT(crs);
@@ -1188,55 +1192,55 @@ public class ConsentService implements IConsentService {
 				details.put("date", new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 				details.put("operation",
 						"Sign and Store Consent Record for Sink. Consent RecordId (" + crk.get_id() + ")");
-				traceAuditLog(accountId, details);
+				ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 
 				details = new JSONObject();
 				details.put("method", "giveConsent");
 				details.put("date", new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 				details.put("operation",
 						"Sign and Store Consent Record for Source. Consent RecordId (" + crs.get_id() + ")");
-				traceAuditLog(accountId, details);
+				ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 
 				storeSinkConsentRecord(accountId, DAOUtils.obj2Json(crk, ConsentRecordSink.class));
 				// URL USE ONLY FOR SELECT 4TH ITERATION. TO BE DELETED AS SOON AS POSSIBLE
 				// URL TO STORE CONSENT IN SERVICES
-				sendConsentToSink(DAOUtils.obj2Json(crk, ConsentRecordSink.class), sourceId,
+				ConsentServiceUtils.sendConsentToSinkUTILS(DAOUtils.obj2Json(crk, ConsentRecordSink.class), sourceId,
 						resorceSet.getDataset().get(0).get_id());
 				details = new JSONObject();
 				details.put("method", "giveConsent");
 				details.put("date", new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 				details.put("operation", "Send Consent Record  to Sink (" + sinkId + ")");
-				traceAuditLog(accountId, details);
+				ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 				// END TO BE REMOVED
 
 				storeSourceConsentRecord(accountId, DAOUtils.obj2Json(crs, ConsentRecordSource.class));
 				// URL USE ONLY FOR SELECT 4TH ITERATION. TO BE DELETED AS SOON AS POSSIBLE
 				// URL TO STORE CONSENT IN SERVICES
-				sendConsentToSource(DAOUtils.obj2Json(crs, ConsentRecordSource.class), sinkId);
+				ConsentServiceUtils.sendConsentToSourceUTILS(DAOUtils.obj2Json(crs, ConsentRecordSource.class), sinkId);
 				details = new JSONObject();
 				details.put("method", "giveConsent");
 				details.put("date", new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 				details.put("operation", "Send Consent Record to Source (" + sourceId + ")");
-				traceAuditLog(accountId, details);
+				ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 				// END TO BE REMOVED
 
 				details = new JSONObject();
 				details.put("method", "giveConsent");
 				details.put("date", new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 				details.put("operation", "Create Consent Record  Sink. Sink (" + sinkId + ")");
-				traceAuditLog(accountId, details);
+				ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 
 				details = new JSONObject();
 				details.put("method", "giveConsent");
 				details.put("date", new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 				details.put("operation", "Create Consent Record  Source. Source (" + sourceId + ")");
-				traceAuditLog(accountId, details);
+				ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 
 				details = new JSONObject();
 				details.put("method", "giveConsent");
 				details.put("date", new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
 				details.put("operation", "exit from giveConsent method");
-				traceAuditLog(accountId, details);
+				ConsentServiceUtils.traceAuditLogUTILS(accountId, details);
 
 				return Response.status(Response.Status.CREATED)
 						.entity("{ \"sink_consent_record\": " + DAOUtils.obj2Json(crk, ConsentRecordSink.class)
@@ -1371,8 +1375,8 @@ public class ConsentService implements IConsentService {
 
 				String slr_id = crk.getCommon_part().getSlr_id();
 
-				ServiceEntry sinkService = this.findById(crk.getCommon_part().getSubject_id());
-				ServiceEntry sourceService = this.findById(crs.getCommon_part().getSubject_id());
+				ServiceEntry sinkService = csu.findByIdUTILS(crk.getCommon_part().getSubject_id());
+				ServiceEntry sourceService = csu.findByIdUTILS(crs.getCommon_part().getSubject_id());
 
 				m.put("sinkService", sinkService);
 				m.put("sourceService", sourceService);
@@ -1428,8 +1432,8 @@ public class ConsentService implements IConsentService {
 
 					String slr_id = crk.getCommon_part().getSlr_id();
 
-					ServiceEntry sinkService = this.findById(crk.getCommon_part().getSubject_id());
-					ServiceEntry sourceService = this.findById(crs.getCommon_part().getSubject_id());
+					ServiceEntry sinkService = csu.findByIdUTILS(crk.getCommon_part().getSubject_id());
+					ServiceEntry sourceService = csu.findByIdUTILS(crs.getCommon_part().getSubject_id());
 
 					m.put("sinkService", sinkService);
 					m.put("sourceService", sourceService);
@@ -1466,8 +1470,6 @@ public class ConsentService implements IConsentService {
 
 	}
 
-
-
 	@Override
 	@GET
 	@Path("/consents/active/{accountId}/{slr}")
@@ -1489,8 +1491,8 @@ public class ConsentService implements IConsentService {
 
 					String slr_id = crk.getCommon_part().getSlr_id();
 
-					ServiceEntry sinkService = this.findById(crk.getCommon_part().getSubject_id());
-					ServiceEntry sourceService = this.findById(crs.getCommon_part().getSubject_id());
+					ServiceEntry sinkService = csu.findByIdUTILS(crk.getCommon_part().getSubject_id());
+					ServiceEntry sourceService = csu.findByIdUTILS(crs.getCommon_part().getSubject_id());
 
 					m.put("sinkService", sinkService);
 					m.put("sourceService", sourceService);
@@ -1653,7 +1655,8 @@ public class ConsentService implements IConsentService {
 		}
 	}
 
-	private void traceAuditLog(String accountId, JSONObject details) {
+/*	private void traceAuditLog(String accountId, JSONObject details) {
+
 		Client client = ClientBuilder.newClient();
 		WebTarget webTarget = client.target("http://localhost:8080/auditlog-manager/api/v1/internal/addlog");
 
@@ -1665,9 +1668,9 @@ public class ConsentService implements IConsentService {
 		Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
 		Response response = invocationBuilder.post(Entity.entity(payload.toString(), MediaType.APPLICATION_JSON));
 
-	}
+	}*/
 
-	private void sendConsentToSource(String csrToService, String sinkIdToService) {
+/*	private void sendConsentToSource(String csrToService, String sinkIdToService) {
 		Client client = ClientBuilder.newClient();
 		WebTarget webTarget = client.target("http://localhost:8080");
 		JSONObject payload = new JSONObject();
@@ -1676,9 +1679,9 @@ public class ConsentService implements IConsentService {
 		Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
 		Response response = invocationBuilder.post(Entity.entity(payload.toString(), MediaType.APPLICATION_JSON));
 
-	}
+	}*/
 
-	private void sendConsentToSink(String csrToService, String sourceIdToService, String datasetIdToService) {
+/*	private void sendConsentToSink(String csrToService, String sourceIdToService, String datasetIdToService) {
 		Client client = ClientBuilder.newClient();
 		WebTarget webTarget = client.target("http://localhost:8080");
 		JSONObject payload = new JSONObject();
@@ -1688,6 +1691,6 @@ public class ConsentService implements IConsentService {
 		Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
 		Response response = invocationBuilder.post(Entity.entity(payload.toString(), MediaType.APPLICATION_JSON));
 
-	}
+	}*/
 
 }

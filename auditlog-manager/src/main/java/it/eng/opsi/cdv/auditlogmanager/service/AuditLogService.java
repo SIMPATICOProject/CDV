@@ -26,7 +26,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -39,6 +41,10 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.lang3.StringUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.google.gson.reflect.TypeToken;
 
 import it.eng.opsi.cdv.auditlogmanager.dao.AuditLogDAO;
@@ -47,6 +53,8 @@ import it.eng.opsi.cdv.auditlogmanager.model.AuditLogException;
 import it.eng.opsi.cdv.auditlogmanager.model.ErrorResponse;
 import it.eng.opsi.cdv.auditlogmanager.utils.DAOUtils;
 import it.eng.opsi.cdv.auditlogmanager.utils.PropertyManager;
+import it.eng.opsi.cdv.auditlogmanager.model.AccountManagerCallException;
+
 
 @Path("/v1")
 public class AuditLogService implements IAuditLogService {
@@ -214,6 +222,93 @@ public class AuditLogService implements IAuditLogService {
 					String.valueOf(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()), e.getClass().getSimpleName(),
 					e.getMessage());
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error.toJson()).build();
+		}
+
+	}
+	
+	
+	@Override
+	@DELETE
+	@Path("/internal/deletelog")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response deleteAllAuditLog(@HeaderParam("accountId") String accountId) {
+
+		if (StringUtils.isNotBlank(accountId)) {
+
+			try {
+				if (callExistsAccount(accountId)) {
+
+					dao.deleteAllAuditLog(accountId);
+
+					return Response.status(Response.Status.OK).build();
+
+				} else {
+
+					ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.NOT_FOUND.getStatusCode()),
+							"AccountNotFound",
+							"The account with Id: " + accountId + " was not found in Account Manager");
+					return Response.status(Response.Status.NOT_FOUND).entity(error.toJson()).build();
+				}
+			} catch (AuditLogException e) {
+
+				System.out.println(e.getMessage());
+				ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.NOT_FOUND.getStatusCode()),
+						e.getClass().getSimpleName(), e.getMessage());
+
+				return Response.status(Response.Status.NOT_FOUND).entity(error.toJson()).build();
+
+			} catch (Exception e) {
+
+				e.printStackTrace();
+				ErrorResponse error = new ErrorResponse(
+						String.valueOf(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()),
+						e.getClass().getSimpleName(), e.getMessage());
+
+				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error.toJson()).build();
+			}
+
+		} else {
+
+			ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
+					"AccountIdMissing", "The account Id is empty or missing");
+
+			return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
+
+		}
+
+	}
+	
+	
+	private static boolean callExistsAccount(String accountId) throws AccountManagerCallException {
+
+		try {
+
+			Client client = ClientBuilder.newClient();
+			WebTarget webTarget = client.target(
+					PropertyManager.getProperty("ACCOUNTMANAGER_HOST") + "/api/internal/accounts/{accountId}/exists")
+					.resolveTemplate("accountId", accountId);
+
+			Invocation.Builder invocationBuilder = webTarget.request();
+			Response response = invocationBuilder.get();
+
+			int status = response.getStatus();
+			String res = response.readEntity(String.class);
+			response.close();
+
+			if (status == 200) {
+				JSONObject resJson = new JSONObject(res);
+				return resJson.getBoolean("result");
+
+			} else {
+				throw new AccountManagerCallException(
+						"There was an error while calling the existsAccount service of Account Manager");
+
+			}
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+			throw new AccountManagerCallException(
+					"There was an error while calling the existsAccount service of Account Manager");
 		}
 
 	}

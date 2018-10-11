@@ -29,7 +29,9 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.Consumes;
@@ -56,6 +58,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.stereotype.Service;
+
 import com.google.gson.reflect.TypeToken;
 
 import it.eng.opsi.cdv.pdatamanager.model.AccountManagerCallException;
@@ -73,12 +77,15 @@ import it.eng.opsi.cdv.pdatarepository.model.PDataUtilsException;
 import it.eng.opsi.cdv.pdatarepository.model.PDataWriteMode;
 import it.eng.opsi.cdv.pdatarepository.utils.DAOUtils;
 
+@Service("PDataService")
+
 //@Component
 @Path("/v1")
 public class PDataService implements IPDataService {
 
 	private static PDataRepository repo = new PDataRepository(
 			PropertyManager.getProperty("PDATA_REPOSITORY_COLLECTION"), PropertyManager.getProperties());
+	
 	static final String api_version = "1.0";
 
 	@POST
@@ -759,6 +766,7 @@ public class PDataService implements IPDataService {
 
 	}
 
+	//JUNIT/MOCKITO TESTED
 	@Override
 	@POST
 	@Path("/postPDataByConsent")
@@ -767,7 +775,7 @@ public class PDataService implements IPDataService {
 	public Response postServicePDataByConsent(final String input, @QueryParam("mode") String modeString) {
 
 		try {
-
+            System.out.println(input);
 			// INPUT
 			JSONObject in = new JSONObject(input);
 			String slrId = in.getString("slr_id");
@@ -790,10 +798,11 @@ public class PDataService implements IPDataService {
 			}
 
 			// Verify SLR and get the related accountId from AccountManager
-			verifyResSLR = callVerifySLR(slrId, slrToken, userId);
-			verifySLRResult = verifyResSLR.get("result");
+			verifyResSLR = callVerifySLR(slrId, slrToken, userId);			
+			verifySLRResult = verifyResSLR.get("result");	
 
 			if (verifySLRResult.equalsIgnoreCase("success")) {
+					
 				// The accountId stored by the PData Manager is the Account
 				// username of Account Manager
 				accountId = verifyResSLR.get("username");
@@ -805,7 +814,7 @@ public class PDataService implements IPDataService {
 				if (verifyCRResult.equalsIgnoreCase("success")) {
 
 					List<DataMapping> responseList = (List<DataMapping>) DAOUtils
-							.json2Obj(verifyResCR.get("datamapping"), new TypeToken<List<DataMapping>>() {
+							.json2Obj(verifyResCR.get("datamapping"), new TypeToken<List<DataMapping>>() {  
 							}.getType());
 
 					// Get the service Data Mapping from Service Consent
@@ -824,10 +833,8 @@ public class PDataService implements IPDataService {
 						JSONObject property = (JSONObject) properties.get(i);
 						PDataEntry resolved = serviceMap.get(property.getString("key"));
 						if (resolved != null) {
-							resolved.setValues((List<String>) DAOUtils.json2Obj(property.get("values").toString(),
-									new TypeToken<List<String>>() {
-									}.getType()));
-
+							
+							resolved.setValues((List<String>) DAOUtils.json2Obj(property.get("values").toString(),new TypeToken<List<String>>(){}.getType()));
 							mappedPData.add(resolved);
 						}
 					}
@@ -835,7 +842,6 @@ public class PDataService implements IPDataService {
 					repo.storePData(accountId, mappedPData, mode);
 
 				} else {
-
 					ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
 							"CRNotValid", verifyResCR.get("message"));
 					return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
@@ -845,7 +851,6 @@ public class PDataService implements IPDataService {
 				return Response.status(Response.Status.OK).build();
 
 			} else {
-
 				ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
 						"SLRNotValid", verifyResSLR.get("message"));
 
@@ -993,6 +998,7 @@ public class PDataService implements IPDataService {
 
 	}
 
+	//JUNIT/MOCKITO TESTED
 	@Override
 	@POST
 	@Path("/getPDataByConsent")
@@ -1022,7 +1028,7 @@ public class PDataService implements IPDataService {
 
 			verifySLRResult = verifyResSLR.get("result");
 
-			if (verifySLRResult.equalsIgnoreCase("success")) {
+			if (verifySLRResult.equalsIgnoreCase("success")) {			
 
 				// The accountId stored by the PData Manager is the Account
 				// username of Account Manager
@@ -1035,11 +1041,8 @@ public class PDataService implements IPDataService {
 
 				JSONArray properties = new JSONArray();
 
-				if (verifyCRResult.equalsIgnoreCase("success")) {
-
-					List<DataMapping> responseList = (List<DataMapping>) DAOUtils
-							.json2Obj(verifyResCR.get("datamapping"), new TypeToken<List<DataMapping>>() {
-							}.getType());
+				if (verifyCRResult.equalsIgnoreCase("success")) {					
+					List<DataMapping> responseList = (List<DataMapping>) DAOUtils.json2Obj(verifyResCR.get("datamapping"), new TypeToken<List<DataMapping>>(){}.getType());
 
 					// Get the service Data Mapping from Service Consent
 					serviceMap = (HashMap<String, PDataEntry>) responseList.stream().collect(Collectors.toMap(
@@ -1064,7 +1067,7 @@ public class PDataService implements IPDataService {
 							}
 						}
 
-					} else {
+					} else {					
 						for (int i = 0; i < propertiesKeys.length(); i++) {
 
 							String property = (String) propertiesKeys.get(i);
@@ -1084,8 +1087,7 @@ public class PDataService implements IPDataService {
 						}
 					}
 
-				} else {
-
+				} else {	
 					ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
 							"CRNotValid", verifyResCR.get("message"));
 					return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
@@ -1099,8 +1101,7 @@ public class PDataService implements IPDataService {
 
 				return Response.status(Response.Status.OK).entity(result.toString()).build();
 
-			} else {
-
+			} else {	
 				ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
 						"SLRNotValid", verifyResSLR.get("message"));
 				return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();

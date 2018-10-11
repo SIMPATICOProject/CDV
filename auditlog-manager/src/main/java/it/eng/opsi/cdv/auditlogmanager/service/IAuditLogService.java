@@ -36,4 +36,6 @@ public interface IAuditLogService {
 
 	public Response getLogsByUsername(@PathParam("username") String username);
 
+	public Response deleteAllAuditLog(@PathParam("accountId")String accountId);
+
 }

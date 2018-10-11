@@ -1,6 +1,6 @@
 /*******************************************************************************
  * The MIT License (MIT)
- * Copyright (c) 2016, 2017  Engineering Ingegneria Informatica S.p.A
+ * Copyright (c) 2016, 2018  Engineering Ingegneria Informatica S.p.A
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,41 +20,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *******************************************************************************/
-package it.eng.rspa.cdv.consentmanager;
+package it.eng.opsi.cdv.auditlogmanager.model;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+public class AccountManagerCallException extends Exception {
 
-/**
- * Unit test for simple App.
- */
-public class AppTest 
-    extends TestCase
-{
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public AppTest( String testName )
-    {
-        super( testName );
-    }
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
-    {
-        return new TestSuite( AppTest.class );
-    }
+	public AccountManagerCallException(String message) {
+		super(message);
 
-    /**
-     * Rigourous Test :-)
-     */
-    public void testApp()
-    {
-        assertTrue( true );
-    }
+	}
+
 }

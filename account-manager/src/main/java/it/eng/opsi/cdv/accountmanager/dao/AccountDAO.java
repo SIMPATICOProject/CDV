@@ -86,14 +86,11 @@ public class AccountDAO {
 	public AccountDAO(String collectionName) {
 		this.collectionName = collectionName;
 
-		// Create unique index for username field
-		MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
-		MongoDatabase db = dbSingleton.getDB();
-		MongoCollection<Document> collection = db.getCollection(collectionName);
-		Document keys = new Document("username", 1);
-		collection.createIndex(keys, new IndexOptions().unique(true));
+		
 
 	}
+	
+	
 
 	public Account storeAccount(Account account) throws AccountAlreadyPresentException, AccountManagerException {
 
@@ -101,6 +98,11 @@ public class AccountDAO {
 			MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
 			MongoDatabase db = dbSingleton.getDB();
 			MongoCollection<Document> collection = db.getCollection(collectionName);
+			
+			
+			// Create unique index for username field
+			Document keys = new Document("username", 1);
+			collection.createIndex(keys, new IndexOptions().unique(true));
 
 			account.setCreated(ZonedDateTime.now(ZoneOffset.UTC));
 			Document doc = Document.parse(DAOUtils.obj2Json(account, Account.class));

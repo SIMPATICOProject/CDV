@@ -64,6 +64,7 @@ import it.eng.opsi.cdv.auditlogmanager.model.AuditLogException;
 import it.eng.opsi.cdv.auditlogmanager.utils.DAOUtils;
 import it.eng.opsi.cdv.auditlogmanager.utils.JWTUtils;
 
+
 public class AuditLogDAO {
 
 	private String collectionName;
@@ -101,8 +102,29 @@ public class AuditLogDAO {
 			return log;
 
 		} catch (Exception e) {
-			throw new AuditLogException("There was an error while storing the Account");
+			throw new AuditLogException("There was an error while storing the AuditLog");
 		}
+	}
+	
+	
+	public void deleteAllAuditLog(String accountId) throws AuditLogException {
+
+		DeleteResult result = null;
+		try {
+			MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
+			MongoDatabase db = dbSingleton.getDB();
+			MongoCollection<Document> collection = db.getCollection(collectionName);
+
+			result = collection.deleteMany(eq("username", accountId));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new AuditLogException("There was an error while deleting the AuditLog values");
+		}
+
+		if (result != null && result.getDeletedCount() == 0)
+			throw new AuditLogException("AuditLog entries not found for accountId: " + accountId);
+
 	}
 
 	public List<AuditLog> getLogs() throws AuditLogException {

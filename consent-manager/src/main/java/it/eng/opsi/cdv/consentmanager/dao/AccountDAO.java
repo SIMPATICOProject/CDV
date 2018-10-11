@@ -92,12 +92,12 @@ public class AccountDAO {
 	public AccountDAO(String collectionName) {
 		this.collectionName = collectionName;
 
-		// Create unique index for username field
+	/*	// Create unique index for username field
 		MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
 		MongoDatabase db = dbSingleton.getDB();
 		MongoCollection<Document> collection = db.getCollection(collectionName);
 		Document keys = new Document("username", 1);
-		collection.createIndex(keys, new IndexOptions().unique(true));
+		collection.createIndex(keys, new IndexOptions().unique(true));*/
 
 	}
 

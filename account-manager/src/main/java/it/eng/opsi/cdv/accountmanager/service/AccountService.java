@@ -43,6 +43,8 @@ import javax.ws.rs.core.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.stereotype.Service;
+
 import com.google.gson.reflect.TypeToken;
 
 import io.jsonwebtoken.MalformedJwtException;
@@ -73,6 +75,8 @@ import it.eng.opsi.cdv.accountmanager.utils.DAOUtils;
 import it.eng.opsi.cdv.accountmanager.utils.JWTUtils;
 import it.eng.opsi.cdv.accountmanager.utils.PropertyManager;
 
+@Service("AccountService")
+
 @Path("/v1")
 public class AccountService implements IAccountService {
 
@@ -81,6 +85,7 @@ public class AccountService implements IAccountService {
 	// static {
 	// new JHades().overlappingJarsReport();
 	// }
+	
 	@Override
 	@POST
 	@Path("/accounts")
@@ -1023,6 +1028,7 @@ public class AccountService implements IAccountService {
 
 	}
 
+	
 	@Override
 	@POST
 	@Path("/accounts/{accountId}/serviceLinks")
@@ -1049,7 +1055,8 @@ public class AccountService implements IAccountService {
 				if (dao.existsServiceLinkRecord(accountId, serviceId)) {
 
 					record = dao.getServiceLinkRecordByServiceId(accountId, serviceId);
-					List<ServiceLinkStatusRecord> ssrList = record.getServiceLinkStatusRecords();
+					List<ServiceLinkStatusRecord> ssrList = record.getServiceLinkStatusRecords();	
+
 					ServiceLinkStatusEnum lastStatus = ssrList.get(ssrList.size() - 1).getServiceLinkStatus();
 
 					if (lastStatus.equals(ServiceLinkStatusEnum.ACTIVE)) {
@@ -1059,6 +1066,7 @@ public class AccountService implements IAccountService {
 					}
 
 				} else {
+
 					record = dao.addServiceLinkRecord(accountId,
 							new ServiceLinkRecord(serviceId, serviceUri, serviceName, surrogateId));
 				}
@@ -1633,7 +1641,7 @@ public class AccountService implements IAccountService {
 
 	}
 
-	private static List<PDataEntry> callGetAllPData(String accountId) throws PDataManagerCallException {
+	public static List<PDataEntry> callGetAllPData(String accountId) throws PDataManagerCallException {
 
 		Response response = null;
 		try {
