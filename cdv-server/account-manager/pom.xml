@@ -633,7 +633,8 @@
                     <check />
 					<instrumentation>
 					   <includes>
-					      <include>it/eng/opsi/cdv/accountmanager/service/*</include>
+					      <include>it/eng/opsi/cdv/accountmanager/service/AccountService.class</include>
+						   <include>it/eng/opsi/cdv/accountmanager/utils/DAOUtils.class</include>
                           </includes>
 					   <excludes>
                             <exclude>it/eng/opsi/cdv/accountmanager/dao/*</exclude>                            

@@ -1605,7 +1605,7 @@ public class AccountService implements IAccountService {
 
 	}
 
-	private static List<PDataEntry> callGetAllPData(String accountId) throws PDataManagerCallException {
+	public static List<PDataEntry> callGetAllPData(String accountId) throws PDataManagerCallException {
 
 		Response response = null;
 		try {
