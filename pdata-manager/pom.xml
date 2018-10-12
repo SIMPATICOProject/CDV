@@ -625,6 +625,8 @@
                     </formats>
                     <check />
 					<instrumentation>
+					   <ignoreTrivial>true</ignoreTrivial>
+					   <ignoreMethodAnnotation>it.eng.opsi.cdv.pdatamanager.utils.CoberturaIgnore</ignoreMethodAnnotation>
 					   <includes>
 					      <include>it/eng/opsi/cdv/pdatamanager/service/PDataService.class</include>
                        </includes>

@@ -71,6 +71,7 @@ import it.eng.opsi.cdv.accountmanager.model.ServiceLinkStatusRecord;
 import it.eng.opsi.cdv.accountmanager.model.ServiceLinkStatusRecordNotFoundException;
 import it.eng.opsi.cdv.accountmanager.model.Telephone;
 import it.eng.opsi.cdv.accountmanager.model.TelephoneNotFoundException;
+import it.eng.opsi.cdv.accountmanager.utils.CoberturaIgnore;
 import it.eng.opsi.cdv.accountmanager.utils.DAOUtils;
 import it.eng.opsi.cdv.accountmanager.utils.JWTUtils;
 import it.eng.opsi.cdv.accountmanager.utils.PropertyManager;
@@ -98,8 +99,8 @@ public class AccountService implements IAccountService {
 
 			Account created = dao.storeAccount(account);
 
-			return Response.status(Response.Status.CREATED).entity(DAOUtils.obj2Json(created, Account.class).toString())
-					.build();
+			Object en = DAOUtils.obj2Json(created, Account.class).toString();
+			return Response.status(Response.Status.CREATED).entity(en).build();
 
 		} catch (AccountUtilsException e) {
 
@@ -352,6 +353,7 @@ public class AccountService implements IAccountService {
 
 	}
 
+	@CoberturaIgnore
 	@Override
 	@GET
 	@Path("/accounts/{accountId}/telephones/{telephoneId}")
@@ -391,6 +393,7 @@ public class AccountService implements IAccountService {
 
 	}
 
+	@CoberturaIgnore
 	@Override
 	@GET
 	@Path("/accounts/{accountId}/telephones")
@@ -431,6 +434,7 @@ public class AccountService implements IAccountService {
 
 	}
 
+	@CoberturaIgnore
 	@Override
 	@PUT
 	@Path("/accounts/{accountId}/telephones/{telephoneId}")
@@ -540,6 +544,7 @@ public class AccountService implements IAccountService {
 
 	}
 
+	@CoberturaIgnore
 	@Override
 	@GET
 	@Path("/accounts/{accountId}/contacts/{contactId}")
@@ -578,6 +583,7 @@ public class AccountService implements IAccountService {
 
 	}
 
+	@CoberturaIgnore
 	@Override
 	@GET
 	@Path("/accounts/{accountId}/contacts")
@@ -618,6 +624,7 @@ public class AccountService implements IAccountService {
 
 	}
 
+	@CoberturaIgnore
 	@Override
 	@PUT
 	@Path("/accounts/{accountId}/contacts/{contactId}")
@@ -726,6 +733,7 @@ public class AccountService implements IAccountService {
 
 	}
 
+	@CoberturaIgnore
 	@Override
 	@GET
 	@Path("/accounts/{accountId}/emails/{emailId}")
@@ -764,6 +772,7 @@ public class AccountService implements IAccountService {
 
 	}
 
+	@CoberturaIgnore
 	@Override
 	@GET
 	@Path("/accounts/{accountId}/emails")
@@ -804,6 +813,7 @@ public class AccountService implements IAccountService {
 
 	}
 
+	@CoberturaIgnore
 	@Override
 	@PUT
 	@Path("/accounts/{accountId}/emails/{emailId}")
@@ -912,6 +922,7 @@ public class AccountService implements IAccountService {
 
 	}
 
+	@CoberturaIgnore
 	@Override
 	@GET
 	@Path("/accounts/{accountId}/particular")
@@ -1607,6 +1618,7 @@ public class AccountService implements IAccountService {
 
 	}
 
+	@CoberturaIgnore
 	private static void callDeletePData(String accountId) throws PDataManagerCallException {
 
 		Response response = null;
@@ -1641,6 +1653,7 @@ public class AccountService implements IAccountService {
 
 	}
 
+	@CoberturaIgnore
 	public static List<PDataEntry> callGetAllPData(String accountId) throws PDataManagerCallException {
 
 		Response response = null;

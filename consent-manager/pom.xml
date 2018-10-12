@@ -262,8 +262,7 @@
 					   <includes>
 					      <include>it/eng/opsi/cdv/consentmanager/service/ConsentService.class</include>
 					       <include>it/eng/opsi/cdv/consentmanager/utils/DAOUtils.class</include>
-					       <include>it/eng/opsi/cdv/consentmanager/utils/ConsentServiceUtils.class</include>
-					      					      
+					      					      					      
                           </includes>
 					   <excludes>
                             <exclude>it/eng/opsi/cdv/accountmanager/dao/*</exclude>                            

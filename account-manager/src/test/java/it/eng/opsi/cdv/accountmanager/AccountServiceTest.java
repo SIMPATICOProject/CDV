@@ -61,6 +61,7 @@ import it.eng.opsi.cdv.accountmanager.model.ServiceLinkRecord;
 import it.eng.opsi.cdv.accountmanager.model.ServiceLinkRecordNotFoundException;
 import it.eng.opsi.cdv.accountmanager.model.ServiceLinkStatusEnum;
 import it.eng.opsi.cdv.accountmanager.model.ServiceLinkStatusRecord;
+import it.eng.opsi.cdv.accountmanager.model.ServiceLinkStatusRecordNotFoundException;
 import it.eng.opsi.cdv.accountmanager.service.AccountService;
 import it.eng.opsi.cdv.accountmanager.utils.DAOUtils;
 import it.eng.opsi.cdv.accountmanager.utils.PropertyManager;
@@ -89,6 +90,9 @@ public class AccountServiceTest {
 	Account retAccMock;
 	
 	@Mock
+	Account retAccMock2;
+	
+	@Mock
 	ServiceLinkStatusRecord slsr;
 	
 	@Mock
@@ -115,21 +119,108 @@ public class AccountServiceTest {
     public void testCreateAccount() {
     	    	  	
     	System.out.println("testing createAccount STARTED...");
-    	PowerMockito.mockStatic(AccountService.class);
     	
     	String input_201 = "";
         try {
+        	
+        	PowerMockito.mockStatic(DAOUtils.class);
+        	DAOUtils du = PowerMockito.mock(DAOUtils.class);
+        	
+        	Whitebox.setInternalState(AccountService.class,dao);
 
-	    	Whitebox.setInternalState(AccountService.class,dao); 
-			when(dao.storeAccount(any(Account.class))).thenReturn(retAccMock);
+        	PowerMockito.when(du.json2Obj(Mockito.anyString(),any())).thenReturn(retAccMock);
+        	PowerMockito.when(dao.storeAccount(any(Account.class))).thenReturn(retAccMock2);
+        	PowerMockito.when(du.obj2Json(any(Account.class),any())).thenReturn("json_value");
+        	
 			Response res = accService.createAccount(input_201);
 			assertEquals(201, res.getStatus());
 			
-		} catch (AccountManagerException  |  AccountAlreadyPresentException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		} 
 
         System.out.println("...testing createAccount CLOSED.");
+        
+    }
+    
+    @Test
+    public void testCreateAccount_BAD_REQUEST() {
+    	    	  	
+    	System.out.println("testing createAccount_BAD_REQUEST STARTED...");
+    	
+    	String input_400 = "";
+        try {
+        	
+        	PowerMockito.mockStatic(DAOUtils.class);
+        	DAOUtils du = PowerMockito.mock(DAOUtils.class);
+        	
+        	Whitebox.setInternalState(AccountService.class,dao);
+
+        	PowerMockito.when(du.json2Obj(Mockito.anyString(),any())).thenThrow(AccountUtilsException.class);
+			
+        	Response res = accService.createAccount(input_400);
+			assertEquals(400, res.getStatus());
+
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+
+        System.out.println("...testing createAccount_BAD_REQUEST CLOSED.");
+        
+    }
+    
+    @Test
+    public void testCreateAccount_INTERNAL_SERVER_ERROR() throws Exception {
+    	    	  	
+    	System.out.println("testing createAccount_INTERNAL_SERVER_ERROR STARTED...");
+    	
+    	String input_500 = "";
+        try {
+        	
+        	PowerMockito.mockStatic(DAOUtils.class);
+        	DAOUtils du = PowerMockito.mock(DAOUtils.class);
+        	
+        	Whitebox.setInternalState(AccountService.class,dao);
+
+        	PowerMockito.when(du.json2Obj(Mockito.anyString(),any())).thenReturn(retAccMock);
+        	Mockito.when(dao.storeAccount(any(Account.class))).thenThrow(AccountManagerException.class);
+        	
+			Response res = accService.createAccount(input_500);
+			assertEquals(500, res.getStatus());
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+
+        System.out.println("...testing createAccount_INTERNAL_SERVER_ERROR CLOSED.");
+        
+    }
+    
+    @Test
+    public void testCreateAccount_CONFLICT() {
+    	    	  	
+    	System.out.println("testing createAccount_CONFLICT STARTED...");
+    	
+    	String input_409 = "";
+        try {
+
+        	PowerMockito.mockStatic(DAOUtils.class);
+        	DAOUtils du = PowerMockito.mock(DAOUtils.class);
+        	
+        	Whitebox.setInternalState(AccountService.class,dao);
+
+        	PowerMockito.when(du.json2Obj(Mockito.anyString(),any())).thenReturn(retAccMock);
+        	PowerMockito.when(dao.storeAccount(any(Account.class))).thenThrow(AccountAlreadyPresentException.class);
+        	
+			Response res = accService.createAccount(input_409);
+			assertEquals(409, res.getStatus());
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+
+        System.out.println("...testing createAccount_CONFLICT CLOSED.");
         
     }
     
@@ -186,6 +277,7 @@ public class AccountServiceTest {
         
     }
    
+      
    @Test
    public void testDeleteAccountAll() {
    	    	  	
@@ -213,22 +305,7 @@ public class AccountServiceTest {
        
    }
     
-    @Test
-    public void testCreateAccountWith400Exception() {
-    	    	  	
-    	System.out.println("testing exception createAccount STARTED...");
-    	PowerMockito.mockStatic(AccountService.class);
-    	
-    	String input_400 = "aaaa";
-    	Response res=null;
-        Whitebox.setInternalState(AccountService.class,dao); //per rendere "private static AccountDAO dao" non più static
-        res = accService.createAccount(input_400);
-		assertEquals(400, res.getStatus());
-			
-		System.out.println("...testing createAccount CLOSED.");
-        
-    }
-    
+   
        
     
     @Test
@@ -286,7 +363,7 @@ public class AccountServiceTest {
     @Test
     public void testCreateServiceLink_200() {
     	    	  	
-    	System.out.println("testing getServiceLinkRecords STARTED...");
+    	System.out.println("testing createServiceLinkRecords STARTED...");
     	
     	String input_200 = "{\"serviceId\":\"serviceId_value\",\"serviceUri\":\"serviceUri_value\",\"serviceName\":\"serviceName_value\",\"userId\":\"userId_value\"}";
 		try {
@@ -310,18 +387,17 @@ public class AccountServiceTest {
 			e.printStackTrace();
 		}
     	
-    	System.out.println("...testing getServiceLinkRecords CLOSED.");
+    	System.out.println("...testing createServiceLinkRecords CLOSED.");
     	
     }
     
     
-    
-    
+      
     
     @Test
     public void testCreateServiceLink_400() {
     	    	  	
-    	System.out.println("testing getServiceLinkRecords_400 STARTED...");
+    	System.out.println("testing createServiceLinkRecords_400 STARTED...");
     	
     	
     	String input_400 = "{\"serviceId\":\"\",\"serviceUri\":\"\",\"serviceName\":\"\",\"userId\":\"\"}";
@@ -346,7 +422,41 @@ public class AccountServiceTest {
 			e.printStackTrace();
 		}
     	
-    	System.out.println("...testing getServiceLinkRecords_400 CLOSED.");
+    	System.out.println("...testing createServiceLinkRecords_400 CLOSED.");
     	
     }
+    
+    
+    
+    @Test
+    public void testGetServiceLinkStatusRecords() {
+    	    	  	
+    	System.out.println("testing getServiceLinkStatusRecords STARTED...");
+    	
+    	String input_200 = "{\"serviceId\":\"serviceId_value\",\"serviceUri\":\"serviceUri_value\",\"serviceName\":\"serviceName_value\",\"userId\":\"userId_value\"}";
+		try {
+			Whitebox.setInternalState(AccountService.class,dao);
+			
+			when(dao.existsServiceLinkRecord(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
+			ServiceLinkRecord slr = new ServiceLinkRecord("serviceId_value","serviceUri_value","serviceName_value","surrogateId_value");
+			
+			ServiceLinkStatusRecord slrr= new ServiceLinkStatusRecord(ServiceLinkStatusEnum.ACTIVE);
+			List<ServiceLinkStatusRecord> ssrList= new ArrayList<ServiceLinkStatusRecord>();
+			ssrList.add(slrr);
+			when(dao.getServiceLinkStatusRecords(Mockito.anyString(), Mockito.anyString())).thenReturn(ssrList);
+			
+			when(slrMock.getServiceLinkStatusRecords()).thenReturn(ssrList);
+							
+			Response res = accService.getServiceLinkStatusRecords(Mockito.anyString(), Mockito.anyString());
+			assertEquals(200, res.getStatus());
+			
+			
+		} catch (AccountManagerException | ServiceLinkRecordNotFoundException | AccountUtilsException | ServiceLinkStatusRecordNotFoundException e) {
+			e.printStackTrace();
+		}
+    	
+    	System.out.println("...testing getServiceLinkStatusRecords CLOSED.");
+    	
+    }
+    
 }

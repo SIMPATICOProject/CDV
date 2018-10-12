@@ -1635,7 +1635,7 @@ public class ConsentService implements IConsentService {
 	 * del source //stampo l'array degli stati (ad esempio prendendelo dal sink
 	 * consent record corrente //passo al prossimo sink consent record corrente
 	 */
-
+	/*
 	@Override
 	@GET
 	@Path("/testmongo/{accountId}/{sinkId}/{sourceId}/{datasetId}")
@@ -1655,7 +1655,7 @@ public class ConsentService implements IConsentService {
 		}
 	}
 
-/*	private void traceAuditLog(String accountId, JSONObject details) {
+	private void traceAuditLog(String accountId, JSONObject details) {
 
 		Client client = ClientBuilder.newClient();
 		WebTarget webTarget = client.target("http://localhost:8080/auditlog-manager/api/v1/internal/addlog");

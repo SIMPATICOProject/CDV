@@ -635,6 +635,7 @@
                     <check />
 					<instrumentation>
 					   <ignoreTrivial>true</ignoreTrivial>
+					   <ignoreMethodAnnotation>it.eng.opsi.cdv.accountmanager.utils.CoberturaIgnore</ignoreMethodAnnotation>
 					   <includes>
 					      <include>it/eng/opsi/cdv/accountmanager/service/AccountService.class</include>
 					      <include>it/eng/opsi/cdv/accountmanager/utils/DAOUtils.class</include>					      

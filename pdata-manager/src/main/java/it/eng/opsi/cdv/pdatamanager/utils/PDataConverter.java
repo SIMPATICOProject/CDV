@@ -42,7 +42,7 @@ public class PDataConverter {
 
 	private static DateTimeFormatter fmt = DateTimeFormatter.ISO_OFFSET_DATE_TIME.withZone(ZoneOffset.UTC);
 
-	// BRAIN DAMAGE
+	
 	public static String pDataToCSV(List<PDataEntry> entries) {
 
 		StringWriter buffer = new StringWriter();

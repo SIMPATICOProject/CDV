@@ -67,6 +67,7 @@ import it.eng.opsi.cdv.pdatamanager.model.ConsentManagerCallException;
 import it.eng.opsi.cdv.pdatamanager.model.DataMapping;
 import it.eng.opsi.cdv.pdatamanager.model.ErrorResponse;
 import it.eng.opsi.cdv.pdatamanager.model.ServiceManagerCallException;
+import it.eng.opsi.cdv.pdatamanager.utils.CoberturaIgnore;
 import it.eng.opsi.cdv.pdatamanager.utils.PDataConverter;
 import it.eng.opsi.cdv.pdatamanager.utils.PropertyManager;
 import it.eng.opsi.cdv.pdatarepository.api.PDataRepository;
@@ -1133,6 +1134,8 @@ public class PDataService implements IPDataService {
 
 	}
 
+	
+	@CoberturaIgnore
 	private static HashMap<String, PDataEntry> callGetServiceMap(String serviceId, String accountId)
 			throws ServiceManagerCallException, PDataRepositoryException, PDataUtilsException {
 
@@ -1164,6 +1167,8 @@ public class PDataService implements IPDataService {
 
 	}
 
+	
+	@CoberturaIgnore
 	public static HashMap<String, String> callVerifySLR(String slrId, String slrToken, String surrogateId)
 			throws AccountManagerCallException {
 
@@ -1217,6 +1222,7 @@ public class PDataService implements IPDataService {
 		return result;
 	}
 
+	@CoberturaIgnore
 	public static HashMap<String, String> callVerifyCR(String slrId, String crId, String crToken, String surrogateId,
 			String accountId) throws ConsentManagerCallException {
 
@@ -1269,6 +1275,7 @@ public class PDataService implements IPDataService {
 		return result;
 	}
 
+	@CoberturaIgnore
 	public static HashMap<String, String> callVerifySLRByUsernameAndSurrogateId(String username, String surrogateId)
 			throws AccountManagerCallException {
 
@@ -1322,6 +1329,7 @@ public class PDataService implements IPDataService {
 		return result;
 	}
 
+	@CoberturaIgnore
 	private static boolean callExistsAccount(String accountId) throws AccountManagerCallException {
 
 		try {

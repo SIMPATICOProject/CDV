@@ -33,8 +33,6 @@ public interface IConsentService {
 
 	public Response verifySinkConsent(String sinkConsentId);
 
-	public Response testMongo(String accountId, String sinkId, String sourceId, String datasetId);
-
 	public Response findAllSinkConsentRecord(String accountId);
 
 	public Response findAllSourceConsentRecord(String accountId);
