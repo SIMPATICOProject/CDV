@@ -18,8 +18,6 @@
 		</repository>
 	</repositories>
 
-
-
 	<properties>
 		<jersey.version>2.25</jersey.version>
 		<commons-lang3.version>3.5</commons-lang3.version>
@@ -38,11 +36,6 @@
 		<servlet-version>3.0.1</servlet-version>
 		<!-- ____________________ -->
 	</properties>
-
-
-
-
-
 
 	<dependencies>
 
@@ -193,6 +186,13 @@
 		    <scope>test</scope>
 		</dependency>
 		
+		<!-- SWAGGER INTEGRATION -->
+		<!-- https://mvnrepository.com/artifact/io.swagger/swagger-jersey2-jaxrs -->
+		<dependency>
+		    <groupId>io.swagger</groupId>
+		    <artifactId>swagger-jersey2-jaxrs</artifactId>
+		    <version>1.5.21</version>
+		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
 		<dependency>
@@ -611,6 +611,7 @@
 		</dependency>
 
 	</dependencies>
+	
 	<build>
 		<finalName>account-manager</finalName>
 		<plugins>
