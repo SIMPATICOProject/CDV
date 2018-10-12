@@ -164,4 +164,74 @@ public class PdataServiceTest {
 		System.out.println("...testing postServicePDataByConsent_OK CLOSED.");
     }
     
+    @Test
+    public void testGetServicePData_OK() {
+    	    	  	
+    	System.out.println("testing getServicePData_OK STARTS...");
+    	
+    	String input = "{\"slr_id\":\"slr_id_value\",\"slr_token\":\"slr_token_vaue\",\"user_id\":\"user_id_value\",\"cr_id\":\"cr_id_value\",\"cr_token\":\"cr_token_value\",\"properties\":[]}";
+    	
+		try {
+			
+			PowerMockito.mockStatic(PDataService.class);
+			PowerMockito.mockStatic(DAOUtils.class);
+			
+			PowerMockito.when(pdService.callVerifySLR(Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(resultTest);
+			when(resultTest.get("result")).thenReturn("success");
+			when(resultTest.get("username")).thenReturn("username_value");
+			when(resultTest.get("serviceId")).thenReturn("serviceId_value");
+			PowerMockito.when(pdService.callVerifyCR(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),Mockito.anyString(), Mockito.anyString())).thenReturn(resultTest2);
+			when(resultTest2.get("result")).thenReturn("success");
+			
+			when(resultTest2.get("datamapping")).thenReturn("valore_lista");
+			DAOUtils daout = Mockito.mock(DAOUtils.class);
+    		PowerMockito.when(daout.json2Obj("valore_lista",new TypeToken<List<DataMapping>>(){}.getType())).thenReturn(responseList);
+    		
+			
+	    	Response res = pdService.getServicePData(input);
+			assertEquals(200, res.getStatus());
+			
+		} catch (Exception  e) {
+			e.printStackTrace();
+		}
+
+    	System.out.println("...testing getServicePData_OK CLOSED.");
+    } 
+    
+	
+    @Test
+    public void testPostServicePData_OK() {
+    	    	  	
+    	System.out.println("testing postServicePData_OK STARTS...");
+    	
+    	String input = "{\"slr_id\":\"slr_id_value\",\"slr_token\":\"slr_token_vaue\",\"user_id\":\"user_id_value\",\"cr_id\":\"cr_id_value\",\"cr_token\":\"cr_token_value\",\"properties\":[]}";
+    	
+    	try {
+    		
+    		PowerMockito.mockStatic(DAOUtils.class);
+			PowerMockito.mockStatic(PDataService.class);
+			
+    		PowerMockito.when(pdService.callVerifySLR(Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(resultTest);
+    		when(resultTest.get("result")).thenReturn("success");
+    		when(resultTest.get("username")).thenReturn("username_value");
+    		PowerMockito.when(pdService.callVerifyCR(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),Mockito.anyString(), Mockito.anyString())).thenReturn(resultTest2);
+    		when(resultTest2.get("result")).thenReturn("success");
+    		
+    		when(resultTest2.get("datamapping")).thenReturn("valore_lista");
+    		DAOUtils daout = Mockito.mock(DAOUtils.class);
+    		PowerMockito.when(daout.json2Obj("valore_lista",new TypeToken<List<DataMapping>>(){}.getType())).thenReturn(responseList);
+    		
+    		Whitebox.setInternalState(PDataService.class,repo);
+    		when(repo.storePData(Mockito.anyString(), any(PDataEntry.class),any(PDataWriteMode.class))).thenReturn(pde);
+
+    		Response res = pdService.postServicePData(input, "APPEND");		
+    		assertEquals(200, res.getStatus());
+    		
+    	} catch (Exception  e) {
+			e.printStackTrace();
+		}
+    	
+		System.out.println("...testing postServicePData_OK CLOSED.");
+    }
+    
 }

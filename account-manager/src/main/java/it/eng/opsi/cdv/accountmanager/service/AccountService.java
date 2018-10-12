@@ -1501,7 +1501,7 @@ public class AccountService implements IAccountService {
 
 			ServiceLinkStatusRecord statusRecord = dao.getServiceLinkStatusRecord(accountId, slrId, ssrId);
 
-			return Response.status(Response.Status.BAD_REQUEST)
+			return Response.status(Response.Status.OK)
 					.entity(DAOUtils.obj2Json(statusRecord, ServiceLinkStatusRecord.class)).build();
 
 		} catch (AccountUtilsException e) {
