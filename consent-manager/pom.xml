@@ -167,6 +167,14 @@
 		    <scope>test</scope>
 		</dependency>
 		
+		<!-- SWAGGER INTEGRATION -->
+		<!-- https://mvnrepository.com/artifact/io.swagger/swagger-jersey2-jaxrs -->
+		<dependency>
+		    <groupId>io.swagger</groupId>
+		    <artifactId>swagger-jersey2-jaxrs</artifactId>
+		    <version>1.5.21</version>
+		</dependency>
+		
 		<!-- https://mvnrepository.com/artifact/org.powermock/powermock-module-junit4-rule-agent -->
 		<!-- <dependency>
 		    <groupId>org.powermock</groupId>

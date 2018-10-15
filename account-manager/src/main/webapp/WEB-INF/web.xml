@@ -9,7 +9,7 @@
   </context-param>
 
   <servlet>
-    <servlet-name>jersey-servlet</servlet-name>
+    <servlet-name>jersey-servlet-am</servlet-name>
     <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
     <init-param>
       <param-name>jersey.config.server.provider.packages</param-name>
@@ -18,8 +18,8 @@
     <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
-    <servlet-name>jersey-servlet</servlet-name>
-    <url-pattern>/api/*</url-pattern>
+    <servlet-name>jersey-servlet-am</servlet-name>
+    <url-pattern>/*</url-pattern>
   </servlet-mapping>
 
 	<servlet>
@@ -27,11 +27,11 @@
         <servlet-class>io.swagger.jersey.config.JerseyJaxrsConfig</servlet-class>
         <init-param>
             <param-name>api.version</param-name>
-            <param-value>3.1</param-value>
+            <param-value>0.0.1-SNAPSHOT</param-value>
         </init-param>
         <init-param>
             <param-name>swagger.api.basepath</param-name>
-            <param-value>http://localhost:8080/api</param-value>
+            <param-value>http://localhost:8080/account-manager/</param-value>
         </init-param>
         <load-on-startup>2</load-on-startup>
     </servlet>
