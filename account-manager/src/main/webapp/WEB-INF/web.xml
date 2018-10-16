@@ -35,6 +35,12 @@
         </init-param>
         <load-on-startup>2</load-on-startup>
     </servlet>
+    
+    <servlet>
+        <servlet-name>SwaggerBootstrap</servlet-name>
+        <servlet-class>io.swagger.api.util.Bootstrap</servlet-class>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
 
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>

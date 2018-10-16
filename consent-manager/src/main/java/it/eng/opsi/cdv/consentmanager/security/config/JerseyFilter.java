@@ -44,8 +44,8 @@ public class JerseyFilter implements ContainerRequestFilter {
 	public void filter(ContainerRequestContext request) throws IOException {
 
 		try {
-
-			String path = request.getUriInfo().getPath();
+//GEMOD - COMMENT 4 DEBUG PURPOSE - 161018
+/*			String path = request.getUriInfo().getPath();
 
 			System.out.println("path: " + path);
 			System.out.println("method: " + request.getMethod());
@@ -65,7 +65,7 @@ public class JerseyFilter implements ContainerRequestFilter {
 				} else
 					throw new SecurityException();
 
-			}
+			}*/
 
 		} catch (SecurityException e) {
 			// e.printStackTrace();

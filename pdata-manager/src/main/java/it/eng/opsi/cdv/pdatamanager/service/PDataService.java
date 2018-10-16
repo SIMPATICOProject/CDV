@@ -62,6 +62,9 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.reflect.TypeToken;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import it.eng.opsi.cdv.pdatamanager.model.AccountManagerCallException;
 import it.eng.opsi.cdv.pdatamanager.model.ConsentManagerCallException;
 import it.eng.opsi.cdv.pdatamanager.model.DataMapping;
@@ -80,8 +83,9 @@ import it.eng.opsi.cdv.pdatarepository.utils.DAOUtils;
 
 @Service("PDataService")
 
-//@Component
-@Path("/v1")
+
+@Path("/PDataService")
+@Api(value = "/PDataService", description = "Descrizione classe di servizi")
 public class PDataService implements IPDataService {
 
 	private static PDataRepository repo = new PDataRepository(
@@ -93,9 +97,14 @@ public class PDataService implements IPDataService {
 	@Path("/pData")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
+	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
 	@Override
-	public Response savePData(final String input, @HeaderParam("accountId") String accountId,
-			@QueryParam("mode") String modeString) {
+	public Response savePData(@ApiParam(name = "input", value = "descrizione", required = true) final String input, @ApiParam(name = "accountId", value = "descrizione", required = true) @HeaderParam("accountId") String accountId,
+			@ApiParam(name = "modeString", value = "descrizione", required = true) @QueryParam("mode") String modeString) {
 
 		if (StringUtils.isNotBlank(accountId)) {
 
@@ -166,7 +175,12 @@ public class PDataService implements IPDataService {
 	@GET
 	@Path("/pData")
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN })
-	public Response getAllPData(@HeaderParam("accountId") String accountId, @QueryParam("format") String format) {
+	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public Response getAllPData(@ApiParam(name = "accountId", value = "descrizione", required = true) @HeaderParam("accountId") String accountId, @ApiParam(name = "format", value = "descrizione", required = true) @QueryParam("format") String format) {
 
 		List<PDataEntry> entries = null;
 		if (StringUtils.isNotBlank(accountId)) {
@@ -236,7 +250,12 @@ public class PDataService implements IPDataService {
 	@Path("/pData/{conceptId}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getPData(@HeaderParam("accountId") String accountId, @PathParam("conceptId") String conceptId) {
+	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public Response getPData(@ApiParam(name = "accountId", value = "descrizione", required = true) @HeaderParam("accountId") String accountId, @ApiParam(name = "conceptId", value = "descrizione", required = true) @PathParam("conceptId") String conceptId) {
 
 		if (StringUtils.isNotBlank(accountId)) {
 			try {
@@ -285,7 +304,12 @@ public class PDataService implements IPDataService {
 	@GET
 	@Path("/pData/download")
 	@Produces({ MediaType.APPLICATION_OCTET_STREAM, MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN })
-	public Response downloadAllPData(@HeaderParam("accountId") String accountId,
+	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public Response downloadAllPData(@ApiParam(name = "accountId", value = "descrizione", required = true) @HeaderParam("accountId") String accountId,
 			@QueryParam("fileFormat") String fileFormat) {
 
 		List<PDataEntry> entries = null;
@@ -379,7 +403,12 @@ public class PDataService implements IPDataService {
 	@Path("/pData")
 	@Produces({ "application/json" })
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public Response updatePData(final String input, @HeaderParam("accountId") String accountId,
+	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public Response updatePData(@ApiParam(name = "input", value = "descrizione", required = true) final String input, @ApiParam(name = "accountId", value = "descrizione", required = true) @HeaderParam("accountId") String accountId,
 			@QueryParam("mode") String modeString) {
 
 		if (StringUtils.isNotBlank(accountId)) {
@@ -454,8 +483,13 @@ public class PDataService implements IPDataService {
 	@Path("/pData/{conceptId}")
 	@Produces({ "application/json" })
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public Response updatePData(final String input, @HeaderParam("accountId") String accountId,
-			@PathParam("conceptId") String conceptId, @QueryParam("mode") String modeString) {
+	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public Response updatePData(@ApiParam(name = "input", value = "descrizione", required = true) final String input, @ApiParam(name = "accountId", value = "descrizione", required = true) @HeaderParam("accountId") String accountId,
+			@ApiParam(name = "conceptId", value = "descrizione", required = true) @PathParam("conceptId") String conceptId, @ApiParam(name = "modeString", value = "descrizione", required = true) @QueryParam("mode") String modeString) {
 
 		if (StringUtils.isNotBlank(accountId)) {
 
@@ -524,7 +558,12 @@ public class PDataService implements IPDataService {
 	@DELETE
 	@Path("/pData/{conceptId}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response deletePData(@PathParam("conceptId") String conceptId, @HeaderParam("accountId") String accountId) {
+	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public Response deletePData(@ApiParam(name = "conceptId", value = "descrizione", required = true) @PathParam("conceptId") String conceptId, @ApiParam(name = "accountId", value = "descrizione", required = true) @HeaderParam("accountId") String accountId) {
 
 		if (StringUtils.isNotBlank(accountId)) {
 
@@ -572,8 +611,13 @@ public class PDataService implements IPDataService {
 	@DELETE
 	@Path("/pData/{conceptId}/{value}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response deletePDataValue(@PathParam("conceptId") String conceptId,
-			@HeaderParam("accountId") String accountId, @PathParam("value") String value) {
+	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public Response deletePDataValue(@ApiParam(name = "conceptId", value = "descrizione", required = true) @PathParam("conceptId") String conceptId,
+			@ApiParam(name = "accountId", value = "descrizione", required = true) @HeaderParam("accountId") String accountId, @ApiParam(name = "value", value = "descrizione", required = true) @PathParam("value") String value) {
 
 		if (StringUtils.isNotBlank(accountId)) {
 
@@ -621,7 +665,12 @@ public class PDataService implements IPDataService {
 	@DELETE
 	@Path("/pData")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response deleteAllPData(@HeaderParam("accountId") String accountId) {
+	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public Response deleteAllPData(@ApiParam(name = "accountId", value = "descrizione", required = true) @HeaderParam("accountId") String accountId) {
 
 		if (StringUtils.isNotBlank(accountId)) {
 
@@ -673,7 +722,12 @@ public class PDataService implements IPDataService {
 	@Path("/postPData")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response postServicePData(final String input, @QueryParam("mode") String modeString) {
+	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public Response postServicePData(@ApiParam(name = "input", value = "descrizione", required = true) final String input, @ApiParam(name = "modeString", value = "descrizione", required = true) @QueryParam("mode") String modeString) {
 
 		try {
 
@@ -773,7 +827,12 @@ public class PDataService implements IPDataService {
 	@Path("/postPDataByConsent")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response postServicePDataByConsent(final String input, @QueryParam("mode") String modeString) {
+	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public Response postServicePDataByConsent(@ApiParam(name = "input", value = "descrizione", required = true) final String input, @ApiParam(name = "modeString", value = "descrizione", required = true) @QueryParam("mode") String modeString) {
 
 		try {
             System.out.println(input);
@@ -890,7 +949,12 @@ public class PDataService implements IPDataService {
 	@Path("/getPData")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getServicePData(String input) {
+	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public Response getServicePData(@ApiParam(name = "input", value = "descrizione", required = true) String input) {
 
 		try {
 			// INPUT
@@ -1005,7 +1069,12 @@ public class PDataService implements IPDataService {
 	@Path("/getPDataByConsent")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getServicePDataByConsent(String input) {
+	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public Response getServicePDataByConsent(@ApiParam(name = "input", value = "descrizione", required = true) String input) {
 
 		try {
 			// INPUT
