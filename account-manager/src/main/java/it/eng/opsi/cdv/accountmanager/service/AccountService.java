@@ -51,6 +51,7 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.SwaggerDefinition;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -83,11 +84,38 @@ import it.eng.opsi.cdv.accountmanager.utils.DAOUtils;
 import it.eng.opsi.cdv.accountmanager.utils.JWTUtils;
 import it.eng.opsi.cdv.accountmanager.utils.PropertyManager;
 
-@Service("AccountService")
+@Service("AccountService") //MOCKITO
 
 @Path("/AccountService")
-@Api(value = "/AccountService", description = "Descrizione classe di servizi")
-
+@Api(value = "/AccountService", authorizations = {
+	      @io.swagger.annotations.Authorization(
+		          value="cdvoauth", 
+		          scopes = { @io.swagger.annotations.AuthorizationScope(scope = ":", description = "descrizione autorizzazione") }
+		          )})
+@SwaggerDefinition(
+        info = @io.swagger.annotations.Info(
+                description = "Descrizione modulo",
+                version = "0.0.1",			//bypassato da web.xml
+                title = "Account Manager",	//bypassato da web.xml
+                termsOfService = "http://example.io/terms.html",
+                contact = @io.swagger.annotations.Contact(
+                   name = "Edward Moore", 
+                   email = "ed.moore@example.io", 
+                   url = "http://example.io"
+                ),
+                license = @io.swagger.annotations.License(
+                   name = "Example License 2.0", 
+                   url = "http://www.example.org/licenses/LICENSE-2.0"
+                )
+        ),
+        consumes = {"application/json", "application/xml"},
+        produces = {"application/json", "application/xml"},
+        schemes = {SwaggerDefinition.Scheme.HTTP, SwaggerDefinition.Scheme.HTTPS},
+        tags = {
+        		@io.swagger.annotations.Tag(name = "Nome_Tag", description = "Descrizione del tag")
+        }, 
+        externalDocs = @io.swagger.annotations.ExternalDocs(value = "Documento_Allegato", url = "http://example.io/attachment.html")
+)
 public class AccountService implements IAccountService {
 
 	private static AccountDAO dao = new AccountDAO(PropertyManager.getProperty("ACCOUNT_REPOSITORY_COLLECTION"));
