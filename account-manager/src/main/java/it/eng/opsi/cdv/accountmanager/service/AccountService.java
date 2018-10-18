@@ -49,12 +49,18 @@ import com.google.gson.reflect.TypeToken;
 
 import io.jsonwebtoken.MalformedJwtException;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiKeyAuthDefinition;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.BasicAuthDefinition;
 import io.swagger.annotations.SwaggerDefinition;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import it.eng.opsi.cdv.accountmanager.dao.AccountDAO;
 import it.eng.opsi.cdv.accountmanager.model.Account;
@@ -87,11 +93,7 @@ import it.eng.opsi.cdv.accountmanager.utils.PropertyManager;
 @Service("AccountService") //MOCKITO
 
 @Path("/AccountService")
-@Api(value = "/AccountService", authorizations = {
-	      @io.swagger.annotations.Authorization(
-		          value="cdvoauth", 
-		          scopes = { @io.swagger.annotations.AuthorizationScope(scope = ":", description = "descrizione autorizzazione") }
-		          )})
+@Api(value = "/AccountService")
 @SwaggerDefinition(
         info = @io.swagger.annotations.Info(
                 description = "Descrizione modulo",
@@ -111,10 +113,19 @@ import it.eng.opsi.cdv.accountmanager.utils.PropertyManager;
         consumes = {"application/json", "application/xml"},
         produces = {"application/json", "application/xml"},
         schemes = {SwaggerDefinition.Scheme.HTTP, SwaggerDefinition.Scheme.HTTPS},
-        tags = {
+/*        tags = {
         		@io.swagger.annotations.Tag(name = "Nome_Tag", description = "Descrizione del tag")
-        }, 
-        externalDocs = @io.swagger.annotations.ExternalDocs(value = "Documento_Allegato", url = "http://example.io/attachment.html")
+        }, */
+        externalDocs = @io.swagger.annotations.ExternalDocs(value = "Documento_Allegato", url = "http://example.io/attachment.html")/*,
+        securityDefinition = @io.swagger.annotations.SecurityDefinition(
+        		 basicAuthDefinitions = {
+                         @BasicAuthDefinition(key = "basicAuth")},
+                 apiKeyAuthDefinitions = {
+                         @ApiKeyAuthDefinition(key = "apiKeyAuth", name = "apiKey", in = ApiKeyAuthDefinition.ApiKeyLocation.HEADER)},
+                 oAuth2Definitions = {
+                		 @io.swagger.annotations.OAuth2Definition(key = "oAuth2AccessCode", flow = io.swagger.annotations.OAuth2Definition.Flow.ACCESS_CODE),
+                		 @io.swagger.annotations.OAuth2Definition(key = "oAuth2Password", flow = io.swagger.annotations.OAuth2Definition.Flow.PASSWORD)
+ })*/
 )
 public class AccountService implements IAccountService {
 
@@ -125,7 +136,12 @@ public class AccountService implements IAccountService {
 	@Path("/accounts")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class/*, authorizations = {
+		      @io.swagger.annotations.Authorization(
+			          value="OAuth2", 
+			          scopes = { @io.swagger.annotations.AuthorizationScope(scope = "basic", description = "descrizione autorizzazione INT") }
+			          )}*/
+	)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST"),

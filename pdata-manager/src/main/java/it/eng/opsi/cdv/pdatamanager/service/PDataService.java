@@ -113,7 +113,16 @@ import it.eng.opsi.cdv.pdatarepository.utils.DAOUtils;
         tags = {
         		@io.swagger.annotations.Tag(name = "Nome_Tag", description = "Descrizione del tag")
         }, 
-        externalDocs = @io.swagger.annotations.ExternalDocs(value = "Documento_Allegato", url = "http://example.io/attachment.html")
+        externalDocs = @io.swagger.annotations.ExternalDocs(value = "Documento_Allegato", url = "http://example.io/attachment.html")/*,
+        securityDefinition = @io.swagger.annotations.SecurityDefinition(
+			basicAuthDefinitions = {
+	                @BasicAuthDefinition(key = "basicAuth")},
+	        apiKeyAuthDefinitions = {
+	                @ApiKeyAuthDefinition(key = "apiKeyAuth", name = "apiKey", in = ApiKeyAuthDefinition.ApiKeyLocation.HEADER)},
+	        oAuth2Definitions = {
+	       		 @io.swagger.annotations.OAuth2Definition(key = "oAuth2AccessCode", flow = io.swagger.annotations.OAuth2Definition.Flow.ACCESS_CODE),
+	       		 @io.swagger.annotations.OAuth2Definition(key = "oAuth2Password", flow = io.swagger.annotations.OAuth2Definition.Flow.PASSWORD)
+})*/
 )
 public class PDataService implements IPDataService {
 
@@ -126,7 +135,12 @@ public class PDataService implements IPDataService {
 	@Path("/pData")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class/*, authorizations = {
+		      @io.swagger.annotations.Authorization(
+	          value="OAuth2", 
+	          scopes = { @io.swagger.annotations.AuthorizationScope(scope = "basic", description = "descrizione autorizzazione INT") }
+	          )}*/
+	)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
