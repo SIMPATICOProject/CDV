@@ -98,11 +98,11 @@ public class JerseyFilter implements ContainerRequestFilter {
 
 				} else {
 //GEMOD - COMMENT 4 DEBUG PURPOSE - 151018
-					/*ErrorResponse errorResponse = new ErrorResponse("401", "TokenNotProvided",
+					ErrorResponse errorResponse = new ErrorResponse("401", "TokenNotProvided",
 							"Token was not provided");
 
 					request.abortWith(Response.status(Response.Status.UNAUTHORIZED).type(MediaType.APPLICATION_JSON)
-							.entity(errorResponse.toJson().toString()).build());*/
+							.entity(errorResponse.toJson().toString()).build());
 
 				}
 
