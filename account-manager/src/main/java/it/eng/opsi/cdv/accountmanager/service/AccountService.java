@@ -92,7 +92,7 @@ import it.eng.opsi.cdv.accountmanager.utils.PropertyManager;
 
 @Service("AccountService") //MOCKITO
 
-@Path("/AccountService")
+@Path("/v1")
 @Api(value = "/AccountService")
 @SwaggerDefinition(
         info = @io.swagger.annotations.Info(

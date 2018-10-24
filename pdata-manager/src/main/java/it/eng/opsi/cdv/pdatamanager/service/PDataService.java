@@ -85,7 +85,7 @@ import it.eng.opsi.cdv.pdatarepository.utils.DAOUtils;
 @Service("PDataService")
 
 
-@Path("/PDataService")
+@Path("/v1")
 @Api(value = "/PDataService", authorizations = {
 	      @io.swagger.annotations.Authorization(
 		          value="cdvoauth", 

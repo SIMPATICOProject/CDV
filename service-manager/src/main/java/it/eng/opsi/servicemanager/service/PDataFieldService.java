@@ -44,7 +44,7 @@ import it.eng.opsi.servicemanager.data.PDataField;
 
 @Service("PDataFieldService")
 
-@Path("/PDataFieldService")
+@Path("/v1")
 @Api(value = "/PDataFieldService", authorizations = {
 	      @io.swagger.annotations.Authorization(
 		          value="cdvoauth", 

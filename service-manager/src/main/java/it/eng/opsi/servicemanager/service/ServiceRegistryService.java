@@ -50,7 +50,7 @@ import io.swagger.annotations.SwaggerDefinition;
 
 @Service("ServiceRegistryService")
 
-@Path("/ServiceRegistryService")
+@Path("/v1")
 @Api(value = "/ServiceRegistryService", authorizations = {
 	      @io.swagger.annotations.Authorization(
 		          value="cdvoauth", 

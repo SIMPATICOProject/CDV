@@ -91,7 +91,7 @@ import it.eng.opsi.servicemanager.data.ServiceEntry;
 
 @Service("ConsentService")
 
-@Path("/ConsentService")
+@Path("/v1")
 @Api(value = "/ConsentService", authorizations = {
 	      @io.swagger.annotations.Authorization(
 		          value="cdvoauth", 
