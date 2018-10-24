@@ -62,11 +62,15 @@ public class JerseyFilter implements ContainerRequestFilter {
 							.getBasicProfile(authToken);
 					// System.out.println("basicProfile loaded successfully: " +
 					// basicProfile.getUserId());
-				} else
+				} 
+				//GEMOD - 241018 - SWAGGER
+				else if (path.toLowerCase().contains("swagger")) {
+					
+				}
+				else
 					throw new SecurityException();
 
 			}
-
 		} catch (SecurityException e) {
 			// e.printStackTrace();
 			System.err.println("The provided token is not valid, not present or expired.");

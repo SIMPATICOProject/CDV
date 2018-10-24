@@ -96,7 +96,12 @@ public class JerseyFilter implements ContainerRequestFilter {
 
 				} else if (method.equalsIgnoreCase("OPTIONS")) {
 
-				} else {
+				} 
+				//GEMOD - 241018 - SWAGGER
+				else if (path.toLowerCase().contains("swagger")) {
+					
+				}
+				else {
 //GEMOD - COMMENT 4 DEBUG PURPOSE - 151018
 					ErrorResponse errorResponse = new ErrorResponse("401", "TokenNotProvided",
 							"Token was not provided");

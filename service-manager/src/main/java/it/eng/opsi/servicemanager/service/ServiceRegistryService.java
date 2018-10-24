@@ -51,34 +51,30 @@ import io.swagger.annotations.SwaggerDefinition;
 @Service("ServiceRegistryService")
 
 @Path("/v1")
-@Api(value = "/ServiceRegistryService", authorizations = {
-	      @io.swagger.annotations.Authorization(
-		          value="cdvoauth", 
-		          scopes = { @io.swagger.annotations.AuthorizationScope(scope = ":", description = "descrizione autorizzazione") }
-		          )})
+@Api(value = "/ServiceRegistryService")
 @SwaggerDefinition(
         info = @io.swagger.annotations.Info(
-                description = "Descrizione modulo",
-                version = "0.0.1",			//bypassato da web.xml
+                description = "XXX",
+                version = "XXX",			//bypassato da web.xml
                 title = "Service Manager ServiceRegistry",	//bypassato da web.xml
-                termsOfService = "http://example.io/terms.html",
+                termsOfService = "XXX",
                 contact = @io.swagger.annotations.Contact(
-                   name = "Edward Moore", 
-                   email = "ed.moore@example.io", 
-                   url = "http://example.io"
+                   name = "XXX", 
+                   email = "XXX", 
+                   url = "XXX"
                 ),
                 license = @io.swagger.annotations.License(
-                   name = "Example License 2.0", 
-                   url = "http://www.example.org/licenses/LICENSE-2.0"
+                   name = "XXX", 
+                   url = "XXX"
                 )
         ),
         consumes = {"application/json", "application/xml"},
         produces = {"application/json", "application/xml"},
         schemes = {SwaggerDefinition.Scheme.HTTP, SwaggerDefinition.Scheme.HTTPS},
         tags = {
-        		@io.swagger.annotations.Tag(name = "Nome_Tag", description = "Descrizione del tag")
+        		@io.swagger.annotations.Tag(name = "XXX", description = "XXX")
         }, 
-        externalDocs = @io.swagger.annotations.ExternalDocs(value = "Documento_Allegato", url = "http://example.io/attachment.html")/*,
+        externalDocs = @io.swagger.annotations.ExternalDocs(value = "XXX", url = "XXX")/*,
         securityDefinition = @io.swagger.annotations.SecurityDefinition(
 			basicAuthDefinitions = {
 	                @BasicAuthDefinition(key = "basicAuth")},
@@ -99,7 +95,7 @@ public class ServiceRegistryService {
 	@GET
 	@Path("/services")
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class/*, authorizations = {
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class/*, authorizations = {
 		      @io.swagger.annotations.Authorization(
 	          value="OAuth2", 
 	          scopes = { @io.swagger.annotations.AuthorizationScope(scope = "basic", description = "descrizione autorizzazione INT") }
@@ -116,7 +112,7 @@ public class ServiceRegistryService {
 	@Path("/services/")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
@@ -128,7 +124,7 @@ public class ServiceRegistryService {
 	@GET
 	@Path("/services/search/")
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
@@ -140,7 +136,7 @@ public class ServiceRegistryService {
 	@GET
 	@Path("/services/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
@@ -153,7 +149,7 @@ public class ServiceRegistryService {
 	@Path("/services/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
@@ -166,7 +162,7 @@ public class ServiceRegistryService {
 	@DELETE
 	@Path("/services/{id}")
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
@@ -178,7 +174,7 @@ public class ServiceRegistryService {
 	@GET
 	@Path("/services/{id}/servicedatamapping")
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}

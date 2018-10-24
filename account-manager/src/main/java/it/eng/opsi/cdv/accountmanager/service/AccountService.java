@@ -96,18 +96,18 @@ import it.eng.opsi.cdv.accountmanager.utils.PropertyManager;
 @Api(value = "/AccountService")
 @SwaggerDefinition(
         info = @io.swagger.annotations.Info(
-                description = "Descrizione modulo",
-                version = "0.0.1",			//bypassato da web.xml
+                description = "XXX",
+                version = "XXX",			//bypassato da web.xml
                 title = "Account Manager",	//bypassato da web.xml
-                termsOfService = "http://example.io/terms.html",
+                termsOfService = "XXX",
                 contact = @io.swagger.annotations.Contact(
-                   name = "Edward Moore", 
-                   email = "ed.moore@example.io", 
-                   url = "http://example.io"
+                   name = "XXX", 
+                   email = "XXX", 
+                   url = "XXX"
                 ),
                 license = @io.swagger.annotations.License(
-                   name = "Example License 2.0", 
-                   url = "http://www.example.org/licenses/LICENSE-2.0"
+                   name = "XXX", 
+                   url = "XXX"
                 )
         ),
         consumes = {"application/json", "application/xml"},
@@ -116,7 +116,7 @@ import it.eng.opsi.cdv.accountmanager.utils.PropertyManager;
 /*        tags = {
         		@io.swagger.annotations.Tag(name = "Nome_Tag", description = "Descrizione del tag")
         }, */
-        externalDocs = @io.swagger.annotations.ExternalDocs(value = "Documento_Allegato", url = "http://example.io/attachment.html")/*,
+        externalDocs = @io.swagger.annotations.ExternalDocs(value = "XXX", url = "XXX")/*,
         securityDefinition = @io.swagger.annotations.SecurityDefinition(
         		 basicAuthDefinitions = {
                          @BasicAuthDefinition(key = "basicAuth")},
@@ -136,7 +136,7 @@ public class AccountService implements IAccountService {
 	@Path("/accounts")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class/*, authorizations = {
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class/*, authorizations = {
 		      @io.swagger.annotations.Authorization(
 			          value="OAuth2", 
 			          scopes = { @io.swagger.annotations.AuthorizationScope(scope = "basic", description = "descrizione autorizzazione INT") }
@@ -189,7 +189,7 @@ public class AccountService implements IAccountService {
 	@Path("/accounts/{accountId}")
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Consumes({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
@@ -231,7 +231,7 @@ public class AccountService implements IAccountService {
 	@DELETE
 	@Path("/accounts/{accountId}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
@@ -267,7 +267,7 @@ public class AccountService implements IAccountService {
 	@GET
 	@Path("/accounts/{accountId}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
@@ -320,7 +320,7 @@ public class AccountService implements IAccountService {
 	@GET
 	@Path("/accounts/{accountId}/download")
 	@Produces({ MediaType.APPLICATION_OCTET_STREAM, MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN })
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
@@ -370,7 +370,7 @@ public class AccountService implements IAccountService {
 	@GET
 	@Path("/accounts/{accountId}/exists")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
@@ -400,7 +400,7 @@ public class AccountService implements IAccountService {
 	@Path("/accounts/{accountId}/telephones")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
@@ -444,7 +444,7 @@ public class AccountService implements IAccountService {
 	@GET
 	@Path("/accounts/{accountId}/telephones/{telephoneId}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
@@ -489,7 +489,7 @@ public class AccountService implements IAccountService {
 	@GET
 	@Path("/accounts/{accountId}/telephones")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
@@ -536,7 +536,7 @@ public class AccountService implements IAccountService {
 	@Path("/accounts/{accountId}/telephones/{telephoneId}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
@@ -581,7 +581,7 @@ public class AccountService implements IAccountService {
 	@DELETE
 	@Path("/accounts/{accountId}/telephones/{telephoneId}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
@@ -616,7 +616,7 @@ public class AccountService implements IAccountService {
 	@Path("/accounts/{accountId}/contacts")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
@@ -660,7 +660,7 @@ public class AccountService implements IAccountService {
 	@GET
 	@Path("/accounts/{accountId}/contacts/{contactId}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
@@ -704,7 +704,7 @@ public class AccountService implements IAccountService {
 	@GET
 	@Path("/accounts/{accountId}/contacts")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
@@ -751,7 +751,7 @@ public class AccountService implements IAccountService {
 	@Path("/accounts/{accountId}/contacts/{contactId}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
@@ -796,7 +796,7 @@ public class AccountService implements IAccountService {
 	@DELETE
 	@Path("/accounts/{accountId}/contacts/{contactId}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
@@ -830,7 +830,7 @@ public class AccountService implements IAccountService {
 	@Path("/accounts/{accountId}/emails")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
@@ -874,7 +874,7 @@ public class AccountService implements IAccountService {
 	@GET
 	@Path("/accounts/{accountId}/emails/{emailId}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
@@ -918,7 +918,7 @@ public class AccountService implements IAccountService {
 	@GET
 	@Path("/accounts/{accountId}/emails")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
@@ -965,7 +965,7 @@ public class AccountService implements IAccountService {
 	@Path("/accounts/{accountId}/emails/{emailId}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
@@ -1010,7 +1010,7 @@ public class AccountService implements IAccountService {
 	@DELETE
 	@Path("/accounts/{accountId}/emails/{emailId}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
@@ -1044,7 +1044,7 @@ public class AccountService implements IAccountService {
 	@Path("/accounts/{accountId}/particular")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
@@ -1088,7 +1088,7 @@ public class AccountService implements IAccountService {
 	@GET
 	@Path("/accounts/{accountId}/particular")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
@@ -1181,7 +1181,7 @@ public class AccountService implements IAccountService {
 	@DELETE
 	@Path("/accounts/{accountId}/particular")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
@@ -1216,7 +1216,7 @@ public class AccountService implements IAccountService {
 	@Path("/accounts/{accountId}/serviceLinks")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
@@ -1309,7 +1309,7 @@ public class AccountService implements IAccountService {
 	@PUT
 	@Path("/accounts/{accountId}/serviceLinks/{slrId}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
@@ -1360,7 +1360,7 @@ public class AccountService implements IAccountService {
 	@GET
 	@Path("/accounts/{accountId}/serviceLinks")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
@@ -1405,7 +1405,7 @@ public class AccountService implements IAccountService {
 	@GET
 	@Path("/accounts/{accountId}/serviceLinks/{slrId}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
@@ -1449,7 +1449,7 @@ public class AccountService implements IAccountService {
 	@GET
 	@Path("/accounts/{accountId}/services/{serviceId}/serviceLinks")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
@@ -1494,7 +1494,7 @@ public class AccountService implements IAccountService {
 	@GET
 	@Path("/users/{surrogateId}/services/{serviceId}/serviceLink")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
@@ -1543,7 +1543,7 @@ public class AccountService implements IAccountService {
 	@GET
 	@Path("/users/{surrogateId}/serviceLink")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
@@ -1591,7 +1591,7 @@ public class AccountService implements IAccountService {
 	@GET
 	@Path("/accounts/{accountId}/serviceLinks/{slrId}/statuses")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
@@ -1637,7 +1637,7 @@ public class AccountService implements IAccountService {
 	@DELETE
 	@Path("/accounts/{accountId}/serviceLinks/{slrId}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
@@ -1680,7 +1680,7 @@ public class AccountService implements IAccountService {
 	@DELETE
 	@Path("/users/{surrogateId}/services/{serviceId}/serviceLink")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
@@ -1715,7 +1715,7 @@ public class AccountService implements IAccountService {
 	@GET
 	@Path("/accounts/{accountId}/serviceLinks/{slrId}/statuses/{ssrId}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
@@ -1760,7 +1760,7 @@ public class AccountService implements IAccountService {
 	@POST
 	@Path("/verifySLR")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "descrizione compatta", notes = "Descrizione estesa", response = Response.class)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
