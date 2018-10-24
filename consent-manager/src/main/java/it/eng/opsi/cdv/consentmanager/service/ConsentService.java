@@ -115,16 +115,7 @@ import it.eng.opsi.servicemanager.data.ServiceEntry;
         tags = {
         		@io.swagger.annotations.Tag(name = "XXX", description = "XXX")
         }, 
-        externalDocs = @io.swagger.annotations.ExternalDocs(value = "XXX", url = "XXX")/*,
-        securityDefinition = @io.swagger.annotations.SecurityDefinition(
-			basicAuthDefinitions = {
-	                @BasicAuthDefinition(key = "basicAuth")},
-	        apiKeyAuthDefinitions = {
-	                @ApiKeyAuthDefinition(key = "apiKeyAuth", name = "apiKey", in = ApiKeyAuthDefinition.ApiKeyLocation.HEADER)},
-	        oAuth2Definitions = {
-	       		 @io.swagger.annotations.OAuth2Definition(key = "oAuth2AccessCode", flow = io.swagger.annotations.OAuth2Definition.Flow.ACCESS_CODE),
-	       		 @io.swagger.annotations.OAuth2Definition(key = "oAuth2Password", flow = io.swagger.annotations.OAuth2Definition.Flow.PASSWORD)
-})*/
+        externalDocs = @io.swagger.annotations.ExternalDocs(value = "XXX", url = "XXX")
 )
 public class ConsentService implements IConsentService {
 
@@ -138,12 +129,7 @@ public class ConsentService implements IConsentService {
 	@Path("/findConsent/serviceId")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class/*, authorizations = {
-		      @io.swagger.annotations.Authorization(
-	          value="OAuth2", 
-	          scopes = { @io.swagger.annotations.AuthorizationScope(scope = "basic", description = "descrizione autorizzazione INT") }
-	          )}*/
-	)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
 			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
