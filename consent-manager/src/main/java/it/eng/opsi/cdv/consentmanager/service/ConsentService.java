@@ -58,6 +58,10 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import io.jsonwebtoken.MalformedJwtException;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.SwaggerDefinition;
 import it.eng.opsi.cdv.consentmanager.dao.AccountDAO;
 import it.eng.opsi.cdv.consentmanager.model.AccountManagerException;
 import it.eng.opsi.cdv.consentmanager.model.AccountNotFoundException;
@@ -88,6 +92,31 @@ import it.eng.opsi.servicemanager.data.ServiceEntry;
 @Service("ConsentService")
 
 @Path("/v1")
+@Api(value = "/ConsentService")
+@SwaggerDefinition(
+        info = @io.swagger.annotations.Info(
+                description = "XXX",
+                version = "XXX",			//bypassato da web.xml
+                title = "Consent Manager",	//bypassato da web.xml
+                termsOfService = "XXX",
+                contact = @io.swagger.annotations.Contact(
+                   name = "XXX", 
+                   email = "XXX", 
+                   url = "XXX"
+                ),
+                license = @io.swagger.annotations.License(
+                   name = "XXX", 
+                   url = "XXX"
+                )
+        ),
+        consumes = {"application/json", "application/xml"},
+        produces = {"application/json", "application/xml"},
+        schemes = {SwaggerDefinition.Scheme.HTTP, SwaggerDefinition.Scheme.HTTPS},
+        tags = {
+        		@io.swagger.annotations.Tag(name = "XXX", description = "XXX")
+        }, 
+        externalDocs = @io.swagger.annotations.ExternalDocs(value = "XXX", url = "XXX")
+)
 public class ConsentService implements IConsentService {
 
 	private AccountDAO dao = new AccountDAO(PropertyManager.getProperty("ACCOUNT_REPOSITORY_COLLECTION"));
@@ -100,7 +129,12 @@ public class ConsentService implements IConsentService {
 	@Path("/findConsent/serviceId")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response withDrawConsentByServiceid(@PathParam("serviceId") String serviceId) {
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public Response withDrawConsentByServiceid(@ApiParam(name = "serviceId", value = "descrizione", required = true) @PathParam("serviceId") String serviceId) {
 		return null;
 	}
 
@@ -109,8 +143,13 @@ public class ConsentService implements IConsentService {
 	@Path("/changeConsentRecordStatus/{accountId}/{rsid}/{status}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response changeConsentRecordStatus(@PathParam("accountId") String accountId, @PathParam("rsid") String rs_id,
-			@PathParam("status") String status) {
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public Response changeConsentRecordStatus(@ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId, @ApiParam(name = "rsid", value = "descrizione", required = true) @PathParam("rsid") String rs_id,
+			@ApiParam(name = "status", value = "descrizione", required = true) @PathParam("status") String status) {
 		JSONObject details = new JSONObject();
 		try {
 
@@ -275,8 +314,13 @@ public class ConsentService implements IConsentService {
 	@Path("/fetchConsentForm/{accountId}/{sinkId}/{sourceId}/{datasetId}")
 	// @Path("/fetchConsentForm/{accountId}/{sinkId}/{sourceId}/{datasetId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response fetchConsentForm(@PathParam("accountId") String accountId, @PathParam("sinkId") String sinkId,
-			@PathParam("sourceId") String sourceId, @PathParam("datasetId") String datasetId) {
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public Response fetchConsentForm(@ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId, @ApiParam(name = "sinkId", value = "descrizione", required = true) @PathParam("sinkId") String sinkId,
+			@ApiParam(name = "sourceId", value = "descrizione", required = true) @PathParam("sourceId") String sourceId, @ApiParam(name = "datasetId", value = "descrizione", required = true) @PathParam("datasetId") String datasetId) {
 		List<ServiceEntry> services = new ArrayList<ServiceEntry>();
 		List<DataMapping> dataMappingList = new ArrayList<DataMapping>();
 
@@ -379,7 +423,12 @@ public class ConsentService implements IConsentService {
 	@POST
 	@Path("/verifySinkConsent")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response verifySinkConsent(final String input) {
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public Response verifySinkConsent(@ApiParam(name = "input", value = "descrizione", required = true) final String input) {
 
 		try {
 
@@ -614,10 +663,14 @@ public class ConsentService implements IConsentService {
 	@Path("/updateConsent/{accountId}")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces({ MediaType.APPLICATION_JSON })
-
-	public Response updateConsent(@FormParam("consent_record_sink") String consent_record_sink,
-			@FormParam("consent_record_source") String consent_record_source,
-			@PathParam("accountId") String accountId) {
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public Response updateConsent(@ApiParam(name = "consent_record_sink", value = "descrizione", required = true) @FormParam("consent_record_sink") String consent_record_sink,
+			@ApiParam(name = "consent_record_source", value = "descrizione", required = true) @FormParam("consent_record_source") String consent_record_source,
+			@ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId) {
 		JSONObject details = new JSONObject();
 		details.put("method", "updateConsent");
 		details.put("date", new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
@@ -789,7 +842,12 @@ public class ConsentService implements IConsentService {
 	@Path("/giveConsent/{accountId}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response giveConsent(String consentForm, @PathParam("accountId") String accountId) {
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public Response giveConsent(@ApiParam(name = "consentForm", value = "descrizione", required = true) String consentForm, @ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId) {
 		
 		JSONObject details = new JSONObject();	
 		details.put("method", "giveConsent");
@@ -1280,7 +1338,12 @@ public class ConsentService implements IConsentService {
 	@GET
 	@Path("/sinkConsentRecords/{accountId}/")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response findAllSinkConsentRecord(@PathParam("accountId") String accountId) {
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public Response findAllSinkConsentRecord(@ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId) {
 
 		try {
 
@@ -1320,7 +1383,12 @@ public class ConsentService implements IConsentService {
 	@GET
 	@Path("/sourceConsentRecords/{accountId}/")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response findAllSourceConsentRecord(@PathParam("accountId") String accountId) {
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public Response findAllSourceConsentRecord(@ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId) {
 
 		try {
 
@@ -1360,7 +1428,12 @@ public class ConsentService implements IConsentService {
 	@GET
 	@Path("/consents/{accountId}/")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getAllConsentByAccountId(@PathParam("accountId") String accountId) {
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public Response getAllConsentByAccountId(@ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId) {
 
 		List<ConsentRecordSink> consentRecordSink;
 		List consentData = new ArrayList();
@@ -1415,7 +1488,12 @@ public class ConsentService implements IConsentService {
 	@GET
 	@Path("/consents/{accountId}/{slr}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getAllConsentByAccountIdSlr(@PathParam("accountId") String accountId,
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public Response getAllConsentByAccountIdSlr(@ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId,
 			@PathParam("slr") String slr) {
 
 		List<ConsentRecordSink> consentRecordSink;
@@ -1474,8 +1552,13 @@ public class ConsentService implements IConsentService {
 	@GET
 	@Path("/consents/active/{accountId}/{slr}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getAllActiveConsentByAccountIdSlr(@PathParam("accountId") String accountId,
-			@PathParam("slr") String slr) {
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public Response getAllActiveConsentByAccountIdSlr(@ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId,
+			@ApiParam(name = "slr", value = "descrizione", required = true) @PathParam("slr") String slr) {
 
 		List<ConsentRecordSink> consentRecordSink;
 		List consentData = new ArrayList();
@@ -1534,8 +1617,13 @@ public class ConsentService implements IConsentService {
 	@GET
 	@Path("/consents/active/{accountId}/{slr}/{serviceId}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getServiceActiveConsentByAccountIdSlr(@PathParam("accountId") String accountId,
-			@PathParam("slr") String slr, @PathParam("serviceId") String serviceId ) {
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public Response getServiceActiveConsentByAccountIdSlr(@ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId,
+			@ApiParam(name = "slr", value = "descrizione", required = true) @PathParam("slr") String slr, @ApiParam(name = "serviceId", value = "descrizione", required = true) @PathParam("serviceId") String serviceId ) {
 
 		List<ConsentRecordSink> consentRecordSink;
 		Map consent = new HashMap();

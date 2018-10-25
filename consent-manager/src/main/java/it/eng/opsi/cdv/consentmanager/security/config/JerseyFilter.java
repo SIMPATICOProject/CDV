@@ -44,7 +44,7 @@ public class JerseyFilter implements ContainerRequestFilter {
 	public void filter(ContainerRequestContext request) throws IOException {
 
 		try {
-
+//GEMOD - COMMENT 4 DEBUG PURPOSE - 161018
 			String path = request.getUriInfo().getPath();
 
 			System.out.println("path: " + path);
@@ -62,11 +62,15 @@ public class JerseyFilter implements ContainerRequestFilter {
 							.getBasicProfile(authToken);
 					// System.out.println("basicProfile loaded successfully: " +
 					// basicProfile.getUserId());
-				} else
+				} 
+				//GEMOD - 241018 - SWAGGER
+				else if (path.toLowerCase().contains("swagger")) {
+					
+				}
+				else
 					throw new SecurityException();
 
 			}
-
 		} catch (SecurityException e) {
 			// e.printStackTrace();
 			System.err.println("The provided token is not valid, not present or expired.");
