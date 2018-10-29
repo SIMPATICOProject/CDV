@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>CDV Service Editor</title>
+    
+    <!-- Foundation CSS framework (Bootstrap and jQueryUI also supported) -->
+    <link rel="stylesheet" href="css/foundation.css">
+    <!-- Font Awesome icons (Bootstrap, Foundation, and jQueryUI also supported) -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css">
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="js/jsonEditor.js"></script>
+    
+    <script>
+    // Set the default CSS theme and icon library globally
+    JSONEditor.defaults.theme = 'foundation5';
+    JSONEditor.defaults.iconlib = 'fontawesome4';
+    var schemaDir = "json/service-entry.json"
+    
+    </script>
+  </head>
+  
+  
+  <body>
+    <div class="row" style="padding-top: 2em;">
+      <div class="medium-6 columns">
+        <button id="submit" class="tiny"></button>
+        <button id="restore" class="secondary tiny">Restore to Default</button>
+        <!-- <span id="valid_indicator" class="label success">valid</span> -->
+      </div>
+      <div class="medium-6 columns">
+      	<button style="float: right;background-color:#ff0000; color: #fff; font-weight: bold !important;" id="home" class="secondary tiny">Back to Services List</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="medium-12 columns">
+        <h1>CDV Service Editor</h1>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div id="editor_holder" class="medium-12 columns">
+      
+      </div>
+    </div>
+    
+    <script>
+    var serviceID=window.location.href;
+    console.log("primo serivce: "+serviceID);
+    var start = serviceID.indexOf("&");
+    
+    //PUT - UPDATE SELECTED SERVICE
+    if(start != -1){
+    	
+	    console.log("posizione id: "+start);
+	    var len = serviceID.length - start - 1;
+	    serviceID = serviceID.substr(start+1, len);
+	    $('#submit').text("Update Service #"+serviceID);
+	    console.log("id servizio estratto da path: "+serviceID);
+		var starting_value="{}"
+		$(function() {
+	        $.get( "http://localhost:8080/service-manager/api/v1/services/"+serviceID, function( data ) {
+	          starting_value=data;
+		      // Initialize the editor
+		      var editor = new JSONEditor(document.getElementById('editor_holder'),{
+		        // Enable fetching schemas via ajax
+		        ajax: true,
+		        
+		        // The schema for the editor
+		        schema: {
+		          $ref: schemaDir,
+		          format: "grid"
+		        },
+		        
+		        // Seed the form with a starting value
+		        startval: starting_value
+		      });
+		      
+		      // Hook up the submit button to log to the console
+		      document.getElementById('submit').addEventListener('click',function() {
+	
+		    	if (confirm( 'Il servizio verrà modificato, sei sicuro di voler procedere? ' ) ) {
+		    		// Get the value from the editor
+			        //console.log(editor.getValue());
+			        //console.log(JSON.stringify(editor.getValue()));
+		    		
+		    		//PUT
+			        $.ajax({
+				        url: "http://localhost:8080/service-manager/api/v1/services/"+serviceID,
+				        method: 'PUT',
+				        contentType: "application/json",
+				        data: JSON.stringify(editor.getValue()),
+				        //success: function() {location.reload();}
+				    }).then(function() {
+				    	 location.reload();
+				    });
+		    	}
+		        
+		      });
+		      
+		      // Hook up the Restore to Default button
+		      document.getElementById('restore').addEventListener('click',function() {
+		        editor.setValue(starting_value);
+		      });
+		      
+		   	  // Hook up the Home button
+		      document.getElementById('home').addEventListener('click',function() {
+		    	  window.location.href = window.location.origin+"/service-editor/";
+		      });
+		      
+		      // Hook up the validation indicator to update its 
+		      // status whenever the editor changes
+		      editor.on('change',function() {
+		        // Get an array of errors from the validator
+		        var errors = editor.validate();
+		        console.log("orrori: "+errors);
+		        var indicator = document.getElementById('valid_indicator');
+		        
+		        // Not valid
+		        if(errors.length) {
+		          indicator.className = 'label alert';
+		          indicator.textContent = 'not valid';
+		        }
+		        // Valid
+		        else {
+		          indicator.className = 'label success';
+		          indicator.textContent = 'valid';
+		        }
+		      });
+	        });
+		  });
+    }
+    //POST - ADDING NEW SERVICE
+    else{
+    	  $('#submit').text("Create Service");
+	      // Initialize the editor
+	      var editor = new JSONEditor(document.getElementById('editor_holder'),{
+	        // Enable fetching schemas via ajax
+	        ajax: true,
+	        
+	        // The schema for the editor
+	        schema: {
+	          $ref: schemaDir,
+	          format: "grid"
+	        }
+	      });
+	      
+	      // Hook up the submit button to log to the console
+	      document.getElementById('submit').addEventListener('click',function() {
+
+	    	if (confirm( 'Il servizio verrà creato, sei sicuro di voler procedere? ' ) ) {
+	    		// Get the value from the editor
+		        //console.log(editor.getValue());
+		        //console.log(JSON.stringify(editor.getValue()));
+	    		
+	    		//POST
+		        $.ajax({
+			        url: "http://localhost:8080/service-manager/api/v1/services/",
+			        method: 'POST',
+			        contentType: "application/json",
+			        data: JSON.stringify(editor.getValue()),
+			        //success: function() {location.reload();}
+			    }).then(function() {
+			    	window.location.href = window.location.origin+"/service-editor/";
+			    });
+	    	}
+	        
+	      });
+	      
+	      // Hook up the Restore to Default button
+	      document.getElementById('restore').addEventListener('click',function() {
+	        editor.setValue(starting_value);
+	      });
+	      
+	   	  // Hook up the Home button
+	      document.getElementById('home').addEventListener('click',function() {
+	    	  window.location.href = window.location.origin+"/service-editor/";
+	      });
+	      
+	      // Hook up the validation indicator to update its 
+	      // status whenever the editor changes
+	      editor.on('change',function() {
+	        // Get an array of errors from the validator
+	        var errors = editor.validate();
+	        
+	        var indicator = document.getElementById('valid_indicator');
+	        
+	        // Not valid
+	        if(errors.length) {
+	          indicator.className = 'label alert';
+	          indicator.textContent = 'not valid';
+	        }
+	        // Valid
+	        else {
+	          indicator.className = 'label success';
+	          indicator.textContent = 'valid';
+	        }
+	      });
+    }
+    </script>
+</body>
+</html>
