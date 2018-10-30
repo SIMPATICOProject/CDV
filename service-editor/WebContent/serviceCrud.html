@@ -17,10 +17,9 @@
     JSONEditor.defaults.theme = 'foundation5';
     JSONEditor.defaults.iconlib = 'fontawesome4';
     var schemaDir = "json/service-entry.json"
-    
     </script>
+
   </head>
-  
   
   <body>
     <div class="row" style="padding-top: 2em;">
@@ -44,20 +43,20 @@
       
       </div>
     </div>
-    
-    <script>
+</body>    
+<script>
     var serviceID=window.location.href;
-    console.log("primo serivce: "+serviceID);
+    //console.log("primo serivce: "+serviceID);
     var start = serviceID.indexOf("&");
     
     //PUT - UPDATE SELECTED SERVICE
     if(start != -1){
     	
-	    console.log("posizione id: "+start);
+	    //console.log("posizione id: "+start);
 	    var len = serviceID.length - start - 1;
 	    serviceID = serviceID.substr(start+1, len);
 	    $('#submit').text("Update Service #"+serviceID);
-	    console.log("id servizio estratto da path: "+serviceID);
+	    //console.log("id servizio estratto da path: "+serviceID);
 		var starting_value="{}"
 		$(function() {
 	        $.get( "http://localhost:8080/service-manager/api/v1/services/"+serviceID, function( data ) {
@@ -80,23 +79,17 @@
 		      // Hook up the submit button to log to the console
 		      document.getElementById('submit').addEventListener('click',function() {
 	
-		    	if (confirm( 'Il servizio verrà modificato, sei sicuro di voler procedere? ' ) ) {
-		    		// Get the value from the editor
-			        //console.log(editor.getValue());
-			        //console.log(JSON.stringify(editor.getValue()));
-		    		
+		    	if (confirm('Il servizio verrà modificato, sei sicuro di voler procedere?')){
 		    		//PUT
 			        $.ajax({
 				        url: "http://localhost:8080/service-manager/api/v1/services/"+serviceID,
 				        method: 'PUT',
 				        contentType: "application/json",
 				        data: JSON.stringify(editor.getValue()),
-				        //success: function() {location.reload();}
 				    }).then(function() {
 				    	 location.reload();
 				    });
 		    	}
-		        
 		      });
 		      
 		      // Hook up the Restore to Default button
@@ -109,8 +102,7 @@
 		    	  window.location.href = window.location.origin+"/service-editor/";
 		      });
 		      
-		      // Hook up the validation indicator to update its 
-		      // status whenever the editor changes
+		      // Hook up the validation indicator to update its status whenever the editor changes
 		      editor.on('change',function() {
 		        // Get an array of errors from the validator
 		        var errors = editor.validate();
@@ -138,7 +130,6 @@
 	      var editor = new JSONEditor(document.getElementById('editor_holder'),{
 	        // Enable fetching schemas via ajax
 	        ajax: true,
-	        
 	        // The schema for the editor
 	        schema: {
 	          $ref: schemaDir,
@@ -149,11 +140,7 @@
 	      // Hook up the submit button to log to the console
 	      document.getElementById('submit').addEventListener('click',function() {
 
-	    	if (confirm( 'Il servizio verrà creato, sei sicuro di voler procedere? ' ) ) {
-	    		// Get the value from the editor
-		        //console.log(editor.getValue());
-		        //console.log(JSON.stringify(editor.getValue()));
-	    		
+	    	if (confirm( 'Il servizio verrà creato, sei sicuro di voler procedere?')){    		
 	    		//POST
 		        $.ajax({
 			        url: "http://localhost:8080/service-manager/api/v1/services/",
@@ -165,7 +152,6 @@
 			    	window.location.href = window.location.origin+"/service-editor/";
 			    });
 	    	}
-	        
 	      });
 	      
 	      // Hook up the Restore to Default button
@@ -178,8 +164,7 @@
 	    	  window.location.href = window.location.origin+"/service-editor/";
 	      });
 	      
-	      // Hook up the validation indicator to update its 
-	      // status whenever the editor changes
+	      // Hook up the validation indicator to update its status whenever the editor changes
 	      editor.on('change',function() {
 	        // Get an array of errors from the validator
 	        var errors = editor.validate();
@@ -199,5 +184,4 @@
 	      });
     }
     </script>
-</body>
 </html>
