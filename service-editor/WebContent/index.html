@@ -48,9 +48,9 @@ $(document).ready(function() {
     	for(i = 0; i < data.length; i++){
     		
     		if(i+1==data.length){
-    			$('.service-list').append("<tr style=\"width: 100%\"><td style=\"width:40%;padding-bottom:3em;\" class=\"service-test\">"+data[i].publicServiceName+"</td><td style=\"width:55%;padding-bottom:3em;\">"+data[i].humanReadableDescription[0].description+"</td><td style=\"padding-bottom:3em;\"><button class=\"tiny\" id=\""+data[i].publicServiceID+"\" value=\""+data[i].publicServiceName+"\" onClick=\"EditService("+data[i].publicServiceID+")\">EDIT</button></td></tr>");
+    			$('.service-list').append("<tr style=\"width: 100%\"><td style=\"width:40%;padding-bottom:3em;\" class=\"service-test\">"+data[i].publicServiceName+"</td><td style=\"width:55%;padding-bottom:3em;\">"+data[i].humanReadableDescription[0].description+"</td><td style=\"padding-bottom:3em;\"><button id=\""+data[i].publicServiceID+"\" value=\""+data[i].publicServiceName+"\" onClick=\"EditService("+data[i].publicServiceID+")\">EDIT</button></td></tr>");
     		}
-    		else{
+    		else{ 
     			$('.service-list').append("<tr style=\"width: 100%\"><td style=\"width:40%\" class=\"service-test\">"+data[i].publicServiceName+"</td><td style=\"width:55%\">"+data[i].humanReadableDescription[0].description+"</td><td><button id=\""+data[i].publicServiceID+"\" value=\""+data[i].publicServiceName+"\" onClick=\"EditService("+data[i].publicServiceID+")\">EDIT</button></td></tr>");
     		}
     	}
@@ -58,12 +58,12 @@ $(document).ready(function() {
 });
 
 function CreateNewService(){
-	window.location.href = window.location.href+"serviceCrud.html";
+	window.location.href = window.location.href+"edit-service.html";
 };
 
 function EditService(id){
 	var nome = $('#2').attr("value").replace(" ","-");
-	window.location.href = window.location.href+"serviceCrud.html?"+nome+"&"+id;
+	window.location.href = window.location.href+"edit-service.html?"+nome+"&"+id;
 };
 </script>
 <body>

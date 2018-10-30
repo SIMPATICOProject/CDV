@@ -5,24 +5,37 @@
     <title>CDV Service Editor</title>
     
     <!-- Foundation CSS framework (Bootstrap and jQueryUI also supported) -->
-    <link rel="stylesheet" href="css/foundation.css">
+    <!-- <link rel="stylesheet" href="css/foundation.css"> -->
+        <style>[class*="foundicon-"] {font-family: GeneralFoundicons;font-style: normal;}</style>
+    <!-- Foundation CSS framework (Bootstrap and jQueryUI also supported) -->
+    <link rel='stylesheet' href='//cdn.jsdelivr.net/foundation/5.0.2/css/foundation.min.css'>
+    
+    <!-- Swicth off for no-tabbed version -->
+    <link rel="stylesheet" id="theme_stylesheet" href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css">
+    
     <!-- Font Awesome icons (Bootstrap, Foundation, and jQueryUI also supported) -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css">
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="js/jsonEditor.js"></script>
+    <!-- <script src="js/jsonEditor.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/@json-editor/json-editor/dist/jsoneditor.min.js"></script>
     
     <script>
     // Set the default CSS theme and icon library globally
-    JSONEditor.defaults.theme = 'foundation5';
+    //JSONEditor.defaults.theme = 'foundation5'; /* no tab version */
+    JSONEditor.defaults.theme = 'bootstrap2';
     JSONEditor.defaults.iconlib = 'fontawesome4';
-    var schemaDir = "json/service-entry.json"
+    var schemaDir = "json/service-entry.json";
     </script>
 
   </head>
-  
+  <style>
+  	input[type="text"]{
+  		height: auto !important;
+  	} 
+  </style>
   <body>
-    <div class="row" style="padding-top: 2em;">
+    <div class="row" style="padding-top: 2em;margin-left:auto;margin-right:auto">
       <div class="medium-6 columns">
         <button id="submit" class="tiny"></button>
         <button id="restore" class="secondary tiny">Restore to Default</button>
@@ -32,13 +45,13 @@
       	<button style="float: right;background-color:#ff0000; color: #fff; font-weight: bold !important;" id="home" class="secondary tiny">Back to Services List</button>
       </div>
     </div>
-    <div class="row">
+    <div class="row"style="margin-left:auto;margin-right:auto">
       <div class="medium-12 columns">
         <h1>CDV Service Editor</h1>
       </div>
     </div>
     
-    <div class="row">
+    <div class="row"style="margin-left:auto;margin-right:auto">
       <div id="editor_holder" class="medium-12 columns">
       
       </div>
@@ -68,8 +81,8 @@
 		        
 		        // The schema for the editor
 		        schema: {
-		          $ref: schemaDir,
-		          format: "grid"
+		          $ref: schemaDir/*,
+		          format: "grid"*/ //no tab version
 		        },
 		        
 		        // Seed the form with a starting value
@@ -132,8 +145,8 @@
 	        ajax: true,
 	        // The schema for the editor
 	        schema: {
-	          $ref: schemaDir,
-	          format: "grid"
+	          $ref: schemaDir/*,
+	          format: "grid"*/ //no tab version
 	        }
 	      });
 	      

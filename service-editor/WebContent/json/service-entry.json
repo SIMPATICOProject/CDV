@@ -2,72 +2,101 @@
   "title":"ServiceEntry",
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
+  
   "properties": {
     "publicServiceID": {
-      "type": "string"
+      "type": "string",
+	  "title":"Public Service ID"
     },
     "publicServiceName": {
-      "type": "string"
+      "type": "string",
+	  "title":"Service Name"
     },
     "serviceUri": {
-      "type": "string"
+      "type": "string",
+	  "title":"Service URI"
     },
     "serviceDescriptionVersion": {
-      "type": "string"
+      "type": "string",
+	  "title":"Version"
     },
     "publicServiceKeyword": {
-      "type": "string"
+      "type": "string",
+	  "title":"Keywords"
+    },
+	"publicServiceStatus": {
+      "type": "string",
+	  "title":"Status"
+    },    
+    "serviceProviderId": {
+      "type": "string",
+	  "title":"Provider ID"
+    },
+    "organizationId": {
+      "type": "string",
+	  "title":"Organization ID"
+    },
+    "serviceType": {
+      "type": "string",
+	  "title":"Service Provision Type"
+    },
+    "technicalDescriptionId": {
+      "type": "string",
+	  "title":"Technical Description ID"
     },
     "publicServiceSector": {
       "type": "array",
-      "items": [
-        {
-          "type": "string"
-        }
-      ]
+	  "title":"Public Service Sector",
+	  "format":"table",
+	  "uniqueItems": true,
+      "items": {
+	    "type": "string",
+        "title":"Sector"
+      }
     },
     "publicServiceTypeProp": {
       "type": "array",
-      "items": [
+	  "title":"Public Service Type",
+	  "format":"table",
+	  "uniqueItems": true,
+      "items": 
         {
-          "type": "string"
+          "type": "string",
+		  "title":"Type"
         }
-      ]
+      
     },
     "publicServiceLanguage": {
       "type": "array",
-      "items": [
+	  "title":"Public Service Language",
+	  "format":"table",
+	  "uniqueItems": true,
+      "items": 
         {
-          "type": "string"
-        },
-        {
-          "type": "string"
+          "type": "string",
+		  "title":"Language"
         }
-      ]
-    },
-    "publicServiceStatus": {
-      "type": "string"
-    },
-    "serviceType": {
-      "type": "null"
-    },
-    "serviceProviderId": {
-      "type": "null"
-    },
-    "organizationId": {
-      "type": "null"
+      
     },
     "humanReadableDescription": {
       "type": "array",
-      "items": [
+	  "title":"Description",
+	  
+	  "uniqueItems": true,
+      "items": 
         {
           "type": "object",
+		  "title":"Locale",
+		  "options": {
+				"collapsed": true
+			},
           "properties": {
             "locale": {
               "type": "string"
             },
             "description": {
-              "type": "string"
+              "type": "string",
+			  "format": "textarea"
             }
           },
           "required": [
@@ -75,937 +104,107 @@
             "description"
           ]
         }
-      ]
-    },
-    "technicalDescriptionId": {
-      "type": "string"
+     
     },
     "publicServiceIsDescribedAt": {
       "type": "array",
-      "items": [
+	  "title":"Service Data Description",
+	 
+      "items": 
         {
           "type": "object",
+		  "title":"DataSet",
+		  "options": {
+				"collapsed": true
+			},
+		   "format":"categories",
           "properties": {
             "publicServiceDatasetID": {
-              "type": "string"
+              "type": "string",
+			  "title":"DataSet ID"
             },
             "serviceDataDescriptionUri": {
-              "type": "string"
+              "type": "string",
+			  "title":"Description URI"
             },
             "taxonomy": {
-              "type": "string"
+              "type": "string",
+			  "title":"Taxonomy"
             },
             "title": {
-              "type": "string"
+              "type": "string",
+			   "title":"Title"
             },
             "issued": {
-              "type": "integer"
+              "type": "integer",
+			   "title":"Issued"
             },
             "modified": {
-              "type": "integer"
+              "type": "integer",
+			   "title":"Modified"
             },
             "purpose": {
               "type": "array",
-              "items": [
+			  "title": "Purposes",
+			  "format": "table",
+              "items": 
                 {
-                  "type": "string"
-                },
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "string"
+                  "type": "string",
+				  "title": "Purpose"
                 }
-              ]
+              
             },
             "serviceDataType": {
-              "type": "string"
+              "type": "string",
+			   "title": "Data Type"
             },
             "dataStructureSpecification": {
               "type": "array",
+			  "title": "Data Structure",
               "items": {}
             },
             "dataMapping": {
               "type": "array",
-              "items": [
+			  "format": "table",
+			   "title": "Data Mapping",
+              "items": 
                 {
                   "type": "object",
-                  "properties": {
+				  "properties": {
                     "property": {
-                      "type": "string"
+                      "type": "string",
+					   "title": "Property"
                     },
                     "conceptId": {
-                      "type": "string"
+                      "type": "string",
+					   "title": "Concept"
                     },
                     "name": {
-                      "type": "string"
+                      "type": "string",
+					   "title": "Name"
                     },
                     "type": {
-                      "type": "string"
+                      "type": "string",
+					   "title": "Type"
+                    },
+                    "required": {
+                      "type": "number",
+					   "title": "Required"
+                    },
+                    "sensitive": {
+                      "type": "number",
+					  "title": "Sensitive"
                     }
                   },
                   "required": [
                     "property",
                     "conceptId",
                     "name",
-                    "type"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "property": {
-                      "type": "string"
-                    },
-                    "conceptId": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "property",
-                    "conceptId",
-                    "name",
-                    "type"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "property": {
-                      "type": "string"
-                    },
-                    "conceptId": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "property",
-                    "conceptId",
-                    "name",
-                    "type"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "property": {
-                      "type": "string"
-                    },
-                    "conceptId": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "property",
-                    "conceptId",
-                    "name",
-                    "type"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "property": {
-                      "type": "string"
-                    },
-                    "conceptId": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "property",
-                    "conceptId",
-                    "name",
-                    "type"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "property": {
-                      "type": "string"
-                    },
-                    "conceptId": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "property",
-                    "conceptId",
-                    "name",
-                    "type"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "property": {
-                      "type": "string"
-                    },
-                    "conceptId": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "property",
-                    "conceptId",
-                    "name",
-                    "type"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "property": {
-                      "type": "string"
-                    },
-                    "conceptId": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "property",
-                    "conceptId",
-                    "name",
-                    "type"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "property": {
-                      "type": "string"
-                    },
-                    "conceptId": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "property",
-                    "conceptId",
-                    "name",
-                    "type"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "property": {
-                      "type": "string"
-                    },
-                    "conceptId": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "property",
-                    "conceptId",
-                    "name",
-                    "type"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "property": {
-                      "type": "string"
-                    },
-                    "conceptId": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "property",
-                    "conceptId",
-                    "name",
-                    "type"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "property": {
-                      "type": "string"
-                    },
-                    "conceptId": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "property",
-                    "conceptId",
-                    "name",
-                    "type"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "property": {
-                      "type": "string"
-                    },
-                    "conceptId": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "property",
-                    "conceptId",
-                    "name",
-                    "type"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "property": {
-                      "type": "string"
-                    },
-                    "conceptId": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "property",
-                    "conceptId",
-                    "name",
-                    "type"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "property": {
-                      "type": "string"
-                    },
-                    "conceptId": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "property",
-                    "conceptId",
-                    "name",
-                    "type"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "property": {
-                      "type": "string"
-                    },
-                    "conceptId": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "property",
-                    "conceptId",
-                    "name",
-                    "type"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "property": {
-                      "type": "string"
-                    },
-                    "conceptId": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "property",
-                    "conceptId",
-                    "name",
-                    "type"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "property": {
-                      "type": "string"
-                    },
-                    "conceptId": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "property",
-                    "conceptId",
-                    "name",
-                    "type"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "property": {
-                      "type": "string"
-                    },
-                    "conceptId": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "property",
-                    "conceptId",
-                    "name",
-                    "type"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "property": {
-                      "type": "string"
-                    },
-                    "conceptId": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "property",
-                    "conceptId",
-                    "name",
-                    "type"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "property": {
-                      "type": "string"
-                    },
-                    "conceptId": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "property",
-                    "conceptId",
-                    "name",
-                    "type"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "property": {
-                      "type": "string"
-                    },
-                    "conceptId": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "property",
-                    "conceptId",
-                    "name",
-                    "type"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "property": {
-                      "type": "string"
-                    },
-                    "conceptId": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "property",
-                    "conceptId",
-                    "name",
-                    "type"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "property": {
-                      "type": "string"
-                    },
-                    "conceptId": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "property",
-                    "conceptId",
-                    "name",
-                    "type"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "property": {
-                      "type": "string"
-                    },
-                    "conceptId": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "property",
-                    "conceptId",
-                    "name",
-                    "type"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "property": {
-                      "type": "string"
-                    },
-                    "conceptId": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "property",
-                    "conceptId",
-                    "name",
-                    "type"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "property": {
-                      "type": "string"
-                    },
-                    "conceptId": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "property",
-                    "conceptId",
-                    "name",
-                    "type"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "property": {
-                      "type": "string"
-                    },
-                    "conceptId": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "property",
-                    "conceptId",
-                    "name",
-                    "type"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "property": {
-                      "type": "string"
-                    },
-                    "conceptId": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "property",
-                    "conceptId",
-                    "name",
-                    "type"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "property": {
-                      "type": "string"
-                    },
-                    "conceptId": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "property",
-                    "conceptId",
-                    "name",
-                    "type"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "property": {
-                      "type": "string"
-                    },
-                    "conceptId": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "property",
-                    "conceptId",
-                    "name",
-                    "type"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "property": {
-                      "type": "string"
-                    },
-                    "conceptId": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "property",
-                    "conceptId",
-                    "name",
-                    "type"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "property": {
-                      "type": "string"
-                    },
-                    "conceptId": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "property",
-                    "conceptId",
-                    "name",
-                    "type"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "property": {
-                      "type": "string"
-                    },
-                    "conceptId": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "property",
-                    "conceptId",
-                    "name",
-                    "type"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "property": {
-                      "type": "string"
-                    },
-                    "conceptId": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "property",
-                    "conceptId",
-                    "name",
-                    "type"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "property": {
-                      "type": "string"
-                    },
-                    "conceptId": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "property",
-                    "conceptId",
-                    "name",
-                    "type"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "property": {
-                      "type": "string"
-                    },
-                    "conceptId": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "property",
-                    "conceptId",
-                    "name",
-                    "type"
-                  ]
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "property": {
-                      "type": "string"
-                    },
-                    "conceptId": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "property",
-                    "conceptId",
-                    "name",
-                    "type"
+                    "type",
+					"required",
+					"sensitive"
                   ]
                 }
-              ]
             }
           },
           "required": [
@@ -1021,7 +220,7 @@
             "dataMapping"
           ]
         }
-      ]
+      
     }
   },
   "required": [
@@ -1034,11 +233,11 @@
     "publicServiceTypeProp",
     "publicServiceLanguage",
     "publicServiceStatus",
-    "serviceType",
     "serviceProviderId",
     "organizationId",
     "humanReadableDescription",
     "technicalDescriptionId",
     "publicServiceIsDescribedAt"
-  ]
+  ],
+  "format":"categories"
 }
