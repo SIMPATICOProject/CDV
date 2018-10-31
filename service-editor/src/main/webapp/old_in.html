@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>CDV Service Editor</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="css/foundation.css">
+</head>
+<style>
+	body {
+	padding-left: 2em;
+	padding-right: 2em;
+	}
+	
+	td{
+		padding-top: 1em;
+		padding-left: 0.5em;
+	}
+	
+	table, tr, th, td{
+		/*border: 1px solid #f1f1f1;*/
+		/*border-radius:10px;*/
+		background-color: #f2f2f2;
+		border-collapse: initial !important;
+		border-spacing: 20px !important;
+	}
+</style>
+<script>
+$(document).ready(function() {
+    $.ajax({
+        url: "http://localhost:8080/service-manager/api/v1/services"
+    }).then(function(data) {
+    	
+    	//List creation
+    	var servcontent = JSON.stringify(data);
+    	console.log(servcontent.length);
+    	//servcontent = servcontent.substring(1,servcontent.length-1);
+    	//console.log(servcontent);
+    	
+    	var jobj = JSON.parse(servcontent);
+    	console.log("lUNGHEZZA DATA: "+data.length);
+    	console.log("lUNGHEZZA JOBJ: "+jobj.length);
+    	
+    	console.log(data[0].humanReadableDescription[0].description);
+    	console.log(data[0].humanReadableDescription);
+    	
+    	for(i = 0; i < data.length; i++){
+    		
+    		if(i+1==data.length){
+    			$('.service-list').append("<tr style=\"width: 100%\"><td style=\"width:40%;padding-bottom:3em;\" class=\"service-test\">"+data[i].publicServiceName+"</td><td style=\"width:55%;padding-bottom:3em;\">"+data[i].humanReadableDescription[0].description+"</td><td style=\"padding-bottom:3em;\"><button id=\""+data[i].publicServiceID+"\" value=\""+data[i].publicServiceName+"\" onClick=\"EditService("+data[i].publicServiceID+")\">EDIT</button></td></tr>");
+    		}
+    		else{ 
+    			$('.service-list').append("<tr style=\"width: 100%\"><td style=\"width:40%\" class=\"service-test\">"+data[i].publicServiceName+"</td><td style=\"width:55%\">"+data[i].humanReadableDescription[0].description+"</td><td><button id=\""+data[i].publicServiceID+"\" value=\""+data[i].publicServiceName+"\" onClick=\"EditService("+data[i].publicServiceID+")\">EDIT</button></td></tr>");
+    		}
+    	}
+    });
+});
+
+function CreateNewService(){
+	window.location.href = window.location.href+"edit-service.html";
+};
+
+function EditService(id){
+	var nome = $('#2').attr("value").replace(" ","-");
+	window.location.href = window.location.href+"edit-service.html?"+nome+"&"+id;
+};
+</script>
+<body>
+	<div class="row" style="display: table; padding-bottom: 1em; padding-top: 1em;"/>
+		<div class="col-sm-8">
+			<h1>CDV Service Editor</h1>
+		</div>
+		<div class="col-sm-3" style=" float: none; display: table-cell;  vertical-align: middle; font-size: 29px;">Add new service</div>
+		<div class="col-sm-1" style=" float: none; display: table-cell;  vertical-align: middle;padding-right: 0!important;">
+			<button class="tiny" style="margin: 0 0 0 0 !important; background-color: #009933" id="addService" onClick="CreateNewService()">ADD</button>
+		</div>
+	</div>
+	
+	<div class="row" style="display: table;" />
+		<div class="col-sm-12" style=" float: none; display: table-cell;  vertical-align: middle; font-size: 25px;">Available Services: </div>
+	</div>
+	
+	<div class="row" style="padding-top: 2em; padding-left: 15px;">
+		<table class="service-list">
+			<tbody>
+			<th style="padding-bottom: 1em;font-size: 20px;">
+				Service
+			</th>
+			<th style="padding-bottom: 1em;font-size: 20px;">
+				Description
+			</th>
+			</tbody>
+		</table>
+	</div>
+	
+</body>
+</html>

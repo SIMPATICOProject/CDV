@@ -1,0 +1,245 @@
+{
+  "title":"ServiceEntry",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  
+  "format":"categories",
+  
+  "properties": {
+    "publicServiceID": {
+      "type": "string",
+	  "title":"Public Service ID"
+    },
+    "publicServiceName": {
+      "type": "string",
+	  "title":"Service Name"
+    },
+    "serviceUri": {
+      "type": "string",
+	  "title":"Service URI"
+    },
+    "serviceDescriptionVersion": {
+      "type": "string",
+	  "title":"Version"
+    },
+    "publicServiceKeyword": {
+      "type": "string",
+	  "title":"Keywords"
+    },
+	"publicServiceStatus": {
+      "type": "string",
+	  "title":"Status"
+    },    
+    "serviceProviderId": {
+      "type": "string",
+	  "title":"Provider ID"
+    },
+    "organizationId": {
+      "type": "string",
+	  "title":"Organization ID"
+    },
+    "serviceType": {
+      "type": "string",
+	  "title":"Service Provision Type"
+    },
+    "technicalDescriptionId": {
+      "type": "string",
+	  "title":"Technical Description ID"
+    },
+    "publicServiceSector": {
+      "type": "array",
+	  "title":"Public Service Sector",
+	  "format":"table",
+	  "uniqueItems": true,
+      "items": {
+	    "type": "string",
+        "title":"Sector"
+      }
+    },
+    "publicServiceTypeProp": {
+      "type": "array",
+	  "title":"Public Service Type",
+	  "format":"table",
+	  "uniqueItems": true,
+      "items": 
+        {
+          "type": "string",
+		  "title":"Type"
+        }
+      
+    },
+    "publicServiceLanguage": {
+      "type": "array",
+	  "title":"Public Service Language",
+	  "format":"table",
+	  "uniqueItems": true,
+      "items": 
+        {
+          "type": "string",
+		  "title":"Language"
+        }
+      
+    },
+    "humanReadableDescription": {
+      "type": "array",
+	  "title":"Description",
+	  "format":"tabs",
+	  "uniqueItems": true,
+      "items": 
+        {
+          "type": "object",
+		  "title":"Locale",
+		  "options": {
+				"collapsed": false
+			},
+          "properties": {
+            "locale": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string",
+			  "format": "textarea"
+            }
+          },
+          "required": [
+            "locale",
+            "description"
+          ]
+        }
+     
+    },
+    "publicServiceIsDescribedAt": {
+      "type": "array",
+	  "title":"Service Data Description",
+	  "format":"tabs",
+      "items": 
+        {
+          "type": "object",
+		  "title":"DataSet",
+		  "options": {
+				"collapsed": false
+			},
+		   "format":"categories",
+          "properties": {
+            "publicServiceDatasetID": {
+              "type": "string",
+			  "title":"DataSet ID"
+            },
+            "serviceDataDescriptionUri": {
+              "type": "string",
+			  "title":"Description URI"
+            },
+            "taxonomy": {
+              "type": "string",
+			  "title":"Taxonomy"
+            },
+            "title": {
+              "type": "string",
+			   "title":"Title"
+            },
+            "issued": {
+              "type": "integer",
+			   "title":"Issued"
+            },
+            "modified": {
+              "type": "integer",
+			   "title":"Modified"
+            },
+            "purpose": {
+              "type": "array",
+			  "title": "Purposes",
+			  "format":"tabs",
+	           "uniqueItems": true,
+              "items": 
+                {
+                  "type": "string",
+				  "title": "Purpose"
+                }
+              
+            },
+            "serviceDataType": {
+              "type": "string",
+			   "title": "Data Type"
+            },
+            "dataStructureSpecification": {
+              "type": "array",
+			  "title": "Data Structure",
+              "items": {}
+            },
+            "dataMapping": {
+              "type": "array",
+			  "format": "table",
+			   "title": "Data Mapping",
+              "items": 
+                {
+                  "type": "object",
+				  "properties": {
+                    "property": {
+                      "type": "string",
+					   "title": "Property"
+                    },
+                    "conceptId": {
+                      "type": "string",
+					   "title": "Concept"
+                    },
+                    "name": {
+                      "type": "string",
+					   "title": "Name"
+                    },
+                    "type": {
+                      "type": "string",
+					   "title": "Type"
+                    },
+                    "required": {
+                      "type": "number",
+					   "title": "Required"
+                    },
+                    "sensitive": {
+                      "type": "number",
+					  "title": "Sensitive"
+                    }
+                  },
+                  "required": [
+                    "property",
+                    "conceptId",
+                    "name",
+                    "type",
+					"required",
+					"sensitive"
+                  ]
+                }
+            }
+          },
+          "required": [
+            "publicServiceDatasetID",
+            "serviceDataDescriptionUri",
+            "taxonomy",
+            "title",
+            "issued",
+            "modified",
+            "purpose",
+            "serviceDataType",
+            "dataStructureSpecification",
+            "dataMapping"
+          ]
+        }
+      
+    }
+  },
+  "required": [
+    "publicServiceID",
+    "publicServiceName",
+    "serviceUri",
+    "serviceDescriptionVersion",
+    "publicServiceKeyword",
+    "publicServiceSector",
+    "publicServiceTypeProp",
+    "publicServiceLanguage",
+    "publicServiceStatus",
+    "serviceProviderId",
+    "organizationId",
+    "humanReadableDescription",
+    "technicalDescriptionId",
+    "publicServiceIsDescribedAt"
+  ]
+}
