@@ -10,7 +10,7 @@
     <title>CDV Service Editor</title>
 
     <!-- Bootstrap -->
-    <link href="vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="vendors/bootstrap/distrib/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <!-- NProgress -->
@@ -280,7 +280,7 @@
     </div>
 
     <!-- jQuery -->
-    <script src="vendors/jquery/dist/jquery.min.js"></script>
+    <script src="vendors/jquery/distrib/jquery.min.js"></script>
     <script>
 	    $.ajax({
 	        url: "http://localhost:8080/service-manager/api/v1/services"
@@ -302,7 +302,7 @@
 	    	}
 	    
 	    	//Caricamento sequenziale dei rimanenti script per garanzia funzionamento globale
-	    	$.getScript("vendors/bootstrap/dist/js/bootstrap.min.js");
+	    	$.getScript("vendors/bootstrap/distrib/js/bootstrap.min.js");
 	    	$.getScript("vendors/fastclick/lib/fastclick.js");
 	    	//$.getScript("vendors/nprogress/nprogress.js");
 	    	$.getScript("vendors/iCheck/icheck.min.js");
@@ -321,14 +321,14 @@
 	    	$.getScript("vendors/datatables.net-responsive/js/dataTables.responsive.min.js");
 	    	$.getScript("vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js");
 	    	$.getScript("vendors/datatables.net-scroller/js/dataTables.scroller.min.js");
-	    	$.getScript("vendors/jszip/dist/jszip.min.js");
+	    	$.getScript("vendors/jszip/distrib/jszip.min.js");
 	    	
 	    	//$.getScript("vendors/pdfmake/build/pdfmake.min.js");
 	    	$.getScript("vendors/pdfmake/build/vfs_fonts.js");
 	    	$.getScript("js/custom.min.js");
 	    	
 /* 	    	$.ajax({
-	    		  url: "../vendors/bootstrap/dist/js/bootstrap.min.js",
+	    		  url: "../vendors/bootstrap/distrib/js/bootstrap.min.js",
 	    		  dataType: "script",
 	    		  success: {}
 	    		});
@@ -403,7 +403,7 @@
 	    		  success: {}
 	    		});
 	    	$.ajax({
-	    		  url: "../vendors/jszip/dist/jszip.min.js",
+	    		  url: "../vendors/jszip/distrib/jszip.min.js",
 	    		  dataType: "script",
 	    		  success: {}
 	    		});
