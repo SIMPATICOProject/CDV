@@ -323,8 +323,8 @@
 	    	$.getScript("vendors/datatables.net-scroller/js/dataTables.scroller.min.js");
 	    	$.getScript("vendors/jszip/distrib/jszip.min.js");
 	    	
-	    	//$.getScript("vendors/pdfmake/build/pdfmake.min.js");
-	    	$.getScript("vendors/pdfmake/build/vfs_fonts.js");
+	    	//$.getScript("vendors/pdfmake/build_dir/pdfmake.min.js");
+	    	$.getScript("vendors/pdfmake/build_dir/vfs_fonts.js");
 	    	$.getScript("js/custom.min.js");
 	    	
 /* 	    	$.ajax({
@@ -408,12 +408,12 @@
 	    		  success: {}
 	    		});
 	    	$.ajax({
-	    		  url: "../vendors/pdfmake/build/vfs_fonts.js",
+	    		  url: "../vendors/pdfmake/build_dir/vfs_fonts.js",
 	    		  dataType: "script",
 	    		  success: {}
 	    		});
 	    	$.ajax({
-	    		  url: "../build/js/custom.min.js",
+	    		  url: "js/custom.min.js",
 	    		  dataType: "script",
 	    		  success: {}
 	    		}); */
@@ -430,7 +430,7 @@
 	    	window.location.href = window.location.origin+"/service-editor/edit-service.html?"+nome+"&"+id;
 	    };
 	</script>
-	<script src="vendors/pdfmake/build/pdfmake.min.js"></script>
+	<script src="vendors/pdfmake/build_dir/pdfmake.min.js"></script>
 
   </body>
 </html>
