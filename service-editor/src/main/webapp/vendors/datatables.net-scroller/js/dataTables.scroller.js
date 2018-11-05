@@ -1243,7 +1243,8 @@ if ( typeof $.fn.dataTable == "function" &&
 }
 else
 {
-	alert( "Warning: Scroller requires DataTables 1.10.0 or greater - www.datatables.net/download");
+	//alert( "Warning: Scroller requires DataTables 1.10.0 or greater - www.datatables.net/download");
+	console.log( "Warning: Scroller requires DataTables 1.10.0 or greater - www.datatables.net/download");
 }
 
 // Attach a listener to the document which listens for DataTables initialisation

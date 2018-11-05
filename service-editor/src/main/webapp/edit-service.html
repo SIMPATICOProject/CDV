@@ -1,16 +1,33 @@
 <!DOCTYPE html>
-<html><head>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <title>CDV Service Editor</title>
+
+    <!-- Bootstrap -->
+    <link href="vendors/bootstrap/distrib/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- NProgress -->
+<!--     <link href="../vendors/nprogress/nprogress.css" rel="stylesheet"> -->
+    <!-- iCheck -->
+    <link href="vendors/iCheck/skins/flat/green.css" rel="stylesheet">
+    <!-- Datatables -->
+    <link href="vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+    <link href="vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+    <link href="vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+    <link href="vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+    <link href="vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link href="css/custom.min.css" rel="stylesheet">
     
-    <!-- Foundation CSS framework (Bootstrap and jQueryUI also supported) -->
-        <style>[class*="foundicon-"] {font-family: GeneralFoundicons;font-style: normal;}</style>
-    <!-- Foundation CSS framework (Bootstrap and jQueryUI also supported) -->
-    <link rel='stylesheet' href='//cdn.jsdelivr.net/foundation/5.0.2/css/foundation.min.css'>
     
-    <!-- Swicth off for no-tabbed version -->
-    <link rel="stylesheet" id="theme_stylesheet" href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css">
     
     <!-- Font Awesome icons (Bootstrap, Foundation, and jQueryUI also supported) -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css">
@@ -22,40 +39,341 @@
     <script>
     // Set the default CSS theme and icon library globally
     //JSONEditor.defaults.theme = 'foundation5'; /* no tab version */
-    JSONEditor.defaults.theme = 'bootstrap2';
+    JSONEditor.defaults.theme = 'bootstrap3';
     JSONEditor.defaults.iconlib = 'fontawesome4';
     var schemaDir = "json/service-entry.json";
     </script>
 
+    
   </head>
   <style>
   	input[type="text"]{
   		height: auto !important;
   	} 
   </style>
-  <body>
-    <div class="row" style="padding-top: 2em;margin-left:auto;margin-right:auto">
-      <div class="medium-6 columns">
-        <button id="submit" class="tiny"></button>
-        <button id="restore" class="secondary tiny">Restore to Default</button>
-        <!-- <span id="valid_indicator" class="label success">valid</span> -->
-      </div>
-      <div class="medium-6 columns">
-      	<button style="float: right;background-color:#ff0000; color: #fff; font-weight: bold !important;" id="home" class="secondary tiny">Back to Services List</button>
+  <body class="nav-md">
+    <div class="container body">
+      <div class="main_container">
+        <div class="col-md-3 left_col">
+          <div class="left_col scroll-view">
+            <div class="navbar nav_title" style="border: 0;">
+              <a href="index.html" class="site_title"><i class="fa fa-users"></i> <span>CDV Dashboard</span></a>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <!-- menu profile quick info -->
+<!--             <div class="profile clearfix">
+              <div class="profile_pic">
+                <img src="images/img.jpg" alt="..." class="img-circle profile_img">
+              </div>
+              <div class="profile_info">
+                <span>Welcome,</span>
+                <h2>John Doe</h2>
+              </div>
+            </div> -->
+            <!-- /menu profile quick info -->
+
+            <br />
+
+<!-- sidebar menu -->
+            <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+              <div class="menu_section">
+                <h3>Menu</h3>
+                <ul class="nav side-menu">
+                  <!-- <li><a><i class="fa fa-home"></i> Home <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="index.html">Dashboard</a></li>
+                      <li><a href="index2.html">Dashboard2</a></li>
+                      <li><a href="index3.html">Dashboard3</a></li>
+                    </ul>
+                  </li> -->
+                  <li><a><i class="fa fa-edit"></i> Services <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="cdv_home.html">Available Services</a></li>
+                      <li><a href="edit-service.html">Add New Service</a></li>
+                    </ul>
+                  </li>
+                  
+                </ul>
+              </div>
+
+            </div>
+<!-- /sidebar menu -->
+
+            <!-- /menu footer buttons -->
+<!--             <div class="sidebar-footer hidden-small">
+              <a data-toggle="tooltip" data-placement="top" title="Settings">
+                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+              </a>
+              <a data-toggle="tooltip" data-placement="top" title="FullScreen">
+                <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
+              </a>
+              <a data-toggle="tooltip" data-placement="top" title="Lock">
+                <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+              </a>
+              <a data-toggle="tooltip" data-placement="top" title="Logout" href="login.html">
+                <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+              </a>
+            </div> -->
+            <!-- /menu footer buttons -->
+          </div>
+        </div>
+
+<!-- top navigation -->
+        <div class="top_nav">
+          <div class="nav_menu">
+            <nav>
+              <div class="nav toggle" style="padding-bottom: 15px !important">
+                <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+              </div>
+
+              <ul class="nav navbar-nav navbar-right">
+                <!-- <li class="">
+                  <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    <img src="images/img.jpg" alt="">John Doe
+                    <span class=" fa fa-angle-down"></span>
+                  </a>
+                  <ul class="dropdown-menu dropdown-usermenu pull-right">
+                    <li><a href="javascript:;"> Profile</a></li>
+                    <li>
+                      <a href="javascript:;">
+                        <span class="badge bg-red pull-right">50%</span>
+                        <span>Settings</span>
+                      </a>
+                    </li>
+                    <li><a href="javascript:;">Help</a></li>
+                    <li><a href="login.html"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
+                  </ul>
+                </li> -->
+
+                <!-- <li role="presentation" class="dropdown">
+                  <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-envelope-o"></i>
+                    <span class="badge bg-green">6</span>
+                  </a>
+                  <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+                    <li>
+                      <a>
+                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
+                        <span>
+                          <span>John Smith</span>
+                          <span class="time">3 mins ago</span>
+                        </span>
+                        <span class="message">
+                          Film festivals used to be do-or-die moments for movie makers. They were where...
+                        </span>
+                      </a>
+                    </li>
+                    <li>
+                      <a>
+                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
+                        <span>
+                          <span>John Smith</span>
+                          <span class="time">3 mins ago</span>
+                        </span>
+                        <span class="message">
+                          Film festivals used to be do-or-die moments for movie makers. They were where...
+                        </span>
+                      </a>
+                    </li>
+                    <li>
+                      <a>
+                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
+                        <span>
+                          <span>John Smith</span>
+                          <span class="time">3 mins ago</span>
+                        </span>
+                        <span class="message">
+                          Film festivals used to be do-or-die moments for movie makers. They were where...
+                        </span>
+                      </a>
+                    </li>
+                    <li>
+                      <a>
+                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
+                        <span>
+                          <span>John Smith</span>
+                          <span class="time">3 mins ago</span>
+                        </span>
+                        <span class="message">
+                          Film festivals used to be do-or-die moments for movie makers. They were where...
+                        </span>
+                      </a>
+                    </li>
+                    <li>
+                      <div class="text-center">
+                        <a>
+                          <strong>See All Alerts</strong>
+                          <i class="fa fa-angle-right"></i>
+                        </a>
+                      </div>
+                    </li>
+                  </ul>
+                </li> -->
+              </ul>
+            </nav>
+          </div>
+        </div>
+<!-- /top navigation -->
+
+<!-- page content -->
+        <div class="right_col" role="main">
+          <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                <h1>CDV Service Editor</h1>
+              </div>
+
+<!--               <div class="title_right">
+                <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                  <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search for...">
+                    <span class="input-group-btn">
+                      <button class="btn btn-default" type="button">Go!</button>
+                    </span>
+                  </div>
+                </div>
+              </div> -->
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="row">
+            
+	            <div class="col-md-12 col-sm-12 col-xs-12">
+	                <div class="x_panel">
+            
+				      <div class="medium-6 columns" style="float: right;">
+				        <button id="submit" class="btn btn-success"></button>
+				        <button id="restore" class="btn btn-warning">Restore to Default</button>
+				        <!-- <span id="valid_indicator" class="label success">valid</span> -->
+				      </div>
+
+	
+				    <div class="row"style="margin-left:auto;margin-right:auto">
+				      <div id="editor_holder" class="medium-12 columns">
+				      </div>
+				    </div>
+	 
+	            </div>
+          </div>
+       </div>
+     </div>
+
+<!-- /page content -->
+
+<!-- footer content -->
+        <footer>
+          <div class="pull-right">
+            Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
+          </div>
+          <div class="clearfix"></div>
+        </footer>
+<!-- /footer content -->
       </div>
     </div>
-    <div class="row"style="margin-left:auto;margin-right:auto">
-      <div class="medium-12 columns">
-        <h1>CDV Service Editor</h1>
-      </div>
-    </div>
-    
-    <div class="row"style="margin-left:auto;margin-right:auto">
-      <div id="editor_holder" class="medium-12 columns">
-      
-      </div>
-    </div>
-</body>    
+
+    <!-- jQuery -->
+    <script src="vendors/jquery/distrib/jquery.min.js"></script>
+    <script>
+	    $.ajax({
+	        url: "http://localhost:8080/service-manager/api/v1/services"
+	    }).then(function(data) {
+	    	
+	    	//List creation
+	    	var servcontent = JSON.stringify(data);
+	    	console.log(servcontent.length);
+	    	
+	    	var jobj = JSON.parse(servcontent);
+	    	console.log("lUNGHEZZA DATA: "+data.length);
+	    	console.log("lUNGHEZZA JOBJ: "+jobj.length);
+	    	
+	    	console.log(data[0].humanReadableDescription[0].description);
+	    	console.log(data[0].humanReadableDescription);
+	    	
+	    	for(i = 0; i < data.length; i++){
+	    		$('#datatable-buttons').append("<tr><td>"+data[i].publicServiceName+"</td><td>"+data[i].humanReadableDescription[0].description+"</td><td style=\"text-align: center\"><button id=\""+data[i].publicServiceID+"\" value=\""+data[i].publicServiceName+"\" class=\"btn btn-primary\" onClick=\"EditService("+data[i].publicServiceID+")\">EDIT</button></td></tr>");
+	    	}
+	    
+	    	//Caricamento sequenziale dei rimanenti script per garanzia funzionamento globale
+	    	/* $.getScript("vendors/bootstrap/distrib/js/bootstrap.min.js");
+	    	$.getScript("vendors/fastclick/lib/fastclick.js");
+	    	//$.getScript("vendors/nprogress/nprogress.js");
+	    	$.getScript("vendors/iCheck/icheck.min.js");
+	    	$.getScript("vendors/datatables.net/js/jquery.dataTables.js");
+	    	
+	    	$.getScript("vendors/datatables.net-bs/js/dataTables.bootstrap.min.js");
+	    	$.getScript("vendors/datatables.net-buttons/js/dataTables.buttons.min.js");
+	    	$.getScript("vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js");
+	    	$.getScript("vendors/datatables.net-buttons/js/buttons.flash.min.js");
+	    	
+	    	$.getScript("vendors/datatables.net-buttons/js/buttons.html5.min.js");
+	    	$.getScript("vendors/datatables.net-buttons/js/buttons.print.min.js");
+	    	$.getScript("vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js");
+	    	$.getScript("vendors/datatables.net-keytable/js/dataTables.keyTable.min.js");
+	    	
+	    	$.getScript("vendors/datatables.net-responsive/js/dataTables.responsive.min.js");
+	    	$.getScript("vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js");
+	    	$.getScript("vendors/datatables.net-scroller/js/dataTables.scroller.js");
+	    	$.getScript("vendors/jszip/distrib/jszip.min.js");
+	    	
+	    	//$.getScript("vendors/pdfmake/build_dir/pdfmake.min.js");
+	    	$.getScript("vendors/pdfmake/build_dir/vfs_fonts.js");
+	    	$.getScript("js/custom.min.js"); */
+	    	
+	    	$.getScript("vendors/bootstrap/distrib/js/bootstrap.min.js",function() {
+	    		$.getScript("vendors/fastclick/lib/fastclick.js", function(){
+	    			//$.getScript("vendors/nprogress/nprogress.js");
+	    			$.getScript("vendors/iCheck/icheck.min.js", function(){
+	    				$.getScript("vendors/datatables.net/js/jquery.dataTables.js", function(){
+	    					$.getScript("vendors/datatables.net-bs/js/dataTables.bootstrap.min.js", function(){
+	    						$.getScript("vendors/datatables.net-buttons/js/dataTables.buttons.min.js", function(){
+	    							$.getScript("vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js", function(){
+	    								$.getScript("vendors/datatables.net-buttons/js/buttons.flash.min.js", function(){
+	    									$.getScript("vendors/datatables.net-buttons/js/buttons.html5.min.js", function(){
+	    										$.getScript("vendors/datatables.net-buttons/js/buttons.print.min.js", function(){
+	    											$.getScript("vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js", function(){
+	    												$.getScript("vendors/datatables.net-keytable/js/dataTables.keyTable.min.js", function(){
+	    													$.getScript("vendors/datatables.net-responsive/js/dataTables.responsive.min.js", function(){
+	    														$.getScript("vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js", function(){
+	    															$.getScript("vendors/datatables.net-scroller/js/dataTables.scroller.js", function(){
+	    																$.getScript("vendors/jszip/distrib/jszip.min.js", function(){
+	    																	//$.getScript("vendors/pdfmake/build_dir/pdfmake.min.js");
+	    															    	$.getScript("vendors/pdfmake/build_dir/vfs_fonts.js", function(){
+	    															    		$.getScript("js/custom.min.js");
+	    															    	})
+	    																})
+	    															})
+	    														})
+	    													})
+	    												})
+	    											})
+	    										})
+	    									})
+	    								})
+	    							})
+	    						})
+	    					})
+	    				})
+	    			})
+	    		})
+	    	})
+	    });
+	    
+	    function CreateNewService(){
+	    	window.location.href = window.location.href+"edit-service.html";
+	    };
+
+	    function EditService(id){
+	    	var nome = $('#2').attr("value").replace(" ","-");
+	    	console.log("locazzone: "+window.location.origin+"service-editor/edit-service.html?"+nome+"&"+id);
+	    	window.location.href = window.location.origin+"/service-editor/edit-service.html?"+nome+"&"+id;
+	    };
+	</script>
+	<script src="vendors/pdfmake/build_dir/pdfmake.min.js"></script>
+
+  </body>
 <script>
     var serviceID=window.location.href;
     //console.log("primo serivce: "+serviceID);
@@ -195,5 +513,5 @@
 	        }
 	      });
     }
-    </script>
+</script>
 </html>
