@@ -244,8 +244,8 @@
 	            <div class="col-md-12 col-sm-12 col-xs-12">
 	                <div class="x_panel">
             
-				      <div class="medium-6 columns" style="float: right;">
-				        <button id="submit" class="btn btn-success"></button>
+				      <div class="medium-6 columns" style="padding-top:1em;padding-bottom:1em">
+				        <button id="submit" class="btn btn-success">Update Service</button>
 				        <button id="restore" class="btn btn-warning">Restore to Default</button>
 				        <!-- <span id="valid_indicator" class="label success">valid</span> -->
 				      </div>
@@ -293,7 +293,12 @@
 	    	console.log(data[0].humanReadableDescription);
 	    	
 	    	for(i = 0; i < data.length; i++){
-	    		$('#datatable-buttons').append("<tr><td>"+data[i].publicServiceName+"</td><td>"+data[i].humanReadableDescription[0].description+"</td><td style=\"text-align: center\"><button id=\""+data[i].publicServiceID+"\" value=\""+data[i].publicServiceName+"\" class=\"btn btn-primary\" onClick=\"EditService("+data[i].publicServiceID+")\">EDIT</button></td></tr>");
+	    		$('#datatable-buttons').append("<tr><td>"+data[i].publicServiceName+"</td><td>"+
+	    				data[i].humanReadableDescription[0].description+
+	    				"</td><td style=\"text-align: center\"><button id=\""+
+	    				data[i].publicServiceID+"\" value=\""+data[i].publicServiceName+
+	    				"\" class=\"btn btn-primary\" onClick=\"EditService("+data[i].publicServiceID+
+	    						")\">EDIT</button></td></tr>");
 	    	}
 	    
 	    	//Caricamento sequenziale dei rimanenti script per garanzia funzionamento globale
@@ -367,7 +372,6 @@
 
 	    function EditService(id){
 	    	var nome = $('#2').attr("value").replace(" ","-");
-	    	console.log("locazzone: "+window.location.origin+"service-editor/edit-service.html?"+nome+"&"+id);
 	    	window.location.href = window.location.origin+"/service-editor/edit-service.html?"+nome+"&"+id;
 	    };
 	</script>
@@ -376,7 +380,6 @@
   </body>
 <script>
     var serviceID=window.location.href;
-    //console.log("primo serivce: "+serviceID);
     var start = serviceID.indexOf("&");
     
     //PUT - UPDATE SELECTED SERVICE
@@ -385,7 +388,7 @@
 	    //console.log("posizione id: "+start);
 	    var len = serviceID.length - start - 1;
 	    serviceID = serviceID.substr(start+1, len);
-	    $('#submit').text("Update Service #"+serviceID);
+	    //$('#submit').text("Update Service #"+serviceID);
 	    //console.log("id servizio estratto da path: "+serviceID);
 		var starting_value="{}"
 		$(function() {

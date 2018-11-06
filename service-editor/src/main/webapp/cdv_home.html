@@ -320,15 +320,17 @@
 	    	
 	    	console.log(data[0].humanReadableDescription[0].description);
 	    	console.log(data[0].humanReadableDescription);
+	    	console.log("id0: "+data[3].publicServiceID);
+	    	console.log(data[3]);
 	    	//<td class=\"info-link\" hidden></td> //se tolto le righe tornano in disordine e 
 	    	//ritorna il paginator
 	    	for(i = 0; i < data.length; i++){
-	    		$('#datatable-buttons').append("<tr><td>"+data[i].publicServiceName+"</td><td>"+
+	    		psi = data[i].publicServiceID;
+	    		$('#datatable-buttons').append("<tr id=\"info-row-"+i+"\"><td>"+data[i].publicServiceName+"</td><td>"+
 	    				data[i].humanReadableDescription[0].description+
 	    				"</td><td style=\"text-align: center;vertical-align: middle;\"><a href=\"#\" onclick=\"javascript:fillServiceModal("+i+")\" data-toggle=\"modal\" data-target=\".bs-example-modal-lg\"><i style=\"cursor: pointer;\" class=\"fa fa-info-circle fa-2x\"></i></a></td><td style=\"text-align: center\"><button id=\""+
 	    				data[i].publicServiceID+"\" value=\""+data[i].publicServiceName+
-	    				"\" class=\"btn btn-primary\" onClick=\"EditService("+data[i].publicServiceID+
-	    						")\">EDIT</button></td></tr>");
+	    				"\" class=\"btn btn-primary\" onClick=\"EditService(\'"+psi+"\')\">EDIT</button></td></tr>");
 	    	}
 	    
 	    	//Caricamento sequenziale dei rimanenti script per garanzia funzionamento globale
@@ -401,24 +403,25 @@
 	    };
 
 	    function EditService(id){
-	    	var nome = $('#2').attr("value").replace(" ","-");
+	    	console.log("valore id: "+id);
+	    	//console.log($('#2'));
+	    	var nome = $('#'+id).attr("value").replace(" ","-");
 	    	//console.log("locazione: "+window.location.origin+"service-editor/edit-service.html?"+nome+"&"+id);
 	    	window.location.href = window.location.origin+"/service-editor/edit-service.html?"+nome+"&"+id;
 	    };
 	    
 	    function fillServiceModal(ind){
-	    	//to do: ogni info di riga quando cliccato ritorna la posizione della riga
-	    	//tramite parametro IND devo raggiungere titolo e descrizione
-	    	
-	    	//accessing n-th "datatable-buttons" table child [tr]->[td#2nd](title)->[td3rd](description)
-	    	//var sin = $(".datatable-buttons > tr:nth-child(0)").text();
-	    	//console.log("valore sin: "+sin);
+	    	//titolo e descrizione disponibili presso info-row-ind
+			var titolo = $("#info-row-"+ind).children().eq(0).text();
+	    	var descr =  $("#info-row-"+ind).children().eq(1).text();
+	    	console.log("titolo: "+titolo);
+	    	console.log("descrizione: "+descr);
 	    	
 	    	//set the title
-	    	$("#service-title").text();
+	    	$("#service-title").text(titolo);
 	    	//set the description
-	    	$("#service-description-title").text("DESCRIPTION:");
-	    	$("#service-description-content").text();
+	    	$("#service-description-title").text("SERVICE DESCRIPTION:");
+	    	$("#service-description-content").text(descr);
 	    	
 	    	console.log("selezionato servizio di riga:"+ind);
 	    	
