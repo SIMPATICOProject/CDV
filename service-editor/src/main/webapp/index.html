@@ -13,8 +13,10 @@
     <link href="vendors/bootstrap/distrib/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    
     <!-- NProgress -->
 <!--     <link href="../vendors/nprogress/nprogress.css" rel="stylesheet"> -->
+
     <!-- iCheck -->
     <link href="vendors/iCheck/skins/flat/green.css" rel="stylesheet">
     <!-- Datatables -->
@@ -26,13 +28,10 @@
 
     <!-- Custom Theme Style -->
     <link href="css/custom.min.css" rel="stylesheet">
-    
 
-    
   </head>
 
   <body class="nav-md">
-  
 <!-- Large modal -->
     <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog modal-lg">
@@ -93,7 +92,7 @@
                   </li> -->
                   <li><a><i class="fa fa-edit"></i> Services <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="cdv_home.html">Available Services</a></li>
+                      <li><a href="index.html">Available Services</a></li>
                       <li><a href="edit-service.html">Add New Service</a></li>
                     </ul>
                   </li>
@@ -315,15 +314,14 @@
 	    	console.log(servcontent.length);
 	    	
 	    	var jobj = JSON.parse(servcontent);
-	    	console.log("lUNGHEZZA DATA: "+data.length);
-	    	console.log("lUNGHEZZA JOBJ: "+jobj.length);
+// 	    	console.log("lUNGHEZZA DATA: "+data.length);
+// 	    	console.log("lUNGHEZZA JOBJ: "+jobj.length);
 	    	
-	    	console.log(data[0].humanReadableDescription[0].description);
-	    	console.log(data[0].humanReadableDescription);
-	    	console.log("id0: "+data[3].publicServiceID);
-	    	console.log(data[3]);
-	    	//<td class=\"info-link\" hidden></td> //se tolto le righe tornano in disordine e 
-	    	//ritorna il paginator
+// 	    	console.log(data[0].humanReadableDescription[0].description);
+// 	    	console.log(data[0].humanReadableDescription);
+// 	    	console.log("id0: "+data[3].publicServiceID);
+// 	    	console.log(data[3]);
+
 	    	for(i = 0; i < data.length; i++){
 	    		psi = data[i].publicServiceID;
 	    		$('#datatable-buttons').append("<tr id=\"info-row-"+i+"\"><td>"+data[i].publicServiceName+"</td><td>"+
@@ -334,31 +332,6 @@
 	    	}
 	    
 	    	//Caricamento sequenziale dei rimanenti script per garanzia funzionamento globale
-	    	/* $.getScript("vendors/bootstrap/distrib/js/bootstrap.min.js");
-	    	$.getScript("vendors/fastclick/lib/fastclick.js");
-	    	//$.getScript("vendors/nprogress/nprogress.js");
-	    	$.getScript("vendors/iCheck/icheck.min.js");
-	    	$.getScript("vendors/datatables.net/js/jquery.dataTables.js");
-	    	
-	    	$.getScript("vendors/datatables.net-bs/js/dataTables.bootstrap.min.js");
-	    	$.getScript("vendors/datatables.net-buttons/js/dataTables.buttons.min.js");
-	    	$.getScript("vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js");
-	    	$.getScript("vendors/datatables.net-buttons/js/buttons.flash.min.js");
-	    	
-	    	$.getScript("vendors/datatables.net-buttons/js/buttons.html5.min.js");
-	    	$.getScript("vendors/datatables.net-buttons/js/buttons.print.min.js");
-	    	$.getScript("vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js");
-	    	$.getScript("vendors/datatables.net-keytable/js/dataTables.keyTable.min.js");
-	    	
-	    	$.getScript("vendors/datatables.net-responsive/js/dataTables.responsive.min.js");
-	    	$.getScript("vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js");
-	    	$.getScript("vendors/datatables.net-scroller/js/dataTables.scroller.js");
-	    	$.getScript("vendors/jszip/distrib/jszip.min.js");
-	    	
-	    	//$.getScript("vendors/pdfmake/build_dir/pdfmake.min.js");
-	    	$.getScript("vendors/pdfmake/build_dir/vfs_fonts.js");
-	    	$.getScript("js/custom.min.js"); */
-	    	
 	    	$.getScript("vendors/bootstrap/distrib/js/bootstrap.min.js",function() {
 	    		$.getScript("vendors/fastclick/lib_dir/fastclick.js", function(){
 	    			//$.getScript("vendors/nprogress/nprogress.js");
@@ -403,10 +376,7 @@
 	    };
 
 	    function EditService(id){
-	    	console.log("valore id: "+id);
-	    	//console.log($('#2'));
 	    	var nome = $('#'+id).attr("value").replace(" ","-");
-	    	//console.log("locazione: "+window.location.origin+"service-editor/edit-service.html?"+nome+"&"+id);
 	    	window.location.href = window.location.origin+"/service-editor/edit-service.html?"+nome+"&"+id;
 	    };
 	    
@@ -423,15 +393,7 @@
 	    	$("#service-description-title").text("SERVICE DESCRIPTION:");
 	    	$("#service-description-content").text(descr);
 	    	
-	    	console.log("selezionato servizio di riga:"+ind);
-	    	
 	    };
-	    
-	 	// Fill modal with content from table
-	    $(".bs-example-modal-lg").on("show.bs.modal", function(e) {
-
-
-	    });
 	</script>
 	<script src="vendors/pdfmake/build_dir/pdfmake.min.js"></script>
 

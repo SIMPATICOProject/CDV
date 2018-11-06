@@ -22,6 +22,6 @@
     </dependency>
   </dependencies>
   <build>
-    <finalName>service-editor/production</finalName>
+    <finalName>service-editor</finalName>
   </build>
 </project>
