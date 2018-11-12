@@ -25,6 +25,7 @@ package it.eng.opsi.servicemanager.service;
 import it.eng.opsi.servicemanager.dao.ServiceEntryDAO;
 import it.eng.opsi.servicemanager.data.DataMapping;
 import it.eng.opsi.servicemanager.data.ServiceEntry;
+import it.eng.opsi.servicemanager.model.ServiceReport;
 
 import java.util.List;
 
@@ -169,6 +170,32 @@ public class ServiceRegistryService {
 	public List<DataMapping> getServiceDataMapping(@ApiParam(name = "id", value = "descrizione", required = true) @PathParam("id") String id) {
 
 		return dao.getDataMapping(id);
+	}
+	
+	@GET
+	@Path("/service_report/sector")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public List<ServiceReport> getServiceReportbySector() {
+		return dao.getServiceReportbySector();
+	}
+
+	
+	
+	@GET
+	@Path("/service_report/type")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public List<ServiceReport> getServiceReportbyType() {
+		return dao.getServiceReportbyType();
 	}
 
 	public static void main(String[] args) {

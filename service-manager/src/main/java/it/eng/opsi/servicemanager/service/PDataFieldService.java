@@ -40,6 +40,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.SwaggerDefinition;
 import it.eng.opsi.servicemanager.dao.PDataFieldDAO;
+import it.eng.opsi.servicemanager.data.PDataCategory;
 import it.eng.opsi.servicemanager.data.PDataField;
 
 @Service("PDataFieldService")
@@ -121,6 +122,19 @@ public class PDataFieldService implements IPDataFieldService {
 	)
 	public List<PDataField> getPDataFieldByCategory(@ApiParam(name = "category", value = "descrizione", required = true) @PathParam("category") String category) {
 		return dao.findByCategory(category);
+
+	}
+	
+	@GET
+	@Path("/pdatafields/category/tree")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public List<PDataCategory> getPDataCategoryTree()  {
+		return dao.getPDataTree();
 
 	}
 

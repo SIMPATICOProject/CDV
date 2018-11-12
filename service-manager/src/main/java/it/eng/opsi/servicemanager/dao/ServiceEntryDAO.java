@@ -27,8 +27,10 @@ import it.eng.opsi.servicemanager.connection.MongoDBConnection;
 import it.eng.opsi.servicemanager.data.DataMapping;
 import it.eng.opsi.servicemanager.data.PDataField;
 import it.eng.opsi.servicemanager.data.ServiceEntry;
+import it.eng.opsi.servicemanager.model.ServiceReport;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -186,6 +188,70 @@ public class ServiceEntryDAO {
 		}
 
 		return list;
+	}
+	
+	
+	public List<ServiceReport> getServiceReportbySector() {
+		MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
+		DB db = dbSingleton.getDB();
+		DBCollection coll = db.getCollection("serviceRegistry");
+		List<ServiceReport> list = new ArrayList<ServiceReport>();
+		Iterable<DBObject> output = coll.aggregate(Arrays.asList(
+		        (DBObject) new BasicDBObject("$unwind", "$publicServiceSector"),
+		        (DBObject) new BasicDBObject("$group", new BasicDBObject("_id", "$publicServiceSector")
+		        		.append("sector", new BasicDBObject("$first", "$publicServiceSector"))
+		        		.append("count", new BasicDBObject("$sum", 1))
+		        		)
+		        )).results();
+
+		ServiceReport serviceReport;
+		for (DBObject dbObject : output)
+		{
+					
+			try {
+				serviceReport = DAOUtils.dbObj2obj(dbObject, ServiceReport.class);
+				list.add(serviceReport);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+		return list;
+		
+	}
+	
+	
+	public List<ServiceReport> getServiceReportbyType() {
+		MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
+		DB db = dbSingleton.getDB();
+		DBCollection coll = db.getCollection("serviceRegistry");
+		List<ServiceReport> list = new ArrayList<ServiceReport>();
+		Iterable<DBObject> output = coll.aggregate(Arrays.asList(
+		        (DBObject) new BasicDBObject("$unwind", "$publicServiceTypeProp"),
+		        (DBObject) new BasicDBObject("$group", new BasicDBObject("_id", "$publicServiceTypeProp")
+		        		.append("sector", new BasicDBObject("$first", "$publicServiceTypeProp"))
+		        		.append("count", new BasicDBObject("$sum", 1))
+		        		)
+		        )).results();
+
+		ServiceReport serviceReport;
+		for (DBObject dbObject : output)
+		{
+					
+			try {
+				serviceReport = DAOUtils.dbObj2obj(dbObject, ServiceReport.class);
+				list.add(serviceReport);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+		return list;
+		
 	}
 
 }
