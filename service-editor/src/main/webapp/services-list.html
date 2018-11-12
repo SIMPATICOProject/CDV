@@ -38,20 +38,40 @@
   </head>
 
   <body class="nav-md footer_fixed">
+  
 <!-- Large modal -->
     <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
-          <div class="modal-header">
+          <div class="modal-header" style="border-bottom: none;padding-bottom: 0 !important;">
             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
             </button>
             <h1 class="modal-title" id="service-title">TITLE</h1>
           </div>
           <div class="modal-body">
-            <h2 id="service-description-title">Text in modal</h2>
             <p id="service-description-content"></p>
           </div>
+          <div class="modal-body" style="border-top: 1px solid #e5e5e5;">
+            <h2 id="service-keyword-title">Keywords: </h2>
+            <p id="service-keyword-content"></p>
+            </br>
+            <h2 id="service-puropose-title">Provider: </h2>
+            <p id="service-puropose-content"></p>
+            </br>
+            <h2 id="service-provider-title">Purpose: </h2>
+            <p id="service-provider-content"></p>
+            </br>
+            <h2 id="service-link-title">Link: </h2>
+            <a style="font-size: 20px;cursor: pointer;color:#0055FF" id="service-link-content"></a>
+          </div>
+          <div class="keywords-set modal-body" style="border-top: 1px solid #e5e5e5;">
+          	<h2 id="service-data-title" style="font-style: normal">Data Processed: </h2>
+          	<p>bubble test</p>
+          	<p>bubble test2</p>
+          	<p>bubble test3</p>
+          </div>
+
           <div class="modal-footer">
             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
           </div>
@@ -59,7 +79,8 @@
         </div>
       </div>
     </div>
-  
+<!-- Large modal -->
+
     <div class="container body">
       <div class="main_container">
         <div class="col-md-3 left_col menu_fixed">
@@ -325,6 +346,7 @@
     <!-- jQuery -->
     <script src="vendors/jquery/distrib/jquery.min.js"></script>
     <script>
+    var services_info;
     //GET - getServices_apipath
     var url_ = "http://"+app_parameters.host_param+":"+app_parameters.port_param+"/"+app_parameters.getServices_apipath;
     console.log("composed url: "+url_);
@@ -337,6 +359,7 @@
 	    	console.log(servcontent.length);
 	    	
 	    	var jobj = JSON.parse(servcontent);
+	    	services_info = jobj;
 // 	    	console.log("lUNGHEZZA DATA: "+data.length);
 // 	    	console.log("lUNGHEZZA JOBJ: "+jobj.length);
 	    	
@@ -404,17 +427,38 @@
 	    };
 	    
 	    function fillServiceModal(ind){
+	    	console.log("contenuto dei servizi salvato in var globale: "+services_info[1].publicServiceName+"fineeeee");
+	    	
 	    	//titolo e descrizione disponibili presso info-row-ind
-			var titolo = $("#info-row-"+ind).children().eq(0).text();
-	    	var descr =  $("#info-row-"+ind).children().eq(1).text();
+// 			var titolo = $("#info-row-"+ind).children().eq(0).text();
+// 	    	var descr =  $("#info-row-"+ind).children().eq(1).text();
+
+	    	//titolo e descrizione disponibili presso jquery global var services_info
+	    	var titolo = services_info[ind].publicServiceName;
+	    	var descr = services_info[ind].humanReadableDescription[0].description;
+	    	var keyword = services_info[ind].publicServiceKeyword;
+	    	var purpose = services_info[ind].publicServiceIsDescribedAt[0].purpose;
+	    	var provider = services_info[ind].serviceProviderId;
+	    	var link = services_info[ind].serviceUri;
+	    	var keywords_set = 0;
+	    	
 	    	console.log("titolo: "+titolo);
 	    	console.log("descrizione: "+descr);
+	    	console.log("provider: "+provider);
+	    	console.log("purpose: "+purpose);
 	    	
 	    	//set the title
 	    	$("#service-title").text(titolo);
 	    	//set the description
-	    	$("#service-description-title").text("SERVICE DESCRIPTION:");
 	    	$("#service-description-content").text(descr);
+	    	//set the link
+	    	$("#service-link-content").text(link);
+	    	//set the keyword
+	    	$("#service-keyword-content").text(keyword);
+	    	//set the provider
+	    	$("#service-provider-content").text(provider);
+	    	//set the purpose
+	    	$("#service-purpose-content").text(purpose);
 	    	
 	    };
 	</script>
