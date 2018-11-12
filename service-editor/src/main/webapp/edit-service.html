@@ -28,6 +28,9 @@
     <!-- Custom Theme Style -->
     <link href="css/custom.min.css" rel="stylesheet">
     
+    <!-- File di configurazione -->
+	<script src="js/config.properties.js"></script>
+    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@json-editor/json-editor/dist/jsoneditor.min.js"></script>
     
@@ -198,7 +201,10 @@
 	    //console.log("id servizio estratto da path: "+serviceID);
 		var starting_value="{}"
 		$(function() {
-	        $.get( "http://localhost:8080/service-manager/api/v1/services/"+serviceID, function( data ) {
+			//findById_apipath
+			var url = "http://"+app_parameters.host_param+":"+app_parameters.port_param+"/"+app_parameters.findById_apipath+serviceID;
+			console.log("composed url: "+url);
+	        $.get( url, function( data ) {
 	          starting_value=data;
 		      // Initialize the editor
 		      var editor = new JSONEditor(document.getElementById('editor_holder'),{
@@ -219,9 +225,11 @@
 		      document.getElementById('submit').addEventListener('click',function() {
 	
 		    	if (confirm('Il servizio verrà modificato, sei sicuro di voler procedere?')){
-		    		//PUT
+		    		//PUT - update_apipath
+		    		var url_ = "http://"+app_parameters.host_param+":"+app_parameters.port_param+"/"+app_parameters.update_apipath+serviceID;
+		    		console.log("composed url: "+url_);
 			        $.ajax({
-				        url: "http://localhost:8080/service-manager/api/v1/services/"+serviceID,
+				        url: url_,
 				        method: 'PUT',
 				        contentType: "application/json",
 				        data: JSON.stringify(editor.getValue()),
@@ -276,9 +284,11 @@
 	      document.getElementById('submit').addEventListener('click',function() {
 
 	    	if (confirm( 'Il servizio verrà creato, sei sicuro di voler procedere?')){    		
-	    		//POST
+	    		//POST - create_apipath
+	    		var url_ = "http://"+app_parameters.host_param+":"+app_parameters.port_param+
+	    					"/"+app_parameters.create_apipath;
 		        $.ajax({
-			        url: "http://localhost:8080/service-manager/api/v1/services/",
+			        url: url_,
 			        method: 'POST',
 			        contentType: "application/json",
 			        data: JSON.stringify(editor.getValue()),
