@@ -26,7 +26,7 @@
     <link href="vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
     <link href="vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
     <!-- Custom Theme Style -->
-    <link href="css/custom.min.css" rel="stylesheet">
+    <link href="css/custom.css" rel="stylesheet">
     
     <!-- File di configurazione -->
 	<script src="js/config.properties.js"></script>
@@ -47,13 +47,13 @@
   		height: auto !important;
   	} 
   </style>
-  <body class="nav-md">
+  <body class="nav-md footer_fixed">
     <div class="container body">
       <div class="main_container">
-        <div class="col-md-3 left_col">
+        <div class="col-md-3 left_col menu_fixed">
           <div class="left_col scroll-view">
             <div class="navbar nav_title" style="border: 0;">
-              <a href="index.html" class="site_title"><i class="fa fa-users"></i> <span>CDV Dashboard</span></a>
+              <a href="index.html" class="site_title"><i class="fa fa-users"></i> <span>Service Editor</span></a>
             </div>
 
             <div class="clearfix"></div>
@@ -64,9 +64,10 @@
               <div class="menu_section">
                 <h3>Menu</h3>
                 <ul class="nav side-menu">
+                  <li><a href="index.html"><i class="fa fa-home"></i> Home </a></li>
                   <li><a><i class="fa fa-edit"></i> Services <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="index.html">Available Services</a></li>
+                      <li><a href="services-list.html">Available Services</a></li>
                       <li><a href="edit-service.html">Add New Service</a></li>
                     </ul>
                   </li>
@@ -182,7 +183,7 @@
     	})
 
 	    function CreateNewService(){
-	    	window.location.href = window.location.href+"index.html";
+	    	window.location.href = window.location.href+"services-list.html";
 	    };
 	    
 	</script>
@@ -235,8 +236,8 @@
 				        data: JSON.stringify(editor.getValue()),
 				    }).then(function() {
 				    	 //location.reload();
-				    	 //console.log("yuri: "+window.location.origin+"/service-editor/index.html");
-				    	 window.location.href = window.location.origin+"/service-editor/index.html";
+				    	 //console.log("yuri: "+window.location.origin+"/service-editor/services-list.html");
+				    	 window.location.href = window.location.origin+"/service-editor/services-list.html";
 				    });
 		    	}
 		      });
