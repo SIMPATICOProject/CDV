@@ -4271,8 +4271,8 @@ table thead .checkbox.radio { margin-top:-7px;margin-top:-21px; }
 	font-style: italic;
 }
 
-.modal-body p {
-	font-size: 20px;
+.modal-body p{
+	font-size: 18px;
 	display: inline;
 }
 
@@ -4283,4 +4283,12 @@ table thead .checkbox.radio { margin-top:-7px;margin-top:-21px; }
 		border-radius: 20%;
 		line-height: 2;
 		line-widht: 2;
+		white-space: nowrap;
 	}
+	
+.keywords-set div {
+	display: inline;
+	margin-right: 1em;
+	}
+	
+	

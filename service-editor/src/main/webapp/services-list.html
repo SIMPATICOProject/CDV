@@ -59,17 +59,15 @@
             <h2 id="service-puropose-title">Provider: </h2>
             <p id="service-puropose-content"></p>
             </br>
-            <h2 id="service-provider-title">Purpose: </h2>
-            <p id="service-provider-content"></p>
+            <h2 id="service-purpose-title">Purpose: </h2>
+            <p id="service-purpose-content"></p>
             </br>
             <h2 id="service-link-title">Link: </h2>
             <a style="font-size: 20px;cursor: pointer;color:#0055FF" id="service-link-content"></a>
           </div>
-          <div class="keywords-set modal-body" style="border-top: 1px solid #e5e5e5;">
+          <div class="keywords-set modal-body" style="border-top: 1px solid #e5e5e5;word-break: break-all;">
           	<h2 id="service-data-title" style="font-style: normal">Data Processed: </h2>
-          	<p>bubble test</p>
-          	<p>bubble test2</p>
-          	<p>bubble test3</p>
+
           </div>
 
           <div class="modal-footer">
@@ -459,7 +457,15 @@
 	    	$("#service-provider-content").text(provider);
 	    	//set the purpose
 	    	$("#service-purpose-content").text(purpose);
-	    	
+	    	//set the keyword bubbles
+	    	console.log("prove di recapito bolle: "+services_info[ind].publicServiceIsDescribedAt[0].dataMapping.length);
+	    	console.log("valore 1: "+services_info[ind].publicServiceIsDescribedAt[0].dataMapping[0].name);
+	    	console.log("valore 2: "+services_info[ind].publicServiceIsDescribedAt[0].dataMapping[1].name);
+	    	var len = services_info[ind].publicServiceIsDescribedAt[0].dataMapping.length;
+	    	for(i = 0; i < len; i++){
+	    		$('.keywords-set').append("<div><p>"+services_info[ind].publicServiceIsDescribedAt[0].dataMapping[i].name
+	    				+"</p></div>");
+	    	}
 	    };
 	</script>
 	<script src="vendors/pdfmake/build_dir/pdfmake.min.js"></script>
