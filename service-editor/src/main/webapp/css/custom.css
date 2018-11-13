@@ -4291,4 +4291,10 @@ table thead .checkbox.radio { margin-top:-7px;margin-top:-21px; }
 	margin-right: 1em;
 	}
 	
+.sidebar-scroll-y {
+	overflow-y: scroll !important;
+	overflow-x: hidden !important;
+}	
+	
+	
 	
