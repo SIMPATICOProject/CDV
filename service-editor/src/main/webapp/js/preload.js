@@ -1,3 +1,47 @@
+/*fill the PDataFields modal on click*/
+function fillPDFModal(cat, con){
+	console.log("inside fillPDFModal......................");
+	//disabling service modal section
+	$('#service-div-1').hide();
+	$('#service-div-2').hide();
+	//enabling pdf modal section
+	$('#pdf-div').show();
+	
+	//obtaining pdf info from session variable
+	var pdfData = sessionStorage.getItem("infoPDF");
+	pdfData = JSON.parse(pdfData);
+	
+	//obtaining pdf info fields
+	var name = pdfData[cat].concepts[con].name;
+	var descr = pdfData[cat].concepts[con].description;
+	var id = pdfData[cat].concepts[con].id;
+	var category = pdfData[cat].concepts[con].category;
+	var ppdata = pdfData[cat].concepts[con].privatePData;
+	var stype = pdfData[cat].concepts[con].semanticType;
+	var uri = pdfData[cat].concepts[con].uri;
+	
+	//flushing DOM
+	$("#service-title").text("");
+	$("#service-description-content").text("");
+	
+	$("#pdf-id-content").text("");
+	$("#pdf-category-content").text("");
+	$("#pdf-privatePData-content").text("");
+	$("#pdf-semanticType-content").text("");
+	$("#pdf-uri-content").text("");
+	
+	//filling DOM
+	$("#service-title").text(name);
+	$("#service-description-content").text(descr);
+	
+	$("#pdf-id-content").text(id);
+	$("#pdf-category-content").text(category);
+	$("#pdf-privatePData-content").text(ppdata);
+	$("#pdf-semanticType-content").text(stype);
+	$("#pdf-uri-content").text(uri);
+	
+}
+
 /*append categories and concept to the sidebar PDataFields menu*/
 function appendPDFields(data, mod){
 	
@@ -11,7 +55,7 @@ function appendPDFields(data, mod){
 	console.log("ingresso in appendPDFields");
 	console.log("valore di input appendPDFields: ");
 	console.log(data);
-	//RIMODULARE LE APPEND COME STRINGA HTML ED UNICA APPEND FINALE!!!!
+	
 	for(i = 0; i < data.length; i++){ //scorro le categorie
 		
 		cat = data[i].category;
@@ -20,7 +64,7 @@ function appendPDFields(data, mod){
 		//$('#pdf-section').append("<li><a>"+cat+"<span class=\"fa fa-chevron-down\"></span></a>");
 		htmlString += "<li><a>"+cat+"<span class=\"fa fa-chevron-down\"></span></a>";
 		
-		console.log("numero di concetti per la categoria "+cat+": "+data[i].concepts.lenght);
+		console.log("numero di concetti per la categoria "+cat+": "+data[i].concepts.length);
 		
 		if(data[i].concepts.length > 0){	//se presenti, scorro i concetti appartenenti alle singole categorie
 			
@@ -32,11 +76,12 @@ function appendPDFields(data, mod){
 				con = data[i].concepts[j].name;
 				if(j == 0){
 					//$('#pdf-section').append("<li class=\"sub_menu\"><a href=\"#\">"+con+"</a></li>");
-					htmlString += "<li class=\"sub_menu\"><a href=\"#\">"+con+"</a></li>";
+					htmlString += "<li class=\"sub_menu\"><a href=\"#\" onclick=\"javascript:fillPDFModal("+i+","+j+")\" data-toggle=\"modal\" data-target=\".bs-example-modal-lg\">"+
+					con+"</a></li>";
 				}
 				else{
 					//$('#pdf-section').append("<li><a href=\"#\">"+con+"</a></li>");
-					htmlString += "<li><a href=\"#\">"+con+"</a></li>";
+					htmlString += "<li><a href=\"#\" onclick=\"javascript:fillPDFModal("+i+","+j+")\" data-toggle=\"modal\" data-target=\".bs-example-modal-lg\">"+con+"</a></li>";
 				}
 			}
 		}
@@ -73,4 +118,5 @@ function getPDFields(){
 
 	 });
 }
+
 
