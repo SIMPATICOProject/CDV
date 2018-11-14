@@ -390,13 +390,42 @@
 // 	    	console.log("id0: "+data[3].publicServiceID);
 // 	    	console.log(data[3]);
 
+			var name = "";
+			var descr = "";
+			var id = "";
+
 	    	for(i = 0; i < data.length; i++){
-	    		psi = data[i].publicServiceID;
-	    		$('#datatable-buttons').append("<tr id=\"info-row-"+i+"\"><td>"+data[i].publicServiceName+"</td><td>"+
-	    				data[i].humanReadableDescription[0].description+
+	    		
+	    		try{
+					id = data[i].publicServiceID;
+					//console.log("id ok: "+id);
+				}catch(err){
+					console.log("Service missing publicServiceID, Error: "+err.message);
+				}
+				try{
+					name = data[i].publicServiceName;
+					//console.log("name ok: "+name);
+				}catch(err){
+					console.log("Service missing publicServiceName, Error: "+err.message);
+				}
+				try{
+					descr = data[i].humanReadableDescription[0].description;
+					//console.log("descr ok: "+descr);
+				}catch(err){
+					console.log("Service missing humanReadableDescription.description, Error: "+err.message);
+				}
+	    		
+				//se è presente un servizio senza id lo si interpreta come corrotto e non si visualizza in lista
+				if(id == ""){
+					console.log("Service missing publicServiceID, Error: not assigned");
+				}
+				else{
+	    			$('#datatable-buttons').append("<tr id=\"info-row-"+i+"\"><td>"+name+"</td><td>"+
+	    				descr+
 	    				"</td><td style=\"text-align: center;vertical-align: middle;\"><a href=\"#\" onclick=\"javascript:fillServiceModal("+i+")\" data-toggle=\"modal\" data-target=\".bs-example-modal-lg\"><i style=\"cursor: pointer;\" class=\"fa fa-info-circle fa-2x\"></i></a></td><td style=\"text-align: center\"><button id=\""+
-	    				data[i].publicServiceID+"\" value=\""+data[i].publicServiceName+
-	    				"\" class=\"btn btn-primary\" onClick=\"EditService(\'"+psi+"\')\">EDIT</button></td></tr>");
+	    				id+"\" value=\""+name+
+	    				"\" class=\"btn btn-primary\" onClick=\"EditService(\'"+id+"\')\">EDIT</button></td></tr>");
+	    		}
 	    	}
 	    
 	    	//Caricamento sequenziale dei rimanenti script per garanzia funzionamento globale

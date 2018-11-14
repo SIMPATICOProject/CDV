@@ -327,6 +327,12 @@
 		      document.getElementById('submit').addEventListener('click',function() {
 	
 		    	if (confirm('Il servizio verrà modificato, sei sicuro di voler procedere?')){
+		    		
+		    		var payload = editor.getValue();
+		    		
+		    		console.log("UPDATING SERVICE, submitting to CDV: ");
+		    		console.log(payload);
+		    		
 		    		//PUT - update_apipath
 		    		var url_ = "http://"+app_parameters.host_param+":"+app_parameters.port_param+"/"+app_parameters.update_apipath+serviceID;
 		    		console.log("composed url: "+url_);
@@ -335,11 +341,16 @@
 				        method: 'PUT',
 				        contentType: "application/json",
 				        data: JSON.stringify(editor.getValue()),
-				    }).then(function() {
-				    	 //location.reload();
-				    	 //console.log("yuri: "+window.location.origin+"/service-editor/services-list.html");
-				    	 window.location.href = window.location.origin+"/service-editor/services-list.html";
-				    });
+				    }).done(function(data) {
+				    	console.log("RIPOSTA PUT MODIFICA NUOVO SERVIZIO: "+data);
+				    	console.log(data);
+				    	
+				    	var nome = payload.publicServiceName.replace(" ","-");
+				    	window.location.href = window.location.origin+"/service-editor/edit-service.html?"+nome+"&"+payload.publicServiceID;
+				    
+				    }).fail(function() {
+				      alert( "Errors occurred in service update. Please be careful and try again..." );
+				    })
 		    	}
 		      });
 		      
@@ -385,7 +396,13 @@
 	      // Hook up the submit button to log to the console
 	      document.getElementById('submit').addEventListener('click',function() {
 
-	    	if (confirm( 'Il servizio verrà creato, sei sicuro di voler procedere?')){    		
+	    	if (confirm( 'Il servizio verrà creato, sei sicuro di voler procedere?')){  
+	    		
+	    		var payload = editor.getValue();
+	    		
+	    		console.log("REGISTERING NEW SERVICE, submitting to CDV: ");
+	    		console.log(payload);
+	    		
 	    		//POST - create_apipath
 	    		var url_ = "http://"+app_parameters.host_param+":"+app_parameters.port_param+
 	    					"/"+app_parameters.create_apipath;
@@ -395,9 +412,16 @@
 			        contentType: "application/json",
 			        data: JSON.stringify(editor.getValue()),
 			        //success: function() {location.reload();}
-			    }).then(function() {
-			    	window.location.href = window.location.origin+"/service-editor/";
-			    });
+			    }).done(function(data) {
+			    	console.log("RIPOSTA POST REGISTRAZIONE NUOVO SERVIZIO: "+data);
+			    	console.log(data);
+			    	
+			    	var nome = payload.publicServiceName.replace(" ","-");
+			    	window.location.href = window.location.origin+"/service-editor/edit-service.html?"+nome+"&"+payload.publicServiceID;
+			    
+			    }).fail(function() {
+			      alert( "Errors occurred in service registration. Please be careful and try again..." );
+			    })
 	    	}
 	      });
 	      
