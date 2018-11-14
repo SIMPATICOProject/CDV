@@ -251,7 +251,7 @@ public class ServiceRegistryServiceTest {
 
 		// Mocking ServiceEntry methods
 		when(serviceReport.getCount()).thenReturn(4);
-		when(serviceReport.getSector()).thenReturn("type");
+		when(serviceReport.getCategory()).thenReturn("type");
 		
 
 		List<ServiceReport> entries = new ArrayList<ServiceReport>();
@@ -264,7 +264,7 @@ public class ServiceRegistryServiceTest {
 		// Assert expected results
 		Assert.assertNotNull(result);
 		Assert.assertTrue(result.size() == 1);
-		Assert.assertNotNull(result.get(0).getSector());
+		Assert.assertNotNull(result.get(0).getCategory());
 		Assert.assertNotNull(result.get(0).getCount());
 		
 	}
@@ -275,7 +275,7 @@ public class ServiceRegistryServiceTest {
 
 		// Mocking ServiceEntry methods
 		when(serviceReport.getCount()).thenReturn(4);
-		when(serviceReport.getSector()).thenReturn("sector");
+		when(serviceReport.getCategory()).thenReturn("sector");
 		
 
 		List<ServiceReport> entries = new ArrayList<ServiceReport>();
@@ -288,7 +288,7 @@ public class ServiceRegistryServiceTest {
 		// Assert expected results
 		Assert.assertNotNull(result);
 		Assert.assertTrue(result.size() == 1);
-		Assert.assertNotNull(result.get(0).getSector());
+		Assert.assertNotNull(result.get(0).getCategory());
 		Assert.assertNotNull(result.get(0).getCount());
 		
 	}

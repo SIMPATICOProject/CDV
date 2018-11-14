@@ -27,23 +27,23 @@ public class ServiceReport {
 	public ServiceReport() {
 	}
 
-	public ServiceReport(String sector, int count) {
+	public ServiceReport(String category, int count) {
 		super();
 
-		this.sector = (sector.equalsIgnoreCase("")) ? "other" : sector;
+		this.category = (category.equalsIgnoreCase("")) ? "other" : category;
 
 		this.count = count;
 	}
 
-	private String sector;
+	private String category;
 	private int count;
 
-	public String getSector() {
-		return sector;
+	public String getCategory() {
+		return category;
 	}
 
-	public void setSector(String sector) {
-		this.sector = (sector.equalsIgnoreCase("")) ? "other" : sector;
+	public void setCategory(String category) {
+		this.category = (category.equalsIgnoreCase("")) ? "other" : category;
 	}
 
 	public int getCount() {

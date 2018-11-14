@@ -199,7 +199,7 @@ public class ServiceEntryDAO {
 				.aggregate(Arrays.asList((DBObject) new BasicDBObject("$unwind", "$publicServiceSector"),
 						(DBObject) new BasicDBObject("$group",
 								new BasicDBObject("_id", "$publicServiceSector")
-										.append("sector", new BasicDBObject("$first", "$publicServiceSector"))
+										.append("category", new BasicDBObject("$first", "$publicServiceSector"))
 										.append("count", new BasicDBObject("$sum", 1)))))
 				.results();
 
@@ -229,7 +229,7 @@ public class ServiceEntryDAO {
 				.aggregate(Arrays.asList((DBObject) new BasicDBObject("$unwind", "$publicServiceTypeProp"),
 						(DBObject) new BasicDBObject("$group",
 								new BasicDBObject("_id", "$publicServiceTypeProp")
-										.append("sector", new BasicDBObject("$first", "$publicServiceTypeProp"))
+										.append("category", new BasicDBObject("$first", "$publicServiceTypeProp"))
 										.append("count", new BasicDBObject("$sum", 1)))))
 				.results();
 
