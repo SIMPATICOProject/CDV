@@ -470,13 +470,44 @@
 // 	    	var descr =  $("#info-row-"+ind).children().eq(1).text();
 
 	    	//titolo e descrizione disponibili presso jquery global var services_info
-	    	var titolo = services_info[ind].publicServiceName;
-	    	var descr = services_info[ind].humanReadableDescription[0].description;
-	    	var keyword = services_info[ind].publicServiceKeyword;
-	    	var purpose = services_info[ind].publicServiceIsDescribedAt[0].purpose;
-	    	var provider = services_info[ind].serviceProviderId;
-	    	var link = services_info[ind].serviceUri;
-	    	var keywords_set = 0;
+	    	var titolo = "";
+	    	var descr = "";
+	    	var keyword = "";
+	    	var purpose = "";
+	    	var provider = "";
+	    	var link = "";
+	    	var htmlString = "";
+	    	
+	    	try{
+	    		var titolo = services_info[ind].publicServiceName;
+	    	}catch(err){
+	    		 console.log("Missing publicServiceName field, Error: "+err.message);
+	    	}
+	    	try{
+	    		var descr = services_info[ind].humanReadableDescription[0].description;
+	    	}catch(err){
+	    		 console.log("Missing humanReadableDescription.description field, Error: "+err.message);
+	    	}
+	    	try{
+	    		var keyword = services_info[ind].publicServiceKeyword;
+	    	}catch(err){
+	    		 console.log("Missing publicServiceKeyword field, Error: "+err.message);
+	    	}
+	    	try{
+	    		var purpose = services_info[ind].publicServiceIsDescribedAt[0].purpose;
+	    	}catch(err){
+	    		 console.log("Missing publicServiceIsDescribedAt.purpose field, Error: "+err.message);
+	    	}
+	    	try{
+	    		var provider = services_info[ind].serviceProviderId;
+	    	}catch(err){
+	    		 console.log("Missing serviceProviderId field, Error: "+err.message);
+	    	}
+	    	try{
+	    		var link = services_info[ind].serviceUri;
+	    	}catch(err){
+	    		 console.log("Missing serviceUri field, Error: "+err.message);
+	    	}
 	    	
 	    	console.log("titolo: "+titolo);
 	    	console.log("descrizione: "+descr);
@@ -491,16 +522,19 @@
 	    	$("#service-provider-content").text(provider);
 	    	$("#service-purpose-content").text(purpose);
 	    	
-	    	console.log("prove di recapito bolle: "+services_info[ind].publicServiceIsDescribedAt[0].dataMapping.length);
-	    	console.log("valore 1: "+services_info[ind].publicServiceIsDescribedAt[0].dataMapping[0].name);
-	    	console.log("valore 2: "+services_info[ind].publicServiceIsDescribedAt[0].dataMapping[1].name);
-	    	
-	    	var len = services_info[ind].publicServiceIsDescribedAt[0].dataMapping.length;
+	    	//console.log("prove di recapito bolle: "+services_info[ind].publicServiceIsDescribedAt[0].dataMapping.length);
+	    	//console.log("valore 1: "+services_info[ind].publicServiceIsDescribedAt[0].dataMapping[0].name);
+	    	//console.log("valore 2: "+services_info[ind].publicServiceIsDescribedAt[0].dataMapping[1].name);
 	    	$('.keywords-set').append("<h2 id=\"service-data-title\" style=\"font-style: normal\">Data Processed: </h2>")
-	    	var htmlString = "";
-	    	for(i = 0; i < len; i++){
-	    		htmlString += "<div><p>"+services_info[ind].publicServiceIsDescribedAt[0].dataMapping[i].name
-	    				+"</p></div>";
+	    	try{
+		    	var len = services_info[ind].publicServiceIsDescribedAt[0].dataMapping.length;
+		    	
+		    	for(i = 0; i < len; i++){
+		    		htmlString += "<div><p>"+services_info[ind].publicServiceIsDescribedAt[0].dataMapping[i].name
+		    				+"</p></div>";
+		    	}
+	    	}catch(err){
+	    		console.log("Missing publicServiceIsDescribedAt.dataMapping field, Error: "+err.message);
 	    	}
 	    	$('.keywords-set').append(htmlString);
 	    };
