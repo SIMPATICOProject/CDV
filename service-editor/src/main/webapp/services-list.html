@@ -64,11 +64,15 @@
             <p id="service-purpose-content"></p>
             </br>
             <h2 id="service-link-title">Link: </h2>
-            <a style="font-size: 20px;cursor: pointer;color:#0055FF" id="service-link-content"></a>
+            <a style="font-size: 20px;cursor: pointer;color:#0055FF" id="service-link-content" target="_blank"></a>
           </div>
-          <div  id="service-div-2" class="keywords-set modal-body" style="border-top: 1px solid #e5e5e5;word-break: break-all;">
+          <div id="service-div-2" class="modal-body" style="border-top: 1px solid #e5e5e5;word-break: break-all;">
           	<h2 id="service-data-title" style="font-style: normal">Data Processed: </h2>
+          	<div class="keywords-set" style="padding-top: 1em;text-align: center;">
+          		
+          	</div>
           </div>
+
 <!-- SERVICE-LIST SECTION -->
 <!-- PDFIELDS SECTION -->
 			<div id="pdf-div" class="modal-body" style="border-top: 1px solid #e5e5e5;">
@@ -518,6 +522,7 @@
 	    	$("#service-title").text(titolo);	    	
 	    	$("#service-description-content").text(descr);	    	
 	    	$("#service-link-content").text(link);
+	    	$("#service-link-content").attr("href", link);
 	    	$("#service-keyword-content").text(keyword);
 	    	$("#service-provider-content").text(provider);
 	    	$("#service-purpose-content").text(purpose);
@@ -525,7 +530,7 @@
 	    	//console.log("prove di recapito bolle: "+services_info[ind].publicServiceIsDescribedAt[0].dataMapping.length);
 	    	//console.log("valore 1: "+services_info[ind].publicServiceIsDescribedAt[0].dataMapping[0].name);
 	    	//console.log("valore 2: "+services_info[ind].publicServiceIsDescribedAt[0].dataMapping[1].name);
-	    	$('.keywords-set').append("<h2 id=\"service-data-title\" style=\"font-style: normal\">Data Processed: </h2>")
+	    	//$('.keywords-set').append("<h2 id=\"service-data-title\" style=\"font-style: normal\">Data Processed: </h2>")
 	    	try{
 		    	var len = services_info[ind].publicServiceIsDescribedAt[0].dataMapping.length;
 		    	
