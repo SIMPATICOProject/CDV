@@ -98,4 +98,6 @@ public interface IAccountService {
 
 	public abstract Response downloadAccountAndPData(String accountId);
 
+	public abstract Response getAccountReport(String accountId);
+
 }

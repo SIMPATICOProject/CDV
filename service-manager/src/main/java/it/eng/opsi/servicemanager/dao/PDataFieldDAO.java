@@ -121,8 +121,7 @@ public class PDataFieldDAO {
 		}
 		return list;
 	}
-	
-	
+
 	public List<PDataField> getPDataTree_() {
 		MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
 		DB db = dbSingleton.getDB();
@@ -143,28 +142,24 @@ public class PDataFieldDAO {
 		}
 		return list;
 	}
-	
+
 	public List<PDataCategory> getPDataTree() {
 		MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
 		DB db = dbSingleton.getDB();
 		DBCollection coll = db.getCollection("pDataFields");
 		List<PDataCategory> list = new ArrayList<PDataCategory>();
-		BasicDBObject name=BasicDBObject.parse("{name: { $arrayElemAt: [ \"$metadata.name\", 0 ] }}");
-		Iterable<DBObject> output = coll.aggregate(Arrays.asList(
-		        (DBObject) new BasicDBObject("$group", new BasicDBObject("_id", "$pcategory")
-		        		.append("category", new BasicDBObject("$first", "$pcategory"))
-		        		.append("concepts", new BasicDBObject("$push", name
-		        				.append("id", "$id")
-		        				.append("description", "$description")
-		        				.append("category", "$pcategory")
-		        				.append("semanticType", "$semanticType")))
-		        		)
-		        )).results();
+		BasicDBObject name = BasicDBObject.parse("{name: { $arrayElemAt: [ \"$metadata.name\", 0 ] }}");
+		Iterable<DBObject> output = coll
+				.aggregate(Arrays.asList((DBObject) new BasicDBObject("$group", new BasicDBObject("_id", "$pcategory")
+						.append("category", new BasicDBObject("$first", "$pcategory"))
+						.append("concepts", new BasicDBObject("$push",
+								name.append("id", "$id").append("description", "$description")
+										.append("category", "$pcategory").append("semanticType", "$semanticType"))))))
+				.results();
 
 		PDataCategory pdataCategory;
-		for (DBObject dbObject : output)
-		{
-					
+		for (DBObject dbObject : output) {
+
 			try {
 				pdataCategory = DAOUtils.dbObj2obj(dbObject, PDataCategory.class);
 				list.add(pdataCategory);
@@ -172,11 +167,11 @@ public class PDataFieldDAO {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 		}
-		
+
 		return list;
-		
+
 	}
 
 }

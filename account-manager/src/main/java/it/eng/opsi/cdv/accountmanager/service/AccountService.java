@@ -22,6 +22,8 @@
  *******************************************************************************/
 package it.eng.opsi.cdv.accountmanager.service;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,6 +69,7 @@ import it.eng.opsi.cdv.accountmanager.model.Account;
 import it.eng.opsi.cdv.accountmanager.model.AccountAlreadyPresentException;
 import it.eng.opsi.cdv.accountmanager.model.AccountManagerException;
 import it.eng.opsi.cdv.accountmanager.model.AccountNotFoundException;
+import it.eng.opsi.cdv.accountmanager.model.AccountReport;
 import it.eng.opsi.cdv.accountmanager.model.AccountUtilsException;
 import it.eng.opsi.cdv.accountmanager.model.ConsentRecordNotFoundException;
 import it.eng.opsi.cdv.accountmanager.model.Contact;
@@ -1904,6 +1907,44 @@ public class AccountService implements IAccountService {
 		} finally {
 			if (response != null)
 				response.close();
+		}
+
+	}
+	
+	@CoberturaIgnore
+	@Override
+	@GET
+	@Path("/accounts/{accountId}/report")
+	@Produces({ MediaType.APPLICATION_JSON })
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
+	)
+	public Response getAccountReport( @PathParam("accountId") String accountId) {
+
+		try {
+
+			AccountReport report = dao.getAccountReport_SL_CR(accountId);
+			report.setCreated(ZonedDateTime.now(ZoneId.of("UTC")));
+
+			return Response.status(Response.Status.OK).entity(DAOUtils.obj2Json(report, AccountReport.class)).build();
+
+		} catch (AccountUtilsException e) {
+
+			e.printStackTrace();
+			ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
+					e.getClass().getSimpleName(), e.getMessage());
+
+			return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			ErrorResponse error = new ErrorResponse(
+					String.valueOf(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()), e.getClass().getSimpleName(),
+					e.getMessage());
+
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error.toJson()).build();
 		}
 
 	}

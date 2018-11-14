@@ -28,6 +28,10 @@ import org.bson.types.ObjectId;
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.reflect.TypeToken;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
 import com.mongodb.MongoWriteException;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
@@ -55,6 +59,7 @@ import it.eng.opsi.cdv.accountmanager.connection.MongoDBConnection;
 import it.eng.opsi.cdv.accountmanager.model.Account;
 import it.eng.opsi.cdv.accountmanager.model.AccountAlreadyPresentException;
 import it.eng.opsi.cdv.accountmanager.model.AccountNotFoundException;
+import it.eng.opsi.cdv.accountmanager.model.AccountReport;
 import it.eng.opsi.cdv.accountmanager.model.AccountUtilsException;
 import it.eng.opsi.cdv.accountmanager.model.ConsentRecordNotFoundException;
 import it.eng.opsi.cdv.accountmanager.model.AccountManagerException;
@@ -72,6 +77,7 @@ import it.eng.opsi.cdv.accountmanager.model.Telephone;
 import it.eng.opsi.cdv.accountmanager.model.TelephoneNotFoundException;
 import it.eng.opsi.cdv.accountmanager.utils.DAOUtils;
 import it.eng.opsi.cdv.accountmanager.utils.JWTUtils;
+
 
 public class AccountDAO {
 
@@ -2063,6 +2069,51 @@ public class AccountDAO {
 			throw new ConsentRecordNotFoundException("The Source Consent Record with slr: " + slrId
 					+ " for the Account Id: " + accountId + " was not found");
 
+	}
+	
+	public AccountReport getAccountReport_SL_CR(String accountId) throws AccountManagerException{
+		
+		AggregateIterable<Document> output = null;
+		MongoCollection<Document> collection = null;
+		Document match = null;
+		try {
+
+			MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
+			MongoDatabase db = dbSingleton.getDB();
+			collection = db.getCollection(collectionName);
+            
+            Document project = new Document("$project", new Document("nslr", new Document("$size", "$serviceLinkRecords")).append("ncr", new Document("$size", "$sinkConsentRecords")));
+			
+			try {
+
+				match = new Document("$match", new Document("username", accountId));
+				output = collection.aggregate(Arrays.asList(match, project));
+			} catch (IllegalArgumentException e) {
+
+				
+					throw new AccountManagerException("There was an error while getting the Account");
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new AccountManagerException("There was an error while getting Account Report");
+		}
+
+		Document d = null;
+		if (output != null && (d = output.first()) != null) {
+
+			try {
+				return DAOUtils.json2Obj(d.toJson(), AccountReport.class);
+			} catch (AccountUtilsException e) {
+				e.printStackTrace();
+				throw new AccountManagerException("There was an error while getting report");
+			}
+
+		} else
+			throw new AccountManagerException(
+					"There was an error while getting report");
+		
 	}
 
 }

@@ -57,9 +57,9 @@ import it.eng.opsi.cdv.pdatarepository.model.AccountPData;
 import it.eng.opsi.cdv.pdatarepository.model.DataSecurityManagerCallException;
 import it.eng.opsi.cdv.pdatarepository.model.PDataEntry;
 import it.eng.opsi.cdv.pdatarepository.model.PDataNotFoundException;
+import it.eng.opsi.cdv.pdatarepository.model.PDataReport;
 import it.eng.opsi.cdv.pdatarepository.model.PDataRepositoryException;
 import it.eng.opsi.cdv.pdatarepository.model.PDataUtilsException;
-import it.eng.opsi.cdv.pdatarepository.model.PDataValueAlreadyPresentException;
 import it.eng.opsi.cdv.pdatarepository.model.PDataWriteMode;
 import it.eng.opsi.cdv.pdatarepository.utils.DAOUtils;
 import ch.qos.logback.classic.Level;
@@ -757,6 +757,55 @@ public class PDataDAO {
 		}
 
 	}
+	
+	
+	
+public List<PDataReport> getDataReport(String accountId) throws PDataRepositoryException{
+		
+		AggregateIterable<Document> output = null;
+		MongoCollection<Document> collection = null;
+		ArrayList<PDataReport> result = new ArrayList<PDataReport>();
+		Document match = null;
+		try {
+
+			MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
+			MongoDatabase db = dbSingleton.getDB();
+			collection = db.getCollection(collectionName);
+            
+            Document project = new Document("$project", new Document("pData", 1));
+            Document unwind = new Document("$unwind", "$pData");
+            Document group = new Document("$group", new Document("_id", "$pData.name").append("name", new Document("$first", "$pData.name")).append("count", new Document("$sum", 1)));
+			try {
+
+				match = new Document("$match", new Document("accountId", accountId));
+				output = collection.aggregate(Arrays.asList(match, project,unwind,group));
+			} catch (IllegalArgumentException e) {
+
+					throw new PDataRepositoryException("There was an error while getting PData Report");
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new PDataRepositoryException("There was an error while getting PDataReport");
+		}
+
+			
+		
+		for (Document d : output) {
+			try {
+				result.add(DAOUtils.json2Obj(d.toJson(), PDataReport.class));
+			} catch (PDataUtilsException e) {
+				e.printStackTrace();
+				throw new PDataRepositoryException("There was an error while getting report");
+			}
+		}
+		
+		
+		return result;
+		
+	}
+	
 
 	public void finalizeDAO() {
 		MongoDBConnection.onFinalize();

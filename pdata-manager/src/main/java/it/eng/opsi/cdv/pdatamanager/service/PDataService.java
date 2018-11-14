@@ -77,6 +77,7 @@ import it.eng.opsi.cdv.pdatamanager.utils.PropertyManager;
 import it.eng.opsi.cdv.pdatarepository.api.PDataRepository;
 import it.eng.opsi.cdv.pdatarepository.model.PDataEntry;
 import it.eng.opsi.cdv.pdatarepository.model.PDataNotFoundException;
+import it.eng.opsi.cdv.pdatarepository.model.PDataReport;
 import it.eng.opsi.cdv.pdatarepository.model.PDataRepositoryException;
 import it.eng.opsi.cdv.pdatarepository.model.PDataUtilsException;
 import it.eng.opsi.cdv.pdatarepository.model.PDataWriteMode;
@@ -1456,6 +1457,67 @@ public class PDataService implements IPDataService {
 					"There was an error while calling the existsAccount service of Account Manager");
 		}
 
+	}
+	
+	
+	@CoberturaIgnore
+	@Override
+	@GET
+	@Path("/pData/report")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON })
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public Response getPDataReport( @HeaderParam("accountId") String accountId) {
+
+		List<PDataReport> entries = null;
+		if (StringUtils.isNotBlank(accountId)) {
+
+			try {
+
+				if (callExistsAccount(accountId)) {
+
+						entries = repo.getPDataReport(accountId);
+						return Response.status(Response.Status.OK)
+								.entity(DAOUtils.obj2Json(entries, new TypeToken<ArrayList<PDataReport>>() {
+								}.getType())).build();
+
+
+				} else {
+
+					ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.NOT_FOUND.getStatusCode()),
+							"AccountNotFound",
+							"The account with Id: " + accountId + " was not found in Account Manager");
+					return Response.status(Response.Status.NOT_FOUND).entity(error.toJson()).build();
+				}
+
+			} catch (PDataRepositoryException e) {
+				ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.NOT_FOUND.getStatusCode()),
+						e.getClass().getSimpleName(), e.getMessage());
+
+				return Response.status(Response.Status.NOT_FOUND).entity(error.toJson()).build();
+
+			} catch (Exception e) {
+
+				e.printStackTrace();
+				ErrorResponse error = new ErrorResponse(
+						String.valueOf(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()),
+						e.getClass().getSimpleName(), e.getMessage());
+
+				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error.toJson()).build();
+
+			}
+
+		} else {
+
+			ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
+					"AccountIdMissing", "The account Id is empty or missing");
+			return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
+
+		}
 	}
 
 }

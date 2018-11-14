@@ -53,30 +53,13 @@ import io.swagger.annotations.SwaggerDefinition;
 
 @Path("/v1")
 @Api(value = "/ServiceRegistryService")
-@SwaggerDefinition(
-        info = @io.swagger.annotations.Info(
-                description = "XXX",
-                version = "XXX",			//bypassato da web.xml
-                title = "Service Manager ServiceRegistry",	//bypassato da web.xml
-                termsOfService = "XXX",
-                contact = @io.swagger.annotations.Contact(
-                   name = "XXX", 
-                   email = "XXX", 
-                   url = "XXX"
-                ),
-                license = @io.swagger.annotations.License(
-                   name = "XXX", 
-                   url = "XXX"
-                )
-        ),
-        consumes = {"application/json", "application/xml"},
-        produces = {"application/json", "application/xml"},
-        schemes = {SwaggerDefinition.Scheme.HTTP, SwaggerDefinition.Scheme.HTTPS},
-        tags = {
-        		@io.swagger.annotations.Tag(name = "XXX", description = "XXX")
-        }, 
-        externalDocs = @io.swagger.annotations.ExternalDocs(value = "XXX", url = "XXX")
-)
+@SwaggerDefinition(info = @io.swagger.annotations.Info(description = "XXX", version = "XXX", // bypassato da web.xml
+		title = "Service Manager ServiceRegistry", // bypassato da web.xml
+		termsOfService = "XXX", contact = @io.swagger.annotations.Contact(name = "XXX", email = "XXX", url = "XXX"), license = @io.swagger.annotations.License(name = "XXX", url = "XXX")), consumes = {
+				"application/json",
+				"application/xml" }, produces = { "application/json", "application/xml" }, schemes = {
+						SwaggerDefinition.Scheme.HTTP, SwaggerDefinition.Scheme.HTTPS }, tags = {
+								@io.swagger.annotations.Tag(name = "XXX", description = "XXX") }, externalDocs = @io.swagger.annotations.ExternalDocs(value = "XXX", url = "XXX"))
 public class ServiceRegistryService {
 	static final String api_version = "1.0";
 	ServiceEntryDAO dao = new ServiceEntryDAO();
@@ -90,8 +73,7 @@ public class ServiceRegistryService {
 	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
-	)
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST") })
 	public List<ServiceEntry> getServices() {
 		return dao.findAll();
 	}
@@ -103,9 +85,9 @@ public class ServiceRegistryService {
 	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
-	)
-	public ServiceEntry create(@ApiParam(name = "service", value = "descrizione", required = true) ServiceEntry service) {
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST") })
+	public ServiceEntry create(
+			@ApiParam(name = "service", value = "descrizione", required = true) ServiceEntry service) {
 		return dao.create(service);
 	}
 
@@ -115,9 +97,9 @@ public class ServiceRegistryService {
 	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
-	)
-	public List<ServiceEntry> findServicesByName(@ApiParam(name = "regex", value = "descrizione", required = true) @QueryParam("regex") String regex) {
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST") })
+	public List<ServiceEntry> findServicesByName(
+			@ApiParam(name = "regex", value = "descrizione", required = true) @QueryParam("regex") String regex) {
 		return dao.findByName(regex);
 	}
 
@@ -127,9 +109,9 @@ public class ServiceRegistryService {
 	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
-	)
-	public ServiceEntry findById(@ApiParam(name = "id", value = "descrizione", required = true) @PathParam("id") String id) {
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST") })
+	public ServiceEntry findById(
+			@ApiParam(name = "id", value = "descrizione", required = true) @PathParam("id") String id) {
 		return dao.findById(id);
 	}
 
@@ -140,9 +122,9 @@ public class ServiceRegistryService {
 	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
-	)
-	public ServiceEntry update(@ApiParam(name = "service", value = "descrizione", required = true) ServiceEntry service, @ApiParam(name = "id", value = "descrizione", required = true) @PathParam("id") String id) {
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST") })
+	public ServiceEntry update(@ApiParam(name = "service", value = "descrizione", required = true) ServiceEntry service,
+			@ApiParam(name = "id", value = "descrizione", required = true) @PathParam("id") String id) {
 		dao.update(service, id);
 		return service;
 	}
@@ -153,8 +135,7 @@ public class ServiceRegistryService {
 	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
-	)
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST") })
 	public void remove(@ApiParam(name = "id", value = "descrizione", required = true) @PathParam("id") String id) {
 		dao.remove(id);
 	}
@@ -165,35 +146,31 @@ public class ServiceRegistryService {
 	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
-	)
-	public List<DataMapping> getServiceDataMapping(@ApiParam(name = "id", value = "descrizione", required = true) @PathParam("id") String id) {
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST") })
+	public List<DataMapping> getServiceDataMapping(
+			@ApiParam(name = "id", value = "descrizione", required = true) @PathParam("id") String id) {
 
 		return dao.getDataMapping(id);
 	}
-	
+
 	@GET
 	@Path("/service_report/sector")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
-	)
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST") })
 	public List<ServiceReport> getServiceReportbySector() {
 		return dao.getServiceReportbySector();
 	}
 
-	
-	
 	@GET
 	@Path("/service_report/type")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
-	)
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST") })
 	public List<ServiceReport> getServiceReportbyType() {
 		return dao.getServiceReportbyType();
 	}

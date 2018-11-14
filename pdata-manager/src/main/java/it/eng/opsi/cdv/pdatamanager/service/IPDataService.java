@@ -52,4 +52,6 @@ public interface IPDataService {
 
 	public abstract Response postServicePDataByConsent(String input, String modeString);
 
+	public abstract Response getPDataReport(String accountId);
+
 }

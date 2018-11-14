@@ -28,6 +28,7 @@ import java.util.Properties;
 import it.eng.opsi.cdv.pdatarepository.dao.PDataDAO;
 import it.eng.opsi.cdv.pdatarepository.model.PDataEntry;
 import it.eng.opsi.cdv.pdatarepository.model.PDataNotFoundException;
+import it.eng.opsi.cdv.pdatarepository.model.PDataReport;
 import it.eng.opsi.cdv.pdatarepository.model.PDataRepositoryException;
 import it.eng.opsi.cdv.pdatarepository.model.PDataUtilsException;
 import it.eng.opsi.cdv.pdatarepository.model.PDataWriteMode;
@@ -102,6 +103,12 @@ public class PDataRepository implements IPDataRepository {
 	@Override
 	public boolean existsPData(String conceptId, String accountId) throws PDataRepositoryException {
 		return dao.existsPData(conceptId, accountId);
+
+	}
+	
+	@Override
+	public List<PDataReport> getPDataReport(String accountId) throws PDataRepositoryException {
+		return dao.getDataReport(accountId);
 
 	}
 

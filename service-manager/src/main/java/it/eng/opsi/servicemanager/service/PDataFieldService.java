@@ -47,30 +47,13 @@ import it.eng.opsi.servicemanager.data.PDataField;
 
 @Path("/v1")
 @Api(value = "/PDataFieldService")
-@SwaggerDefinition(
-        info = @io.swagger.annotations.Info(
-                description = "XXX",
-                version = "XXX",			//bypassato da web.xml
-                title = "Service Manager PDataField",	//bypassato da web.xml
-                termsOfService = "XXX",
-                contact = @io.swagger.annotations.Contact(
-                   name = "XXX", 
-                   email = "XXX", 
-                   url = "XXX"
-                ),
-                license = @io.swagger.annotations.License(
-                   name = "XXX", 
-                   url = "XXX"
-                )
-        ),
-        consumes = {"application/json", "application/xml"},
-        produces = {"application/json", "application/xml"},
-        schemes = {SwaggerDefinition.Scheme.HTTP, SwaggerDefinition.Scheme.HTTPS},
-        tags = {
-        		@io.swagger.annotations.Tag(name = "XXX", description = "XXX")
-        }, 
-        externalDocs = @io.swagger.annotations.ExternalDocs(value = "XXX", url = "XXX")
-)
+@SwaggerDefinition(info = @io.swagger.annotations.Info(description = "XXX", version = "XXX", // bypassato da web.xml
+		title = "Service Manager PDataField", // bypassato da web.xml
+		termsOfService = "XXX", contact = @io.swagger.annotations.Contact(name = "XXX", email = "XXX", url = "XXX"), license = @io.swagger.annotations.License(name = "XXX", url = "XXX")), consumes = {
+				"application/json",
+				"application/xml" }, produces = { "application/json", "application/xml" }, schemes = {
+						SwaggerDefinition.Scheme.HTTP, SwaggerDefinition.Scheme.HTTPS }, tags = {
+								@io.swagger.annotations.Tag(name = "XXX", description = "XXX") }, externalDocs = @io.swagger.annotations.ExternalDocs(value = "XXX", url = "XXX"))
 public class PDataFieldService implements IPDataFieldService {
 	static final String api_version = "1.0";
 
@@ -82,8 +65,7 @@ public class PDataFieldService implements IPDataFieldService {
 	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
-	)
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST") })
 	public List<PDataField> getPDataFields() {
 		return dao.findAll();
 	}
@@ -94,9 +76,9 @@ public class PDataFieldService implements IPDataFieldService {
 	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
-	)
-	public PDataField getPDataFieldById(@ApiParam(name = "id", value = "descrizione", required = true) @PathParam("id") String id) {
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST") })
+	public PDataField getPDataFieldById(
+			@ApiParam(name = "id", value = "descrizione", required = true) @PathParam("id") String id) {
 		return dao.findById(id);
 	}
 
@@ -106,9 +88,9 @@ public class PDataFieldService implements IPDataFieldService {
 	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
-	)
-	public List<PDataField> findPDataFieldByName(@ApiParam(name = "regex", value = "descrizione", required = true) @QueryParam("regex") String regex) {
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST") })
+	public List<PDataField> findPDataFieldByName(
+			@ApiParam(name = "regex", value = "descrizione", required = true) @QueryParam("regex") String regex) {
 		return dao.findByName(regex);
 	}
 
@@ -118,22 +100,21 @@ public class PDataFieldService implements IPDataFieldService {
 	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
-	)
-	public List<PDataField> getPDataFieldByCategory(@ApiParam(name = "category", value = "descrizione", required = true) @PathParam("category") String category) {
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST") })
+	public List<PDataField> getPDataFieldByCategory(
+			@ApiParam(name = "category", value = "descrizione", required = true) @PathParam("category") String category) {
 		return dao.findByCategory(category);
 
 	}
-	
+
 	@GET
 	@Path("/pdatafields/category/tree")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
-	)
-	public List<PDataCategory> getPDataCategoryTree()  {
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST") })
+	public List<PDataCategory> getPDataCategoryTree() {
 		return dao.getPDataTree();
 
 	}

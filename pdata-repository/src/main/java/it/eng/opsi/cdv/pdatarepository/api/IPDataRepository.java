@@ -26,6 +26,7 @@ import java.util.List;
 
 import it.eng.opsi.cdv.pdatarepository.model.PDataEntry;
 import it.eng.opsi.cdv.pdatarepository.model.PDataNotFoundException;
+import it.eng.opsi.cdv.pdatarepository.model.PDataReport;
 import it.eng.opsi.cdv.pdatarepository.model.PDataRepositoryException;
 import it.eng.opsi.cdv.pdatarepository.model.PDataUtilsException;
 import it.eng.opsi.cdv.pdatarepository.model.PDataValueAlreadyPresentException;
@@ -57,5 +58,7 @@ public interface IPDataRepository {
 	public abstract void deleteAllPData(String accountId) throws PDataNotFoundException, PDataRepositoryException;
 
 	public abstract boolean existsPData(String conceptId, String accountId) throws PDataRepositoryException;
+
+	public abstract List<PDataReport> getPDataReport(String accountId) throws PDataRepositoryException;
 
 }
