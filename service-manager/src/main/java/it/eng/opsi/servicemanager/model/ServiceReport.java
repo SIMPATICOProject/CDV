@@ -27,16 +27,26 @@ public class ServiceReport {
 	public ServiceReport() {
 	}
 
-	public ServiceReport(String category, int count) {
+	public ServiceReport(String category, int count, int total) {
 		super();
 
 		this.category = (category.equalsIgnoreCase("")) ? "other" : category;
 
 		this.count = count;
+		this.total = total;
 	}
 
 	private String category;
 	private int count;
+	private int total;
+
+	public int getTotal() {
+		return total;
+	}
+
+	public void setTotal(int total) {
+		this.total = total;
+	}
 
 	public String getCategory() {
 		return category;

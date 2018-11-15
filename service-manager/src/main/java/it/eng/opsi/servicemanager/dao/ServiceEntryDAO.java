@@ -194,6 +194,8 @@ public class ServiceEntryDAO {
 		MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
 		DB db = dbSingleton.getDB();
 		DBCollection coll = db.getCollection("serviceRegistry");
+		
+		int total=coll.find().count();
 		List<ServiceReport> list = new ArrayList<ServiceReport>();
 		Iterable<DBObject> output = coll
 				.aggregate(Arrays.asList((DBObject) new BasicDBObject("$unwind", "$publicServiceSector"),
@@ -208,6 +210,7 @@ public class ServiceEntryDAO {
 
 			try {
 				serviceReport = DAOUtils.dbObj2obj(dbObject, ServiceReport.class);
+				serviceReport.setTotal(total);
 				list.add(serviceReport);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -224,6 +227,7 @@ public class ServiceEntryDAO {
 		MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
 		DB db = dbSingleton.getDB();
 		DBCollection coll = db.getCollection("serviceRegistry");
+		int total=coll.find().count();
 		List<ServiceReport> list = new ArrayList<ServiceReport>();
 		Iterable<DBObject> output = coll
 				.aggregate(Arrays.asList((DBObject) new BasicDBObject("$unwind", "$publicServiceTypeProp"),
@@ -238,6 +242,7 @@ public class ServiceEntryDAO {
 
 			try {
 				serviceReport = DAOUtils.dbObj2obj(dbObject, ServiceReport.class);
+				serviceReport.setTotal(total);
 				list.add(serviceReport);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
