@@ -683,7 +683,7 @@ if (typeof NProgress != 'undefined') {
 	   
 	   
 	function init_chart_doughnut(){
-				
+		
 		if( typeof (Chart) === 'undefined'){ return; }
 		
 		console.log('init_chart_doughnut');
@@ -695,14 +695,14 @@ if (typeof NProgress != 'undefined') {
 				tooltipFillColor: "rgba(51, 51, 51, 0.55)",
 				data: {
 					labels: [
-						"Symbian",
-						"Blackberry",
-						"Other",
-						"Android",
-						"IOS"
+						"value A",
+						"value B",
+						"value C",
+						"value D",
+						"value E"
 					],
 					datasets: [{
-						data: [15, 20, 30, 10, 30],
+						data: [20, 20, 20, 15, 25],
 						backgroundColor: [
 							"#BDC3C7",
 							"#9B59B6",
@@ -5031,7 +5031,7 @@ if (typeof NProgress != 'undefined') {
 		init_select2();
 		init_validator();
 		init_DataTables();
-		init_chart_doughnut();
+		init_chart_doughnut(); //GE_161118
 		init_gauge();
 		init_PNotify();
 		init_starrr();
