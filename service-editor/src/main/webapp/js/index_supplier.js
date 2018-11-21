@@ -149,7 +149,7 @@ function typeFiller(data){
 	var ajax_data = [];
 	var labels_array = [];
 	htmlString = "";
-	for(w = 0; w < maxType.length ; w++){
+	for(w = 0; w < maxType.length && w < 5; w++){
 		ajax_data[w] = maxType[w][0];
 		labels_array[w] = maxType[w][1];
 	}
@@ -161,7 +161,7 @@ function typeFiller(data){
 	for(f = 0; f < 5; f++){
 		percent_value = (ajax_data[f] * 100)/nServ;
 		htmlString = htmlString + "<tr><td><p><i class=\"fa fa-square "+color_array[f]+"\"></i>"+labels_array[f]+"</p>"+
-        "</td><td>"+percent_value.toFixed(1)+"</td></tr>";
+        "</td><td>"+percent_value.toFixed(1)+"%"+"</td></tr>";
 	}
 	$("#type-cake").append(htmlString);
 	
@@ -233,7 +233,7 @@ function sectorFiller(data){
 	var labels_array = [];
 	var t = 0;
 	htmlString = "";
-	for(w = 0; w < maxSector.length-1; w++){
+	for(w = 0; w < maxSector.length-1 && w < 5; w++){
 		ajax_data[w] = maxSector[w][0];
 		labels_array[w] = maxSector[w][1];
 		t++;
@@ -246,7 +246,7 @@ function sectorFiller(data){
 	for(f = 0; f < 5; f++){
 		percent_value = (ajax_data[f] * 100)/nServ;
 		htmlString = htmlString + "<tr><td><p><i class=\"fa fa-square "+color_array[f]+"\"></i>"+labels_array[f]+"</p>"+
-        "</td><td>"+percent_value.toFixed(1)+"</td></tr>";
+        "</td><td>"+percent_value.toFixed(1)+"%"+"</td></tr>";
 	}
 	$("#sector-cake").append(htmlString);
 	
