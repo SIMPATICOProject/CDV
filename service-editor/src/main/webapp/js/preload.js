@@ -52,10 +52,7 @@ function appendPDFields(data, mod){
 		//var servcontent = JSON.stringify(data);
 		data = JSON.parse(data);
 	}
-	console.log("ingresso in appendPDFields");
-	console.log("valore di input appendPDFields: ");
-	console.log(data);
-	
+		
 	for(i = 0; i < data.length; i++){ //scorro le categorie
 		
 		cat = data[i].category;
@@ -64,7 +61,7 @@ function appendPDFields(data, mod){
 		//$('#pdf-section').append("<li><a>"+cat+"<span class=\"fa fa-chevron-down\"></span></a>");
 		htmlString += "<li><a>"+cat+"<span class=\"fa fa-chevron-down\"></span></a>";
 		
-		console.log("numero di concetti per la categoria "+cat+": "+data[i].concepts.length);
+		
 		
 		if(data[i].concepts.length > 0){	//se presenti, scorro i concetti appartenenti alle singole categorie
 			
@@ -94,10 +91,10 @@ function appendPDFields(data, mod){
 /*query the endpoint to obtain PDFields's categories and concepts. It store the result in the "infoPDF"
  * session variable */
 function getPDFields(){
-	console.log("ingresso in getPDFields");
+	
     //GET - getPDataCategoryTree_apipath
     var url_ = "http://"+app_parameters.host_param+":"+app_parameters.port_param+"/"+app_parameters.getPDataCategoryTree_apipath;
-    console.log("composed url PDF: "+url_);
+    
 	    $.ajax({
 	        url: url_
 	    }).then(function(data) {
@@ -112,8 +109,6 @@ function getPDFields(){
 	    	//Salvo l'elenco in sessione
 	    	sessionStorage.setItem("infoPDF", servcontent);
 
-	    	console.log("valore di jobj: ");
-	    	console.log(jobj);
 	    	appendPDFields(jobj,0);
 
 	 });
