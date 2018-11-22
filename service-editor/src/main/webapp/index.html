@@ -123,7 +123,7 @@
 <!-- sidebar menu -->
             <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
               <div class="menu_section">
-                <h3>Menu</h3>
+               
                 <ul class="nav side-menu">
                   <li><a href="index.html"><i class="fa fa-home"></i> Home </a>
                   </li>
@@ -195,8 +195,8 @@
               <ul class="nav navbar-nav navbar-right">
                  <li class="">
                   <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    <i class="fa fa-user-circle-o"></i>&nbsp Frank Rosenblatt
-                    <span class=" fa fa-angle-down"></span>
+                    <img src="images/no-photo.png" alt="">
+                    
                   </a>
                   <ul class="dropdown-menu dropdown-usermenu pull-right">
                     <li><a href="javascript:;"> Profile</a></li>
@@ -735,6 +735,28 @@
    		})
    	})
 	</script>
+    <script>
+		$(document).ready(function(){
+     $(window).scroll(function () {
+            if ($(this).scrollTop() > 50) {
+                $('#back-to-top').fadeIn();
+            } else {
+                $('#back-to-top').fadeOut();
+            }
+        });
+        // scroll body to 0px on click
+        $('#back-to-top').click(function () {
+            $('#back-to-top').tooltip('hide');
+            $('body,html').animate({
+                scrollTop: 0
+            }, 800);
+            return false;
+        });
+             
 
+});
+	</script>
+	<a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button" title="Click to return on the top page" data-toggle="tooltip" data-placement="left"><span class="glyphicon glyphicon-chevron-up"></span></a>
+ 
   </body>
 </html>

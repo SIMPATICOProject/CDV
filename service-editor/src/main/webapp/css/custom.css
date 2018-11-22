@@ -144,7 +144,7 @@ html , body{
     padding: 0 0 4px 0
 }
 .left_col {
-    background: #2A3F54
+    background: #1C2B36
 }
 .nav-sm .container.body .col-md-3.left_col {
     min-height: 100%;
@@ -332,7 +332,7 @@ html , body{
 }
 .nav_menu {
     float: left;
-    background: #EDEDED;
+    background: #1C2B36;
     border-bottom: 1px solid #D9DEE4;
     margin-bottom: 10px;
     width: 100%;
@@ -367,7 +367,7 @@ body .container.body .right_col {
 .nav_title {
     width: 230px;
     float: left;
-    background: #2A3F54;
+    background: #1C2B36;
     border-radius: 0;
     height: 57px
 }
@@ -495,11 +495,13 @@ body .container.body .right_col {
 .top_nav .nav .open>a,
 .top_nav .nav .open>a:focus,
 .top_nav .nav .open>a:hover {
-    background: #D9DEE4
+    background-color: #1C2B36;
 }
+
+
 body {
     color: #73879C;
-    background: #2A3F54;
+    background: #F7F7F7;
     font-family: "Helvetica Neue", Roboto, Arial, "Droid Sans", sans-serif;
     font-size: 13px;
     font-weight: 400;
@@ -885,7 +887,8 @@ a:focus {
 .toggle a {
     padding: 15px 15px 0;
     margin: 0;
-    cursor: pointer
+    cursor: pointer;
+	color: #E7E7E7;
 }
 .toggle a i {
     font-size: 26px
@@ -1776,8 +1779,8 @@ a.user-profile {
     color: #5E6974 !important
 }
 .user-profile img {
-    width: 29px;
-    height: 29px;
+    width: 40px;
+    height: 35px;
     border-radius: 50%;
     margin-right: 10px
 }
@@ -4307,4 +4310,19 @@ table thead .checkbox.radio { margin-top:-7px;margin-top:-21px; }
 body {
 	overflow-x: hidden !important;
 }	
-	
+
+.back-to-top {
+    cursor: pointer;
+    position: fixed;
+    bottom: 45px !important;
+    right: 20px;
+    display:none;
+	color: #209e91;
+    background-color: rgba(0,0,0,0.75);
+    border-radius: 50%;
+	opacity: 0.4;
+}
+
+.back-to-top a{
+    color: #209e91;
+}	

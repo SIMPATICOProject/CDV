@@ -31,14 +31,33 @@
     <!-- File di configurazione -->
 	<script src="js/config.properties.js"></script>
     
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+     <script src="vendors/jquery/distrib/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@json-editor/json-editor/dist/jsoneditor.min.js"></script>
-    
+    <script src="js/preload.js"></script>
+    <script src="//cdn.jsdelivr.net/select2/3.4.8/select2.min.js"></script>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/select2/3.4.8/select2.css">
+	<link rel="stylesheet" href="./css/select2-bootstrap.css">
+	
+	
+
+	
+	
+	
+	
     <script>
+	
+	
     // Set the default CSS theme and icon library globally
     JSONEditor.defaults.theme = 'bootstrap3';
     JSONEditor.defaults.iconlib = 'fontawesome4';
     var schemaDir = "json/service-entry.json";
+	
+	// Disable additional properties
+    JSONEditor.defaults.options.no_additional_properties= true;
+	JSONEditor.defaults.options.disable_properties=true;
+	JSONEditor.defaults.options.prompt_before_delete=true;
+	
+	
     </script>
 
   </head>
@@ -124,8 +143,7 @@
 <!-- sidebar menu -->
             <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
               <div class="menu_section">
-                <h3>Menu</h3>
-                <ul class="nav side-menu">
+                 <ul class="nav side-menu">
                   <li><a href="index.html"><i class="fa fa-home"></i> Home </a></li>
                   <li><a><i class="fa fa-edit"></i> Services <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
@@ -158,18 +176,11 @@
               <ul class="nav navbar-nav navbar-right">
                  <li class="">
                   <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    <img src="images/img.jpg" alt="">John Doe
-                    <span class=" fa fa-angle-down"></span>
+                    <img src="images/no-photo.png" alt="">
+                    
                   </a>
                   <ul class="dropdown-menu dropdown-usermenu pull-right">
                     <li><a href="javascript:;"> Profile</a></li>
-                    <li>
-                      <a href="javascript:;">
-                        <span class="badge bg-red pull-right">50%</span>
-                        <span>Settings</span>
-                      </a>
-                    </li>
-                    <li><a href="javascript:;">Help</a></li>
                     <li><a href="login.html"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
                   </ul>
                 </li>
@@ -225,10 +236,7 @@
       </div>
     </div>
 
-    <!-- jQuery -->
-    <script src="vendors/jquery/distrib/jquery.min.js"></script>
     
-    <script src="js/preload.js"></script>
     <script>
   		//infoPDF is assigned in preload.js
 		var localInfoPDF = sessionStorage.getItem("infoPDF");
@@ -455,4 +463,27 @@
 	      });
     }
   </script>
+  <script>
+		$(document).ready(function(){
+     $(window).scroll(function () {
+            if ($(this).scrollTop() > 50) {
+                $('#back-to-top').fadeIn();
+            } else {
+                $('#back-to-top').fadeOut();
+            }
+        });
+        // scroll body to 0px on click
+        $('#back-to-top').click(function () {
+            $('#back-to-top').tooltip('hide');
+            $('body,html').animate({
+                scrollTop: 0
+            }, 800);
+            return false;
+        });
+             
+
+});
+	</script>
+	<a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button" title="Click to return on the top page" data-toggle="tooltip" data-placement="left"><span class="glyphicon glyphicon-chevron-up"></span></a>
+ 
 </html>

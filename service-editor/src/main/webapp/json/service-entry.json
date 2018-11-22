@@ -6,6 +6,8 @@
   "format":"categories",
   
   "properties": {
+	  
+		  
     "publicServiceID": {
       "type": "string",
 	  "title":"Public Service ID"
@@ -28,7 +30,8 @@
     },
 	"publicServiceStatus": {
       "type": "string",
-	  "title":"Status"
+	  "title":"Status",
+	  "enum":["Completed", "Deprecated","UnderDevelopment","WithDrawn"]
     },    
     "serviceProviderId": {
       "type": "string",
@@ -40,31 +43,57 @@
     },
     "serviceType": {
       "type": "string",
-	  "title":"Service Provision Type"
+	  "title":"Service Provision Type",
+		 "enum":["DataSource", "DataSink","Both"]
     },
     "technicalDescriptionId": {
       "type": "string",
 	  "title":"Technical Description ID"
     },
+	
+	"spatial":{
+		"type":"string",
+		"title":"Spatial"	
+		
+	},
+	
+	"lifeEvent":{
+		"type":"string",
+		"title":"Life Event"	
+		
+	},
+	"businessEvent":{
+		"type":"string",
+		"title":"Business Event"	
+		
+	},
+	
     "publicServiceSector": {
       "type": "array",
 	  "title":"Public Service Sector",
-	  "format":"table",
 	  "uniqueItems": true,
+	  "format":"select",
+	 
+			
       "items": {
 	    "type": "string",
-        "title":"Sector"
-      }
+        "title":"Sector",		
+		"enum":["Sector1", "Sector2","Sector3"]
+	   }
     },
     "publicServiceTypeProp": {
       "type": "array",
 	  "title":"Public Service Type",
-	  "format":"table",
+	  "format":"select",
 	  "uniqueItems": true,
       "items": 
         {
           "type": "string",
-		  "title":"Type"
+		  "format":"select",
+		  "title":"Type",
+		  	
+		"enum":["Type1", "Type2","Type3"]
+		 
         }
       
     },
@@ -76,7 +105,8 @@
       "items": 
         {
           "type": "string",
-		  "title":"Language"
+		  "title":"Language",
+		  "enum":["it_IT", "en_EN","es_ES"]
         }
       
     },
@@ -89,12 +119,17 @@
         {
           "type": "object",
 		  "title":"Locale",
+		  "headerTemplate": "Locale ({{ self.locale }}) ",
 		  "options": {
 				"collapsed": false
 			},
           "properties": {
             "locale": {
-              "type": "string"
+              "type": "string",
+			  "enumSource":"possible_langs",
+			  "watch": {
+				  "possible_langs": "root.publicServiceLanguage"
+				  }
             },
             "description": {
               "type": "string",
@@ -168,11 +203,13 @@
             },
             "dataMapping": {
               "type": "array",
-			  "format": "table",
-			   "title": "Data Mapping",
+			  "format":"tabs",
+			  "title": "Data Mapping",
               "items": 
                 {
                   "type": "object",
+				  "title": "Field",
+				  
 				  "properties": {
                     "property": {
                       "type": "string",
@@ -188,15 +225,30 @@
                     },
                     "type": {
                       "type": "string",
-					   "title": "Type"
+					   "title": "Type",
+					  "options" :{
+						  
+						  "input_width":"85px"
+					  }
                     },
                     "required": {
                       "type": "number",
-					   "title": "Required"
+					   "title": "Required",
+					  "enum": [1,0],
+					  "options" :{
+						  "enum_titles":["True","False"],
+						  "input_width":"100px"
+					  }
                     },
                     "sensitive": {
                       "type": "number",
-					  "title": "Sensitive"
+					  "title": "Sensitive",
+					  "enum": [1,0],
+					  "options" :{
+						  "enum_titles":["True","False"],
+						  
+						  "input_width":"100px"
+					  }
                     }
                   },
                   "required": [
@@ -238,6 +290,9 @@
     "publicServiceStatus",
     "serviceProviderId",
     "organizationId",
+	"lifeEvent",
+	"businessEvent",
+	"spatial",
     "humanReadableDescription",
     "technicalDescriptionId",
     "publicServiceIsDescribedAt"
