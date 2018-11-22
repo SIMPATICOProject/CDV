@@ -111,6 +111,27 @@
 						</xsd:documentation>
 					</xsd:annotation>
 				</xsd:element>
+				<xsd:element name="spatial" type="xsd:string"
+					minOccurs="1" maxOccurs="1">
+					<xsd:annotation>
+						<xsd:documentation>	A Public Service is likely to be available only within a given area, typically the area covered by a particular public authority
+						</xsd:documentation>
+				</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="lifeEvent" type="xsd:string"
+					minOccurs="1" maxOccurs="1">
+					<xsd:annotation>
+						<xsd:documentation>	This property links the Public Service to a particular Business Event class linked to a controlled vocabulary of event types
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>	
+				<xsd:element name="businessEvent" type="xsd:string"
+					minOccurs="1" maxOccurs="1">
+					<xsd:annotation>
+						<xsd:documentation>	This property links the Public Service to a particular Life Event class linked to a controlled vocabulary of event types
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
 				<xsd:element name="humanReadableDescription" type="tns:HumanReadableDescription"
 					minOccurs="1" maxOccurs="unbounded" />
 				<xsd:element name="technicalDescriptionId" type="xsd:string"

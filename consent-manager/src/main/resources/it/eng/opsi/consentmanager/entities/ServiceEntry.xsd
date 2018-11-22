@@ -7,21 +7,24 @@
 		<xsd:complexType>
 			<xsd:annotation>
 				<xsd:documentation>Main entity of the registered service containing
-					its description</xsd:documentation>
+					its description
+				</xsd:documentation>
 			</xsd:annotation>
 			<xsd:sequence>
 				<xsd:element name="publicServiceID" type="xsd:string"
 					minOccurs="1" maxOccurs="1">
 					<xsd:annotation>
 						<xsd:documentation>This property represents a formally-issued
-							Identifier for the Public Service</xsd:documentation>
+							Identifier for the Public Service
+						</xsd:documentation>
 					</xsd:annotation>
 				</xsd:element>
 				<xsd:element name="publicServiceName" type="xsd:string"
 					minOccurs="1" maxOccurs="1">
 					<xsd:annotation>
 						<xsd:documentation>This property represents the official Name of
-							the Public Service</xsd:documentation>
+							the Public Service
+						</xsd:documentation>
 					</xsd:annotation>
 				</xsd:element>
 				<xsd:element name="serviceUri" type="xsd:string"
@@ -34,7 +37,8 @@
 					minOccurs="1" maxOccurs="1">
 					<xsd:annotation>
 						<xsd:documentation>Version identifier of the service description
-							following developer's own format</xsd:documentation>
+							following developer's own format
+						</xsd:documentation>
 					</xsd:annotation>
 				</xsd:element>
 				<xsd:element name="publicServiceKeyword" type="xsd:string"
@@ -48,7 +52,8 @@
 					minOccurs="0" maxOccurs="unbounded">
 					<xsd:annotation>
 						<xsd:documentation>
-							This property represents the industry or sector a Public Service
+							This property represents the industry or sector
+							a Public Service
 							relates to, or is intended for.
 						</xsd:documentation>
 					</xsd:annotation>
@@ -57,7 +62,8 @@
 					minOccurs="0" maxOccurs="unbounded">
 					<xsd:annotation>
 						<xsd:documentation>
-							This property represents the type of a Public Service as described in
+							This property represents the type of a Public
+							Service as described in
 							a controlled vocabulary.
 						</xsd:documentation>
 					</xsd:annotation>
@@ -66,7 +72,8 @@
 					minOccurs="0" maxOccurs="unbounded">
 					<xsd:annotation>
 						<xsd:documentation>
-							This property represents the language(s) in which the Public Service
+							This property represents the language(s) in
+							which the Public Service
 							is available.
 						</xsd:documentation>
 					</xsd:annotation>
@@ -75,8 +82,10 @@
 					minOccurs="0" maxOccurs="1">
 					<xsd:annotation>
 						<xsd:documentation>
-							Indicates whether a Public Service is active, inactive, under development
-							etc. according to a controlled vocabulary.
+							Indicates whether a Public Service is active,
+							inactive, under development
+							etc. according to a controlled
+							vocabulary.
 						</xsd:documentation>
 					</xsd:annotation>
 				</xsd:element>
@@ -98,7 +107,29 @@
 					minOccurs="1" maxOccurs="1">
 					<xsd:annotation>
 						<xsd:documentation>Organization who provides service instance in
-							"serviceUri"</xsd:documentation>
+							"serviceUri"
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="spatial" type="xsd:string"
+					minOccurs="1" maxOccurs="1">
+					<xsd:annotation>
+						<xsd:documentation>	A Public Service is likely to be available only within a given area, typically the area covered by a particular public authority
+						</xsd:documentation>
+				</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="lifeEvent" type="xsd:string"
+					minOccurs="1" maxOccurs="1">
+					<xsd:annotation>
+						<xsd:documentation>	This property links the Public Service to a particular Business Event class linked to a controlled vocabulary of event types
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>	
+				<xsd:element name="businessEvent" type="xsd:string"
+					minOccurs="1" maxOccurs="1">
+					<xsd:annotation>
+						<xsd:documentation>	This property links the Public Service to a particular Life Event class linked to a controlled vocabulary of event types
+						</xsd:documentation>
 					</xsd:annotation>
 				</xsd:element>
 				<xsd:element name="humanReadableDescription" type="tns:HumanReadableDescription"
@@ -114,7 +145,8 @@
 	<xsd:complexType name="HumanReadableDescription">
 		<xsd:annotation>
 			<xsd:documentation>Class for the human readable service description
-				like web pages or other documentation</xsd:documentation>
+				like web pages or other documentation
+			</xsd:documentation>
 		</xsd:annotation>
 		<xsd:sequence>
 			<xsd:element name="locale" type="xsd:string" minOccurs="1"
@@ -127,7 +159,8 @@
 				minOccurs="1" maxOccurs="1">
 				<xsd:annotation>
 					<xsd:documentation>Provided human readable description or document
-						content</xsd:documentation>
+						content
+					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
 		</xsd:sequence>
@@ -137,14 +170,16 @@
 		<xsd:annotation>
 			<xsd:documentation>Collection of metadata about service data. It
 				reuses the Data Catalog Vocabulary (DCAT) for the creation of the
-				Public Service Dataset class.</xsd:documentation>
+				Public Service Dataset class.
+			</xsd:documentation>
 		</xsd:annotation>
 		<xsd:sequence>
 			<xsd:element name="publicServiceDatasetID" type="xsd:string"
 				minOccurs="1" maxOccurs="1">
 				<xsd:annotation>
 					<xsd:documentation>
-						This property represents an Identifier for the Public Service Dataset.
+						This property represents an Identifier for the
+						Public Service Dataset.
 					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
@@ -153,14 +188,16 @@
 				<xsd:annotation>
 					<xsd:documentation>Link to a document that describes the service
 						data description based on the defined schema (schemaID)
-						(=serviceDataDescriptionDocument)</xsd:documentation>
+						(=serviceDataDescriptionDocument)
+					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
 			<xsd:element name="taxonomy" type="xsd:string" minOccurs="1"
 				maxOccurs="1">
 				<xsd:annotation>
 					<xsd:documentation>Link to a taxonomy that is used to describe data
-						of a service (ex. dcat:themeTaxonomy)</xsd:documentation>
+						of a service (ex. dcat:themeTaxonomy)
+					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
 			<xsd:element name="title" type="xsd:string" minOccurs="1"
@@ -220,7 +257,8 @@
 				minOccurs="1" maxOccurs="1">
 				<xsd:annotation>
 					<xsd:documentation>links (URI) to existing taxonomies, vocabularies
-						describing the property</xsd:documentation>
+						describing the property
+					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
 			<xsd:element name="name" type="xsd:string" minOccurs="1"
@@ -241,7 +279,8 @@
 				default="1">
 				<xsd:annotation>
 					<xsd:documentation>if the component is required or not. (1
-						required, 0 not required)</xsd:documentation>
+						required, 0 not required)
+					</xsd:documentation>
 				</xsd:annotation>
 				<xsd:simpleType>
 					<xsd:restriction base="xsd:int">
@@ -254,7 +293,8 @@
 				default="1">
 				<xsd:annotation>
 					<xsd:documentation>if the component is sensitive or not. (1
-						sensitive, 0 not sensitive)</xsd:documentation>
+						sensitive, 0 not sensitive)
+					</xsd:documentation>
 				</xsd:annotation>
 				<xsd:simpleType>
 					<xsd:restriction base="xsd:int">
@@ -272,7 +312,8 @@
 				minOccurs="0" maxOccurs="unbounded">
 				<xsd:annotation>
 					<xsd:documentation>reference to a specified component specification
-						that is part of the data structure definition</xsd:documentation>
+						that is part of the data structure definition
+					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
 			<xsd:element name="dataStructureDefinitionId" type="xsd:string"
@@ -286,7 +327,8 @@
 				minOccurs="1" maxOccurs="1">
 				<xsd:annotation>
 					<xsd:documentation>free text description of a data structure
-						definition, possibly in multiple languages</xsd:documentation>
+						definition, possibly in multiple languages
+					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
 		</xsd:sequence>
@@ -305,7 +347,8 @@
 				minOccurs="1" maxOccurs="1">
 				<xsd:annotation>
 					<xsd:documentation>Indicated if a component is required (true) or
-						optional (false) by a data sink. </xsd:documentation>
+						optional (false) by a data sink.
+					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
 			<xsd:element name="componentSpecificationId" type="xsd:string"
