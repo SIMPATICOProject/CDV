@@ -14,20 +14,8 @@
     <link href="vendors/bootstrap/distrib/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-    
-<!--     NProgress
-    <link href="vendors/nprogress/nprogress.css" rel="stylesheet"> -->
-<!--     iCheck
-    <link href="vendors/iCheck/skins/flat/green.css" rel="stylesheet"> -->
-    <!-- bootstrap-progressbar -->
-    <!-- <link href="vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet"> -->
-    
     <!-- JQVMap -->
     <link href="vendors/jqvmap/distrib/jqvmap.min.css" rel="stylesheet"/>
-    
-    <!-- bootstrap-daterangepicker -->
-    <!-- <link href="vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet"> -->
-
     <!-- Custom Theme Style -->
     <link href="css/custom.css" rel="stylesheet">
     
@@ -549,52 +537,26 @@
     <script>
    	//Caricamento sequenziale dei rimanenti script per garanzia funzionamento globale
    	$.getScript("vendors/bootstrap/distrib/js/bootstrap.min.js",function() {
-   		//$.getScript("vendors/fastclick/lib_dir/fastclick.js", function(){
-   			$.getScript("vendors/Chart.js/distrib/Chart.min.js", function(){
-   				//$.getScript("vendors/gauge.js/distrib/gauge.min.js", function(){
-   					//$.getScript("vendors/bootstrap-progressbar/bootstrap-progressbar.min.js", function(){
-   						//$.getScript("vendors/iCheck/icheck.min.js", function(){
-   							//$.getScript("vendors/skycons/skycons.js", function(){
-   								$.getScript("vendors/Flot/jquery.flot.js", function(){
-   									//$.getScript("vendors/Flot/jquery.flot.pie.js", function(){
-   										//$.getScript("vendors/Flot/jquery.flot.time.js", function(){
-   											//$.getScript("vendors/Flot/jquery.flot.stack.js", function(){
-   												//$.getScript("vendors/Flot/jquery.flot.resize.js", function(){
-   													//$.getScript("vendors/flot.orderbars/js/jquery.flot.orderBars.js", function(){
-   														//$.getScript("vendors/flot-spline/js/jquery.flot.spline.min.js", function(){
-   															//$.getScript("vendors/flot.curvedlines/curvedLines.js", function(){
-   																$.getScript("vendors/DateJS/build_dir/date.js", function(){
-   															    	$.getScript("vendors/jqvmap/distrib/jquery.vmap.js", function(){
-   															    		$.getScript("vendors/jqvmap/distrib/maps/jquery.vmap.world.js", function (){
-   															    			$.getScript("vendors/jqvmap/examples/js/jquery.vmap.sampledata.js", function(){
-   															    				$.getScript("vendors/moment/min/moment.min.js", function(){
-   															    					//$.getScript("vendors/bootstrap-daterangepicker/daterangepicker.js", function(){
-   															    						$.getScript("js/custom.js", function(){
-   															    							$.getScript("js/index_supplier.js", function(){
-   															    								indexStatsFiller();
-   															    							})
-   															    						})
-   															    					//})
-   															    				})
-   															    			})
-   															    		})
-   															    	})
-   																})
-   															//})
-   														//})
-   													//})
-   												//})
-   											//})
-   										//})
-   									//})
-   								})
-   							//})
-   						//})
-   					//})
-   				//})
-   			})
-   		//})
-   	})
+   		$.getScript("vendors/Chart.js/distrib/Chart.min.js", function(){
+   			$.getScript("vendors/Flot/jquery.flot.js", function(){
+   				$.getScript("vendors/DateJS/build_dir/date.js", function(){
+					$.getScript("vendors/jqvmap/distrib/jquery.vmap.js", function(){
+						$.getScript("vendors/jqvmap/distrib/maps/jquery.vmap.world.js", function (){
+							$.getScript("vendors/jqvmap/examples/js/jquery.vmap.sampledata.js", function(){
+								$.getScript("vendors/moment/min/moment.min.js", function(){
+									$.getScript("js/custom.js", function(){
+										$.getScript("js/index_supplier.js", function(){
+											indexStatsFiller();
+										})
+									})
+								})
+							})
+						})
+					})
+				})
+			})
+		})
+	})
 	</script>
 	
     <script>

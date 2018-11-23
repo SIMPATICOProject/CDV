@@ -14,8 +14,6 @@
     <!-- Font Awesome -->
     <link href="vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 
-    <!-- iCheck -->
-    <!-- <link href="vendors/iCheck/skins/flat/green.css" rel="stylesheet"> -->
     <!-- Datatables -->
     <link href="vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
     <link href="vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
@@ -25,9 +23,6 @@
 
     <!-- Custom Theme Style -->
     <link href="css/custom.css" rel="stylesheet">
-
-	<!-- jQuery custom content scroller -->
-    <!-- <link href="vendors/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css" rel="stylesheet"/> -->
 
 	<!-- File di configurazione -->
 	<script src="js/config.properties.js"></script>
@@ -297,39 +292,39 @@
 	    
 	    	//Caricamento sequenziale dei rimanenti script per garanzia funzionamento globale
 	    	$.getScript("vendors/bootstrap/distrib/js/bootstrap.min.js",function() {
-	    		$.getScript("vendors/fastclick/lib_dir/fastclick.js", function(){
-	    			$.getScript("vendors/iCheck/icheck.min.js", function(){
+	    		//$.getScript("vendors/fastclick/lib_dir/fastclick.js", function(){
+	    			//$.getScript("vendors/iCheck/icheck.min.js", function(){
 	    				$.getScript("vendors/datatables.net/js/jquery.dataTables.js", function(){
 	    					$.getScript("vendors/datatables.net-bs/js/dataTables.bootstrap.min.js", function(){
 	    						$.getScript("vendors/datatables.net-buttons/js/dataTables.buttons.min.js", function(){
 	    							$.getScript("vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js", function(){
-	    								$.getScript("vendors/datatables.net-buttons/js/buttons.flash.min.js", function(){
+	    								//$.getScript("vendors/datatables.net-buttons/js/buttons.flash.min.js", function(){
 	    									$.getScript("vendors/datatables.net-buttons/js/buttons.html5.min.js", function(){
 	    										$.getScript("vendors/datatables.net-buttons/js/buttons.print.min.js", function(){
-	    											$.getScript("vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js", function(){
-	    												$.getScript("vendors/datatables.net-keytable/js/dataTables.keyTable.min.js", function(){
+	    											//$.getScript("vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js", function(){
+	    												//$.getScript("vendors/datatables.net-keytable/js/dataTables.keyTable.min.js", function(){
 	    													$.getScript("vendors/datatables.net-responsive/js/dataTables.responsive.min.js", function(){
 	    														$.getScript("vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js", function(){
-	    															$.getScript("vendors/datatables.net-scroller/js/dataTables.scroller.js", function(){
-	    																$.getScript("vendors/jszip/distrib/jszip.min.js", function(){
+	    															//$.getScript("vendors/datatables.net-scroller/js/dataTables.scroller.js", function(){
+	    																//$.getScript("vendors/jszip/distrib/jszip.min.js", function(){
 	    															    	$.getScript("vendors/pdfmake/build_dir/vfs_fonts.js", function(){
 	    															    		$.getScript("js/custom.min.js");
 	    															    	})
-	    																})
-	    															})
+	    																//})
+	    															//})
 	    														})
 	    													})
-	    												})
-	    											})
+	    												//})
+	    											//})
 	    										})
 	    									})
-	    								})
+	    								//})
 	    							})
 	    						})
 	    					})
 	    				})
-	    			})
-	    		})
+	    			//})
+	    		//})
 	    	})
 	    });
 	    

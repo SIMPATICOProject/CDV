@@ -13,12 +13,7 @@
     <link href="vendors/bootstrap/distrib/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-    
-    <!-- NProgress -->
-<!--     <link href="../vendors/nprogress/nprogress.css" rel="stylesheet"> -->
 
-    <!-- iCheck -->
-    <!-- <link href="vendors/iCheck/skins/flat/green.css" rel="stylesheet"> -->
     <!-- Datatables -->
     <link href="vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
     <link href="vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
@@ -34,9 +29,6 @@
     <script src="vendors/jquery/distrib/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@json-editor/json-editor/dist/jsoneditor.min.js"></script>
     <script src="js/preload.js"></script>
-<!--     <script src="//cdn.jsdelivr.net/select2/3.4.8/select2.min.js"></script>
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/select2/3.4.8/select2.css">
-	<link rel="stylesheet" href="./css/select2-bootstrap.css"> -->
 	
 	<link rel="stylesheet" href="css/simple-scrollbar.css">
 	<script src="js/simple-scrollbar.js"></script>
@@ -246,39 +238,13 @@
     <script>
     	//Caricamento sequenziale dei rimanenti script per garanzia funzionamento globale
     	$.getScript("vendors/bootstrap/distrib/js/bootstrap.min.js",function() {
-    		//$.getScript("vendors/fastclick/lib_dir/fastclick.js", function(){
-    			//$.getScript("vendors/iCheck/icheck.min.js", function(){
-    				$.getScript("vendors/datatables.net/js/jquery.dataTables.js", function(){
-    					//$.getScript("vendors/datatables.net-bs/js/dataTables.bootstrap.min.js", function(){
-    						$.getScript("vendors/datatables.net-buttons/js/dataTables.buttons.min.js", function(){
-    							//$.getScript("vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js", function(){
-    								//$.getScript("vendors/datatables.net-buttons/js/buttons.flash.min.js", function(){
-    									//$.getScript("vendors/datatables.net-buttons/js/buttons.html5.min.js", function(){
-    										//$.getScript("vendors/datatables.net-buttons/js/buttons.print.min.js", function(){
-    											//$.getScript("vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js", function(){
-    												//$.getScript("vendors/datatables.net-keytable/js/dataTables.keyTable.min.js", function(){
-    													$.getScript("vendors/datatables.net-responsive/js/dataTables.responsive.min.js", function(){
-    														//$.getScript("vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js", function(){
-    															//$.getScript("vendors/datatables.net-scroller/js/dataTables.scroller.js", function(){
-    																//$.getScript("vendors/jszip/distrib/jszip.min.js", function(){
-    															    	//$.getScript("vendors/pdfmake/build_dir/vfs_fonts.js", function(){
-    															    		$.getScript("js/custom.min.js");
-    															    	//})
-    																//})
-    															//})
-    														//})
-    													})
-    												//})
-    											//})
-    										//})
-    									//})
-    								//})
-    							//})
-    						})
-    					//})
-    				})
-    			//})
-    		//})
+    		$.getScript("vendors/datatables.net/js/jquery.dataTables.js", function(){
+    			$.getScript("vendors/datatables.net-buttons/js/dataTables.buttons.min.js", function(){
+    				$.getScript("vendors/datatables.net-responsive/js/dataTables.responsive.min.js", function(){
+    					$.getScript("js/custom.min.js");
+					})
+    			})
+    		})
     	})
 
 	    function CreateNewService(){
@@ -402,30 +368,7 @@
       document.getElementById('restore').addEventListener('click',function() {
         editor.setValue(starting_value);
       });
-      
-/*    	  // Hook up the Home button
-      document.getElementById('home').addEventListener('click',function() {
-    	  window.location.href = window.location.origin+"/service-editor/index.html";//window.location.origin+"/service-editor/";
-      }); */
-      
-/*       // Hook up the validation indicator to update its status whenever the editor changes
-      editor.on('change',function() {
-        // Get an array of errors from the validator
-        var errors = editor.validate();
-        
-        var indicator = document.getElementById('valid_indicator');
-        
-        // Not valid
-        if(errors.length) {
-          indicator.className = 'label alert';
-          indicator.textContent = 'not valid';
-        }
-        // Valid
-        else {
-          indicator.className = 'label success';
-          indicator.textContent = 'valid';
-        }
-      }); */
+
     }
     //PUT - UPDATE SELECTED SERVICE
     else if(start != -1){
@@ -491,25 +434,6 @@
 		      document.getElementById('restore').addEventListener('click',function() {
 		        editor.setValue(starting_value);
 		      });
-		      
-/* 		      // Hook up the validation indicator to update its status whenever the editor changes
-		      editor.on('change',function() {
-		        // Get an array of errors from the validator
-		        var errors = editor.validate();
-		        var indicator = document.getElementById('valid_indicator');
-		        
-		        // Not valid
-		        if(errors.length) {
-		          indicator.className = 'label alert';
-		          indicator.textContent = 'not valid';
-		        }
-		        // Valid
-		        else {
-		          indicator.className = 'label success';
-		          indicator.textContent = 'valid';
-		        }
-		      }); */
-		      
 	        });
 		  });
     }
@@ -563,30 +487,6 @@
 	      document.getElementById('restore').addEventListener('click',function() {
 	        editor.setValue(starting_value);
 	      });
-	      
-/* 	   	  // Hook up the Home button
-	      document.getElementById('home').addEventListener('click',function() {
-	    	  window.location.href = window.location.origin+"/service-editor/index.html";//window.location.origin+"/service-editor/";
-	      }); */
-	      
-/* 	      // Hook up the validation indicator to update its status whenever the editor changes
-	      editor.on('change',function() {
-	        // Get an array of errors from the validator
-	        var errors = editor.validate();
-	        
-	        var indicator = document.getElementById('valid_indicator');
-	        
-	        // Not valid
-	        if(errors.length) {
-	          indicator.className = 'label alert';
-	          indicator.textContent = 'not valid';
-	        }
-	        // Valid
-	        else {
-	          indicator.className = 'label success';
-	          indicator.textContent = 'valid';
-	        }
-	      }); */
     }
   </script>
   
