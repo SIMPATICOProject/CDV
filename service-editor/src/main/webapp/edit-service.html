@@ -18,7 +18,7 @@
 <!--     <link href="../vendors/nprogress/nprogress.css" rel="stylesheet"> -->
 
     <!-- iCheck -->
-    <link href="vendors/iCheck/skins/flat/green.css" rel="stylesheet">
+    <!-- <link href="vendors/iCheck/skins/flat/green.css" rel="stylesheet"> -->
     <!-- Datatables -->
     <link href="vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
     <link href="vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
@@ -34,15 +34,14 @@
     <script src="vendors/jquery/distrib/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@json-editor/json-editor/dist/jsoneditor.min.js"></script>
     <script src="js/preload.js"></script>
-    <script src="//cdn.jsdelivr.net/select2/3.4.8/select2.min.js"></script>
+<!--     <script src="//cdn.jsdelivr.net/select2/3.4.8/select2.min.js"></script>
     <link rel="stylesheet" href="//cdn.jsdelivr.net/select2/3.4.8/select2.css">
-	<link rel="stylesheet" href="./css/select2-bootstrap.css">
+	<link rel="stylesheet" href="./css/select2-bootstrap.css"> -->
 	
 	<link rel="stylesheet" href="css/simple-scrollbar.css">
 	<script src="js/simple-scrollbar.js"></script>
 	
     <script>
-	
     // Set the default CSS theme and icon library globally
     JSONEditor.defaults.theme = 'bootstrap3';
     JSONEditor.defaults.iconlib = 'fontawesome4';
@@ -52,10 +51,10 @@
     JSONEditor.defaults.options.no_additional_properties= true;
 	JSONEditor.defaults.options.disable_properties=true;
 	JSONEditor.defaults.options.prompt_before_delete=true;
-	
     </script>
 
   </head>
+  
   <style>
   	input[type="text"]{
   		height: auto !important;
@@ -235,27 +234,19 @@
     <script>
   		//infoPDF is assigned in preload.js
 		var localInfoPDF = sessionStorage.getItem("infoPDF");
-		//se la variabile di sessione è già stata valorizzata...
 		if(localInfoPDF){
 			console.log("infoPDF valorizzato...");
 			appendPDFields(localInfoPDF,1);
 		}
-		//sennò la si istanzia e valorizza
 		else{
 			getPDFields();
 		}
     </script>
     
-<!--     USED BY EDIT-SERVICE ONLY TO IMPORT JSON
-    <script>
-    	var importJSONSink = sessionStorage.getItem("jsonSink");
-    </script> -->
-    
     <script>
     	//Caricamento sequenziale dei rimanenti script per garanzia funzionamento globale
     	$.getScript("vendors/bootstrap/distrib/js/bootstrap.min.js",function() {
     		$.getScript("vendors/fastclick/lib_dir/fastclick.js", function(){
-    			//$.getScript("vendors/nprogress/nprogress.js");
     			$.getScript("vendors/iCheck/icheck.min.js", function(){
     				$.getScript("vendors/datatables.net/js/jquery.dataTables.js", function(){
     					$.getScript("vendors/datatables.net-bs/js/dataTables.bootstrap.min.js", function(){
@@ -270,7 +261,6 @@
     														$.getScript("vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js", function(){
     															$.getScript("vendors/datatables.net-scroller/js/dataTables.scroller.js", function(){
     																$.getScript("vendors/jszip/distrib/jszip.min.js", function(){
-    																	//$.getScript("vendors/pdfmake/build_dir/pdfmake.min.js");
     															    	$.getScript("vendors/pdfmake/build_dir/vfs_fonts.js", function(){
     															    		$.getScript("js/custom.min.js");
     															    	})
@@ -308,7 +298,6 @@
 	    	            //ogni volta che arriva un nuovo file lo applico al JSON EDITOR (overwrite)
 	    	            var file = x.files[0];
 	    	            var jsonFile = "";
-	    	            //var jobj = "";
 	    	            
 	    	            if (file.type.match('\.json$')) {
 	    	            	
@@ -318,10 +307,6 @@
 
 	    	            	  reader.onload = function(e) {
 	    	            		  jsonFile = reader.result;
-/* 	    	            		  jobj = JSON.parse(jsonFile);
-	    	            		  console.log("stampa json prima:");
-	    	            		  console.log(jobj); */
-	    	            		  
 	    	            		  sessionStorage.setItem("jsonSink", jsonFile);
 	    	            	  }
 
@@ -331,9 +316,6 @@
 	    	            else {
 	    	            	  alert("File not supported!");
 	    	            }
-	    	            
-	    	            //sessionStorage.setItem("jsonSink", jsonFile);
-	    	            //location.reload();
 	    	        }
 	    	    } 
 	    	    else {
@@ -345,13 +327,13 @@
 	    	            console.log("IMPORT JSON, FILE NOT SUPPORTEEEEEEEEEEEEEEEEED");
 	    	        }
 	    	    }
-	    	    //document.getElementById("demo").innerHTML = txt;
 	    	}
-	    
 	</script>
+	
 	<script src="vendors/pdfmake/build_dir/pdfmake.min.js"></script>
 
   </body>
+  
   <script>
     var serviceID=window.location.href;
     var start = serviceID.indexOf("&");
@@ -403,7 +385,6 @@
 		        method: 'POST',
 		        contentType: "application/json",
 		        data: JSON.stringify(editor.getValue()),
-		        //success: function() {location.reload();}
 		    }).done(function(data) {
 		    	console.log("RIPOSTA POST REGISTRAZIONE NUOVO SERVIZIO: "+data);
 		    	console.log(data);
@@ -422,12 +403,12 @@
         editor.setValue(starting_value);
       });
       
-   	  // Hook up the Home button
+/*    	  // Hook up the Home button
       document.getElementById('home').addEventListener('click',function() {
     	  window.location.href = window.location.origin+"/service-editor/index.html";//window.location.origin+"/service-editor/";
-      });
+      }); */
       
-      // Hook up the validation indicator to update its status whenever the editor changes
+/*       // Hook up the validation indicator to update its status whenever the editor changes
       editor.on('change',function() {
         // Get an array of errors from the validator
         var errors = editor.validate();
@@ -444,14 +425,13 @@
           indicator.className = 'label success';
           indicator.textContent = 'valid';
         }
-      });
+      }); */
     }
     //PUT - UPDATE SELECTED SERVICE
     else if(start != -1){
     	console.log("start !=-1");
 	    var len = serviceID.length - start - 1;
 	    serviceID = serviceID.substr(start+1, len);
-	    //console.log("id servizio estratto da path: "+serviceID);
 		var starting_value="{}"
 		$(function() {
 			//findById_apipath
@@ -512,7 +492,7 @@
 		        editor.setValue(starting_value);
 		      });
 		      
-		      // Hook up the validation indicator to update its status whenever the editor changes
+/* 		      // Hook up the validation indicator to update its status whenever the editor changes
 		      editor.on('change',function() {
 		        // Get an array of errors from the validator
 		        var errors = editor.validate();
@@ -528,7 +508,8 @@
 		          indicator.className = 'label success';
 		          indicator.textContent = 'valid';
 		        }
-		      });
+		      }); */
+		      
 	        });
 		  });
     }
@@ -565,7 +546,6 @@
 			        method: 'POST',
 			        contentType: "application/json",
 			        data: JSON.stringify(editor.getValue()),
-			        //success: function() {location.reload();}
 			    }).done(function(data) {
 			    	console.log("RIPOSTA POST REGISTRAZIONE NUOVO SERVIZIO: "+data);
 			    	console.log(data);
@@ -584,12 +564,12 @@
 	        editor.setValue(starting_value);
 	      });
 	      
-	   	  // Hook up the Home button
+/* 	   	  // Hook up the Home button
 	      document.getElementById('home').addEventListener('click',function() {
 	    	  window.location.href = window.location.origin+"/service-editor/index.html";//window.location.origin+"/service-editor/";
-	      });
+	      }); */
 	      
-	      // Hook up the validation indicator to update its status whenever the editor changes
+/* 	      // Hook up the validation indicator to update its status whenever the editor changes
 	      editor.on('change',function() {
 	        // Get an array of errors from the validator
 	        var errors = editor.validate();
@@ -606,30 +586,30 @@
 	          indicator.className = 'label success';
 	          indicator.textContent = 'valid';
 	        }
-	      });
+	      }); */
     }
   </script>
+  
   <script>
 		$(document).ready(function(){
-     $(window).scroll(function () {
-            if ($(this).scrollTop() > 50) {
-                $('#back-to-top').fadeIn();
-            } else {
-                $('#back-to-top').fadeOut();
-            }
-        });
-        // scroll body to 0px on click
-        $('#back-to-top').click(function () {
-            $('#back-to-top').tooltip('hide');
-            $('body,html').animate({
-                scrollTop: 0
-            }, 800);
-            return false;
-        });
-             
-
-});
+	     $(window).scroll(function () {
+	            if ($(this).scrollTop() > 50) {
+	                $('#back-to-top').fadeIn();
+	            } else {
+	                $('#back-to-top').fadeOut();
+	            }
+	        });
+	        // scroll body to 0px on click
+	        $('#back-to-top').click(function () {
+	            $('#back-to-top').tooltip('hide');
+	            $('body,html').animate({
+	                scrollTop: 0
+	            }, 800);
+	            return false;
+	        });
+		});
 	</script>
+	
 	<script>
 	  var el = document.querySelector('.ss-container');
 	  SimpleScrollbar.initEl(el);
