@@ -111,6 +111,7 @@ function getPDFields(){
 
 	    	appendPDFields(jobj,0);
 
+	    	$('.sidebar-scroll-y').css("overflow", "hidden");
 	 });
 }
 

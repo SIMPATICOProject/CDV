@@ -34,6 +34,9 @@
 
 	<!-- File di configurazione -->
 	<script src="js/config.properties.js"></script>
+	
+	<link rel="stylesheet" href="css/simple-scrollbar.css">
+	<script src="js/simple-scrollbar.js"></script>
 
   </head>
 
@@ -105,7 +108,7 @@
     <div class="container body">
       <div class="main_container">
         <div class="col-md-3 left_col menu_fixed">
-          <div class="left_col scroll-view sidebar-scroll-y">
+          <div class="left_col scroll-view sidebar-scroll-y ss-container">
             <div class="navbar nav_title" style="border: 0;">
               <a href="index.html" class="site_title"><i class="fa fa-users"></i> <span>Service Editor</span></a>
             </div>
@@ -588,6 +591,10 @@
              
 
 });
+	</script>
+	<script>
+	  var el = document.querySelector('.ss-container');
+	  SimpleScrollbar.initEl(el);
 	</script>
 	<a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button" title="Click to return on the top page" data-toggle="tooltip" data-placement="left"><span class="glyphicon glyphicon-chevron-up"></span></a>
  

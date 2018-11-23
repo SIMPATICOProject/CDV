@@ -4326,3 +4326,10 @@ body {
 .back-to-top a{
     color: #209e91;
 }	
+
+/*Hiding scrollbar on Chrome, Opera and Safari*/
+.sidebar-scroll-y::-webkit-scrollbar{
+    display: none;
+}
+
+
