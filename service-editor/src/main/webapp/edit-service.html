@@ -235,7 +235,7 @@
   		//infoPDF is assigned in preload.js
 		var localInfoPDF = sessionStorage.getItem("infoPDF");
 		if(localInfoPDF){
-			console.log("infoPDF valorizzato...");
+			//console.log("infoPDF valorizzato...");
 			appendPDFields(localInfoPDF,1);
 		}
 		else{
@@ -246,39 +246,39 @@
     <script>
     	//Caricamento sequenziale dei rimanenti script per garanzia funzionamento globale
     	$.getScript("vendors/bootstrap/distrib/js/bootstrap.min.js",function() {
-    		$.getScript("vendors/fastclick/lib_dir/fastclick.js", function(){
-    			$.getScript("vendors/iCheck/icheck.min.js", function(){
+    		//$.getScript("vendors/fastclick/lib_dir/fastclick.js", function(){
+    			//$.getScript("vendors/iCheck/icheck.min.js", function(){
     				$.getScript("vendors/datatables.net/js/jquery.dataTables.js", function(){
-    					$.getScript("vendors/datatables.net-bs/js/dataTables.bootstrap.min.js", function(){
+    					//$.getScript("vendors/datatables.net-bs/js/dataTables.bootstrap.min.js", function(){
     						$.getScript("vendors/datatables.net-buttons/js/dataTables.buttons.min.js", function(){
-    							$.getScript("vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js", function(){
-    								$.getScript("vendors/datatables.net-buttons/js/buttons.flash.min.js", function(){
-    									$.getScript("vendors/datatables.net-buttons/js/buttons.html5.min.js", function(){
-    										$.getScript("vendors/datatables.net-buttons/js/buttons.print.min.js", function(){
-    											$.getScript("vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js", function(){
-    												$.getScript("vendors/datatables.net-keytable/js/dataTables.keyTable.min.js", function(){
+    							//$.getScript("vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js", function(){
+    								//$.getScript("vendors/datatables.net-buttons/js/buttons.flash.min.js", function(){
+    									//$.getScript("vendors/datatables.net-buttons/js/buttons.html5.min.js", function(){
+    										//$.getScript("vendors/datatables.net-buttons/js/buttons.print.min.js", function(){
+    											//$.getScript("vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js", function(){
+    												//$.getScript("vendors/datatables.net-keytable/js/dataTables.keyTable.min.js", function(){
     													$.getScript("vendors/datatables.net-responsive/js/dataTables.responsive.min.js", function(){
-    														$.getScript("vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js", function(){
-    															$.getScript("vendors/datatables.net-scroller/js/dataTables.scroller.js", function(){
-    																$.getScript("vendors/jszip/distrib/jszip.min.js", function(){
-    															    	$.getScript("vendors/pdfmake/build_dir/vfs_fonts.js", function(){
+    														//$.getScript("vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js", function(){
+    															//$.getScript("vendors/datatables.net-scroller/js/dataTables.scroller.js", function(){
+    																//$.getScript("vendors/jszip/distrib/jszip.min.js", function(){
+    															    	//$.getScript("vendors/pdfmake/build_dir/vfs_fonts.js", function(){
     															    		$.getScript("js/custom.min.js");
-    															    	})
-    																})
-    															})
-    														})
+    															    	//})
+    																//})
+    															//})
+    														//})
     													})
-    												})
-    											})
-    										})
-    									})
-    								})
-    							})
+    												//})
+    											//})
+    										//})
+    									//})
+    								//})
+    							//})
     						})
-    					})
+    					//})
     				})
-    			})
-    		})
+    			//})
+    		//})
     	})
 
 	    function CreateNewService(){
@@ -291,17 +291,17 @@
 	    	    if ('files' in x) {
 	    	        if (x.files.length == 0) {
 	    	            //nessun file caricato
-	    	            console.log("IMPORT JSON, NO FILEEEEEEEEEEEEEEEE");
+	    	            //console.log("IMPORT JSON, NO FILE");
 	    	        } else {
 	    	            //file caricati
-	    	            console.log("IMPORT JSON, DOOOOOOOOOOOOOOOOOOOOONE");
+	    	            //console.log("IMPORT JSON, DONE");
 	    	            //ogni volta che arriva un nuovo file lo applico al JSON EDITOR (overwrite)
 	    	            var file = x.files[0];
 	    	            var jsonFile = "";
 	    	            
 	    	            if (file.type.match('\.json$')) {
 	    	            	
-	    	            	console.log("json file uploaded!!!!");  
+	    	            	//console.log("json file uploaded.");  
 	    	            	
 	    	            	  var reader = new FileReader();
 
@@ -321,10 +321,10 @@
 	    	    else {
 	    	        if (x.value == "") {
 	    	            //nessun file caricato
-	    	            console.log("IMPORT JSON, NO FILE TWOOOOOOOOOO");
+	    	            console.log("IMPORT JSON, NO FILE");
 	    	        } else {
 	    	            //file non supportato dal browser 
-	    	            console.log("IMPORT JSON, FILE NOT SUPPORTEEEEEEEEEEEEEEEEED");
+	    	            console.log("IMPORT JSON, FILE NOT SUPPORTED");
 	    	        }
 	    	    }
 	    	}
@@ -341,12 +341,12 @@
     var importJSONSink = sessionStorage.getItem("jsonSink");
     
     if(importJSONSink){
-      console.log("inside importJSONSink, valorized!!!!!!!!!");
-      console.log(importJSONSink);
+      //console.log("inside importJSONSink, valorized");
+      //console.log(importJSONSink);
       
 	  var jobj = JSON.parse(importJSONSink);
-	  console.log("stampa json poccoprima:");
-	  console.log(jobj);
+	  //console.log("stampa json:");
+	  //console.log(jobj);
       
   	  $('#submit').text("Create Service");
       // Initialize the editor
@@ -374,8 +374,8 @@
     		
     		var payload = editor.getValue();
     		
-    		console.log("REGISTERING NEW SERVICE, submitting to CDV: ");
-    		console.log(payload);
+    		//console.log("REGISTERING NEW SERVICE, submitting to CDV: ");
+    		//console.log(payload);
     		
     		//POST - create_apipath
     		var url_ = "http://"+app_parameters.host_param+":"+app_parameters.port_param+
@@ -386,8 +386,8 @@
 		        contentType: "application/json",
 		        data: JSON.stringify(editor.getValue()),
 		    }).done(function(data) {
-		    	console.log("RIPOSTA POST REGISTRAZIONE NUOVO SERVIZIO: "+data);
-		    	console.log(data);
+		    	//console.log("RIPOSTA POST REGISTRAZIONE NUOVO SERVIZIO: "+data);
+		    	//console.log(data);
 		    	
 		    	var nome = payload.publicServiceName.replace(" ","-");
 		    	window.location.href = window.location.origin+"/service-editor/edit-service.html?"+nome+"&"+payload.publicServiceID;
@@ -429,17 +429,17 @@
     }
     //PUT - UPDATE SELECTED SERVICE
     else if(start != -1){
-    	console.log("start !=-1");
+    	//console.log("start !=-1");
 	    var len = serviceID.length - start - 1;
 	    serviceID = serviceID.substr(start+1, len);
 		var starting_value="{}"
 		$(function() {
 			//findById_apipath
 			var url = "http://"+app_parameters.host_param+":"+app_parameters.port_param+"/"+app_parameters.findById_apipath+serviceID;
-			console.log("composed url: "+url);
+			//console.log("composed url: "+url);
 	        $.get( url, function( data ) {
-	        	console.log("STAMPA DI CONTROLLO:"+data);
-	        	console.log(data);
+	        	//console.log("STAMPA DI CONTROLLO:"+data);
+	        	//console.log(data);
 	          starting_value=data;
 		      // Initialize the editor
 		      var editor = new JSONEditor(document.getElementById('editor_holder'),{
@@ -463,20 +463,20 @@
 		    		
 		    		var payload = editor.getValue();
 		    		
-		    		console.log("UPDATING SERVICE, submitting to CDV: ");
-		    		console.log(payload);
+		    		//console.log("UPDATING SERVICE, submitting to CDV: ");
+		    		//console.log(payload);
 		    		
 		    		//PUT - update_apipath
 		    		var url_ = "http://"+app_parameters.host_param+":"+app_parameters.port_param+"/"+app_parameters.update_apipath+serviceID;
-		    		console.log("composed url: "+url_);
+		    		//console.log("composed url: "+url_);
 			        $.ajax({
 				        url: url_,
 				        method: 'PUT',
 				        contentType: "application/json",
 				        data: JSON.stringify(editor.getValue()),
 				    }).done(function(data) {
-				    	console.log("RIPOSTA PUT MODIFICA NUOVO SERVIZIO: "+data);
-				    	console.log(data);
+				    	//console.log("RIPOSTA PUT MODIFICA NUOVO SERVIZIO: "+data);
+				    	//console.log(data);
 				    	
 				    	var nome = payload.publicServiceName.replace(" ","-");
 				    	window.location.href = window.location.origin+"/service-editor/edit-service.html?"+nome+"&"+payload.publicServiceID;
@@ -515,7 +515,7 @@
     }
     //POST - ADDING NEW SERVICE
     else{
-    	console.log("start -1");
+    	//console.log("start -1");
     	  $('#submit').text("Create Service");
 	      // Initialize the editor
 	      var editor = new JSONEditor(document.getElementById('editor_holder'),{
@@ -535,8 +535,8 @@
 	    		
 	    		var payload = editor.getValue();
 	    		
-	    		console.log("REGISTERING NEW SERVICE, submitting to CDV: ");
-	    		console.log(payload);
+	    		//console.log("REGISTERING NEW SERVICE, submitting to CDV: ");
+	    		//console.log(payload);
 	    		
 	    		//POST - create_apipath
 	    		var url_ = "http://"+app_parameters.host_param+":"+app_parameters.port_param+
@@ -547,8 +547,8 @@
 			        contentType: "application/json",
 			        data: JSON.stringify(editor.getValue()),
 			    }).done(function(data) {
-			    	console.log("RIPOSTA POST REGISTRAZIONE NUOVO SERVIZIO: "+data);
-			    	console.log(data);
+			    	//console.log("RIPOSTA POST REGISTRAZIONE NUOVO SERVIZIO: "+data);
+			    	//console.log(data);
 			    	
 			    	var nome = payload.publicServiceName.replace(" ","-");
 			    	window.location.href = window.location.origin+"/service-editor/edit-service.html?"+nome+"&"+payload.publicServiceID;

@@ -233,7 +233,7 @@
   		//infoPDF is assigned in preload.js
 		var localInfoPDF = sessionStorage.getItem("infoPDF");
 		if(localInfoPDF){
-			console.log("infoPDF valorizzato...");
+			//console.log("infoPDF valorizzato...");
 			appendPDFields(localInfoPDF,1);
 		}
 		else{
@@ -245,14 +245,14 @@
     var services_info;
     //GET - getServices_apipath
     var url_ = "http://"+app_parameters.host_param+":"+app_parameters.port_param+"/"+app_parameters.getServices_apipath;
-    console.log("composed url: "+url_);
+    //console.log("composed url: "+url_);
 	    $.ajax({
 	        url: url_
 	    }).then(function(data) {
 	    	
 	    	//List creation
 	    	var servcontent = JSON.stringify(data);
-	    	console.log(servcontent.length);
+	    	//console.log(servcontent.length);
 	    	
 	    	var jobj = JSON.parse(servcontent);
 	    	services_info = jobj;
@@ -358,11 +358,11 @@
 	    	$("#service-provider-content").text("");
 	    	$("#service-purpose-content").text("");
 	    	
-	    	console.log("stampa di keywords set: ");
-	    	console.log($('.keywords-set').first());
+	    	//console.log("stampa di keywords set: ");
+	    	//console.log($('.keywords-set').first());
 	    	$('.keywords-set').first().empty();
 	    	
-	    	console.log("contenuto dei servizi salvato in var globale: "+services_info[1].publicServiceName);
+	    	//console.log("contenuto dei servizi salvato in var globale: "+services_info[1].publicServiceName);
 
 	    	//titolo e descrizione disponibili presso jquery global var services_info
 	    	var titolo = "";
@@ -404,10 +404,10 @@
 	    		 console.log("Missing serviceUri field, Error: "+err.message);
 	    	}
 	    	
-	    	console.log("titolo: "+titolo);
-	    	console.log("descrizione: "+descr);
-	    	console.log("provider: "+provider);
-	    	console.log("purpose: "+purpose);
+	    	//console.log("titolo: "+titolo);
+	    	//console.log("descrizione: "+descr);
+	    	//console.log("provider: "+provider);
+	    	//console.log("purpose: "+purpose);
 	    	
 	    	//setting DOM
 	    	$("#service-title").text(titolo);	    	

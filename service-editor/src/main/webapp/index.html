@@ -537,11 +537,11 @@
     	//infoPDF is assigned in preload.js
 		var localInfoPDF = sessionStorage.getItem("infoPDF");
 		if(localInfoPDF){
-			console.log("infoPDF valorizzato.");
+			//console.log("infoPDF valorizzato.");
 			appendPDFields(localInfoPDF,1);
 		}
 		else{
-			console.log("infoPDF non è valorizzato.");
+			//console.log("infoPDF non è valorizzato.");
 			getPDFields();
 		}
     </script>
@@ -549,51 +549,51 @@
     <script>
    	//Caricamento sequenziale dei rimanenti script per garanzia funzionamento globale
    	$.getScript("vendors/bootstrap/distrib/js/bootstrap.min.js",function() {
-   		$.getScript("vendors/fastclick/lib_dir/fastclick.js", function(){
+   		//$.getScript("vendors/fastclick/lib_dir/fastclick.js", function(){
    			$.getScript("vendors/Chart.js/distrib/Chart.min.js", function(){
-   				$.getScript("vendors/gauge.js/distrib/gauge.min.js", function(){
-   					$.getScript("vendors/bootstrap-progressbar/bootstrap-progressbar.min.js", function(){
-   						$.getScript("vendors/iCheck/icheck.min.js", function(){
-   							$.getScript("vendors/skycons/skycons.js", function(){
+   				//$.getScript("vendors/gauge.js/distrib/gauge.min.js", function(){
+   					//$.getScript("vendors/bootstrap-progressbar/bootstrap-progressbar.min.js", function(){
+   						//$.getScript("vendors/iCheck/icheck.min.js", function(){
+   							//$.getScript("vendors/skycons/skycons.js", function(){
    								$.getScript("vendors/Flot/jquery.flot.js", function(){
-   									$.getScript("vendors/Flot/jquery.flot.pie.js", function(){
-   										$.getScript("vendors/Flot/jquery.flot.time.js", function(){
-   											$.getScript("vendors/Flot/jquery.flot.stack.js", function(){
-   												$.getScript("vendors/Flot/jquery.flot.resize.js", function(){
-   													$.getScript("vendors/flot.orderbars/js/jquery.flot.orderBars.js", function(){
-   														$.getScript("vendors/flot-spline/js/jquery.flot.spline.min.js", function(){
-   															$.getScript("vendors/flot.curvedlines/curvedLines.js", function(){
+   									//$.getScript("vendors/Flot/jquery.flot.pie.js", function(){
+   										//$.getScript("vendors/Flot/jquery.flot.time.js", function(){
+   											//$.getScript("vendors/Flot/jquery.flot.stack.js", function(){
+   												//$.getScript("vendors/Flot/jquery.flot.resize.js", function(){
+   													//$.getScript("vendors/flot.orderbars/js/jquery.flot.orderBars.js", function(){
+   														//$.getScript("vendors/flot-spline/js/jquery.flot.spline.min.js", function(){
+   															//$.getScript("vendors/flot.curvedlines/curvedLines.js", function(){
    																$.getScript("vendors/DateJS/build_dir/date.js", function(){
    															    	$.getScript("vendors/jqvmap/distrib/jquery.vmap.js", function(){
    															    		$.getScript("vendors/jqvmap/distrib/maps/jquery.vmap.world.js", function (){
    															    			$.getScript("vendors/jqvmap/examples/js/jquery.vmap.sampledata.js", function(){
    															    				$.getScript("vendors/moment/min/moment.min.js", function(){
-   															    					$.getScript("vendors/bootstrap-daterangepicker/daterangepicker.js", function(){
+   															    					//$.getScript("vendors/bootstrap-daterangepicker/daterangepicker.js", function(){
    															    						$.getScript("js/custom.js", function(){
    															    							$.getScript("js/index_supplier.js", function(){
    															    								indexStatsFiller();
    															    							})
    															    						})
-   															    					})
+   															    					//})
    															    				})
    															    			})
    															    		})
    															    	})
    																})
-   															})
-   														})
-   													})
-   												})
-   											})
-   										})
-   									})
+   															//})
+   														//})
+   													//})
+   												//})
+   											//})
+   										//})
+   									//})
    								})
-   							})
-   						})
-   					})
-   				})
+   							//})
+   						//})
+   					//})
+   				//})
    			})
-   		})
+   		//})
    	})
 	</script>
 	
