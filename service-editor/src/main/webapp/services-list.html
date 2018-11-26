@@ -222,9 +222,19 @@
 
     <!-- jQuery -->
     <script src="vendors/jquery/distrib/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.6/dist/loadingoverlay.min.js"></script>
     
     <script src="js/preload.js"></script>
     <script>
+		//SPINNER
+		//$("#editor_holder").LoadingOverlay("show", {
+		$.LoadingOverlay("show", {
+			 image       : "",
+			 fontawesome : "fa fa-cog fa-spin",
+			 fade: [200,100]
+		});
+		
+    
   		//infoPDF is assigned in preload.js
 		var localInfoPDF = sessionStorage.getItem("infoPDF");
 		if(localInfoPDF){
@@ -433,6 +443,11 @@
               }, 800);
               return false;
           });
+	        
+	        //SPINNER
+	        //$("#editor_holder").LoadingOverlay("hide", true);
+	        $.LoadingOverlay("hide", true);
+	        
 		});
 	</script>
 	

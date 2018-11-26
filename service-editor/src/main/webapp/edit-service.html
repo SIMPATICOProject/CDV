@@ -38,6 +38,8 @@
 	<link rel="stylesheet" href="css/simple-scrollbar.css">
 	<script src="js/simple-scrollbar.js"></script>
 	
+	<script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.6/dist/loadingoverlay.min.js"></script>
+	
     <script>
     // Set the default CSS theme and icon library globally
     JSONEditor.defaults.theme = 'bootstrap3';
@@ -48,6 +50,7 @@
     JSONEditor.defaults.options.no_additional_properties= true;
 	JSONEditor.defaults.options.disable_properties=true;
 	JSONEditor.defaults.options.prompt_before_delete=true;
+	
     </script>
 
   </head>
@@ -229,6 +232,16 @@
 
     <!-- USED BY THE SIDEBAR -->
     <script>
+    
+    	//SPINNER
+		//$("#editor_holder").LoadingOverlay("show", {
+		$.LoadingOverlay("show", {
+			 image       : "",
+			 fontawesome : "fa fa-cog fa-spin",
+			 fade: [100,800]
+		});
+		
+    
   		//infoPDF is assigned in preload.js
 		var localInfoPDF = sessionStorage.getItem("infoPDF");
 		if(localInfoPDF){
@@ -281,8 +294,9 @@
 	    	            		  sessionStorage.setItem("jsonSink", jsonFile);
 	    	            	  }
 
-	    	            	  reader.readAsText(file);  
+	    	            	  reader.readAsText(file); 
 	    	            	  location.reload();
+	    	            	  
 	    	            } 
 	    	            else {
 	    	            	  alert("File not supported!");
@@ -512,6 +526,10 @@
 	            }, 800);
 	            return false;
 	        });
+	        
+	        //SPINNER
+	        //$("#editor_holder").LoadingOverlay("hide", true);
+	        $.LoadingOverlay("hide", true);
 		});
 	</script>
 	

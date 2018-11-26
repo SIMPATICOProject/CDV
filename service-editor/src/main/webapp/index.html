@@ -161,6 +161,8 @@
               <span class="count_top"><i class="fa fa-user"></i> Total Services</span>
               <div class="count" id="total-services-number">#</div>
             </div>
+            <div class="col-md-2 col-sm-4 col-xs-6" id="spinner_holder" style="float: right !important;min-height: 60px;max-width: 80px;margin-top: 25px;">
+            </div>
           </div>
           <!-- /top tiles -->
           
@@ -519,9 +521,22 @@
 
     <!-- jQuery -->
     <script src="vendors/jquery/distrib/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.6/dist/loadingoverlay.min.js"></script>
     
     <script src="js/preload.js"></script>
     <script>
+		//SPINNER - Temporizzato per avviarsi dopo X secondi
+		setTimeout(function(){
+			$("#spinner_holder").LoadingOverlay("show", {
+				//$.LoadingOverlay("show", {
+					 image       : "",
+					 fontawesome : "fa fa-cog fa-spin",
+					 fade: [1,1],
+					 background  : "rgba(165, 190, 100, 0)",
+					 fontawesomeColor  : "#202020" 
+				});
+		}, 300);
+    
     	//infoPDF is assigned in preload.js
 		var localInfoPDF = sessionStorage.getItem("infoPDF");
 		if(localInfoPDF){
@@ -576,6 +591,14 @@
 	            }, 800);
 	            return false;
 	        });
+	        
+	        //SPINNER
+			setTimeout(function(){
+		        $("#spinner_holder").LoadingOverlay("hide", true);
+		        //$.LoadingOverlay("hide", true);
+			}, 500);
+	        
+	        
 		});
 	</script>
 	
