@@ -18,7 +18,17 @@
     },
     "serviceUri": {
       "type": "string",
-	  "title":"Service URI"
+	  "title":"Service URL",
+	  "format":"url",
+	  "links": [
+		{
+		  "rel": "Open Service page",
+		  "href": "{{self}}",
+		  "target": "_blank",
+		  "class": "comment-link open-in-modal primary-text"
+		}
+	  ]
+	  
     },
     "serviceDescriptionVersion": {
       "type": "string",
@@ -204,32 +214,36 @@
             "dataMapping": {
               "type": "array",
 			  "format":"tabs",
+			  
 			  "title": "Data Mapping",
               "items": 
                 {
                   "type": "object",
 				  "title": "Field",
-				  
+				  "id": "arr_item",
 				  "properties": {
                     "property": {
                       "type": "string",
 					   "title": "Property"
                     },
+                    
                     "conceptId": {
-                      "type": "string",
-					   "title": "Concept"
+						"$ref": "./concepts.json"
+                      					   
                     },
-                    "name": {
-                      "type": "string",
-					   "title": "Name"
+					"name": {
+                       "type": "string",
+					   "options": {
+							"hidden": false
+						  }
                     },
                     "type": {
                       "type": "string",
 					   "title": "Type",
 					  "options" :{
-						  
 						  "input_width":"85px"
-					  }
+					  },
+					  "default":"string"
                     },
                     "required": {
                       "type": "number",
@@ -249,7 +263,7 @@
 						  
 						  "input_width":"100px"
 					  }
-                    }
+                    }					
                   },
                   "required": [
                     "property",
