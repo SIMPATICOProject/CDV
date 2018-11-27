@@ -446,8 +446,8 @@
                         <div class="block">
                           <div class="block_content">
                             <h2 class="title">
-                                              <a>Who Needs Sundance When You’ve Got&nbsp;Crowdfunding?</a>
-                                          </h2>
+                            	<a>Who Needs Sundance When You’ve Got&nbsp;Crowdfunding?</a>
+                            </h2>
                             <div class="byline">
                               <span>13 hours ago</span> by <a>Jane Smith</a>
                             </div>
@@ -522,89 +522,82 @@
     <!-- jQuery -->
     <script src="vendors/jquery/distrib/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.6/dist/loadingoverlay.min.js"></script>
-    
     <script src="js/preload.js"></script>
     <script>
-		//SPINNER - Temporizzato per avviarsi dopo X secondi
-		setTimeout(function(){
-			$("#spinner_holder").LoadingOverlay("show", {
-				//$.LoadingOverlay("show", {
-					 image       : "",
-					 fontawesome : "fa fa-cog fa-spin",
-					 fade: [1,1],
-					 background  : "rgba(165, 190, 100, 0)",
-					 fontawesomeColor  : "#202020" 
-				});
-		}, 300);
-    
-    	//infoPDF is assigned in preload.js
-		var localInfoPDF = sessionStorage.getItem("infoPDF");
-		if(localInfoPDF){
-			//console.log("infoPDF valorizzato.");
-			appendPDFields(localInfoPDF,1);
-		}
-		else{
-			//console.log("infoPDF non è valorizzato.");
-			getPDFields();
-		}
-    </script>
+	//SPINNER - Temporizzato per avviarsi dopo X secondi
+	setTimeout(function(){
+		$("#spinner_holder").LoadingOverlay("show", {
+			//$.LoadingOverlay("show", {
+				 image       : "",
+				 fontawesome : "fa fa-cog fa-spin",
+				 fade: [1,1],
+				 background  : "rgba(165, 190, 100, 0)",
+				 fontawesomeColor  : "#202020" 
+			});
+	}, 300);
+   
+	//SESION VAR - infoPDF is assigned in preload.js
+	var localInfoPDF = sessionStorage.getItem("infoPDF");
+	if(localInfoPDF){
+		//console.log("infoPDF valorizzato.");
+		appendPDFields(localInfoPDF,1);
+	}
+	else{
+		//console.log("infoPDF non è valorizzato.");
+		getPDFields();
+	}
 
-    <script>
-   	//Caricamento sequenziale dei rimanenti script per garanzia funzionamento globale
+    //CASCADE SCRIPT LOADING
    	$.getScript("vendors/bootstrap/distrib/js/bootstrap.min.js",function() {
    		$.getScript("vendors/Chart.js/distrib/Chart.min.js", function(){
-   			$.getScript("vendors/Flot/jquery.flot.js", function(){
+   			//$.getScript("vendors/Flot/jquery.flot.js", function(){
    				$.getScript("vendors/DateJS/build_dir/date.js", function(){
 					$.getScript("vendors/jqvmap/distrib/jquery.vmap.js", function(){
 						$.getScript("vendors/jqvmap/distrib/maps/jquery.vmap.world.js", function (){
 							$.getScript("vendors/jqvmap/examples/js/jquery.vmap.sampledata.js", function(){
-								$.getScript("vendors/moment/min/moment.min.js", function(){
+								//$.getScript("vendors/moment/min/moment.min.js", function(){
 									$.getScript("js/custom.js", function(){
 										$.getScript("js/index_supplier.js", function(){
 											indexStatsFiller();
 										})
 									})
-								})
+								//})
 							})
 						})
 					})
-				})
+				//})
 			})
 		})
 	})
-	</script>
-	
-    <script>
-		$(document).ready(function(){
-		     $(window).scroll(function () {
-		            if ($(this).scrollTop() > 50) {
-		                $('#back-to-top').fadeIn();
-		            } else {
-		                $('#back-to-top').fadeOut();
-		            }
-		        });
-	        // scroll body to 0px on click
-	        $('#back-to-top').click(function () {
-	            $('#back-to-top').tooltip('hide');
-	            $('body,html').animate({
-	                scrollTop: 0
-	            }, 800);
-	            return false;
+
+	$(document).ready(function(){
+	     $(window).scroll(function () {
+	            if ($(this).scrollTop() > 50) {
+	                $('#back-to-top').fadeIn();
+	            } else {
+	                $('#back-to-top').fadeOut();
+	            }
 	        });
-	        
-	        //SPINNER
-			setTimeout(function(){
-		        $("#spinner_holder").LoadingOverlay("hide", true);
-		        //$.LoadingOverlay("hide", true);
-			}, 500);
-	        
-	        
-		});
-	</script>
-	
-	<script>
-	  var el = document.querySelector('.ss-container');
-	  SimpleScrollbar.initEl(el);
+        // scroll body to 0px on click
+        $('#back-to-top').click(function () {
+            $('#back-to-top').tooltip('hide');
+            $('body,html').animate({
+                scrollTop: 0
+            }, 800);
+            return false;
+        });
+        
+        //SPINNER HIDE
+		setTimeout(function(){
+	        $("#spinner_holder").LoadingOverlay("hide", true);
+	        //$.LoadingOverlay("hide", true);
+		}, 500);
+        
+	});
+		
+	//SIMPLESCROLLBAR PLUGIN - Scrollbar for Firefox
+	var el = document.querySelector('.ss-container');
+	SimpleScrollbar.initEl(el);
 	</script>
 	
 	<a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button" title="Click to return on the top page" data-toggle="tooltip" data-placement="left"><span class="glyphicon glyphicon-chevron-up"></span></a>
