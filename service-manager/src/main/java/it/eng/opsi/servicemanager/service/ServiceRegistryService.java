@@ -102,7 +102,8 @@ public class ServiceRegistryService {
 			@ApiParam(name = "regex", value = "descrizione", required = true) @QueryParam("regex") String regex) {
 		return dao.findByName(regex);
 	}
-
+	
+	
 	@GET
 	@Path("/services/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -113,6 +114,20 @@ public class ServiceRegistryService {
 	public ServiceEntry findById(
 			@ApiParam(name = "id", value = "descrizione", required = true) @PathParam("id") String id) {
 		return dao.findById(id);
+	}
+	
+
+	
+	@GET
+	@Path("/services/searchByUrl/")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST") })
+	public ServiceEntry findServiceByUrl(
+			@ApiParam(name = "url", value = "service url", required = true) @QueryParam("url") String url) {
+		return dao.findByURL(url);
 	}
 
 	@PUT
