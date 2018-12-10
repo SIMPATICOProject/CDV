@@ -17,13 +17,13 @@
     "background": {
       "scripts": [
         "src/bg/background.js",
-        "src/lib/options/js/manifest.js",
-		"src/lib/options/js/vendor/underscore.js",
-		"src/lib/options/js/background.js"
+        "src/lib_dir/options/js/manifest.js",
+		"src/lib_dir/options/js/vendor/underscore.js",
+		"src/lib_dir/options/js/background.js"
       ],
       "persistent": true
     },
-    "options_page": "src/lib/options/index.html",
+    "options_page": "src/lib_dir/options/index.html",
     "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   	"browser_action": {
   	"default_icon": "icons/icon16.png",
