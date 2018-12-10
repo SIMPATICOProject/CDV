@@ -805,7 +805,7 @@ a:focus {
     border-right: 5px solid #1ABB9C
 }
 .nav li.current-page {
-    background: rgba(255, 255, 255, 0.05)
+    background: #209e91
 }
 .nav li li li.current-page {
     background: none
@@ -831,7 +831,7 @@ a:focus {
     font-weight: 400;
     font-size: 22px;
     width: 100%;
-    color: #ECF0F1 !important;
+    color: #209e91 !important;
     margin-left: 0 !important;
     line-height: 59px;
     display: block;
@@ -1706,7 +1706,9 @@ span.right {
 }
 .tile_count {
     margin-bottom: 20px;
-    margin-top: 20px
+    margin-top: 20px;
+	background:#1ABB9C;
+	    color: #f7f7f7;
 }
 .tile_count .tile_stats_count {
     border-bottom: 1px solid #D9DEE4;
@@ -4288,7 +4290,7 @@ table thead .checkbox.radio { margin-top:-7px;margin-top:-21px; }
 		background-color: #73879C;
 		color: #fff;
 		padding: 4px;
-		border-radius: 20%;
+		border-radius: 5px;
 		line-height: 2;
 		line-widht: 2;
 		
