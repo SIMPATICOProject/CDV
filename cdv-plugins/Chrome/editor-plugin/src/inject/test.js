@@ -1,3 +1,0 @@
-function clickFun(){
-	alert("bombombomb");
-}

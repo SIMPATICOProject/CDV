@@ -7,5 +7,6 @@ var app_parameters={
 		getServices_apipath: 'service-manager/api/v1/services/',
 		getPDataCategoryTree_apipath: 'service-manager/api/v1/pdatafields/category/tree',
 		getServiceReportbyType_apipath: 'service-manager/api/v1/service_report/type',
-		getServiceReportbySector_apipath: 'service-manager/api/v1/service_report/sector'
+		getServiceReportbySector_apipath: 'service-manager/api/v1/service_report/sector',
+		getServByUrl_apipath: 'service-manager/api/v1/services/searchByUrl?url='
 };

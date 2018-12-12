@@ -11,11 +11,13 @@
     },
     "default_locale": "en",
   	"permissions": [
+  		"*://*/*",
   		"activeTab",
   		"contextMenus"
   	 ],
     "background": {
       "scripts": [
+        "src/bg/jquery.js",
         "src/bg/background.js",
         "src/lib_dir/options/js/manifest.js",
 		"src/lib_dir/options/js/vendor/underscore.js",
@@ -34,18 +36,9 @@
         "matches": [
             "*://*/*"
         ],
-        "run_at": "document_start",
+        "run_at": "document_end",
         "js": [
             "src/inject/content.js"
-        ]
-      },
-      {
-        "matches": [
-            "*://*/*"
-        ],
-        "run_at": "document_start",
-        "js": [
-            "src/inject/test.js"
         ]
       }
     ]
