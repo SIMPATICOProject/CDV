@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import { Router} from '@angular/router';
-
+import { ConfigService } from 'ng2-config';
 import {GlobalState} from '../../../global.state';
 
 import 'style-loader!./baPageTop.scss';

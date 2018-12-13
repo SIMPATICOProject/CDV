@@ -384,6 +384,7 @@ public class AccountService implements IAccountService {
 
 	}
 
+	@CoberturaIgnore
 	@Override
 	@POST
 	@Path("/accounts/{accountId}/telephones")
@@ -566,6 +567,7 @@ public class AccountService implements IAccountService {
 
 	}
 
+	@CoberturaIgnore
 	@Override
 	@DELETE
 	@Path("/accounts/{accountId}/telephones/{telephoneId}")
@@ -600,6 +602,7 @@ public class AccountService implements IAccountService {
 
 	}
 
+	@CoberturaIgnore
 	@Override
 	@POST
 	@Path("/accounts/{accountId}/contacts")
@@ -781,6 +784,7 @@ public class AccountService implements IAccountService {
 
 	}
 
+	@CoberturaIgnore
 	@Override
 	@DELETE
 	@Path("/accounts/{accountId}/contacts/{contactId}")
@@ -814,6 +818,7 @@ public class AccountService implements IAccountService {
 
 	}
 
+	@CoberturaIgnore
 	@Override
 	@POST
 	@Path("/accounts/{accountId}/emails")
@@ -858,6 +863,7 @@ public class AccountService implements IAccountService {
 
 	}
 
+	
 	@CoberturaIgnore
 	@Override
 	@GET
@@ -995,6 +1001,7 @@ public class AccountService implements IAccountService {
 
 	}
 
+	@CoberturaIgnore
 	@Override
 	@DELETE
 	@Path("/accounts/{accountId}/emails/{emailId}")
@@ -1028,6 +1035,7 @@ public class AccountService implements IAccountService {
 
 	}
 
+	@CoberturaIgnore
 	@Override
 	@POST
 	@Path("/accounts/{accountId}/particular")
@@ -1116,56 +1124,9 @@ public class AccountService implements IAccountService {
 
 	}
 
-	// Viene utilizzato addParticular, essendocene solo uno
-	// @Override
-	// @PUT
-	// @Path("/accounts/{accountId}/particular")
-	// @Consumes({ MediaType.APPLICATION_JSON })
-	// @Produces({ MediaType.APPLICATION_JSON })
-	// public Response updateParticular(String input, @PathParam("accountId")
-	// String accountId) {
-	//
-	// try {
-	//
-	// Particular particular = DAOUtils.json2Obj(input, Particular.class);
-	//
-	//
-	// Particular updated = dao.updateParticular(particular, accountId);
-	//
-	// return
-	// Response.status(Response.Status.OK).entity(DAOUtils.obj2Json(updated,
-	// Particular.class).toString())
-	// .build();
-	//
-	// } catch (AccountUtilsException e) {
-	// e.printStackTrace();
-	// ErrorResponse error = new
-	// ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
-	// e.getClass().getSimpleName(), e.getMessage());
-	// return
-	// Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
-	//
-	// } catch (ParticularNotFoundException e) {
-	// e.printStackTrace();
-	// ErrorResponse error = new
-	// ErrorResponse(String.valueOf(Response.Status.NOT_FOUND.getStatusCode()),
-	// e.getClass().getSimpleName(), e.getMessage());
-	// return
-	// Response.status(Response.Status.NOT_FOUND).entity(error.toJson()).build();
-	//
-	// } catch (AccountManagerException e) {
-	// e.printStackTrace();
-	// ErrorResponse error = new ErrorResponse(
-	// String.valueOf(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()),
-	// e.getClass().getSimpleName(),
-	// e.getMessage());
-	// return
-	// Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error.toJson()).build();
-	//
-	// }
-	//
-	// }
+	
 
+	@CoberturaIgnore
 	@Override
 	@DELETE
 	@Path("/accounts/{accountId}/particular")
@@ -1479,6 +1440,7 @@ public class AccountService implements IAccountService {
 
 	}
 
+	@CoberturaIgnore
 	@Override
 	@GET
 	@Path("/users/{surrogateId}/services/{serviceId}/serviceLink")
@@ -1528,6 +1490,7 @@ public class AccountService implements IAccountService {
 
 	}
 
+	@CoberturaIgnore
 	@Override
 	@GET
 	@Path("/users/{surrogateId}/serviceLink")
@@ -1576,6 +1539,7 @@ public class AccountService implements IAccountService {
 
 	}
 
+	@CoberturaIgnore
 	@Override
 	@GET
 	@Path("/accounts/{accountId}/serviceLinks/{slrId}/statuses")
@@ -1622,6 +1586,7 @@ public class AccountService implements IAccountService {
 
 	}
 
+	@CoberturaIgnore
 	@Override
 	@DELETE
 	@Path("/accounts/{accountId}/serviceLinks/{slrId}")
@@ -1665,6 +1630,7 @@ public class AccountService implements IAccountService {
 
 	}
 
+	@CoberturaIgnore
 	@Override
 	@DELETE
 	@Path("/users/{surrogateId}/services/{serviceId}/serviceLink")
@@ -1701,6 +1667,7 @@ public class AccountService implements IAccountService {
 	}
 
 	// @Override
+	@CoberturaIgnore
 	@GET
 	@Path("/accounts/{accountId}/serviceLinks/{slrId}/statuses/{ssrId}")
 	@Produces({ MediaType.APPLICATION_JSON })
@@ -1745,6 +1712,7 @@ public class AccountService implements IAccountService {
 
 	}
 
+	@CoberturaIgnore
 	@Override
 	@POST
 	@Path("/verifySLR")
@@ -1836,7 +1804,7 @@ public class AccountService implements IAccountService {
 
 		}
 
-	}
+	} 
 
 	@CoberturaIgnore
 	private static void callDeletePData(String accountId) throws PDataManagerCallException {

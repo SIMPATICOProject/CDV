@@ -34,6 +34,7 @@ import org.mockito.Mockito;
 
 import static org.mockito.Mockito.when;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -48,7 +49,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import it.eng.opsi.cdv.consentmanager.dao.AccountDAO;
+import it.eng.opsi.cdv.consentmanager.model.AccountManagerException;
 import it.eng.opsi.cdv.consentmanager.model.ServiceLinkRecord;
+import it.eng.opsi.cdv.consentmanager.model.ServiceLinkRecordNotFoundException;
 import it.eng.opsi.cdv.consentmanager.model.consentRecord.CommonPart;
 import it.eng.opsi.cdv.consentmanager.model.consentRecord.ConsentForm;
 import it.eng.opsi.cdv.consentmanager.model.consentRecord.ConsentRecordSink;
@@ -60,6 +63,7 @@ import it.eng.opsi.cdv.consentmanager.model.consentRecord.Dataset;
 import it.eng.opsi.cdv.consentmanager.model.consentRecord.RSDescription;
 import it.eng.opsi.cdv.consentmanager.model.consentRecord.ResourceSet;
 import it.eng.opsi.cdv.consentmanager.service.ConsentService;
+import it.eng.opsi.cdv.consentmanager.utils.ConsentManagerException;
 import it.eng.opsi.cdv.consentmanager.utils.ConsentServiceUtils;
 import it.eng.opsi.cdv.consentmanager.utils.DAOUtils;
 import it.eng.opsi.servicemanager.data.ServiceEntry;
@@ -230,87 +234,9 @@ public class ConsentServiceTest {
     	System.out.println("...testing giveConsent_CREATED_1255 CLOSED.");
     	
     }
-
-
-    @Test
-    public void testGiveConsent_ACCEPTED_861() {
-    	    	  	
-    	System.out.println("testing giveConsent_ACCEPTED_861 STARTS...");
-    	
-    	PowerMockito.mockStatic(ConsentServiceUtils.class);
-
-    	ConsentForm cf = new ConsentForm();
-    	cf.setSourceId("source_id_value");
-    	cf.setSinkId("sink_id_value");
-    	cf.setSourceName("source_name_value");
-    	cf.setSinkName("sink_name_value");
-    	cf.setSinkHumanReadbleDescription("sinkHumanReadbleDescription_value");
-    	cf.setSourceHumanReadbleDescription("sourceHumanReadbleDescription_value");
-    	
-    	ResourceSet rs = new ResourceSet();
-    	rs.setRs_id("rs_id_value");
-    	rs.setAnonymousUsage("anonymousUsage_value");
-    	
-    	List<Dataset> dataset = new ArrayList<Dataset>();
-    	Dataset ds = new Dataset();
-    	
-    	ds.set_id("_id_value");
-    	ds.setContactPoint("contactPoint_value");
-    	ds.setDescription("description_value");
-    	ds.setIssued("issued_value");
-    	List<String> key = new ArrayList<String>();
-    	ds.setKeyword(key);
-    	List<String> pur = new ArrayList<String>();
-    	ds.setPurpose(pur);
-    	ds.setLanguage("language_value");
-    	ds.setModified("modified_value");
-    	ds.setPublisher("publisher_value");
-    	ds.setServiceDataType("serviceDataType_value");
-    	ds.setSpatial("spatial_value");
-    	ds.setTitle("title_value");
-    	ds.setDataStructureSpecification("dataStructureSpecification_value");
-    	ds.setStatus(true);
-    	Date d = new Date();
-    	ds.setCreated(d);
-    	List<DataMapping> dm = new ArrayList<DataMapping>();
-    	ds.setDataMapping(dm);
-    	dataset.add(ds);
-    	
-    	rs.setDataset(dataset);
-    	cf.setResourceSet(rs);
-    	
-    	String jsonCF = "";
-		try {
-
-			
-			jsonCF = DAOUtils.obj2Json(cf,ConsentForm.class);
-
-			when(cform.getSinkId()).thenReturn("sink_id_value");
-			when(cform.getSourceId()).thenReturn("source_id_value");
-			
-			when(dao.getConsentRecordsByServicendDatasetId(Mockito.anyString(),Mockito.anyString(),
-					Mockito.anyString(),Mockito.anyString())).thenReturn(lo);
-			when(lo.get(0)).thenReturn(crSink);
-			when(lo.get(1)).thenReturn(css);
-			
-			when(crSink.getConsentStatusList()).thenReturn(ssrList);
-			ConsentRecordStatusEnum lastStatus = ConsentRecordStatusEnum.ACTIVE;
-			when(ssrList.size()).thenReturn(2);
-			when(ssrList.get(Mockito.anyInt())).thenReturn(c);
-			when(c.getConsent_status()).thenReturn(lastStatus);
-			
-			Response res = consentServ.giveConsent(jsonCF, "account_id_value");
-	    	assertEquals(202, res.getStatus());
-	    	
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-    	System.out.println("...testing giveConsent_ACCEPTED_861 CLOSED.");
-    	
-    }
     
+    
+       
     
     @Test
     public void testGiveConsent_CREATED_969() {
@@ -422,5 +348,305 @@ public class ConsentServiceTest {
     	System.out.println("...testing giveConsent_CREATED_969 CLOSED.");
     	
     }
+    
+    
+    @Test
+    public void testGiveConsent_CREATED_969_BAD_REQUEST() {
+    	    	  	
+    	System.out.println("testing giveConsent_CREATED_969_BAD_REQUEST STARTS...");
+    	
+    	PowerMockito.mockStatic(ConsentServiceUtils.class);
+    	
+    	ConsentForm cf = new ConsentForm();
+    	cf.setSourceId("source_id_value");
+    	cf.setSinkId("sink_id_value");
+    	cf.setSourceName("source_name_value");
+    	cf.setSinkName("sink_name_value");
+    	cf.setSinkHumanReadbleDescription("sinkHumanReadbleDescription_value");
+    	cf.setSourceHumanReadbleDescription("sourceHumanReadbleDescription_value");
+    	
+    	ResourceSet rs = new ResourceSet();
+    	rs.setRs_id("rs_id_value");
+    	rs.setAnonymousUsage("anonymousUsage_value");
+    	
+    	List<Dataset> dataset = new ArrayList<Dataset>();
+    	Dataset ds = new Dataset();
+    	
+    	ds.set_id("_id_value");
+    	ds.setContactPoint("contactPoint_value");
+    	ds.setDescription("description_value");
+    	ds.setIssued("issued_value");
+    	List<String> key = new ArrayList<String>();
+    	ds.setKeyword(key);
+    	List<String> pur = new ArrayList<String>();
+    	ds.setPurpose(pur);
+    	ds.setLanguage("language_value");
+    	ds.setModified("modified_value");
+    	ds.setPublisher("publisher_value");
+    	ds.setServiceDataType("serviceDataType_value");
+    	ds.setSpatial("spatial_value");
+    	ds.setTitle("title_value");
+    	ds.setDataStructureSpecification("dataStructureSpecification_value");
+    	ds.setStatus(true);
+    	Date d = new Date();
+    	ds.setCreated(d);
+    	List<DataMapping> dm = new ArrayList<DataMapping>();
+    	ds.setDataMapping(dm);
+    	dataset.add(ds);
+    	
+    	rs.setDataset(dataset);
+    	cf.setResourceSet(rs);
+    	
+    	String jsonCF = "";
+		try {
+
+			jsonCF = DAOUtils.obj2Json(cf,ConsentForm.class);
+			List<Object> loi = new ArrayList<Object>();
+			Object ob = new Object();
+			loi.add(ob);
+			
+			when(cform.getSinkId()).thenReturn("sink_id_value");
+			when(cform.getSourceId()).thenReturn("source_id_value");
+			
+			when(dao.getConsentRecordsByServicendDatasetId(Mockito.anyString(),Mockito.anyString(),
+					Mockito.anyString(),Mockito.anyString())).thenThrow(ConsentManagerException.class);
+			
+			
+			Response res = consentServ.giveConsent(jsonCF, "account_id_value");
+	    	assertEquals(400, res.getStatus());
+	    	
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+    	System.out.println("...testing giveConsent_CREATED_969_BAD_REQUEST CLOSED.");
+    	
+    }
+    
+    
+    @Test
+    public void testGiveConsent_CREATED_969_BAD_REQUEST_2() {
+    	    	  	
+    	System.out.println("testing giveConsent_CREATED_969_BAD_REQUEST_2 STARTS...");
+    	
+    	PowerMockito.mockStatic(ConsentServiceUtils.class);
+    	
+    	ConsentForm cf = new ConsentForm();
+    	cf.setSourceId("source_id_value");
+    	cf.setSinkId("sink_id_value");
+    	cf.setSourceName("source_name_value");
+    	cf.setSinkName("sink_name_value");
+    	cf.setSinkHumanReadbleDescription("sinkHumanReadbleDescription_value");
+    	cf.setSourceHumanReadbleDescription("sourceHumanReadbleDescription_value");
+    	
+    	ResourceSet rs = new ResourceSet();
+    	rs.setRs_id("rs_id_value");
+    	rs.setAnonymousUsage("anonymousUsage_value");
+    	
+    	List<Dataset> dataset = new ArrayList<Dataset>();
+    	Dataset ds = new Dataset();
+    	
+    	ds.set_id("_id_value");
+    	ds.setContactPoint("contactPoint_value");
+    	ds.setDescription("description_value");
+    	ds.setIssued("issued_value");
+    	List<String> key = new ArrayList<String>();
+    	ds.setKeyword(key);
+    	List<String> pur = new ArrayList<String>();
+    	ds.setPurpose(pur);
+    	ds.setLanguage("language_value");
+    	ds.setModified("modified_value");
+    	ds.setPublisher("publisher_value");
+    	ds.setServiceDataType("serviceDataType_value");
+    	ds.setSpatial("spatial_value");
+    	ds.setTitle("title_value");
+    	ds.setDataStructureSpecification("dataStructureSpecification_value");
+    	ds.setStatus(true);
+    	Date d = new Date();
+    	ds.setCreated(d);
+    	List<DataMapping> dm = new ArrayList<DataMapping>();
+    	ds.setDataMapping(dm);
+    	dataset.add(ds);
+    	
+    	rs.setDataset(dataset);
+    	cf.setResourceSet(rs);
+    	
+    	String jsonCF = "";
+		try {
+
+			jsonCF = DAOUtils.obj2Json(cf,ConsentForm.class);
+			List<Object> loi = new ArrayList<Object>();
+			Object ob = new Object();
+			loi.add(ob);
+			
+			when(cform.getSinkId()).thenReturn("sink_id_value");
+			when(cform.getSourceId()).thenReturn("source_id_value");
+			
+			when(dao.getConsentRecordsByServicendDatasetId(Mockito.anyString(),Mockito.anyString(),
+					Mockito.anyString(),Mockito.anyString())).thenThrow(UnsupportedEncodingException .class);
+			
+			
+			Response res = consentServ.giveConsent(jsonCF, "account_id_value");
+	    	assertEquals(400, res.getStatus());
+	    	
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+    	System.out.println("...testing giveConsent_CREATED_969_BAD_REQUEST_2 CLOSED.");
+    	
+    }
+    
+    @Test
+    public void testGiveConsent_CREATED_969_NOT_FOUND() {
+    	    	  	
+    	System.out.println("testing giveConsent_CREATED_969_NOT_FOUND STARTS...");
+    	
+    	PowerMockito.mockStatic(ConsentServiceUtils.class);
+    	
+    	ConsentForm cf = new ConsentForm();
+    	cf.setSourceId("source_id_value");
+    	cf.setSinkId("sink_id_value");
+    	cf.setSourceName("source_name_value");
+    	cf.setSinkName("sink_name_value");
+    	cf.setSinkHumanReadbleDescription("sinkHumanReadbleDescription_value");
+    	cf.setSourceHumanReadbleDescription("sourceHumanReadbleDescription_value");
+    	
+    	ResourceSet rs = new ResourceSet();
+    	rs.setRs_id("rs_id_value");
+    	rs.setAnonymousUsage("anonymousUsage_value");
+    	
+    	List<Dataset> dataset = new ArrayList<Dataset>();
+    	Dataset ds = new Dataset();
+    	
+    	ds.set_id("_id_value");
+    	ds.setContactPoint("contactPoint_value");
+    	ds.setDescription("description_value");
+    	ds.setIssued("issued_value");
+    	List<String> key = new ArrayList<String>();
+    	ds.setKeyword(key);
+    	List<String> pur = new ArrayList<String>();
+    	ds.setPurpose(pur);
+    	ds.setLanguage("language_value");
+    	ds.setModified("modified_value");
+    	ds.setPublisher("publisher_value");
+    	ds.setServiceDataType("serviceDataType_value");
+    	ds.setSpatial("spatial_value");
+    	ds.setTitle("title_value");
+    	ds.setDataStructureSpecification("dataStructureSpecification_value");
+    	ds.setStatus(true);
+    	Date d = new Date();
+    	ds.setCreated(d);
+    	List<DataMapping> dm = new ArrayList<DataMapping>();
+    	ds.setDataMapping(dm);
+    	dataset.add(ds);
+    	
+    	rs.setDataset(dataset);
+    	cf.setResourceSet(rs);
+    	
+    	String jsonCF = "";
+		try {
+
+			jsonCF = DAOUtils.obj2Json(cf,ConsentForm.class);
+			List<Object> loi = new ArrayList<Object>();
+			Object ob = new Object();
+			loi.add(ob);
+			
+			when(cform.getSinkId()).thenReturn("sink_id_value");
+			when(cform.getSourceId()).thenReturn("source_id_value");
+			
+			when(dao.getConsentRecordsByServicendDatasetId(Mockito.anyString(),Mockito.anyString(),
+					Mockito.anyString(),Mockito.anyString())).thenThrow(ServiceLinkRecordNotFoundException.class);
+			
+			
+			Response res = consentServ.giveConsent(jsonCF, "account_id_value");
+	    	assertEquals(404, res.getStatus());
+	    	
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+    	System.out.println("...testing giveConsent_CREATED_969_NOT_FOUND CLOSED.");
+    	
+    }
+    
+    @Test
+    public void testGiveConsent_CREATED_969_500() {
+    	    	  	
+    	System.out.println("testing giveConsent_CREATED_969_500 STARTS...");
+    	
+    	PowerMockito.mockStatic(ConsentServiceUtils.class);
+    	
+    	ConsentForm cf = new ConsentForm();
+    	cf.setSourceId("source_id_value");
+    	cf.setSinkId("sink_id_value");
+    	cf.setSourceName("source_name_value");
+    	cf.setSinkName("sink_name_value");
+    	cf.setSinkHumanReadbleDescription("sinkHumanReadbleDescription_value");
+    	cf.setSourceHumanReadbleDescription("sourceHumanReadbleDescription_value");
+    	
+    	ResourceSet rs = new ResourceSet();
+    	rs.setRs_id("rs_id_value");
+    	rs.setAnonymousUsage("anonymousUsage_value");
+    	
+    	List<Dataset> dataset = new ArrayList<Dataset>();
+    	Dataset ds = new Dataset();
+    	
+    	ds.set_id("_id_value");
+    	ds.setContactPoint("contactPoint_value");
+    	ds.setDescription("description_value");
+    	ds.setIssued("issued_value");
+    	List<String> key = new ArrayList<String>();
+    	ds.setKeyword(key);
+    	List<String> pur = new ArrayList<String>();
+    	ds.setPurpose(pur);
+    	ds.setLanguage("language_value");
+    	ds.setModified("modified_value");
+    	ds.setPublisher("publisher_value");
+    	ds.setServiceDataType("serviceDataType_value");
+    	ds.setSpatial("spatial_value");
+    	ds.setTitle("title_value");
+    	ds.setDataStructureSpecification("dataStructureSpecification_value");
+    	ds.setStatus(true);
+    	Date d = new Date();
+    	ds.setCreated(d);
+    	List<DataMapping> dm = new ArrayList<DataMapping>();
+    	ds.setDataMapping(dm);
+    	dataset.add(ds);
+    	
+    	rs.setDataset(dataset);
+    	cf.setResourceSet(rs);
+    	
+    	String jsonCF = "";
+		try {
+
+			jsonCF = DAOUtils.obj2Json(cf,ConsentForm.class);
+			List<Object> loi = new ArrayList<Object>();
+			Object ob = new Object();
+			loi.add(ob);
+			
+			when(cform.getSinkId()).thenReturn("sink_id_value");
+			when(cform.getSourceId()).thenReturn("source_id_value");
+			
+			when(dao.getConsentRecordsByServicendDatasetId(Mockito.anyString(),Mockito.anyString(),
+					Mockito.anyString(),Mockito.anyString())).thenThrow(AccountManagerException.class);
+			
+			
+			Response res = consentServ.giveConsent(jsonCF, "account_id_value");
+	    	assertEquals(500, res.getStatus());
+	    	
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+    	System.out.println("...testing giveConsent_CREATED_969_NOT_FOUND CLOSED.");
+    	
+    }
+    
+    
     
 }

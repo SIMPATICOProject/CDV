@@ -248,6 +248,27 @@ public class AccountServiceTest {
         
     }
     
+    @Test
+    public void testExistsAccount_500() {
+    	    	  	
+    	System.out.println("testing existsAccount_500 STARTED...");
+    	PowerMockito.mockStatic(AccountService.class);
+    	   	
+        try {
+
+	    	Whitebox.setInternalState(AccountService.class,dao); 
+			when(dao.existsAccount(Mockito.anyString())).thenThrow(Exception.class);
+			Response res = accService.existsAccount(Mockito.anyString());
+			assertEquals(500, res.getStatus());
+			
+		} catch (AccountManagerException e) {
+			e.printStackTrace();
+		} 
+
+        System.out.println("...testing existsAccount 500 CLOSED.");
+        
+    }
+    
      
    @Test
    public void testUpdateAccount() {
@@ -260,16 +281,7 @@ public class AccountServiceTest {
 
 	    	Whitebox.setInternalState(AccountService.class,dao); 
 			when(dao.updateAccount(any(Account.class))).thenReturn(retAccMock);
-			
-			res=accService.addContact(Mockito.anyString(), Mockito.anyString());
-		   	assertEquals(201, res.getStatus());
-		   	res=accService.addEmail(Mockito.anyString(), Mockito.anyString());
-		   	assertEquals(201, res.getStatus());
-		   	res=accService.addTelephone(Mockito.anyString(), Mockito.anyString());
-		   	assertEquals(201, res.getStatus());
-		   	res=accService.addParticular(Mockito.anyString(), Mockito.anyString());
-		   	assertEquals(201, res.getStatus());
-		   				
+								   				
 			res = accService.updateAccount(input_201, Mockito.anyString());
 			assertEquals(200, res.getStatus());
 			
@@ -281,6 +293,83 @@ public class AccountServiceTest {
        
    }
    
+   @Test
+   public void testUpdateAccount_BAD_REQUEST() {
+   	    	  	
+   	System.out.println("testing updateAccount_BAD_REQUEST STARTED...");
+   	
+   	String input_400 = "";
+       try {
+       	
+       	PowerMockito.mockStatic(DAOUtils.class);
+       	DAOUtils du = PowerMockito.mock(DAOUtils.class);
+       	
+       	Whitebox.setInternalState(AccountService.class,dao);
+
+       	PowerMockito.when(du.json2Obj(Mockito.anyString(),any())).thenThrow(AccountUtilsException.class);
+			
+       	Response res = accService.updateAccount(input_400, "q");
+			assertEquals(400, res.getStatus());
+
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+
+       System.out.println("...testing createAccount_BAD_REQUEST CLOSED.");
+       
+   }
+   
+   @Test
+   public void testUpdateAccount_500() {
+   	    	  	
+   	System.out.println("testing updateAccount_500 STARTED...");
+   	
+   	String input= "{\"username\":\"a_username\"}";
+   	Response res=null;
+       try {
+
+	    	Whitebox.setInternalState(AccountService.class,dao); 
+			when(dao.updateAccount(any(Account.class))).thenThrow(Exception.class);
+			
+		   				
+			res = accService.updateAccount(input, Mockito.anyString());
+			assertEquals(500, res.getStatus());
+			
+		} catch (AccountManagerException  |  AccountNotFoundException e) {
+			e.printStackTrace();
+		} 
+
+       System.out.println("...testing updateAccount_500 CLOSED.");
+       
+   } 
+   
+   
+   @Test
+   public void testUpdateAccount_404() {
+   	    	  	
+   	System.out.println("testing updateAccount_404 STARTED...");
+   	
+   	String input= "{\"username\":\"a_username\"}";
+   	Response res=null;
+       try {
+
+	    	Whitebox.setInternalState(AccountService.class,dao); 
+			when(dao.updateAccount(any(Account.class))).thenThrow(AccountNotFoundException .class);
+			
+		   				
+			res = accService.updateAccount(input, Mockito.anyString());
+			assertEquals(404, res.getStatus());
+			
+		} catch (AccountManagerException  |  AccountNotFoundException e) {
+			e.printStackTrace();
+		} 
+
+       System.out.println("...testing updateAccount_404 CLOSED.");
+       
+   } 
+   
+   
       
    @Test
    public void testDeleteAccountAll() {
@@ -291,26 +380,65 @@ public class AccountServiceTest {
    	Response res=null;
    	//when(dao.deleteAccount(Mockito.anyString()))..thenReturn(retAccMock);  
    	Whitebox.setInternalState(AccountService.class,dao); 
-   	res=accService.deleteContact(Mockito.anyString(), Mockito.anyString());
-   	assertEquals(200, res.getStatus());
-   	res=accService.deleteEmail(Mockito.anyString(), Mockito.anyString());
-   	assertEquals(200, res.getStatus());
-   	res=accService.deleteTelephone(Mockito.anyString(), Mockito.anyString());
-   	assertEquals(200, res.getStatus());
-   	res=accService.deleteParticular(Mockito.anyString());
-   	assertEquals(200, res.getStatus());
-   	res=accService.deleteServiceLinkRecordById(Mockito.anyString(), Mockito.anyString());
-   	assertEquals(200, res.getStatus());
-   	res=accService.deleteServiceLinkRecordBySurrogateIdAndServiceId(Mockito.anyString(), Mockito.anyString());
-   	assertEquals(200, res.getStatus());
-    res = accService.deleteAccount(Mockito.anyString());
+   	res = accService.deleteAccount(Mockito.anyString());
 	assertEquals(200, res.getStatus());
 	System.out.println("...testing updateAccount CLOSED.");
        
    }
-    
-  
-    
+   
+   
+   @Test
+   public void testDeleteAccount_404() {
+   	    	  	
+   	System.out.println("testing deleteAccount_404 STARTED...");
+   	PowerMockito.mockStatic(AccountService.class);
+	   	
+   	try {
+		Response res=null;
+		//when(dao.deleteAccount(Mockito.anyString()))..thenReturn(retAccMock);  
+		Whitebox.setInternalState(AccountService.class,dao); 
+		res=accService.deleteContact(Mockito.anyString(), Mockito.anyString());
+		PowerMockito.when(dao.deleteAccount(Mockito.anyString())).thenThrow(AccountNotFoundException .class);
+		res = accService.deleteAccount(Mockito.anyString());
+		assertEquals(404, res.getStatus());
+		System.out.println("...testing deleteAccount_404 CLOSED.");
+	} catch (AccountNotFoundException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (AccountManagerException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+       
+   }
+   
+   @Test
+   public void testDeleteAccount_500() {
+   	    	  	
+   	System.out.println("testing deleteAccount_500 STARTED...");
+   	PowerMockito.mockStatic(AccountService.class);
+	   	
+   	try {
+		Response res=null;
+		//when(dao.deleteAccount(Mockito.anyString()))..thenReturn(retAccMock);  
+		Whitebox.setInternalState(AccountService.class,dao); 
+		res=accService.deleteContact(Mockito.anyString(), Mockito.anyString());
+		PowerMockito.when(dao.deleteAccount(Mockito.anyString())).thenThrow(AccountManagerException.class);
+		res = accService.deleteAccount(Mockito.anyString());
+		assertEquals(500, res.getStatus());
+		System.out.println("...testing deleteAccount_500 CLOSED.");
+	} catch (AccountNotFoundException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (AccountManagerException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+       
+   }
+   
+   
+        
        
     
     @Test
@@ -330,6 +458,66 @@ public class AccountServiceTest {
 		} 
 
         System.out.println("...testing createAccount CLOSED.");
+        
+    }
+    
+    @Test
+    public void testGetAccount_404() {
+    	    	  	
+    	System.out.println("testing getAccount_404 STARTED...");
+    	
+    	try {
+
+        	Whitebox.setInternalState(AccountService.class,dao); 
+			when(dao.getAccount(Mockito.anyString())).thenThrow(AccountNotFoundException.class);
+			Response res = accService.getAccount(Mockito.anyString(), false);
+			assertEquals(404, res.getStatus());
+			
+		} catch (AccountManagerException  |  AccountNotFoundException e) {
+			e.printStackTrace();
+		} 
+
+        System.out.println("...testing getAccount_404 CLOSED.");
+        
+    }
+    
+    @Test
+    public void testGetAccount_500() {
+    	    	  	
+    	System.out.println("testing getAccount_500 STARTED...");
+    	
+    	try {
+
+        	Whitebox.setInternalState(AccountService.class,dao); 
+			when(dao.getAccount(Mockito.anyString())).thenThrow(Exception.class);
+			Response res = accService.getAccount(Mockito.anyString(), false);
+			assertEquals(500, res.getStatus());
+			
+		} catch (AccountManagerException  |  AccountNotFoundException e) {
+			e.printStackTrace();
+		} 
+
+        System.out.println("...testing getAccount_500 CLOSED.");
+        
+    }
+    
+    @Test
+    public void testGetAccount_400() {
+    	    	  	
+    	System.out.println("testing getAccount_400 STARTED...");
+    	
+    	try {
+
+        	Whitebox.setInternalState(AccountService.class,dao); 
+			when(dao.getAccount(Mockito.anyString())).thenThrow(AccountUtilsException.class);
+			Response res = accService.getAccount(Mockito.anyString(), false);
+			assertEquals(400, res.getStatus());
+			
+		} catch (AccountManagerException  |  AccountNotFoundException e) {
+			e.printStackTrace();
+		} 
+
+        System.out.println("...testing getAccount_400 CLOSED.");
         
     }
     
@@ -396,7 +584,115 @@ public class AccountServiceTest {
         System.out.println("...testing downloadPdata CLOSED.");
         
     }
+    
+    
+    @Test
+    public void testDownloadPData_400() {
+    	    	  	
+    	System.out.println("testing downloadPdata_exceptions STARTED...");
+    	
+		    	
+    	try {
+    		 PowerMockito.mockStatic(AccountService.class);
+    		 
+ 			 Whitebox.setInternalState(AccountService.class,dao); 
+        	 when( pdataEntryMock.getName() ).thenReturn( "aPdata" );
+             when( pdataEntryMock.getConceptId()).thenReturn( "aConceptId" );
+             when(  pdataEntryMock.getType()).thenReturn( "aType" );
+             when(  pdataEntryMock.getValues()).thenReturn( Arrays.asList("1", "2", "3") );
+            
+             List<PDataEntry> entries= new ArrayList<PDataEntry>();
+             entries.add(pdataEntryMock);
+             PowerMockito.when(accService.callGetAllPData(Mockito.anyString())).thenThrow(AccountUtilsException.class);
+             when(dao.getAccount(Mockito.anyString())).thenReturn(retAccMock);
+			
+			Response res = accService.downloadAccountAndPData(Mockito.anyString());
+			assertEquals(400, res.getStatus());
+			
+			
+			
+			
+			
+			
+		} catch ( AccountManagerException  |  AccountNotFoundException | PDataManagerCallException e) {
+			e.printStackTrace();
+		} 
 
+        System.out.println("...testing downloadPdata_exceptions CLOSED.");
+        
+    }
+    
+    
+    @Test
+    public void testDownloadPData_404() {
+    	    	  	
+    	System.out.println("testing downloadPdata_exceptions STARTED...");
+    	
+		    	
+    	try {
+    		 PowerMockito.mockStatic(AccountService.class);
+    		 
+ 			 Whitebox.setInternalState(AccountService.class,dao); 
+        	 when( pdataEntryMock.getName() ).thenReturn( "aPdata" );
+             when( pdataEntryMock.getConceptId()).thenReturn( "aConceptId" );
+             when(  pdataEntryMock.getType()).thenReturn( "aType" );
+             when(  pdataEntryMock.getValues()).thenReturn( Arrays.asList("1", "2", "3") );
+            
+             List<PDataEntry> entries= new ArrayList<PDataEntry>();
+             entries.add(pdataEntryMock);
+             PowerMockito.when(accService.callGetAllPData(Mockito.anyString())).thenReturn(entries);
+             when(dao.getAccount(Mockito.anyString())).thenThrow(AccountNotFoundException.class);
+			
+			Response res = accService.downloadAccountAndPData(Mockito.anyString());
+			
+			assertEquals(404, res.getStatus());   		
+			
+			
+		} catch ( AccountManagerException  |  AccountNotFoundException | PDataManagerCallException e) {
+			e.printStackTrace();
+		} 
+
+        System.out.println("...testing downloadPdata_exceptions CLOSED.");
+        
+    }
+    
+
+    @Test
+    public void testDownloadPData_500() {
+    	    	  	
+    	System.out.println("testing downloadPdata_exceptions STARTED...");
+    	
+		    	
+    	try {
+    		 PowerMockito.mockStatic(AccountService.class);
+    		 
+ 			 Whitebox.setInternalState(AccountService.class,dao); 
+        	 when( pdataEntryMock.getName() ).thenReturn( "aPdata" );
+             when( pdataEntryMock.getConceptId()).thenReturn( "aConceptId" );
+             when(  pdataEntryMock.getType()).thenReturn( "aType" );
+             when(  pdataEntryMock.getValues()).thenReturn( Arrays.asList("1", "2", "3") );
+            
+             List<PDataEntry> entries= new ArrayList<PDataEntry>();
+             entries.add(pdataEntryMock);
+             PowerMockito.when(accService.callGetAllPData(Mockito.anyString())).thenReturn(entries);
+             when(dao.getAccount(Mockito.anyString())).thenThrow(Exception.class);
+			
+			Response res = accService.downloadAccountAndPData(Mockito.anyString());
+			
+			assertEquals(500, res.getStatus());   		
+			
+			
+		} catch ( AccountManagerException  |  AccountNotFoundException | PDataManagerCallException e) {
+			e.printStackTrace();
+		} 
+
+        System.out.println("...testing downloadPdata_exceptions CLOSED.");
+        
+    }
+    
+    
+    
+    
     @Test
     public void testCreateServiceLink_200() {
     	    	  	
@@ -428,8 +724,6 @@ public class AccountServiceTest {
     	
     }
     
-    
-      
     
     @Test
     public void testCreateServiceLink_400() {
@@ -537,7 +831,9 @@ public class AccountServiceTest {
 			Whitebox.setInternalState(AccountService.class,dao);
 			
 			ServiceLinkRecord slr = new ServiceLinkRecord("serviceId_value","serviceUri_value","serviceName_value","surrogateId_value");
-			when(dao.getServiceLinkRecord(Mockito.anyString(), Mockito.anyString())).thenReturn(slr);
+			ArrayList<ServiceLinkRecord> slrs= new ArrayList<ServiceLinkRecord>();
+			slrs.add(slr);
+			when(dao.getServiceLinkRecords(Mockito.anyString())).thenReturn(slrs);
 										
 			Response res = accService.getServiceLinkRecords(Mockito.anyString());
 			assertEquals(200, res.getStatus());
@@ -551,6 +847,76 @@ public class AccountServiceTest {
     	
     }
     
+    @Test
+    public void testGetServiceLinkRecords_404() {
+    	    	  	
+    	System.out.println("testing testGetServiceLinkRecords STARTED...");
+    	
+    	
+		try {
+			Whitebox.setInternalState(AccountService.class,dao);
+			
+			when(dao.getServiceLinkRecords(Mockito.anyString())).thenThrow(ServiceLinkRecordNotFoundException.class);
+										
+			Response res = accService.getServiceLinkRecords(Mockito.anyString());
+			assertEquals(404, res.getStatus());
+			
+			
+		} catch (AccountManagerException | ServiceLinkRecordNotFoundException  e) {
+			e.printStackTrace();
+		}
+    	
+    	System.out.println("...testing testGetServiceLinkRecords_404 CLOSED.");
+    	
+    }
+    
+    @Test
+    public void testGetServiceLinkRecords_400() {
+    	    	  	
+    	System.out.println("testing testGetServiceLinkRecords STARTED...");
+    	
+    	
+		try {
+			Whitebox.setInternalState(AccountService.class,dao);
+			
+			when(dao.getServiceLinkRecords(Mockito.anyString())).thenThrow(AccountUtilsException.class);
+										
+			Response res = accService.getServiceLinkRecords(Mockito.anyString());
+			assertEquals(400, res.getStatus());
+			
+			
+		} catch (AccountManagerException | ServiceLinkRecordNotFoundException  e) {
+			e.printStackTrace();
+		}
+    	
+    	System.out.println("...testing testGetServiceLinkRecords_400 CLOSED.");
+    	
+    }
+    
+    @Test
+    public void testGetServiceLinkRecords_500() {
+    	    	  	
+    	System.out.println("testing testGetServiceLinkRecords STARTED...");
+    	
+    	
+		try {
+			Whitebox.setInternalState(AccountService.class,dao);
+			
+			when(dao.getServiceLinkRecords(Mockito.anyString())).thenThrow(Exception.class);
+										
+			Response res = accService.getServiceLinkRecords(Mockito.anyString());
+			assertEquals(500, res.getStatus());
+			
+			
+		} catch (AccountManagerException | ServiceLinkRecordNotFoundException  e) {
+			e.printStackTrace();
+		}
+    	
+    	System.out.println("...testing testGetServiceLinkRecords_400 CLOSED.");
+    	
+    }
+    
+   
     @Test
     public void testGetServiceLinkRecord() {
     	    	  	
@@ -576,6 +942,78 @@ public class AccountServiceTest {
     }
     
     @Test
+    public void testGetServiceLinkRecord_400() {
+    	    	  	
+    	System.out.println("testing testGetServiceLinkRecord STARTED...");
+    	
+    	
+		try {
+			Whitebox.setInternalState(AccountService.class,dao);
+			
+			ServiceLinkRecord slr = new ServiceLinkRecord("serviceId_value","serviceUri_value","serviceName_value","surrogateId_value");
+			when(dao.getServiceLinkRecord(Mockito.anyString(), Mockito.anyString())).thenThrow(AccountUtilsException .class);
+										
+			Response res = accService.getServiceLinkRecord(Mockito.anyString(),Mockito.anyString());
+			assertEquals(400, res.getStatus());
+			
+			
+		} catch (AccountManagerException | ServiceLinkRecordNotFoundException  e) {
+			e.printStackTrace();
+		}
+    	
+    	System.out.println("...testing testGetServiceLinkRecord_400 CLOSED.");
+    	
+    }
+    
+    @Test
+    public void testGetServiceLinkRecord_404() {
+    	    	  	
+    	System.out.println("testing testGetServiceLinkRecord STARTED...");
+    	
+    	
+		try {
+			Whitebox.setInternalState(AccountService.class,dao);
+			
+			ServiceLinkRecord slr = new ServiceLinkRecord("serviceId_value","serviceUri_value","serviceName_value","surrogateId_value");
+			when(dao.getServiceLinkRecord(Mockito.anyString(), Mockito.anyString())).thenThrow(ServiceLinkRecordNotFoundException .class);
+										
+			Response res = accService.getServiceLinkRecord(Mockito.anyString(),Mockito.anyString());
+			assertEquals(404, res.getStatus());
+			
+			
+		} catch (AccountManagerException | ServiceLinkRecordNotFoundException  e) {
+			e.printStackTrace();
+		}
+    	
+    	System.out.println("...testing testGetServiceLinkRecord_404 CLOSED.");
+    	
+    }
+   
+    @Test
+    public void testGetServiceLinkRecord_500() {
+    	    	  	
+    	System.out.println("testing testGetServiceLinkRecord STARTED...");
+    	
+    	
+		try {
+			Whitebox.setInternalState(AccountService.class,dao);
+			
+			ServiceLinkRecord slr = new ServiceLinkRecord("serviceId_value","serviceUri_value","serviceName_value","surrogateId_value");
+			when(dao.getServiceLinkRecord(Mockito.anyString(), Mockito.anyString())).thenThrow(Exception  .class);
+										
+			Response res = accService.getServiceLinkRecord(Mockito.anyString(),Mockito.anyString());
+			assertEquals(500, res.getStatus());
+			
+			
+		} catch (AccountManagerException | ServiceLinkRecordNotFoundException  e) {
+			e.printStackTrace();
+		}
+    	
+    	System.out.println("...testing testGetServiceLinkRecord_500 CLOSED.");
+    	
+    }
+
+	@Test
     public void testGetServiceLinkRecordByServiceId() {
     	    	  	
     	System.out.println("testing testGetServiceLinkRecordByServiceId STARTED...");
@@ -596,6 +1034,80 @@ public class AccountServiceTest {
 		}
     	
     	System.out.println("...testing testGetServiceLinkRecordByServiceId CLOSED.");
+    	
+    }
+	
+	
+	@Test
+    public void testGetServiceLinkRecordByServiceId_400() {
+    	    	  	
+    	System.out.println("testing testGetServiceLinkRecordByServiceId_400 STARTED...");
+    	
+    	
+		try {
+			Whitebox.setInternalState(AccountService.class,dao);
+			
+			ServiceLinkRecord slr = new ServiceLinkRecord("serviceId_value","serviceUri_value","serviceName_value","surrogateId_value");
+			when(dao.getServiceLinkRecordByServiceId(Mockito.anyString(), Mockito.anyString())).thenThrow(AccountUtilsException .class);
+										
+			Response res = accService.getServiceLinkRecordByServiceId(Mockito.anyString(),Mockito.anyString());
+			assertEquals(400, res.getStatus());
+			
+			
+		} catch (AccountManagerException | ServiceLinkRecordNotFoundException  e) {
+			e.printStackTrace();
+		}
+		
+		
+		
+    	
+    	System.out.println("...testing testGetServiceLinkRecordByServiceId_400 CLOSED.");
+    	
+    }
+	
+	@Test
+    public void testGetServiceLinkRecordByServiceId_404() {
+    	    	  	
+    	System.out.println("testing testGetServiceLinkRecordByServiceId_404 STARTED...");
+    	
+		try {
+			Whitebox.setInternalState(AccountService.class,dao);
+			
+			ServiceLinkRecord slr = new ServiceLinkRecord("serviceId_value","serviceUri_value","serviceName_value","surrogateId_value");
+			when(dao.getServiceLinkRecordByServiceId(Mockito.anyString(), Mockito.anyString())).thenThrow(ServiceLinkRecordNotFoundException  .class);
+										
+			Response res = accService.getServiceLinkRecordByServiceId(Mockito.anyString(),Mockito.anyString());
+			assertEquals(404, res.getStatus());
+			
+			
+		} catch (AccountManagerException | ServiceLinkRecordNotFoundException  e) {
+			e.printStackTrace();
+		}
+    	
+    	System.out.println("...testing testGetServiceLinkRecordByServiceId_404 CLOSED.");
+    	
+    }
+	
+	@Test
+    public void testGetServiceLinkRecordByServiceId_500() {
+    	    	  	
+    	System.out.println("testing testGetServiceLinkRecordByServiceId_404 STARTED...");
+    	
+		try {
+			Whitebox.setInternalState(AccountService.class,dao);
+			
+			ServiceLinkRecord slr = new ServiceLinkRecord("serviceId_value","serviceUri_value","serviceName_value","surrogateId_value");
+			when(dao.getServiceLinkRecordByServiceId(Mockito.anyString(), Mockito.anyString())).thenThrow(Exception.class);
+										
+			Response res = accService.getServiceLinkRecordByServiceId(Mockito.anyString(),Mockito.anyString());
+			assertEquals(500, res.getStatus());
+			
+			
+		} catch (AccountManagerException | ServiceLinkRecordNotFoundException  e) {
+			e.printStackTrace();
+		}
+    	
+    	System.out.println("...testing testGetServiceLinkRecordByServiceId_500 CLOSED.");
     	
     }
     
@@ -678,6 +1190,100 @@ public class AccountServiceTest {
 		}
     	
     	System.out.println("...testing testDisableServiceLinkRecord CLOSED.");
+    	
+    }
+    
+    
+    @Test
+    public void testDisableServiceLinkRecord_404() {
+    	    	  	
+    	System.out.println("testing testDisableServiceLinkRecord_404 STARTED...");
+    	
+    	
+		try {
+			Whitebox.setInternalState(AccountService.class,dao);
+			
+			
+			ServiceLinkRecord slr = new ServiceLinkRecord("serviceId_value","serviceUri_value","serviceName_value","surrogateId_value");
+			when(dao.getServiceLinkRecord(Mockito.anyString(), Mockito.anyString())).thenThrow(ServiceLinkRecordNotFoundException.class);
+			
+			when(slrMock.getServiceLinkStatusRecords()).thenReturn(ssrList);
+			
+			when(ssrList.size()).thenReturn(2);
+			when(ssrList.get(Mockito.anyInt())).thenReturn(slsr);
+			when(slsr.getServiceLinkStatus()).thenReturn(ServiceLinkStatusEnum.ACTIVE);
+													
+			Response res = accService.disableServiceLinkRecord(Mockito.anyString(), Mockito.anyString());
+			assertEquals(404, res.getStatus());
+			
+			
+		} catch (AccountManagerException | ServiceLinkRecordNotFoundException  e) {
+			e.printStackTrace();
+		}
+    	
+    	System.out.println("...testing testDisableServiceLinkRecord_404 CLOSED.");
+    	
+    }
+    
+    @Test
+    public void testDisableServiceLinkRecord_404_2() {
+    	    	  	
+    	System.out.println("testing testDisableServiceLinkRecord_404 STARTED...");
+    	
+    	
+		try {
+			Whitebox.setInternalState(AccountService.class,dao);
+			
+			
+			ServiceLinkRecord slr = new ServiceLinkRecord("serviceId_value","serviceUri_value","serviceName_value","surrogateId_value");
+			when(dao.getServiceLinkRecord(Mockito.anyString(), Mockito.anyString())).thenThrow(AccountNotFoundException .class);
+			
+			when(slrMock.getServiceLinkStatusRecords()).thenReturn(ssrList);
+			
+			when(ssrList.size()).thenReturn(2);
+			when(ssrList.get(Mockito.anyInt())).thenReturn(slsr);
+			when(slsr.getServiceLinkStatus()).thenReturn(ServiceLinkStatusEnum.ACTIVE);
+													
+			Response res = accService.disableServiceLinkRecord(Mockito.anyString(), Mockito.anyString());
+			assertEquals(404, res.getStatus());
+			
+			
+		} catch (AccountManagerException | ServiceLinkRecordNotFoundException  e) {
+			e.printStackTrace();
+		}
+    	
+    	System.out.println("...testing testDisableServiceLinkRecord_404 CLOSED.");
+    	
+    }
+    
+    @Test
+    public void testDisableServiceLinkRecord_500() {
+    	    	  	
+    	System.out.println("testing testDisableServiceLinkRecord_500 STARTED...");
+    	
+    	
+		try {
+			Whitebox.setInternalState(AccountService.class,dao);
+			
+			
+			ServiceLinkRecord slr = new ServiceLinkRecord("serviceId_value","serviceUri_value","serviceName_value","surrogateId_value");
+			when(dao.getServiceLinkRecord(Mockito.anyString(), Mockito.anyString())).thenThrow(AccountManagerException.class);
+			
+			when(slrMock.getServiceLinkStatusRecords()).thenReturn(ssrList);
+			
+			when(ssrList.size()).thenReturn(2);
+			when(ssrList.get(Mockito.anyInt())).thenReturn(slsr);
+			when(slsr.getServiceLinkStatus()).thenReturn(ServiceLinkStatusEnum.ACTIVE);
+													
+			Response res = accService.disableServiceLinkRecord(Mockito.anyString(), Mockito.anyString());
+			assertEquals(500, res.getStatus());
+			
+			
+		} catch (AccountManagerException | ServiceLinkRecordNotFoundException  e) {
+			e.printStackTrace();
+		}
+    	
+    	System.out.println("...testing testDisableServiceLinkRecord_500 CLOSED.");
     	
     }
     

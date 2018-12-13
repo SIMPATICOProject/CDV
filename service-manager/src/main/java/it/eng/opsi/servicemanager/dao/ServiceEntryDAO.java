@@ -254,5 +254,23 @@ public class ServiceEntryDAO {
 		return list;
 
 	}
+	
+	
+	public ServiceEntry findByURL(String url) {
+		MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
+		DB db = dbSingleton.getDB();
+		DBCollection coll = db.getCollection("serviceRegistry");
+		DBObject service = coll.findOne(new BasicDBObject("serviceUri", url));
+		ServiceEntry serviceEntry = new ServiceEntry();
+		try {
+			serviceEntry = DAOUtils.dbObj2obj(service, ServiceEntry.class);
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+
+		return serviceEntry;
+	}
+
 
 }

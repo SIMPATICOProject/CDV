@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0"?> 
 <project
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -267,10 +267,9 @@
                     <check />
 					<instrumentation>
 					   <ignoreTrivial>true</ignoreTrivial>
+					   <ignoreMethodAnnotation>it.eng.opsi.cdv.consentmanager.utils.CoberturaIgnore</ignoreMethodAnnotation>
 					   <includes>
-					      <include>it/eng/opsi/cdv/consentmanager/service/ConsentService.class</include>
-					       <include>it/eng/opsi/cdv/consentmanager/utils/DAOUtils.class</include>
-					      					      					      
+					      <include>it/eng/opsi/cdv/consentmanager/service/ConsentService.class</include>				      					      					      
                           </includes>
 					   <excludes>
                             <exclude>it/eng/opsi/cdv/accountmanager/dao/*</exclude>                            

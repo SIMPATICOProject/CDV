@@ -191,7 +191,7 @@ public class AccountDAO {
 		}
 	}
 
-	public void deleteAccount(String accountId) throws AccountNotFoundException, AccountManagerException {
+	public int deleteAccount(String accountId) throws AccountNotFoundException, AccountManagerException {
 
 		DeleteResult result = null;
 		MongoCollection<Document> collection = null;
@@ -216,7 +216,7 @@ public class AccountDAO {
 
 		if (result.getDeletedCount() == 0)
 			throw new AccountNotFoundException("The account with id: " + accountId + " was not found");
-
+        return (int) result.getDeletedCount();
 	}
 
 	public Account getAccount(String accountId) throws AccountManagerException, AccountNotFoundException {
