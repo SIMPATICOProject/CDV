@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<script src="js/vendor/zepto.js"></script>
+	<script src="js/vendor/knockout.js"></script>
+	<script src="js/vendor/knockout.reactor.js"></script>
+	<script src="js/vendor/underscore.js"></script>
+	<script src="js/manifest.js"></script>
+	<script src="js/options.js"></script>
+	<link rel="stylesheet" href="css/help.css"/>
+	<link rel="stylesheet" href="css/options.css"/>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">";
+	<link rel="stylesheet" href="../../../css/custom.css"/>
+
+	<title>Extension options</title>
+
+	<!-- see http://codepo8.github.com/css-fork-on-github-ribbon/ -->
+	<style>
+		#forkongithub a{background:#000;color:#fff;text-decoration:none;font-family:arial,sans-serif;text-align:center;font-weight:bold;padding:8px;font-size:10px;line-height:12px;position:relative;transition:0.5s;}
+		#forkongithub a:hover{background:#c11;color:#fff;}
+		#forkongithub a::before,#forkongithub a::after{content:"";width:100%;display:block;position:absolute;top:1px;left:0;height:1px;background:#fff;}
+		#forkongithub a::after{bottom:1px;top:auto;}
+		@media screen and (max-width:400px){
+			#forkongithub {display: block;margin: 0 -20px}
+			#forkongithub a {display: block;}
+		}
+		@media screen and (min-width:400px){
+			#forkongithub {position:absolute;display:block;top:0px;right:0px;width:120px;overflow:hidden;height:120px;z-index:0;}
+			#forkongithub a{width:120%;position:absolute;transform:rotate(45deg);  right: -40px;top: 30px;margin-left: -10%;  box-shadow:4px 4px 10px rgba(0,0,0,0.5);}
+		}
+	</style>
+</head>
+	<body class="appIcon">
+		<div class="settings">
+			<header class="header">
+				<h1 class="header__heading"></h1>
+				<p>
+					Use the form below to enable/disable features
+				</p>
+			</header>
+			<nav class="settings__navigation settings__navigation--fixed">
+				<ul class="settings__navigation-list">
+					<li class="last settings__navigation-item"><a class="settings__navigation-link" href="#sectionAbout">About</a></li>
+				</ul>
+			</nav>
+			<main class="main">
+
+				<form class="settings__form">
+				<fieldset id="sectionAbout" class="settings__section relative">
+					<div>
+
+						<h2>About</h2>
+						<p><strong class="appName"></strong></p>
+						<p>version: <strong class="appVersion"></strong></p>
+						<h3>Getting started</h3>
+						<ol>
+							<li>Copy the lib_dir/options folder to your extension</li>
+							<li>In your extension manifest file, add the following to background script <pre><code>[
+								"lib_dir/options/js/manifest.js",
+								"lib_dir/options/js/vendor/underscore.js",
+								"lib_dir/options/js/vendor/zepto.js",
+								"lib_dir/options/js/background.js"
+								]</code></pre>
+							</li>
+							<li>and <code>"options_page": "lib_dir/options/index.html"</code></li>
+                            <li>Also add <code>"content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"</code>
+                                this allows KnockoutJS to use <code>eval()</code></li>
+						</ol>
+						<h4>Usage</h4>
+						<p>Once you have added options as above, you are then ready to use the options form</p>
+						<p>Open the options manifest and amend as necessary</p>
+						<p>In your background page use <code>options.setLocalStore("key", "value");  options.getLocalStore("key"); </code></p>
+						<p>Notes on <code>options.getLocalStore()</code> see <a href="/lib_dir/options/test/jasmine/SpecRunner.html?spec=Background%20options%20API%20Background%20page%20backgroundPage.options.getLocalStore(key%2C%20fallback%2C%20fn)">Jasmine Spec Runner</a>
+							and see <code>lib_dir/options/test/jasmine/spec/OptionsSpec.js</code> for usage examples.
+						</p>
+						<h4>Options form</h4>
+						<p>
+							For more information about the chrome-extension-options-form.
+							<a href="https://github.com/clanceyp/chrome-extension-settings-form">See github for details</a>
+						</p>
+						<iframe src="/lib_dir/options/test/jasmine/SpecRunner.html" class="jasmine-frame" frameborder="no"></iframe>
+						<p>
+							<a href="/lib_dir/options/test/jasmine/SpecRunner.html">Jasmine Spec Runner</a>
+						</p>
+						<h4>Reset settings</h4>
+						<p>
+							Items with a default value can be reset by double clicking on
+							the element.
+						</p>
+						<p>
+							To reset all the setting back to the default setting, click on the
+							"Reset default options" button.
+						</p>
+						<p><input type="reset" value="Reset default options" /> </p>
+					</div>
+				</fieldset>
+
+
+
+				</form>
+			</main>
+		</div>
+	    <div class="hidden">
+			<div class="insert-html-test"><i>I'm an HTML insert</i></div>
+		</div>
+		<script type="text/template" id="test_template">
+			<div class="template-html-test"><p><strong><%= message %></strong></p></div>
+		</script>
+	</body>
+</html>

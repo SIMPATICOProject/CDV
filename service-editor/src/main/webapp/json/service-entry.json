@@ -18,7 +18,17 @@
     },
     "serviceUri": {
       "type": "string",
-	  "title":"Service URI"
+	  "title":"Service URL",
+	  "format":"url",
+	  "links": [
+		{
+		  "rel": "Open Service page",
+		  "href": "{{self}}",
+		  "target": "_blank",
+		  "class": "comment-link open-in-modal primary-text"
+		}
+	  ]
+	  
     },
     "serviceDescriptionVersion": {
       "type": "string",
@@ -52,62 +62,28 @@
     },
 	
 	"spatial":{
-		"type":"string",
-		"title":"Spatial"	
+		"$ref": "./spatials.json"	
 		
 	},
 	
 	"lifeEvent":{
-		"type":"string",
-		"title":"Life Event"	
+		 "$ref": "./life_event.json"	
 		
 	},
 	"businessEvent":{
-		"type":"string",
-		"title":"Business Event"	
+		"$ref": "./business_event.json"	
 		
 	},
 	
     "publicServiceSector": {
-      "type": "array",
-	  "title":"Public Service Sector",
-	  "uniqueItems": true,
-	  "format":"select",
-	 
-			
-      "items": {
-	    "type": "string",
-        "title":"Sector",		
-		"enum":["Sector1", "Sector2","Sector3"]
-	   }
+      "$ref": "./sectors.json"
     },
     "publicServiceTypeProp": {
-      "type": "array",
-	  "title":"Public Service Type",
-	  "format":"select",
-	  "uniqueItems": true,
-      "items": 
-        {
-          "type": "string",
-		  "format":"select",
-		  "title":"Type",
-		  	
-		"enum":["Type1", "Type2","Type3"]
-		 
-        }
+      "$ref": "./types.json"
       
     },
     "publicServiceLanguage": {
-      "type": "array",
-	  "title":"Public Service Language",
-	  "format":"table",
-	  "uniqueItems": true,
-      "items": 
-        {
-          "type": "string",
-		  "title":"Language",
-		  "enum":["it_IT", "en_EN","es_ES"]
-        }
+      "$ref": "./locale.json"
       
     },
     "humanReadableDescription": {
@@ -204,32 +180,36 @@
             "dataMapping": {
               "type": "array",
 			  "format":"tabs",
+			  
 			  "title": "Data Mapping",
               "items": 
                 {
                   "type": "object",
 				  "title": "Field",
-				  
+				  "id": "arr_item",
 				  "properties": {
                     "property": {
                       "type": "string",
 					   "title": "Property"
                     },
+                    
                     "conceptId": {
-                      "type": "string",
-					   "title": "Concept"
+						"$ref": "./concepts.json"
+                      					   
                     },
-                    "name": {
-                      "type": "string",
-					   "title": "Name"
+					"name": {
+                       "type": "string",
+					   "options": {
+							"hidden": false
+						  }
                     },
                     "type": {
                       "type": "string",
 					   "title": "Type",
 					  "options" :{
-						  
 						  "input_width":"85px"
-					  }
+					  },
+					  "default":"string"
                     },
                     "required": {
                       "type": "number",
@@ -249,7 +229,7 @@
 						  
 						  "input_width":"100px"
 					  }
-                    }
+                    }					
                   },
                   "required": [
                     "property",

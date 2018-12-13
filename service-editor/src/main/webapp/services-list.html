@@ -13,12 +13,7 @@
     <link href="vendors/bootstrap/distrib/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-    
-    <!-- NProgress -->
-<!--     <link href="../vendors/nprogress/nprogress.css" rel="stylesheet"> -->
 
-    <!-- iCheck -->
-    <link href="vendors/iCheck/skins/flat/green.css" rel="stylesheet">
     <!-- Datatables -->
     <link href="vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
     <link href="vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
@@ -29,11 +24,11 @@
     <!-- Custom Theme Style -->
     <link href="css/custom.css" rel="stylesheet">
 
-	<!-- jQuery custom content scroller -->
-    <link href="vendors/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css" rel="stylesheet"/>
-
 	<!-- File di configurazione -->
 	<script src="js/config.properties.js"></script>
+	
+	<link rel="stylesheet" href="css/simple-scrollbar.css">
+	<script src="js/simple-scrollbar.js"></script>
 
   </head>
 
@@ -64,11 +59,11 @@
             <p id="service-purpose-content"></p>
             </br>
             <h2 id="service-link-title">Link: </h2>
-            <a style="font-size: 20px;cursor: pointer;color:#0055FF" id="service-link-content" target="_blank"></a>
+            <a style="font-size: 18px;cursor: pointer;color:#1b867b" id="service-link-content" target="_blank"></a>
           </div>
           <div id="service-div-2" class="modal-body" style="border-top: 1px solid #e5e5e5;word-break: break-all;">
           	<h2 id="service-data-title" style="font-style: normal">Data Processed: </h2>
-          	<div class="keywords-set" style="padding-top: 1em;text-align: center;">
+          	<div class="keywords-set" style="padding-top: 1em;text-align: left;">
           		
           	</div>
           </div>
@@ -105,24 +100,12 @@
     <div class="container body">
       <div class="main_container">
         <div class="col-md-3 left_col menu_fixed">
-          <div class="left_col scroll-view sidebar-scroll-y">
+          <div class="left_col scroll-view sidebar-scroll-y ss-container">
             <div class="navbar nav_title" style="border: 0;">
-              <a href="index.html" class="site_title"><i class="fa fa-users"></i> <span>Service Editor</span></a>
+              <a href="index.html" class="site_title"><i class="fa fa-edit"></i> <span>Service Editor</span></a>
             </div>
 
             <div class="clearfix"></div>
-
-            <!-- menu profile quick info -->
-<!--             <div class="profile clearfix">
-              <div class="profile_pic">
-                <img src="images/img.jpg" alt="..." class="img-circle profile_img">
-              </div>
-              <div class="profile_info">
-                <span>Welcome,</span>
-                <h2>John Doe</h2>
-              </div>
-            </div> -->
-            <!-- /menu profile quick info -->
 
             <br />
 
@@ -150,22 +133,6 @@
             </div>
 <!-- /sidebar menu -->
 
-            <!-- /menu footer buttons -->
-<!--             <div class="sidebar-footer hidden-small">
-              <a data-toggle="tooltip" data-placement="top" title="Settings">
-                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-              </a>
-              <a data-toggle="tooltip" data-placement="top" title="FullScreen">
-                <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
-              </a>
-              <a data-toggle="tooltip" data-placement="top" title="Lock">
-                <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
-              </a>
-              <a data-toggle="tooltip" data-placement="top" title="Logout" href="login.html">
-                <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
-              </a>
-            </div> -->
-            <!-- /menu footer buttons -->
           </div>
         </div>
 
@@ -189,70 +156,6 @@
                   </ul>
                 </li>
 
-                <!-- <li role="presentation" class="dropdown">
-                  <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
-                    <i class="fa fa-envelope-o"></i>
-                    <span class="badge bg-green">6</span>
-                  </a>
-                  <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
-                    <li>
-                      <a>
-                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
-                        <span>
-                          <span>John Smith</span>
-                          <span class="time">3 mins ago</span>
-                        </span>
-                        <span class="message">
-                          Film festivals used to be do-or-die moments for movie makers. They were where...
-                        </span>
-                      </a>
-                    </li>
-                    <li>
-                      <a>
-                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
-                        <span>
-                          <span>John Smith</span>
-                          <span class="time">3 mins ago</span>
-                        </span>
-                        <span class="message">
-                          Film festivals used to be do-or-die moments for movie makers. They were where...
-                        </span>
-                      </a>
-                    </li>
-                    <li>
-                      <a>
-                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
-                        <span>
-                          <span>John Smith</span>
-                          <span class="time">3 mins ago</span>
-                        </span>
-                        <span class="message">
-                          Film festivals used to be do-or-die moments for movie makers. They were where...
-                        </span>
-                      </a>
-                    </li>
-                    <li>
-                      <a>
-                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
-                        <span>
-                          <span>John Smith</span>
-                          <span class="time">3 mins ago</span>
-                        </span>
-                        <span class="message">
-                          Film festivals used to be do-or-die moments for movie makers. They were where...
-                        </span>
-                      </a>
-                    </li>
-                    <li>
-                      <div class="text-center">
-                        <a>
-                          <strong>See All Alerts</strong>
-                          <i class="fa fa-angle-right"></i>
-                        </a>
-                      </div>
-                    </li>
-                  </ul>
-                </li> -->
               </ul>
             </nav>
           </div>
@@ -267,16 +170,6 @@
                 <h1>Service Editor</h1>
               </div>
 
-<!--               <div class="title_right">
-                <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
-                  <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search for...">
-                    <span class="input-group-btn">
-                      <button class="btn btn-default" type="button">Go!</button>
-                    </span>
-                  </div>
-                </div>
-              </div> -->
             </div>
 
             <div class="clearfix"></div>
@@ -286,22 +179,7 @@
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>CDV Available Services:</h2>
-<!--                     <ul class="nav navbar-right panel_toolbox">
-                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                      </li>
-                      <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                        <ul class="dropdown-menu" role="menu">
-                          <li><a href="#">Settings 1</a>
-                          </li>
-                          <li><a href="#">Settings 2</a>
-                          </li>
-                        </ul>
-                      </li>
-                      <li><a class="close-link"><i class="fa fa-close"></i></a>
-                      </li>
-                    </ul> -->
+                    <h2>Available Services:</h2>
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
@@ -334,7 +212,7 @@
 <!-- footer content -->
         <footer>
           <div class="pull-right">
-            CDV Service Editor
+            Service Editor
           </div>
           <div class="clearfix"></div>
         </footer>
@@ -344,17 +222,25 @@
 
     <!-- jQuery -->
     <script src="vendors/jquery/distrib/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.6/dist/loadingoverlay.min.js"></script>
     
     <script src="js/preload.js"></script>
     <script>
+		//SPINNER
+		//$("#editor_holder").LoadingOverlay("show", {
+		$.LoadingOverlay("show", {
+			 image       : "",
+			 fontawesome : "fa fa-cog fa-spin",
+			 fade: [200,100]
+		});
+		
+    
   		//infoPDF is assigned in preload.js
 		var localInfoPDF = sessionStorage.getItem("infoPDF");
-		//se la variabile di sessione è già stata valorizzata...
 		if(localInfoPDF){
-			console.log("infoPDF valorizzato...");
+			//console.log("infoPDF valorizzato...");
 			appendPDFields(localInfoPDF,1);
 		}
-		//sennò la si istanzia e valorizza
 		else{
 			getPDFields();
 		}
@@ -364,29 +250,20 @@
     var services_info;
     //GET - getServices_apipath
     var url_ = "http://"+app_parameters.host_param+":"+app_parameters.port_param+"/"+app_parameters.getServices_apipath;
-    console.log("composed url: "+url_);
+    //console.log("composed url: "+url_);
 	    $.ajax({
 	        url: url_
 	    }).then(function(data) {
 	    	
 	    	//List creation
 	    	var servcontent = JSON.stringify(data);
-	    	console.log(servcontent.length);
+	    	//console.log(servcontent.length);
 	    	
 	    	var jobj = JSON.parse(servcontent);
 	    	services_info = jobj;
-// 	    	console.log("lUNGHEZZA DATA: "+data.length);
-// 	    	console.log("lUNGHEZZA JOBJ: "+jobj.length);
-	    	
-// 	    	console.log(data[0].humanReadableDescription[0].description);
-// 	    	console.log(data[0].humanReadableDescription);
-// 	    	console.log("id0: "+data[3].publicServiceID);
-// 	    	console.log(data[3]);
-
 			var name = "";
 			var descr = "";
 			var id = "";
-
 	    	for(i = 0; i < data.length; i++){
 	    		
 	    		try{
@@ -423,32 +300,16 @@
 	    
 	    	//Caricamento sequenziale dei rimanenti script per garanzia funzionamento globale
 	    	$.getScript("vendors/bootstrap/distrib/js/bootstrap.min.js",function() {
-	    		$.getScript("vendors/fastclick/lib_dir/fastclick.js", function(){
-	    			//$.getScript("vendors/nprogress/nprogress.js");
-	    			$.getScript("vendors/iCheck/icheck.min.js", function(){
-	    				$.getScript("vendors/datatables.net/js/jquery.dataTables.js", function(){
-	    					$.getScript("vendors/datatables.net-bs/js/dataTables.bootstrap.min.js", function(){
-	    						$.getScript("vendors/datatables.net-buttons/js/dataTables.buttons.min.js", function(){
-	    							$.getScript("vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js", function(){
-	    								$.getScript("vendors/datatables.net-buttons/js/buttons.flash.min.js", function(){
-	    									$.getScript("vendors/datatables.net-buttons/js/buttons.html5.min.js", function(){
-	    										$.getScript("vendors/datatables.net-buttons/js/buttons.print.min.js", function(){
-	    											$.getScript("vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js", function(){
-	    												$.getScript("vendors/datatables.net-keytable/js/dataTables.keyTable.min.js", function(){
-	    													$.getScript("vendors/datatables.net-responsive/js/dataTables.responsive.min.js", function(){
-	    														$.getScript("vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js", function(){
-	    															$.getScript("vendors/datatables.net-scroller/js/dataTables.scroller.js", function(){
-	    																$.getScript("vendors/jszip/distrib/jszip.min.js", function(){
-	    																	//$.getScript("vendors/pdfmake/build_dir/pdfmake.min.js");
-	    															    	$.getScript("vendors/pdfmake/build_dir/vfs_fonts.js", function(){
-	    															    		$.getScript("js/custom.min.js");
-	    															    	})
-	    																})
-	    															})
-	    														})
-	    													})
-	    												})
-	    											})
+	    		$.getScript("vendors/datatables.net/js/jquery.dataTables.js", function(){
+	    			$.getScript("vendors/datatables.net-bs/js/dataTables.bootstrap.min.js", function(){
+	    				$.getScript("vendors/datatables.net-buttons/js/dataTables.buttons.min.js", function(){
+	    					$.getScript("vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js", function(){
+	    						$.getScript("vendors/datatables.net-buttons/js/buttons.html5.min.js", function(){
+	    							$.getScript("vendors/datatables.net-buttons/js/buttons.print.min.js", function(){
+	    								$.getScript("vendors/datatables.net-responsive/js/dataTables.responsive.min.js", function(){
+	    									$.getScript("vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js", function(){
+												$.getScript("vendors/pdfmake/build_dir/vfs_fonts.js", function(){
+													$.getScript("js/custom.min.js");
 	    										})
 	    									})
 	    								})
@@ -464,7 +325,6 @@
 	    function CreateNewService(){
 	    	window.location.href = window.location.href+"edit-service.html";
 	    };
-
 	    function EditService(id){
 	    	var nome = $('#'+id).attr("value").replace(" ","-");
 	    	window.location.href = window.location.origin+"/service-editor/edit-service.html?"+nome+"&"+id;
@@ -473,6 +333,7 @@
 	    function fillServiceModal(ind){
 	    	//disabling pdf modal section
 	    	$('#pdf-div').hide();
+	    	
 	    	//enabling service modal section
 	    	$('#service-div-1').show();
 			$('#service-div-2').show();
@@ -485,16 +346,11 @@
 	    	$("#service-provider-content").text("");
 	    	$("#service-purpose-content").text("");
 	    	
-	    	console.log("stampa di keywords set: ");
-	    	console.log($('.keywords-set').first());
+	    	//console.log("stampa di keywords set: ");
+	    	//console.log($('.keywords-set').first());
 	    	$('.keywords-set').first().empty();
 	    	
-	    	console.log("contenuto dei servizi salvato in var globale: "+services_info[1].publicServiceName);
-	    	
-	    	//titolo e descrizione disponibili presso info-row-ind
-// 			var titolo = $("#info-row-"+ind).children().eq(0).text();
-// 	    	var descr =  $("#info-row-"+ind).children().eq(1).text();
-
+	    	//console.log("contenuto dei servizi salvato in var globale: "+services_info[1].publicServiceName);
 	    	//titolo e descrizione disponibili presso jquery global var services_info
 	    	var titolo = "";
 	    	var descr = "";
@@ -535,10 +391,10 @@
 	    		 console.log("Missing serviceUri field, Error: "+err.message);
 	    	}
 	    	
-	    	console.log("titolo: "+titolo);
-	    	console.log("descrizione: "+descr);
-	    	console.log("provider: "+provider);
-	    	console.log("purpose: "+purpose);
+	    	//console.log("titolo: "+titolo);
+	    	//console.log("descrizione: "+descr);
+	    	//console.log("provider: "+provider);
+	    	//console.log("purpose: "+purpose);
 	    	
 	    	//setting DOM
 	    	$("#service-title").text(titolo);	    	
@@ -549,10 +405,6 @@
 	    	$("#service-provider-content").text(provider);
 	    	$("#service-purpose-content").text(purpose);
 	    	
-	    	//console.log("prove di recapito bolle: "+services_info[ind].publicServiceIsDescribedAt[0].dataMapping.length);
-	    	//console.log("valore 1: "+services_info[ind].publicServiceIsDescribedAt[0].dataMapping[0].name);
-	    	//console.log("valore 2: "+services_info[ind].publicServiceIsDescribedAt[0].dataMapping[1].name);
-	    	//$('.keywords-set').append("<h2 id=\"service-data-title\" style=\"font-style: normal\">Data Processed: </h2>")
 	    	try{
 		    	var len = services_info[ind].publicServiceIsDescribedAt[0].dataMapping.length;
 		    	
@@ -567,28 +419,39 @@
 	    };
 	    
 	</script>
+	
 	<script src="vendors/pdfmake/build_dir/pdfmake.min.js"></script>
+	
     <script>
 		$(document).ready(function(){
-     $(window).scroll(function () {
-            if ($(this).scrollTop() > 50) {
-                $('#back-to-top').fadeIn();
-            } else {
-                $('#back-to-top').fadeOut();
-            }
-        });
-        // scroll body to 0px on click
-        $('#back-to-top').click(function () {
-            $('#back-to-top').tooltip('hide');
-            $('body,html').animate({
-                scrollTop: 0
-            }, 800);
-            return false;
-        });
-             
-
-});
+	     $(window).scroll(function () {
+	            if ($(this).scrollTop() > 50) {
+	                $('#back-to-top').fadeIn();
+	            } else {
+	                $('#back-to-top').fadeOut();
+	            }
+	      });
+          // scroll body to 0px on click
+          $('#back-to-top').click(function () {
+              $('#back-to-top').tooltip('hide');
+              $('body,html').animate({
+                  scrollTop: 0
+              }, 800);
+              return false;
+          });
+	        
+	        //SPINNER
+	        //$("#editor_holder").LoadingOverlay("hide", true);
+	        $.LoadingOverlay("hide", true);
+	        
+		});
 	</script>
+	
+	<script>
+	  var el = document.querySelector('.ss-container');
+	  SimpleScrollbar.initEl(el);
+	</script>
+	
 	<a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button" title="Click to return on the top page" data-toggle="tooltip" data-placement="left"><span class="glyphicon glyphicon-chevron-up"></span></a>
  
   </body>

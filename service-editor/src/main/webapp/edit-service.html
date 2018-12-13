@@ -13,12 +13,7 @@
     <link href="vendors/bootstrap/distrib/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-    
-    <!-- NProgress -->
-<!--     <link href="../vendors/nprogress/nprogress.css" rel="stylesheet"> -->
 
-    <!-- iCheck -->
-    <link href="vendors/iCheck/skins/flat/green.css" rel="stylesheet">
     <!-- Datatables -->
     <link href="vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
     <link href="vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
@@ -31,22 +26,21 @@
     <!-- File di configurazione -->
 	<script src="js/config.properties.js"></script>
     
-     <script src="vendors/jquery/distrib/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@json-editor/json-editor/dist/jsoneditor.min.js"></script>
+    <script src="vendors/jquery/distrib/jquery.min.js"></script>
+    <script src="vendors/jsoneditor/jsoneditor.min.js"></script>
     <script src="js/preload.js"></script>
-    <script src="//cdn.jsdelivr.net/select2/3.4.8/select2.min.js"></script>
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/select2/3.4.8/select2.css">
-	<link rel="stylesheet" href="./css/select2-bootstrap.css">
 	
+	<!-- select2 for editor -->
+	<script src="vendors/select2/select2.min.js"></script>
+	<link rel="stylesheet" href="vendors/select2/select2.css">
+	<link rel="stylesheet" href="vendors/select2/select2-bootstrap.css">
 	
-
+	<link rel="stylesheet" href="css/simple-scrollbar.css">
+	<script src="js/simple-scrollbar.js"></script>
 	
-	
-	
+	<script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.6/dist/loadingoverlay.min.js"></script>
 	
     <script>
-	
-	
     // Set the default CSS theme and icon library globally
     JSONEditor.defaults.theme = 'bootstrap3';
     JSONEditor.defaults.iconlib = 'fontawesome4';
@@ -57,10 +51,10 @@
 	JSONEditor.defaults.options.disable_properties=true;
 	JSONEditor.defaults.options.prompt_before_delete=true;
 	
-	
     </script>
 
   </head>
+  
   <style>
   	input[type="text"]{
   		height: auto !important;
@@ -132,9 +126,9 @@
     <div class="container body">
       <div class="main_container">
         <div class="col-md-3 left_col menu_fixed">
-          <div class="left_col scroll-view sidebar-scroll-y">
+          <div class="left_col scroll-view sidebar-scroll-y ss-container" id="trest">
             <div class="navbar nav_title" style="border: 0;">
-              <a href="index.html" class="site_title"><i class="fa fa-users"></i> <span>Service Editor</span></a>
+              <a href="index.html" class="site_title"><i class="fa fa-edit"></i> <span>Service Editor</span></a>
             </div>
 
             <div class="clearfix"></div>
@@ -196,7 +190,7 @@
           <div class="">
             <div class="page-title">
               <div class="title_left">
-                <h1>CDV Service Editor</h1>
+                <h1>Service Editor</h1>
               </div>
             </div>
 
@@ -210,9 +204,9 @@
 				      <div class="medium-6 columns" style="padding-top:1em;padding-bottom:1em">
 				        <button id="submit" class="btn btn-success">Update Service</button>
 				        <button id="restore" class="btn btn-warning">Restore to Default</button>
-				        <!-- <span id="valid_indicator" class="label success">valid</span> -->
-				      </div>
-
+				        <!-- <button id="import" class="btn btn-info">Import JSON</button> -->
+				        <input type="file" id="import" style="display: initial !important;" class="btn btn-info" multiple size="30" onchange="uploadJSON()">
+				    
 				    <div class="row"style="margin-left:auto;margin-right:auto">
 				      <div id="editor_holder" class="medium-12 columns">
 				      </div>
@@ -228,262 +222,91 @@
 <!-- footer content -->
         <footer>
           <div class="pull-right">
-            CDV Service Editor
+            Service Editor
           </div>
           <div class="clearfix"></div>
         </footer>
 <!-- /footer content -->
       </div>
     </div>
-
     
     <script>
-  		//infoPDF is assigned in preload.js
+    	//SPINNER
+		//$("#editor_holder").LoadingOverlay("show", {
+		$.LoadingOverlay("show", {
+			 image       : "",
+			 fontawesome : "fa fa-cog fa-spin",
+			 fade: [100,800]
+		});
+		
+  		//SESION VAR - infoPDF is assigned in preload.js
 		var localInfoPDF = sessionStorage.getItem("infoPDF");
-		//se la variabile di sessione è già stata valorizzata...
 		if(localInfoPDF){
-			console.log("infoPDF valorizzato...");
+			//console.log("infoPDF valorizzato...");
 			appendPDFields(localInfoPDF,1);
 		}
-		//sennò la si istanzia e valorizza
 		else{
 			getPDFields();
 		}
-    </script>
-    
-    <script>
-    	//Caricamento sequenziale dei rimanenti script per garanzia funzionamento globale
+
+    	//CASCADE SCRIPT LOADING
     	$.getScript("vendors/bootstrap/distrib/js/bootstrap.min.js",function() {
-    		$.getScript("vendors/fastclick/lib_dir/fastclick.js", function(){
-    			//$.getScript("vendors/nprogress/nprogress.js");
-    			$.getScript("vendors/iCheck/icheck.min.js", function(){
-    				$.getScript("vendors/datatables.net/js/jquery.dataTables.js", function(){
-    					$.getScript("vendors/datatables.net-bs/js/dataTables.bootstrap.min.js", function(){
-    						$.getScript("vendors/datatables.net-buttons/js/dataTables.buttons.min.js", function(){
-    							$.getScript("vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js", function(){
-    								$.getScript("vendors/datatables.net-buttons/js/buttons.flash.min.js", function(){
-    									$.getScript("vendors/datatables.net-buttons/js/buttons.html5.min.js", function(){
-    										$.getScript("vendors/datatables.net-buttons/js/buttons.print.min.js", function(){
-    											$.getScript("vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js", function(){
-    												$.getScript("vendors/datatables.net-keytable/js/dataTables.keyTable.min.js", function(){
-    													$.getScript("vendors/datatables.net-responsive/js/dataTables.responsive.min.js", function(){
-    														$.getScript("vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js", function(){
-    															$.getScript("vendors/datatables.net-scroller/js/dataTables.scroller.js", function(){
-    																$.getScript("vendors/jszip/distrib/jszip.min.js", function(){
-    																	//$.getScript("vendors/pdfmake/build_dir/pdfmake.min.js");
-    															    	$.getScript("vendors/pdfmake/build_dir/vfs_fonts.js", function(){
-    															    		$.getScript("js/custom.min.js");
-    															    	})
-    																})
-    															})
-    														})
-    													})
-    												})
-    											})
-    										})
-    									})
-    								})
-    							})
-    						})
-    					})
-    				})
+    		$.getScript("vendors/datatables.net/js/jquery.dataTables.js", function(){
+    			$.getScript("vendors/datatables.net-buttons/js/dataTables.buttons.min.js", function(){
+    				$.getScript("vendors/datatables.net-responsive/js/dataTables.responsive.min.js", function(){
+    					$.getScript("js/custom.min.js", function(){
+    						$.getScript("js/edit_service_supplier.js")
+    					});
+					})
     			})
     		})
     	})
-
-	    function CreateNewService(){
-	    	window.location.href = window.location.href+"services-list.html";
-	    };
 	    
+	    /*function uploadJSON()*/
+	    
+	    //RESTORE BUTTON ACTION
+	    document.getElementById('restore').addEventListener('click',function() {
+	    	console.log("CLICKED RESTORE BUTTON");
+	    	location.reload();
+		});
 	</script>
 	<script src="vendors/pdfmake/build_dir/pdfmake.min.js"></script>
+	<script src="js/edit_service_supplier.js"></script>
 
   </body>
+  
   <script>
-    var serviceID=window.location.href;
-    var start = serviceID.indexOf("&");
-    
-    //PUT - UPDATE SELECTED SERVICE
-    if(start != -1){
-    	
-	    var len = serviceID.length - start - 1;
-	    serviceID = serviceID.substr(start+1, len);
-	    //console.log("id servizio estratto da path: "+serviceID);
-		var starting_value="{}"
-		$(function() {
-			//findById_apipath
-			var url = "http://"+app_parameters.host_param+":"+app_parameters.port_param+"/"+app_parameters.findById_apipath+serviceID;
-			console.log("composed url: "+url);
-	        $.get( url, function( data ) {
-	          starting_value=data;
-		      // Initialize the editor
-		      var editor = new JSONEditor(document.getElementById('editor_holder'),{
-		        // Enable fetching schemas via ajax
-		        ajax: true,
-		        
-		        // The schema for the editor
-		        schema: {
-		          $ref: schemaDir/*,
-		          format: "grid"*/ //no tab version
-		        },
-		        
-		        // Seed the form with a starting value
-		        startval: starting_value
-		      });
-		      
-		      // Hook up the submit button to log to the console
-		      document.getElementById('submit').addEventListener('click',function() {
-	
-		    	if (confirm('Il servizio verrà modificato, sei sicuro di voler procedere?')){
-		    		
-		    		var payload = editor.getValue();
-		    		
-		    		console.log("UPDATING SERVICE, submitting to CDV: ");
-		    		console.log(payload);
-		    		
-		    		//PUT - update_apipath
-		    		var url_ = "http://"+app_parameters.host_param+":"+app_parameters.port_param+"/"+app_parameters.update_apipath+serviceID;
-		    		console.log("composed url: "+url_);
-			        $.ajax({
-				        url: url_,
-				        method: 'PUT',
-				        contentType: "application/json",
-				        data: JSON.stringify(editor.getValue()),
-				    }).done(function(data) {
-				    	console.log("RIPOSTA PUT MODIFICA NUOVO SERVIZIO: "+data);
-				    	console.log(data);
-				    	
-				    	var nome = payload.publicServiceName.replace(" ","-");
-				    	window.location.href = window.location.origin+"/service-editor/edit-service.html?"+nome+"&"+payload.publicServiceID;
-				    
-				    }).fail(function() {
-				      alert( "Errors occurred in service update. Please be careful and try again..." );
-				    })
-		    	}
-		      });
-		      
-		      // Hook up the Restore to Default button
-		      document.getElementById('restore').addEventListener('click',function() {
-		        editor.setValue(starting_value);
-		      });
-		      
-		      // Hook up the validation indicator to update its status whenever the editor changes
-		      editor.on('change',function() {
-		        // Get an array of errors from the validator
-		        var errors = editor.validate();
-		        var indicator = document.getElementById('valid_indicator');
-		        
-		        // Not valid
-		        if(errors.length) {
-		          indicator.className = 'label alert';
-		          indicator.textContent = 'not valid';
-		        }
-		        // Valid
-		        else {
-		          indicator.className = 'label success';
-		          indicator.textContent = 'valid';
-		        }
-		      });
-	        });
-		  });
-    }
-    //POST - ADDING NEW SERVICE
-    else{
-    	  $('#submit').text("Create Service");
-	      // Initialize the editor
-	      var editor = new JSONEditor(document.getElementById('editor_holder'),{
-	        // Enable fetching schemas via ajax
-	        ajax: true,
-	        // The schema for the editor
-	        schema: {
-	          $ref: schemaDir/*,
-	          format: "grid"*/ //no tab version
+  	editManager();
+  
+	$(document).ready(function(){
+		$(window).scroll(function () {
+	    	if ($(this).scrollTop() > 50) {
+	        	$('#back-to-top').fadeIn();
+	            }
+	    	else{
+	        	$('#back-to-top').fadeOut();
 	        }
+	     });
+	     // scroll body to 0px on click
+	     $('#back-to-top').click(function () {
+	     	$('#back-to-top').tooltip('hide');
+	        $('body,html').animate({
+	        	scrollTop: 0
+	        }, 800);
+	        return false;
 	      });
-	      
-	      // Hook up the submit button to log to the console
-	      document.getElementById('submit').addEventListener('click',function() {
-
-	    	if (confirm( 'Il servizio verrà creato, sei sicuro di voler procedere?')){  
-	    		
-	    		var payload = editor.getValue();
-	    		
-	    		console.log("REGISTERING NEW SERVICE, submitting to CDV: ");
-	    		console.log(payload);
-	    		
-	    		//POST - create_apipath
-	    		var url_ = "http://"+app_parameters.host_param+":"+app_parameters.port_param+
-	    					"/"+app_parameters.create_apipath;
-		        $.ajax({
-			        url: url_,
-			        method: 'POST',
-			        contentType: "application/json",
-			        data: JSON.stringify(editor.getValue()),
-			        //success: function() {location.reload();}
-			    }).done(function(data) {
-			    	console.log("RIPOSTA POST REGISTRAZIONE NUOVO SERVIZIO: "+data);
-			    	console.log(data);
-			    	
-			    	var nome = payload.publicServiceName.replace(" ","-");
-			    	window.location.href = window.location.origin+"/service-editor/edit-service.html?"+nome+"&"+payload.publicServiceID;
-			    
-			    }).fail(function() {
-			      alert( "Errors occurred in service registration. Please be careful and try again..." );
-			    })
-	    	}
-	      });
-	      
-	      // Hook up the Restore to Default button
-	      document.getElementById('restore').addEventListener('click',function() {
-	        editor.setValue(starting_value);
-	      });
-	      
-	   	  // Hook up the Home button
-	      document.getElementById('home').addEventListener('click',function() {
-	    	  window.location.href = window.location.origin+"/service-editor/index.html";//window.location.origin+"/service-editor/";
-	      });
-	      
-	      // Hook up the validation indicator to update its status whenever the editor changes
-	      editor.on('change',function() {
-	        // Get an array of errors from the validator
-	        var errors = editor.validate();
 	        
-	        var indicator = document.getElementById('valid_indicator');
-	        
-	        // Not valid
-	        if(errors.length) {
-	          indicator.className = 'label alert';
-	          indicator.textContent = 'not valid';
-	        }
-	        // Valid
-	        else {
-	          indicator.className = 'label success';
-	          indicator.textContent = 'valid';
-	        }
-	      });
-    }
-  </script>
-  <script>
-		$(document).ready(function(){
-     $(window).scroll(function () {
-            if ($(this).scrollTop() > 50) {
-                $('#back-to-top').fadeIn();
-            } else {
-                $('#back-to-top').fadeOut();
-            }
-        });
-        // scroll body to 0px on click
-        $('#back-to-top').click(function () {
-            $('#back-to-top').tooltip('hide');
-            $('body,html').animate({
-                scrollTop: 0
-            }, 800);
-            return false;
-        });
-             
-
-});
+	      //SPINNER HIDE
+	      //$("#editor_holder").LoadingOverlay("hide", true); //over a single DOM elements
+	      $.LoadingOverlay("hide", true); //over the entire page
+	      
+		});
+	  
+	  //SIMPLESCROLLBAR PLUGIN - Scrollbar for Firefox
+	  var el = document.querySelector('.ss-container');
+	  SimpleScrollbar.initEl(el);
 	</script>
+	
 	<a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button" title="Click to return on the top page" data-toggle="tooltip" data-placement="left"><span class="glyphicon glyphicon-chevron-up"></span></a>
  
 </html>
