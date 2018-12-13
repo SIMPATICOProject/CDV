@@ -46,6 +46,7 @@ import it.eng.opsi.servicemanager.dao.PDataFieldDAO;
 import it.eng.opsi.servicemanager.dao.ServiceEntryDAO;
 import it.eng.opsi.servicemanager.data.DataMapping;
 import it.eng.opsi.servicemanager.data.HumanReadableDescription;
+import it.eng.opsi.servicemanager.data.PDataCategory;
 import it.eng.opsi.servicemanager.data.PDataField;
 import it.eng.opsi.servicemanager.data.ServiceEntry;
 import it.eng.opsi.servicemanager.service.PDataFieldService;
@@ -61,6 +62,9 @@ public class PDataFieldServiceTest {
 
 	@Mock
 	PDataField pDataField;
+	
+	@Mock
+	PDataCategory pDataCategory;
 
 	@Autowired
 	@InjectMocks
@@ -151,6 +155,39 @@ public class PDataFieldServiceTest {
 		Assert.assertNotNull(result.get(0).getName());
 		Assert.assertNotNull(result.get(0).getDescription());
 		Assert.assertNotNull(result.get(0).getId());
+
+	}
+	
+	
+	@Test
+	public void testGetPDataTree() {
+
+		System.out.println("testing getPDataTree");
+
+		// Mocking PDataField methods
+		when(pDataField.getName()).thenReturn("aConcept");
+		when(pDataField.getDescription()).thenReturn("description");
+		when(pDataField.getId()).thenReturn("id");
+
+		List<PDataField> entries = new ArrayList<PDataField>();
+		entries.add(pDataField);
+		// Mocking PDataField methods
+				when(pDataCategory.getCategory()).thenReturn("aCategory");
+				when(pDataCategory.getConcepts()).thenReturn(entries);
+				List<PDataCategory> cat_entries = new ArrayList<PDataCategory>();
+				cat_entries.add(pDataCategory);		
+		// Mocking database methods
+		when(dao.getPDataTree()).thenReturn(cat_entries);
+
+		// Call create method
+		List<PDataCategory> result = pDataFieldService.getPDataCategoryTree();
+
+		// Assert expected results
+		Assert.assertNotNull(result);
+		Assert.assertTrue(result.size() == 1);
+		Assert.assertNotNull(result.get(0).getCategory());
+		Assert.assertNotNull(result.get(0).getConcepts());
+		
 
 	}
 

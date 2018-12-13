@@ -246,6 +246,28 @@ public class ServiceRegistryServiceTest {
 	}
 	
 	@Test
+	public void getServicesByUrlTest() {
+		System.out.println("testing getServicesByUrl");
+
+		// Mocking ServiceEntry methods
+		when(serviceEntry.getPublicServiceID()).thenReturn("1234");
+		when(serviceEntry.getPublicServiceName()).thenReturn("myService");
+		when(serviceEntry.getPublicServiceKeyword()).thenReturn("aaaaa");
+
+		// Mocking database methods
+		when(dao.findByURL(Mockito.anyString())).thenReturn(serviceEntry);
+
+		// Call create method
+		ServiceEntry result = registryService.findServiceByUrl("");
+		// Assert expected results
+		Assert.assertNotNull(result);
+		Assert.assertNotNull(result.getPublicServiceName());
+		Assert.assertNotNull(result.getPublicServiceName());
+		Assert.assertNotNull(result.getPublicServiceKeyword());
+
+	}
+	
+	@Test
 	public void getServiceReportByTypeTest() {
 		System.out.println("testing getServiceReportByType");
 

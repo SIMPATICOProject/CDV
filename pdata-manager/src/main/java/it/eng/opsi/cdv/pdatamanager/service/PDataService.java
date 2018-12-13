@@ -118,7 +118,8 @@ public class PDataService implements IPDataService {
 			PropertyManager.getProperty("PDATA_REPOSITORY_COLLECTION"), PropertyManager.getProperties());
 	
 	static final String api_version = "1.0";
-
+	
+	@CoberturaIgnore
 	@POST
 	@Path("/pData")
 	@Consumes({ MediaType.APPLICATION_JSON })
@@ -197,6 +198,7 @@ public class PDataService implements IPDataService {
 		}
 	}
 
+	@CoberturaIgnore
 	@Override
 	@GET
 	@Path("/pData")
@@ -271,6 +273,7 @@ public class PDataService implements IPDataService {
 		}
 	}
 
+	@CoberturaIgnore
 	@Override
 	@GET
 	@Path("/pData/{conceptId}")
@@ -326,6 +329,7 @@ public class PDataService implements IPDataService {
 		}
 	}
 
+	@CoberturaIgnore
 	@Override
 	@GET
 	@Path("/pData/download")
@@ -424,6 +428,7 @@ public class PDataService implements IPDataService {
 		}
 	}
 
+	@CoberturaIgnore
 	@Override
 	@PUT
 	@Path("/pData")
@@ -504,6 +509,7 @@ public class PDataService implements IPDataService {
 		}
 	}
 
+	@CoberturaIgnore
 	@Override
 	@PUT
 	@Path("/pData/{conceptId}")
@@ -580,6 +586,7 @@ public class PDataService implements IPDataService {
 		}
 	}
 
+	@CoberturaIgnore
 	@Override
 	@DELETE
 	@Path("/pData/{conceptId}")
@@ -633,6 +640,7 @@ public class PDataService implements IPDataService {
 		}
 	}
 
+	@CoberturaIgnore
 	@Override
 	@DELETE
 	@Path("/pData/{conceptId}/{value}")
@@ -687,6 +695,7 @@ public class PDataService implements IPDataService {
 		}
 	}
 
+	@CoberturaIgnore
 	@Override
 	@DELETE
 	@Path("/pData")
@@ -1013,7 +1022,7 @@ public class PDataService implements IPDataService {
 				// Data Mapping and return its values as key-value pair
 
 				JSONArray properties = new JSONArray();
-
+System.out.println("#############################"+propertiesKeys.length());
 				if (propertiesKeys.length() == 0) {
 					for (Entry<String, PDataEntry> entry : serviceMap.entrySet()) {
 
@@ -1033,6 +1042,7 @@ public class PDataService implements IPDataService {
 					for (int i = 0; i < propertiesKeys.length(); i++) {
 
 						String property = (String) propertiesKeys.get(i);
+						
 						PDataEntry resolved = serviceMap.get(property);
 
 						if (resolved != null) {
@@ -1231,7 +1241,7 @@ public class PDataService implements IPDataService {
 
 	
 	@CoberturaIgnore
-	private static HashMap<String, PDataEntry> callGetServiceMap(String serviceId, String accountId)
+	public static HashMap<String, PDataEntry> callGetServiceMap(String serviceId, String accountId)
 			throws ServiceManagerCallException, PDataRepositoryException, PDataUtilsException {
 
 		Client client = ClientBuilder.newClient();

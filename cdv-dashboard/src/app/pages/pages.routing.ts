@@ -33,7 +33,9 @@ export const routes: Routes = [
 	  { path: 'logs',  loadChildren: 'app/pages/logs/logs.module#logsModule', canActivate: [AuthGuard]},      
       { path: 'consents',  loadChildren: 'app/pages/consents/consents.module#consentsModule', canActivate: [AuthGuard] },
 	  { path: 'configuration',  loadChildren: 'app/pages/configuration/configuration.module#configurationModule', canActivate: [AuthGuard] },
-	  { path: 'services',  loadChildren: 'app/pages/services/services.module#servicesModule', canActivate: [AuthGuard] }
+	  { path: 'services',  loadChildren: 'app/pages/services/services.module#servicesModule', canActivate: [AuthGuard] },
+	  { path: 'connectors',  loadChildren: 'app/pages/connectors/services.module#servicesModule', canActivate: [AuthGuard] }
+	  
     ]
   }
 ];

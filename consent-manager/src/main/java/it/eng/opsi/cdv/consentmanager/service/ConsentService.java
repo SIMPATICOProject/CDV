@@ -62,6 +62,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.SwaggerDefinition;
+import it.eng.opsi.cdv.consentmanager.utils.CoberturaIgnore;
 import it.eng.opsi.cdv.consentmanager.dao.AccountDAO;
 import it.eng.opsi.cdv.consentmanager.model.AccountManagerException;
 import it.eng.opsi.cdv.consentmanager.model.AccountNotFoundException;
@@ -124,6 +125,7 @@ public class ConsentService implements IConsentService {
 	private ConsentServiceUtils csu = new ConsentServiceUtils();
 	
 	
+	@CoberturaIgnore
 	@Override
 	@POST
 	@Path("/findConsent/serviceId")
@@ -138,6 +140,7 @@ public class ConsentService implements IConsentService {
 		return null;
 	}
 
+	@CoberturaIgnore
 	@Override
 	@POST
 	@Path("/changeConsentRecordStatus/{accountId}/{rsid}/{status}")
@@ -349,6 +352,9 @@ public class ConsentService implements IConsentService {
 					.get(0).getDataMapping();
 			List<it.eng.opsi.servicemanager.data.DataMapping> sourceServiceDataMap = source
 					.getPublicServiceIsDescribedAt().get(0).getDataMapping();
+			//TODO implement a matched purpose between sink and source. At moment reference to sink dataset purpose
+			List<String> matchedPurpose=sink.getPublicServiceIsDescribedAt()
+					.get(0).getPurpose();
 
 			dataMappingList = getMatchedDataMap(sinkServiceDataMap, sourceServiceDataMap);
 
@@ -358,6 +364,7 @@ public class ConsentService implements IConsentService {
 			dataset.setDataMapping(dataMappingList);
 			dataset.setStatus(true);
 			dataset.setCreated(new Date());
+			dataset.setPurpose(matchedPurpose);
 
 			List<it.eng.opsi.cdv.consentmanager.model.consentRecord.Dataset> datasetLists = new ArrayList<it.eng.opsi.cdv.consentmanager.model.consentRecord.Dataset>();
 			datasetLists.add(dataset);
@@ -390,6 +397,7 @@ public class ConsentService implements IConsentService {
 		}
 	}
 
+	@CoberturaIgnore
 	private List<DataMapping> getMatchedDataMap(List sinkServiceDataMap, List sourceServiceDataMap) {
 		// TODO Auto-generated method stub
 
@@ -419,6 +427,7 @@ public class ConsentService implements IConsentService {
 		return dataMappingList;
 	}
 
+	@CoberturaIgnore
 	@Override
 	@POST
 	@Path("/verifySinkConsent")
@@ -509,6 +518,7 @@ public class ConsentService implements IConsentService {
 
 	}
 
+	@CoberturaIgnore
 	private ConsentRecordSink storeSinkConsentRecord(String accountId, String consentJSON) {
 		ConsentRecordSink sinkCR;
 		try {
@@ -528,6 +538,7 @@ public class ConsentService implements IConsentService {
 		}
 	}
 
+	@CoberturaIgnore
 	private ConsentRecordSource storeSourceConsentRecord(String accountId, String consentJSON)
 			throws ConsentManagerException, AccountUtilsException {
 		ConsentRecordSource sourceCR;
@@ -548,6 +559,7 @@ public class ConsentService implements IConsentService {
 		}
 	}
 
+	@CoberturaIgnore
 	private ConsentRecordSink updateSinkConsentRecord(String accountId, String consentJSON) {
 		ConsentRecordSink sinkCR;
 		try {
@@ -567,6 +579,7 @@ public class ConsentService implements IConsentService {
 		}
 	}
 
+	@CoberturaIgnore
 	private ConsentRecordSource updateSourceConsentRecord(String accountId, String consentJSON)
 			throws ConsentManagerException, AccountUtilsException {
 		ConsentRecordSource sourceCR;
@@ -611,6 +624,7 @@ public class ConsentService implements IConsentService {
 		}
 	}
 */
+	@CoberturaIgnore
 	private ServiceEntry findDataMappingById(String serviceId) throws ConsentManagerException, AccountUtilsException {
 
 		Client client = ClientBuilder.newClient();
@@ -634,6 +648,7 @@ public class ConsentService implements IConsentService {
 		}
 	}
 
+	@CoberturaIgnore
 	private ServiceLinkRecord findSlrBySurrogateId(String userId, String serviceId)
 			throws ConsentManagerException, AccountUtilsException {
 
@@ -659,6 +674,7 @@ public class ConsentService implements IConsentService {
 		}
 	}
 
+	@CoberturaIgnore
 	@POST
 	@Path("/updateConsent/{accountId}")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -911,8 +927,7 @@ public class ConsentService implements IConsentService {
 				} else { // if (lastStatus.equals(ConsentRecordStatusEnum.DISABLED)){
 					// si dovrebbe aggiungere alla lista dei consent record status per ciascun
 					// consent un nouovo conent record status attivo e memorizzarlo
-					try {
-
+					
 						details = new JSONObject();
 						details.put("method", "updateConsent");
 						details.put("date", new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
@@ -1022,45 +1037,7 @@ public class ConsentService implements IConsentService {
 								.build();	
 
 
-					} catch (ServiceLinkRecordNotFoundException e) {
-						e.printStackTrace();
-						ErrorResponse error = new ErrorResponse(
-								String.valueOf(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()), e.getClass().getSimpleName(),
-								e.getMessage());
-
-						return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error.toJson()).build();
-					} catch (AccountManagerException e) {
-						e.printStackTrace();
-						ErrorResponse error = new ErrorResponse(
-								String.valueOf(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()), e.getClass().getSimpleName(),
-								e.getMessage());
-
-						return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error.toJson()).build();
-					} catch (AccountNotFoundException e) {
-						e.printStackTrace();
-						ErrorResponse error = new ErrorResponse(
-								String.valueOf(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()), e.getClass().getSimpleName(),
-								e.getMessage());
-						return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error.toJson()).build();
-					} catch (AccountUtilsException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-						ErrorResponse error = new ErrorResponse(
-								String.valueOf(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()), e.getClass().getSimpleName(),
-								e.getMessage());
-
-						return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error.toJson()).build();
-
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-						ErrorResponse error = new ErrorResponse(
-								String.valueOf(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()), e.getClass().getSimpleName(),
-								e.getMessage());
-
-						return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error.toJson()).build();
-
-					}
+					
 				}
 
 			} else { // dobbiamo controllare se esiste già consent record con altro dataset
@@ -1307,7 +1284,7 @@ public class ConsentService implements IConsentService {
 						.build();
 			}
 
-		} catch (ConsentManagerException | AccountUtilsException e) {
+		} catch (ConsentManagerException | AccountUtilsException e) { 
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
@@ -1319,21 +1296,32 @@ public class ConsentService implements IConsentService {
 			ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
 					e.getClass().getSimpleName(), e.getMessage());
 			return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
-		} catch (ServiceLinkRecordNotFoundException e) {
+		} catch (ServiceLinkRecordNotFoundException  e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
+			ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.NOT_FOUND.getStatusCode()),
 					e.getClass().getSimpleName(), e.getMessage());
-			return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
+			return Response.status(Response.Status.NOT_FOUND).entity(error.toJson()).build();
 		} catch (AccountManagerException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
+			ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()),
 					e.getClass().getSimpleName(), e.getMessage());
-			return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error.toJson()).build();
+		}catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			ErrorResponse error = new ErrorResponse(
+					String.valueOf(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()), e.getClass().getSimpleName(),
+					e.getMessage());
+
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error.toJson()).build();
+
 		}
+		
 	}
 
+	@CoberturaIgnore
 	@Override
 	@GET
 	@Path("/sinkConsentRecords/{accountId}/")
@@ -1379,6 +1367,7 @@ public class ConsentService implements IConsentService {
 
 	}
 
+	@CoberturaIgnore
 	@Override
 	@GET
 	@Path("/sourceConsentRecords/{accountId}/")
@@ -1424,6 +1413,7 @@ public class ConsentService implements IConsentService {
 
 	}
 
+	@CoberturaIgnore
 	@Override
 	@GET
 	@Path("/consents/{accountId}/")
@@ -1484,6 +1474,7 @@ public class ConsentService implements IConsentService {
 
 	}
 
+	@CoberturaIgnore
 	@Override
 	@GET
 	@Path("/consents/{accountId}/{slr}")
@@ -1548,6 +1539,7 @@ public class ConsentService implements IConsentService {
 
 	}
 
+	@CoberturaIgnore
 	@Override
 	@GET
 	@Path("/consents/active/{accountId}/{slr}")
@@ -1613,6 +1605,7 @@ public class ConsentService implements IConsentService {
 	}
 
 
+	@CoberturaIgnore
 	@Override
 	@GET
 	@Path("/consents/active/{accountId}/{slr}/{serviceId}")

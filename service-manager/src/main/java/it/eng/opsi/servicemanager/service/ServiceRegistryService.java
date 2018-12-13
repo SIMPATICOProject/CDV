@@ -190,9 +190,5 @@ public class ServiceRegistryService {
 		return dao.getServiceReportbyType();
 	}
 
-	public static void main(String[] args) {
-		new JHades().printClassLoaderNames().printClasspath().overlappingJarsReport().multipleClassVersionsReport();
-
-	}
-
+	
 }

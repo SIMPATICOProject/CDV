@@ -10,15 +10,10 @@ export class PieChartService {
   getData() {
     let pieColor = this._baConfig.get().colors.custom.dashboardPieChart;
     return [
-      {
-        color: pieColor,
-        description: 'general.dashboard.pdata',
-        stats: '300',
-        icon: 'person',
-      }, {
+    {
         color: pieColor,
         description: 'general.dashboard.services',
-        stats: '4',
+        stats: '16',
         icon: 'money',
       }, {
         color: pieColor,
@@ -28,7 +23,7 @@ export class PieChartService {
       }, {
         color: pieColor,
         description: 'general.dashboard.consents',
-        stats: '5',
+        stats: '2',
         icon: 'refresh',
       }
     ];

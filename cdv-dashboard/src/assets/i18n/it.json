@@ -1,5 +1,6 @@
 {
   "general": {
+	"logo_text":"CaPe",
     "home": "Home",
     "dashboard": {
       "pdataCategories": "Dati per Categoria",

@@ -1,5 +1,6 @@
 { 
   "general": { 
+    "logo_text":"CaPe",
     "home": "Home",
     "dashboard": {
       "pdataCategories": "Personal Data Categories",
@@ -57,7 +58,10 @@
 	  "configuration": "Configuration",
 	  "sign_out": "Sign out",
 	  "logs": "Data Logs",
-	  "consents": "Data Consents"
+	  "consents": "Data Consents",
+	  "connectors": "Connectors",
+	  "dataconnectors":"Data Connectors",
+	  "registry": "Service Registries"
 	  
     },
 	"account":{
@@ -130,6 +134,23 @@
 	  "data_processed": "Data Processed",
 	  "close": "Close",
 	  "url": "URL",
+	  "created": "Created",
+	  "data_consent": "Data Consent",
+	  "enabled": "Enabled",
+	  "disabled": "Disabled"  
+	  
+	},
+	"connectors":{
+	  "connector": "Connector",
+      "description": "Description",
+      "link": "Link",
+	  "keywords": "Keywords",
+	  "provider": "Provider",
+	  "purpose": "Purpose",
+	  "url_link": "Link",
+	  "data_processed": "Data Processed",
+	  "close": "Close",
+	  "url": "repository",
 	  "created": "Created",
 	  "data_consent": "Data Consent",
 	  "enabled": "Enabled",

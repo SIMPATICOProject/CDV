@@ -35,7 +35,7 @@ var cdvUI = (function () {
 			statusMessageNoActive: "CDV is not active for this service. Activate?",
 			confirmSaveDataMessage: "Update your Persona Data?",
 			consentMessage1: "The service requires consent to access the following personal data",
-			consentMessage2: "data that are not strictly necessary to execute the service. Check the ones you agree to grant consent for the declared purpose.",
+			consentMessage2: "Data that are not strictly necessary to execute the service. Check the ones you agree to grant consent for the declared purpose.",
 			buttonSaveData: "Save your data",
 			buttonManageData: "Manage your data",
 			buttonActivate: "Activate",
@@ -688,7 +688,8 @@ var cdvUI = (function () {
 								}
 							}
 						}
-						$(this).find('#mybody').append('These data will be used for surveys.')
+						$(this).find('#mybody').append('<br>These data will be used for: ');
+						$(this).find('#mybody').append('<br><b><i>'+mydata.resourceSet.dataset[0].purpose+'</i></b>');
 						$(this).find('#mybody').append('<br><br>Do you agree that your data will be processed in anonymous mode for statistical purpose?<br><center><input type="radio" name="type" id="anonymous_yes" value="yes"><b>  Yes</b></input>&nbsp;&nbsp;&nbsp<input type="radio" id="anonymous_no" name="type" value="no"><b>  No</b></input></center>');
 						$(this).find('#mybody2').html('You have the right to withdraw consent at any time, but that will not affect the lawfulness of processing based on consent before its withdrawal.<br>You have the right of rectification or erasure, to restrict processing or to object to processing and to lodge a complaint to a supervisory authority.<br>The data will be retained until your account on this service is active.');
 

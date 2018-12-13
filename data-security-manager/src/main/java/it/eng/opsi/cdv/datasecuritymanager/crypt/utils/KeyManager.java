@@ -148,7 +148,7 @@ public abstract class KeyManager {
 
 	}
 
-	public static SecretKey getEncryptionKey(final String id, final EncryptionLevel level) {
+	public static SecretKey getEncryptionKey(final String id, final EncryptionLevel level) { 
 
 		SecretKey encryption_key = keys.get(id);
 
