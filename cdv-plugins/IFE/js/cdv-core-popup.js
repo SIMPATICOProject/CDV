@@ -591,7 +591,8 @@ var cdvCORE = (function () {
 		function accountToJSON(userId, firstname, lastname) {
 			var properties = [];
 			var jsonStr = JSON.stringify({
-					"username": firstname + "." + lastname + userId + serviceID
+					"username": firstname + "." + lastname + userId + serviceID,
+					"userId": userId
 					
 				});
 			var partStr = JSON.stringify({

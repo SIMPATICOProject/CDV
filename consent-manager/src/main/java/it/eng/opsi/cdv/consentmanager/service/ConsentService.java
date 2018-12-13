@@ -352,6 +352,9 @@ public class ConsentService implements IConsentService {
 					.get(0).getDataMapping();
 			List<it.eng.opsi.servicemanager.data.DataMapping> sourceServiceDataMap = source
 					.getPublicServiceIsDescribedAt().get(0).getDataMapping();
+			//TODO implement a matched purpose between sink and source. At moment reference to sink dataset purpose
+			List<String> matchedPurpose=sink.getPublicServiceIsDescribedAt()
+					.get(0).getPurpose();
 
 			dataMappingList = getMatchedDataMap(sinkServiceDataMap, sourceServiceDataMap);
 
@@ -361,6 +364,7 @@ public class ConsentService implements IConsentService {
 			dataset.setDataMapping(dataMappingList);
 			dataset.setStatus(true);
 			dataset.setCreated(new Date());
+			dataset.setPurpose(matchedPurpose);
 
 			List<it.eng.opsi.cdv.consentmanager.model.consentRecord.Dataset> datasetLists = new ArrayList<it.eng.opsi.cdv.consentmanager.model.consentRecord.Dataset>();
 			datasetLists.add(dataset);
