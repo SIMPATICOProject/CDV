@@ -47,7 +47,7 @@ chrome.runtime.onMessage.addListener(
 			}
 		    else{
 		    	var dataPkg = request.greeting;
-		    	//aggiungere menu a tendina per concept
+
 			    /*var win = window.open("", "Title", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=450,height=350,top="+(200)+",left="+(400));
 			    win.document.head.innerHTML = "<head><meta charset=\"UTF-8\"><title>Selected Field</title>"
 			    	+"<link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\" integrity=\"sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u\" crossorigin=\"anonymous\">";
@@ -61,24 +61,20 @@ chrome.runtime.onMessage.addListener(
 			    	+" <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css\"/> <link data-require=\"select2@*\" data-semver=\"3.5.1\" rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2.css\"/> <link data-require=\"select2@*\" data-semver=\"3.5.1\" rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2-bootstrap.css\"/> <link rel=\"stylesheet\" href=\"http://localhost:8080/account-manager/style.css\"/>";
 			    //+"<script src=\"https://code.jquery.com/jquery-2.1.3.min.js\"></script> <script src=\"https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2.js\"></script>";
 			    
-			    win.document.body.innerHTML = "<div class=\"container-fluid\"> <h1>Annotation</h1> <form> <div class=\"form-group\"> <label for=\"inputProperty\">Property</label> <input type=\"input\" class=\"form-control\" id=\"inputProperty\"placeholder=\"Enter field id\" value=\""+dataPkg.property+"\"> </div><div class=\"form-group\"> <label for=\"inputConcept\">Concept</label> <input type=\"hidden\" class=\"form-control\" id=\"inputConcept\" placeholder=\"Select concept\"> </div><div class=\"form-group\"> <label for=\"inputConcept\">Name</label> <input type=\"input\" class=\"form-control\" id=\"inputName\" placeholder=\"Name\"> </div><button type=\"submit\" class=\"btn btn-primary\">Save</button></form></div>"+
+			    win.document.body.innerHTML = "<div class=\"container-fluid\"> <h1>Annotation</h1> <form> <div class=\"form-group\"> <label for=\"inputProperty\">Property</label>"
+			    	+"<input type=\"input\" class=\"form-control\" id=\"inputProperty\"placeholder=\"Enter field id\" value=\""+dataPkg.property+"\"> </div><div class=\"form-group\"> <label for=\"inputConcept\">Concept</label> <input type=\"hidden\" class=\"form-control\" id=\"inputConcept\" placeholder=\"Select concept\"> </div><div class=\"form-group\"> <label for=\"inputConcept\">Name</label> <input type=\"input\" class=\"form-control\" id=\"inputName\" placeholder=\"Name\"> </div><button type=\"submit\" class=\"btn btn-primary\">Save</button></form></div>"+
 			    	"</body>"+
 			    	"</html>";
 			    
 			    console.log("Concepts:");
 			    console.log(dataPkg.concepts);
 			    
-			    //JS loading
+			    //JS loading //Only read from CDN
 			    var script = document.createElement('script');
-			    //Can read only from CDN
 			    script.src = 'https://code.jquery.com/jquery-2.1.3.min.js';
-			    	//script.text = 'console.log("ciao")';
-			    	//script.setAttribute("type","text/javascript");
 			    script.async = false;
-			    
-			    console.log("script: ");
-			    console.log(script);
-			    
+			    //script.text = 'console.log("ciao")';
+		    	//script.setAttribute("type","text/javascript");
 			    win.document.head.appendChild(script);
 			    
 			    var script2 = document.createElement('script');

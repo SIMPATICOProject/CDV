@@ -23,7 +23,8 @@ var app_parameters={
 		host_param: 'localhost',
 		port_param: '8082',
 		getServByUrl_apipath: 'service-manager/api/v1/services/searchByUrl?url=',
-		getPDataCategoryTree_apipath: 'service-manager/api/v1/pdatafields/category/tree'
+		getPDataCategoryTree_apipath: 'service-manager/api/v1/pdatafields/category/tree',
+		findById_apipath: 'service-manager/api/v1/services/'
 };
 var selectionON = -1; //quando 0 permette di selezionare annotazioni nella pagina
 var listenerON = false;
@@ -202,10 +203,16 @@ chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
 								selectionON = -1;
 							}
 						}
-						else{
-							//content alert SERVICE REGISTERED
+						else{		//content alert SERVICE REGISTERED
 							console.log("il servizio è registrato");
 							msg = "alert_ok_serv";
+							
+							//salvo id in sessione
+							//sessionStorage.setItem("idActiveService", jobj.publicServiceID);
+							var idS = jobj.publicServiceID;
+							chrome.storage.local.set({"idActiveService": idS}, function() {
+						          console.log('Value is set to ' + idS);
+						        });
 							
 							//abilito il menu contestuale
 							selectionON = selectionON+1;

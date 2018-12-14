@@ -13,7 +13,8 @@
   	"permissions": [
   		"*://*/*",
   		"activeTab",
-  		"contextMenus"
+  		"contextMenus",
+  		"storage"
   	 ],
     "background": {
       "scripts": [
