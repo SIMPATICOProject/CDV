@@ -2,7 +2,7 @@ export const PAGES_MENU = [
   {
     path: 'pages',
     children: [
-     /* {
+      {
         path: 'dashboard',
         data: {
           menu: {
@@ -14,7 +14,7 @@ export const PAGES_MENU = [
           }
         }
       },
-      {
+      /*{
         path: 'editors',
         data: {
           menu: {
@@ -351,6 +351,32 @@ export const PAGES_MENU = [
           }
         }
 	  },
+      {
+        path: 'logs',  // path for our page
+        data: { // custom menu declaration
+          menu: {
+            title: 'general.menu.logs', // menu title
+            icon: 'ion-ios-paper', // menu icon
+            pathMatch: 'prefix', // use it if item children not displayed in menu
+            selected: false,
+            expanded: false,
+            order: 0
+          }
+        }
+      },
+	  {
+        path: 'consents',  // path for our page
+        data: { // custom menu declaration
+          menu: {
+            title: 'general.menu.consents', // menu title
+            icon: 'ion-ios-paper', // menu icon
+            pathMatch: 'prefix', // use it if item children not displayed in menu
+            selected: false,
+            expanded: false,
+            order: 0
+          }
+        }
+      },
 	  {
 	    path: 'services',  // path for our page
         data: { // custom menu declaration
@@ -377,6 +403,39 @@ export const PAGES_MENU = [
             data: {
               menu: {
                 title: 'general.menu.linkedservices',
+              }
+            }
+          }
+        ]
+	  }
+	  ,
+	  {
+	    path: 'connectors',  // path for our page
+        data: { // custom menu declaration
+          menu: {
+            title: 'general.menu.connectors', // menu title
+            icon: 'ion-toggle-filled', // menu icon
+            pathMatch: 'prefix', // use it if item children not displayed in menu
+            selected: false,
+            expanded: false,
+            order: 0
+          }
+        },
+        children: [
+           {
+            path: 'data_connectors',
+            data: {
+              menu: {
+                title: 'general.menu.dataconnectors',
+              }
+            }
+          },
+		  {
+            path: '',
+            data: {
+              menu: {
+                title: 'general.menu.registry',
+                url: '#'
               }
             }
           }

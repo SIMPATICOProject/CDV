@@ -1,0 +1,8 @@
+<div class="addConnector">
+  <button type="button" class="btn btn-primary btn-with-icon" (click)="smModalShow()"><i class="ion-android-add-circle"></i>{{'general.personal_data.add' | translate}}</button>
+</div>
+
+
+    <ba-card title="" baCardClass="with-scroll">
+	   <ng2-smart-table [settings]="settings" [source]="source" (deleteConfirm)="onDeleteConfirm($event)" (createConfirm)="onCreateConfirm($event)"></ng2-smart-table>
+    </ba-card>

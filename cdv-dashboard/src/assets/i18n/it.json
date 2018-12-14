@@ -1,17 +1,18 @@
 {
   "general": {
+	"logo_text":"CDV",
     "home": "Home",
     "dashboard": {
-      "acquisitionChannels": "Acquisition Channels",
+      "pdataCategories": "Dati per Categoria",
       "usersByCountry": "Users by Country",
-      "revenue": "Revenue",
+      "pdataTraffic": "Traffico Richieste",
       "feed": "Feed",
       "toDoList": "To Do List",
       "calendar": "Calendar",
-      "newVisits": "New Visits",
-      "purchases": "Purchases",
-      "activeUsers": "Active Users",
-      "returned": "Returned"
+      "pdata": "Dati salvati",
+      "services": "Servizi disponibili",
+      "linkedServices": "Servizi Collegati",
+      "consents": "Consensi"
     },
     "forms": {
       "option1": "Option 1"
@@ -55,7 +56,9 @@
 	  "linkedservices": "Servizi collegati",
 	  "personaldata": "Dati Personali",
 	  "configuration": "Configura",
-	  "sign_out": "Disconnetti"
+	  "sign_out": "Disconnetti",
+	  "logs": "Data Log",
+	  "consents": "Consensi"
     },
 	"account":{
 	  "export_data": "Esporta i tuoi dati",

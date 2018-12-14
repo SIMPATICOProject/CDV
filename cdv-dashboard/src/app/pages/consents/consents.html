@@ -1,0 +1,360 @@
+<div class="row">
+  <div class="col-12">
+    <h2>{{message}}</h2>
+     <div class="loader" *ngIf="loading"></div>
+
+		<div id="forHiding" *ngIf="!loading">
+        <div class="alert alert-info" role="alert" *ngIf="msg">
+            {{msg}}
+          </div>
+
+<!--
+		<div class="list-group" *ngFor="let consent of consents" >
+
+</div> -->
+
+    
+	
+	
+	 <div class="text-left services"> 	 
+	 <div class="btn-group" ngbDropdown>
+      <button type="button" class="btn btn-primary" ngbDropdownToggle>
+         {{'general.services.service' | translate}} 
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownBasic1">
+            <button *ngFor="let service of services"
+                    class="dropdown-item"
+                    (click)="onFilterConsents(service.serviceId, service.serviceName)"
+                     value={{service.serviceName}}>
+                    {{service.serviceName}}
+            </button>
+			<li class="dropdown-divider"></li>
+			<button class="dropdown-item" (click)="onGetConsent()">All</button>
+      </div>
+	 </div>
+	
+     </div>
+	
+	
+	<div class="card-consents animated fadeIn card" *ngFor="let consent of consents; let idx = index">
+      <div class="card-header">
+
+        <div class="row justify-content-end text-center marginbottom0">
+          <div class="col-12 col-md-8">
+            <button *ngFor="let button of buttons"
+                    type="button"
+                    class="btn btn-primary"
+                    (click)="onClick(consent.rs_id,button.id)"
+                    [disabled]="!isActive(idx,button.id)">
+                    {{button.name}}
+            </button>
+          </div>
+          <div class="col-12 col-md-2">
+            <button class="btn btn-primary pull-right" (click)="openConsentHistory(consentHistory)">Consent History</button>
+          </div>
+        </div>
+
+      </div>
+      <div class="card-body">
+
+        <table>
+          <tbody>
+            <tr>
+              <td>
+                <strong>Data Provider</strong>
+              </td>
+              <td>{{consent.sourceService.publicServiceName}}</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Data Provider Description</strong>
+              </td>
+              <td>{{consent.sourceService.humanReadableDescription[0].description}}</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Data Requester</strong>
+              </td>
+              <td>{{ consent.sinkService.publicServiceName }}</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Data Requester Description</strong>
+              </td>
+              <td>{{ consent.sinkService.humanReadableDescription[0].description }}</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Purpose</strong>
+              </td>
+              <td>{{ consent.sinkService.publicServiceIsDescribedAt[0].purpose[0] }}</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Anonymous Usage</strong>
+              </td>
+              <td>{{ consent.sink.common_part.anonymousUsage }}</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Last Status</strong>
+              </td>
+              <td>{{consent.sink.consentStatusList[consent.sink.consentStatusList.length -1].consent_status}}
+                <strong>since </strong>{{ consent.sink.common_part.iat | date : "short" }}</td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+      <div class="card-footer">
+
+        <div class="row justify-content-end text-center marginbottom0">
+          <div class="col-12 col-md-8">
+            <button class="btn btn-info btn-with-icon"
+                    id="button{{idx}}"
+                    type="button"
+                    data-toggle="collapse"
+                    [attr.data-target]="'#detailsCollapse'+ idx"
+                    (click)="openDetails(idx)">
+              <i class="ion-android-arrow-dropdown-circle"></i> Details
+            </button>
+          </div>
+          <div class="col-12 col-md-2">
+            <button class="btn btn-primary pull-right" (click)="openDatasetHistory(datasetHistory)">Dataset History</button>
+          </div>
+        </div>
+
+        <div class="collapse margintop12" id="detailsCollapse{{idx}}">
+          <div class="row">
+            <div class="col-12 col-lg-6">
+              <table>
+                <thead>
+                  <tr>
+                    <th colspan="4" class="text-center">
+                      <strong>Sensitive</strong>
+                      <button type="button" class="pull-right btn btn-danger" aria-label="Close" (click)='forgetMeDataType("sensitivo",idx)'>
+                        <!--(click)=""-->
+                        <span aria-hidden="true">Forget my sensitive data</span>
+                      </button>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <strong>Name</strong>
+                    </th>
+                    <th>
+                      <strong>Required</strong>
+                    </th>
+                    <th>
+                      <strong>Grant Consent</strong>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let prop of lastDataMapping">
+                    <ng-container *ngIf="prop.sensitive == 1">
+                      <td>
+                        {{prop.name}}
+                      </td>
+                      <td>
+                        {{prop.required == 1 ? 'YES':'NO'}}
+                      </td>
+                      <td class="text-center">
+                        <ng-container *ngIf="(getLastStatus(idx) && (!prop.required))">
+                          <label class="switch">
+                            <input id="{{idx}}||{{prop.conceptId}}" type="checkbox" [checked]="(prop.isIn)" (change)="changeMe($event)">
+                            <span class="slider round"></span>
+                          </label>
+                      </ng-container>
+                      </td>
+                    </ng-container>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="col-12 col-lg-6">
+              <table>
+                <thead>
+                  <tr>
+                    <th colspan="4" class="text-center">
+                      <strong>Non Sensitive</strong>
+                      <button type="button" class="pull-right btn btn-danger" aria-label="Close" (click)='forgetMeDataType("nonsensitivo",idx)'>
+                        <!--(click)=""-->
+                        <span aria-hidden="true">Forget my non sensitive data</span>
+                      </button>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <strong>Name</strong>
+                    </th>
+                    <th>
+                      <strong>Required</strong>
+                    </th>
+                    <th>
+                      <strong>Grant Consent</strong>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let prop of lastDataMapping">
+                    <ng-container *ngIf="prop.sensitive == 0">
+                      <td>
+                        {{prop.name}}
+                      </td>
+                      <td>
+                        {{prop.required == 1 ? 'YES':'NO'}}
+                      </td>
+                      <td class="text-center">
+                        <ng-container *ngIf="(getLastStatus(idx) && (!prop.required))">
+                          <label class="switch">
+                            <input id="{{idx}}||{{prop.conceptId}}" type="checkbox" [checked]="(prop.isIn)" (change)="changeMe($event)">
+                            <span class="slider round"></span>
+                          </label>
+                        </ng-container>
+                      </td>
+                    </ng-container>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+
+          <!-- Aggiungi o rimuovi la classe "to-update" per mostrare tooltip e bordo -->
+          <ng-container *ngIf="(getLastStatus(idx))">
+
+          <div id="updateButton{{idx}}" class="btn-update">
+            <div class="tooltip bs-tooltip-right">
+              <div class="arrow"></div>
+              <div class="tooltip-inner">Click to Update</div>
+            </div>
+            <p class="text-center margintop12 marginbottom0">
+              <button id="disableButton{{idx}}" class="btn btn-primary btn-with-icon" type="button" disabled="true" (click)="updateDataset(idx)">
+                <i class="ion-android-send"></i> Update
+              </button>
+            </p>
+          </div>
+        </ng-container>
+        </div>
+
+      </div>
+
+
+      <ng-template #consentHistory let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title">Consent's History</h4>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <table>
+            <thead>
+              <tr>
+                <th>
+                  <strong>Status</strong>
+                </th>
+                <th>
+                  <strong>From</strong>
+                </th>
+                <th>
+                  <strong>To</strong>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let consentStatus of consent.source.consentStatusList; let i = index">
+                <td>{{consentStatus.consent_status}}</td>
+                <td>{{convertZoneDateTimeToString(consent.source.consentStatusList[i].issuedAt.dateTime)}}</td>
+                <td>{{consent.source.consentStatusList[i+1]!==undefined? convertZoneDateTimeToString(consent.source.consentStatusList[i+1].issuedAt.dateTime):
+                  getNowDateTime()}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" (click)="c('Close click')">Close</button>
+        </div>
+      </ng-template>
+
+      <ng-template #datasetHistory let-c="close" let-d="dismiss">
+        <div class="modal-header modal-header-scroll">
+          <h4 class="modal-title">Dataset's History</h4>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body modal-body-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 30%;">
+                  <strong>Status</strong>
+                </th>
+                <th style="width: 35%;">
+                  <strong>From</strong>
+                </th>
+                <th style="width: 35%;">
+                  <strong>To</strong>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="tr-striped" *ngFor="let ds of consent.sink.common_part.rs_description.resource_set.dataset; let i = index">
+                <td colspan="3" class="td-with-table-inside">
+                  <table class="table-inside">
+                    <tr>
+                      <td style="width: 30%;">
+                        {{ds.status? 'ACTIVE':'DISABLE'}}
+                      </td>
+                      <td style="width: 35%;">
+                        {{ds.created}}
+                      </td>
+                      <td style="width: 35%;">
+                        {{consent.sink.common_part.rs_description.resource_set.dataset[i+1] !==undefined? consent.sink.common_part.rs_description.resource_set.dataset[i+1].created:'' }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="3">
+                        <span *ngFor="let p of ds.dataMapping">{{p.conceptId}}</span>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer modal-footer-scroll">
+          <button type="button" class="btn btn-danger" (click)="c('Close click')">Close</button>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+
+</div>
+
+<style>
+.loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>

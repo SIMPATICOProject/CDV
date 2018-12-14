@@ -10,7 +10,7 @@
 	</parent>
 	<artifactId>data-security-manager</artifactId>
 	<packaging>war</packaging>
-	<name>data-security-manager</name>
+	<name>CDV Data Security Manager</name>
 	<properties>
 		<jersey.version>2.25</jersey.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

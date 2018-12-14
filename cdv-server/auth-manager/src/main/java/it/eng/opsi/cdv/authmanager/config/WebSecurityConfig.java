@@ -1,3 +1,25 @@
+/*******************************************************************************
+ * The MIT License (MIT)
+ * Copyright (c) 2016, 2018  Engineering Ingegneria Informatica S.p.A
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *******************************************************************************/
 package it.eng.opsi.cdv.authmanager.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,11 +89,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		// .permitAll().and().addFilterBefore(filter
 		// , BasicAuthenticationFilter.class);
 
-//		http.authorizeRequests().anyRequest().authenticated().and()
-				http.authenticationProvider(authenticationProvider()).httpBasic().authenticationEntryPoint(clientAuthenticationEntryPoint())
-				.and()
+		// http.authorizeRequests().anyRequest().authenticated().and()
+		http.authenticationProvider(authenticationProvider()).httpBasic()
+				.authenticationEntryPoint(clientAuthenticationEntryPoint()).and()
 				.addFilterBefore(clientCredentialsTokenEndpointFilter(), BasicAuthenticationFilter.class);
-//				.addFilterAfter(oAuth2ClientContextFilter(), ExceptionTranslationFilter.class);
+		// .addFilterAfter(oAuth2ClientContextFilter(),
+		// ExceptionTranslationFilter.class);
 
 		// @formatter:on
 
@@ -86,7 +109,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		return authProvider;
 
 	}
-//
+
+	//
 	@Bean
 	public OAuth2AuthenticationEntryPoint clientAuthenticationEntryPoint() {
 
@@ -96,8 +120,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		return oAuthEntryPoint;
 	}
-//
-	
+	//
+
 	@Bean
 	public ClientCredentialsTokenEndpointFilter clientCredentialsTokenEndpointFilter() throws Exception {
 
@@ -106,21 +130,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		return clientCredentialsTokenEndpointFilter;
 	}
-	
-	
-//
-//	@Bean
-//	OAuth2ClientContextFilter oAuth2ClientContextFilter() {
-//
-//		return new OAuth2ClientContextFilter();
-//
-//	}
+
+	//
+	// @Bean
+	// OAuth2ClientContextFilter oAuth2ClientContextFilter() {
+	//
+	// return new OAuth2ClientContextFilter();
+	//
+	// }
 
 	@Bean
 	public BasicAuthenticationEntryPoint getBasicAuthenticationEntryPoint() {
 		BasicAuthenticationEntryPoint basicAuthenticationEntryPoint = new BasicAuthenticationEntryPoint();
 		basicAuthenticationEntryPoint.setRealmName("Basic Authentication");
-	
+
 		return basicAuthenticationEntryPoint;
 	}
 

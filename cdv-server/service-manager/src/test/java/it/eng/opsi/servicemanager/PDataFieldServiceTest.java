@@ -22,15 +22,12 @@
  *******************************************************************************/
 package it.eng.opsi.servicemanager;
 
-
-
 import org.junit.*;
 import org.junit.runner.RunWith;
 import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-
 
 import static org.mockito.Mockito.when;
 
@@ -49,147 +46,174 @@ import it.eng.opsi.servicemanager.dao.PDataFieldDAO;
 import it.eng.opsi.servicemanager.dao.ServiceEntryDAO;
 import it.eng.opsi.servicemanager.data.DataMapping;
 import it.eng.opsi.servicemanager.data.HumanReadableDescription;
+import it.eng.opsi.servicemanager.data.PDataCategory;
 import it.eng.opsi.servicemanager.data.PDataField;
 import it.eng.opsi.servicemanager.data.ServiceEntry;
 import it.eng.opsi.servicemanager.service.PDataFieldService;
 import it.eng.opsi.servicemanager.service.ServiceRegistryService;
 
-
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration( classes = TestConfiguration.class )
+@ContextConfiguration(classes = TestConfiguration.class)
 
 public class PDataFieldServiceTest {
 
-   
 	@Mock
-    PDataFieldDAO dao;
-	
+	PDataFieldDAO dao;
+
 	@Mock
 	PDataField pDataField;
 	
-		
+	@Mock
+	PDataCategory pDataCategory;
+
 	@Autowired
-    @InjectMocks
-    @Qualifier("PDataFieldService")
-	
-	
+	@InjectMocks
+	@Qualifier("PDataFieldService")
+
 	PDataFieldService pDataFieldService;
 
-    @Before
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
-    }
+	@Before
+	public void setUp() {
+		MockitoAnnotations.initMocks(this);
+	}
+
+	@Test
+	public void testGetPDataFields() {
+
+		System.out.println("testing getPdataFields");
+
+		// Mocking ServiceEntry methods
+		when(pDataField.getName()).thenReturn("aConcept");
+		when(pDataField.getDescription()).thenReturn("description");
+		when(pDataField.getId()).thenReturn("id");
+
+		List<PDataField> entries = new ArrayList<PDataField>();
+		entries.add(pDataField);
+		// Mocking database methods
+		when(dao.findAll()).thenReturn(entries);
+
+		// Call create method
+		List<PDataField> result = pDataFieldService.getPDataFields();
+
+		// Assert expected results
+		Assert.assertNotNull(result);
+		Assert.assertTrue(result.size() == 1);
+		Assert.assertNotNull(result.get(0).getName());
+		Assert.assertNotNull(result.get(0).getDescription());
+		Assert.assertNotNull(result.get(0).getId());
+
+	}
+
+	@Test
+	public void testGetPDataFieldsByCategory() {
+
+		System.out.println("testing getPDataFieldsByCategory");
+
+		// Mocking ServiceEntry methods
+		when(pDataField.getName()).thenReturn("aConcept");
+		when(pDataField.getDescription()).thenReturn("description");
+		when(pDataField.getId()).thenReturn("id");
+
+		List<PDataField> entries = new ArrayList<PDataField>();
+		entries.add(pDataField);
+		// Mocking database methods
+		when(dao.findByCategory(Mockito.anyString())).thenReturn(entries);
+
+		// Call create method
+		List<PDataField> result = pDataFieldService.getPDataFieldByCategory("");
+
+		// Assert expected results
+		Assert.assertNotNull(result);
+		Assert.assertTrue(result.size() == 1);
+		Assert.assertNotNull(result.get(0).getName());
+		Assert.assertNotNull(result.get(0).getDescription());
+		Assert.assertNotNull(result.get(0).getId());
+
+	}
+
+	@Test
+	public void testGetPDataFieldsByName() {
+
+		System.out.println("testing getPDataFieldsByName");
+
+		// Mocking ServiceEntry methods
+		when(pDataField.getName()).thenReturn("aConcept");
+		when(pDataField.getDescription()).thenReturn("description");
+		when(pDataField.getId()).thenReturn("id");
+
+		List<PDataField> entries = new ArrayList<PDataField>();
+		entries.add(pDataField);
+		// Mocking database methods
+		when(dao.findByName(Mockito.anyString())).thenReturn(entries);
+
+		// Call create method
+		List<PDataField> result = pDataFieldService.findPDataFieldByName("");
+
+		// Assert expected results
+		Assert.assertNotNull(result);
+		Assert.assertTrue(result.size() == 1);
+		Assert.assertNotNull(result.get(0).getName());
+		Assert.assertNotNull(result.get(0).getDescription());
+		Assert.assertNotNull(result.get(0).getId());
+
+	}
 	
 	
-	
-    @Test
-    public void testGetPDataFields() {
-    	    	  	
-    	System.out.println("testing getPdataFields");
-       	
-       	// Mocking ServiceEntry methods
-           when( pDataField.getName() ).thenReturn( "aConcept" );
-           when( pDataField.getDescription()).thenReturn( "description" );
-           when( pDataField.getId()).thenReturn( "id" );
-          
-           List<PDataField> entries= new ArrayList<PDataField>();
-           entries.add(pDataField);
-           // Mocking database methods
-           when( dao.findAll() ).thenReturn( entries );
-       	   	     
-           // Call create method    	
-          List<PDataField> result= pDataFieldService.getPDataFields();
-                 
-          // Assert expected results
-          Assert.assertNotNull( result );
-          Assert.assertTrue(result.size()==1);
-          Assert.assertNotNull(result.get(0).getName());
-          Assert.assertNotNull(result.get(0).getDescription());
-          Assert.assertNotNull( result.get(0).getId());
-	  
-   }
-    
-    @Test
-    public void testGetPDataFieldsByCategory() {
-    	    	  	
-    	System.out.println("testing getPDataFieldsByCategory");
-       	
-       	// Mocking ServiceEntry methods
-           when( pDataField.getName() ).thenReturn( "aConcept" );
-           when( pDataField.getDescription()).thenReturn( "description" );
-           when( pDataField.getId()).thenReturn( "id" );
-          
-           List<PDataField> entries= new ArrayList<PDataField>();
-           entries.add(pDataField);
-           // Mocking database methods
-           when( dao.findByCategory(Mockito.anyString())).thenReturn( entries );
-       	   	     
-           // Call create method    	
-          List<PDataField> result= pDataFieldService.getPDataFieldByCategory("");
-                 
-          // Assert expected results
-          Assert.assertNotNull( result );
-          Assert.assertTrue(result.size()==1);
-          Assert.assertNotNull(result.get(0).getName());
-          Assert.assertNotNull(result.get(0).getDescription());
-          Assert.assertNotNull( result.get(0).getId());
-	  
-   }
-    
-    @Test
-    public void testGetPDataFieldsByName() {
-    	    	  	
-    	System.out.println("testing getPDataFieldsByName");
-       	
-       	// Mocking ServiceEntry methods
-           when( pDataField.getName() ).thenReturn( "aConcept" );
-           when( pDataField.getDescription()).thenReturn( "description" );
-           when( pDataField.getId()).thenReturn( "id" );
-          
-           List<PDataField> entries= new ArrayList<PDataField>();
-           entries.add(pDataField);
-           // Mocking database methods
-           when( dao.findByName(Mockito.anyString())).thenReturn( entries );
-       	   	     
-           // Call create method    	
-          List<PDataField> result= pDataFieldService.findPDataFieldByName("");
-                 
-          // Assert expected results
-          Assert.assertNotNull( result );
-          Assert.assertTrue(result.size()==1);
-          Assert.assertNotNull(result.get(0).getName());
-          Assert.assertNotNull(result.get(0).getDescription());
-          Assert.assertNotNull( result.get(0).getId());
-	  
-   }
-    
-    @Test
-    public void testGetPDataField() {
-    	    	  	
-    	System.out.println("testing getPDataField");
-       	
-       	// Mocking ServiceEntry methods
-           when( pDataField.getName() ).thenReturn( "aConcept" );
-           when( pDataField.getDescription()).thenReturn( "description" );
-           when( pDataField.getId()).thenReturn( "id" );
-          
-          
-           // Mocking database methods
-           when( dao.findById(Mockito.anyString())).thenReturn( pDataField );
-       	   	     
-           // Call create method    	
-          PDataField result= pDataFieldService.getPDataFieldById("");
-                 
-          // Assert expected results
-          Assert.assertNotNull( result );
-          
-          Assert.assertNotNull(result.getName());
-          Assert.assertNotNull(result.getDescription());
-          Assert.assertNotNull( result.getId());
-	  
-   }
-   
-   
-   
-   
+	@Test
+	public void testGetPDataTree() {
+
+		System.out.println("testing getPDataTree");
+
+		// Mocking PDataField methods
+		when(pDataField.getName()).thenReturn("aConcept");
+		when(pDataField.getDescription()).thenReturn("description");
+		when(pDataField.getId()).thenReturn("id");
+
+		List<PDataField> entries = new ArrayList<PDataField>();
+		entries.add(pDataField);
+		// Mocking PDataField methods
+				when(pDataCategory.getCategory()).thenReturn("aCategory");
+				when(pDataCategory.getConcepts()).thenReturn(entries);
+				List<PDataCategory> cat_entries = new ArrayList<PDataCategory>();
+				cat_entries.add(pDataCategory);		
+		// Mocking database methods
+		when(dao.getPDataTree()).thenReturn(cat_entries);
+
+		// Call create method
+		List<PDataCategory> result = pDataFieldService.getPDataCategoryTree();
+
+		// Assert expected results
+		Assert.assertNotNull(result);
+		Assert.assertTrue(result.size() == 1);
+		Assert.assertNotNull(result.get(0).getCategory());
+		Assert.assertNotNull(result.get(0).getConcepts());
+		
+
+	}
+
+	@Test
+	public void testGetPDataField() {
+
+		System.out.println("testing getPDataField");
+
+		// Mocking ServiceEntry methods
+		when(pDataField.getName()).thenReturn("aConcept");
+		when(pDataField.getDescription()).thenReturn("description");
+		when(pDataField.getId()).thenReturn("id");
+
+		// Mocking database methods
+		when(dao.findById(Mockito.anyString())).thenReturn(pDataField);
+
+		// Call create method
+		PDataField result = pDataFieldService.getPDataFieldById("");
+
+		// Assert expected results
+		Assert.assertNotNull(result);
+
+		Assert.assertNotNull(result.getName());
+		Assert.assertNotNull(result.getDescription());
+		Assert.assertNotNull(result.getId());
+
+	}
+
 }

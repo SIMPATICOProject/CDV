@@ -10,7 +10,7 @@
   <groupId>it.eng.opsi.cdv</groupId>
   <artifactId>pdata-source-connectors</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>pdata-source-connectors</name>
+  <name>CDV PData Source Connectors</name>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>

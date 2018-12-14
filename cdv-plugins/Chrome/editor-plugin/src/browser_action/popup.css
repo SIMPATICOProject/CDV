@@ -1,0 +1,22 @@
+.container {
+	min-height: 50px;
+	min-width: 150px;
+	    text-align: left;
+}
+
+#optionTable > tbody > tr > td > a {
+	text-decoration:none;
+	color: #101010;
+}
+
+#optionTable > tbody > tr > td{
+	padding-left: 0.5em;
+}
+
+#optionTable > tbody > tr > th {
+	text-align: center;
+}
+
+#optionTable {
+	    width: 100%;
+}

@@ -27,8 +27,10 @@ import it.eng.opsi.servicemanager.connection.MongoDBConnection;
 import it.eng.opsi.servicemanager.data.DataMapping;
 import it.eng.opsi.servicemanager.data.PDataField;
 import it.eng.opsi.servicemanager.data.ServiceEntry;
+import it.eng.opsi.servicemanager.model.ServiceReport;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -187,5 +189,88 @@ public class ServiceEntryDAO {
 
 		return list;
 	}
+
+	public List<ServiceReport> getServiceReportbySector() {
+		MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
+		DB db = dbSingleton.getDB();
+		DBCollection coll = db.getCollection("serviceRegistry");
+		
+		int total=coll.find().count();
+		List<ServiceReport> list = new ArrayList<ServiceReport>();
+		Iterable<DBObject> output = coll
+				.aggregate(Arrays.asList((DBObject) new BasicDBObject("$unwind", "$publicServiceSector"),
+						(DBObject) new BasicDBObject("$group",
+								new BasicDBObject("_id", "$publicServiceSector")
+										.append("category", new BasicDBObject("$first", "$publicServiceSector"))
+										.append("count", new BasicDBObject("$sum", 1)))))
+				.results();
+
+		ServiceReport serviceReport;
+		for (DBObject dbObject : output) {
+
+			try {
+				serviceReport = DAOUtils.dbObj2obj(dbObject, ServiceReport.class);
+				serviceReport.setTotal(total);
+				list.add(serviceReport);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+
+		return list;
+
+	}
+
+	public List<ServiceReport> getServiceReportbyType() {
+		MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
+		DB db = dbSingleton.getDB();
+		DBCollection coll = db.getCollection("serviceRegistry");
+		int total=coll.find().count();
+		List<ServiceReport> list = new ArrayList<ServiceReport>();
+		Iterable<DBObject> output = coll
+				.aggregate(Arrays.asList((DBObject) new BasicDBObject("$unwind", "$publicServiceTypeProp"),
+						(DBObject) new BasicDBObject("$group",
+								new BasicDBObject("_id", "$publicServiceTypeProp")
+										.append("category", new BasicDBObject("$first", "$publicServiceTypeProp"))
+										.append("count", new BasicDBObject("$sum", 1)))))
+				.results();
+
+		ServiceReport serviceReport;
+		for (DBObject dbObject : output) {
+
+			try {
+				serviceReport = DAOUtils.dbObj2obj(dbObject, ServiceReport.class);
+				serviceReport.setTotal(total);
+				list.add(serviceReport);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+
+		return list;
+
+	}
+	
+	
+	public ServiceEntry findByURL(String url) {
+		MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
+		DB db = dbSingleton.getDB();
+		DBCollection coll = db.getCollection("serviceRegistry");
+		DBObject service = coll.findOne(new BasicDBObject("serviceUri", url));
+		ServiceEntry serviceEntry = new ServiceEntry();
+		try {
+			serviceEntry = DAOUtils.dbObj2obj(service, ServiceEntry.class);
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+
+		return serviceEntry;
+	}
+
 
 }

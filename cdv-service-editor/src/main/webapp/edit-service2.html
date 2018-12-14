@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Service Editor</title>
+
+    <!-- Bootstrap -->
+    <link href="vendors/bootstrap/distrib/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- NProgress -->
+<!--     <link href="../vendors/nprogress/nprogress.css" rel="stylesheet"> -->
+
+    <!-- iCheck -->
+    <link href="vendors/iCheck/skins/flat/green.css" rel="stylesheet">
+    <!-- Datatables -->
+    <link href="vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+    <link href="vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+    <link href="vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+    <link href="vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+    <link href="vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+    <!-- Custom Theme Style -->
+    <link href="css/custom.css" rel="stylesheet">
+    
+    <!-- File di configurazione -->
+	<script src="js/config.properties.js"></script>
+    
+     <script src="vendors/jquery/distrib/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@json-editor/json-editor/dist/jsoneditor.min.js"></script>
+    <script src="js/preload.js"></script>
+    <script src="//cdn.jsdelivr.net/select2/3.4.8/select2.min.js"></script>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/select2/3.4.8/select2.css">
+	<link rel="stylesheet" href="./css/select2-bootstrap.css">
+	
+	
+
+	
+	
+	
+	
+    <script>
+	
+	
+    // Set the default CSS theme and icon library globally
+    JSONEditor.defaults.theme = 'bootstrap3';
+    JSONEditor.defaults.iconlib = 'fontawesome4';
+    var schemaDir = "json/service-entry.json";
+	
+	// Disable additional properties
+    JSONEditor.defaults.options.no_additional_properties= true;
+	JSONEditor.defaults.options.disable_properties=true;
+	JSONEditor.defaults.options.prompt_before_delete=true;
+	
+	
+    </script>
+
+  </head>
+  <style>
+  	input[type="text"]{
+  		height: auto !important;
+  	} 
+  </style>
+  
+  <body class="nav-md footer_fixed">
+  
+<!-- Large modal -->
+    <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+          <div class="modal-header" style="border-bottom: none;padding-bottom: 0 !important;">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+            </button>
+            <h1 class="modal-title" id="service-title">TITLE</h1>
+          </div>
+          <div class="modal-body">
+            <p id="service-description-content"></p>
+          </div>
+<!-- SERVICE-LIST SECTION -->
+          <div id="service-div-1" class="modal-body" style="border-top: 1px solid #e5e5e5;">
+            <h2 id="service-keyword-title">Keywords: </h2>
+            <p id="service-keyword-content"></p>
+            </br>
+            <h2 id="service-puropose-title">Provider: </h2>
+            <p id="service-puropose-content"></p>
+            </br>
+            <h2 id="service-purpose-title">Purpose: </h2>
+            <p id="service-purpose-content"></p>
+            </br>
+            <h2 id="service-link-title">Link: </h2>
+            <a style="font-size: 20px;cursor: pointer;color:#0055FF" id="service-link-content"></a>
+          </div>
+          <div  id="service-div-2" class="keywords-set modal-body" style="border-top: 1px solid #e5e5e5;word-break: break-all;">
+          	<h2 id="service-data-title" style="font-style: normal">Data Processed: </h2>
+          </div>
+<!-- SERVICE-LIST SECTION -->
+<!-- PDFIELDS SECTION -->
+			<div id="pdf-div" class="modal-body" style="border-top: 1px solid #e5e5e5;">
+				<h2 id="pdf-id-title">ID: </h2>
+            	<p id="pdf-id-content"></p>
+            	</br>
+            	<h2 id="pdf-category-title">Category: </h2>
+            	<p id="pdf-category-content"></p>
+            	</br>
+            	<h2 id="pdf-privatePData-title">Private PData: </h2>
+            	<p id="pdf-privatePData-content"></p>
+            	</br>
+            	<h2 id="pdf-semanticType-title">Semantic Type: </h2>
+            	<p id="pdf-semanticType-content"></p>
+            	</br>
+            	<h2 id="pdf-uri-title">URI: </h2>
+            	<p id="pdf-uri-content"></p>
+            	</br>
+			</div>
+<!-- PDFIELDS SECTION -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+<!-- Large modal -->
+  
+  
+    <div class="container body">
+      <div class="main_container">
+        <div class="col-md-3 left_col menu_fixed">
+          <div class="left_col scroll-view sidebar-scroll-y">
+            <div class="navbar nav_title" style="border: 0;">
+              <a href="index.html" class="site_title"><i class="fa fa-users"></i> <span>Service Editor</span></a>
+            </div>
+
+            <div class="clearfix"></div>
+            <br />
+
+<!-- sidebar menu -->
+            <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+              <div class="menu_section">
+                <h3>Menu</h3>
+                <ul class="nav side-menu">
+                  <li><a href="index.html"><i class="fa fa-home"></i> Home </a></li>
+                  <li><a><i class="fa fa-edit"></i> Services <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="services-list.html">Available Services</a></li>
+                      <li><a href="edit-service.html">Add New Service</a></li>
+                    </ul>
+                  </li>
+                  <li><a><i class="fa fa-key"></i>PDataFields<span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu" id="pdf-section">
+
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+
+            </div>
+<!-- /sidebar menu -->
+
+          </div>
+        </div>
+
+<!-- top navigation -->
+        <div class="top_nav">
+          <div class="nav_menu">
+            <nav>
+              <div class="nav toggle">
+                <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+              </div>
+
+              <ul class="nav navbar-nav navbar-right">
+                 <li class="">
+                  <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    <img src="images/img.jpg" alt="">John Doe
+                    <span class=" fa fa-angle-down"></span>
+                  </a>
+                  <ul class="dropdown-menu dropdown-usermenu pull-right">
+                    <li><a href="javascript:;"> Profile</a></li>
+                    <li>
+                      <a href="javascript:;">
+                        <span class="badge bg-red pull-right">50%</span>
+                        <span>Settings</span>
+                      </a>
+                    </li>
+                    <li><a href="javascript:;">Help</a></li>
+                    <li><a href="login.html"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
+                  </ul>
+                </li>
+              
+              </ul>
+            </nav>
+          </div>
+        </div>
+<!-- /top navigation -->
+
+<!-- page content -->
+        <div class="right_col" role="main">
+          <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                <h1>CDV Service Editor</h1>
+              </div>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="row">
+            
+	            <div class="col-md-12 col-sm-12 col-xs-12">
+	                <div class="x_panel">
+            
+				      <div class="medium-6 columns" style="padding-top:1em;padding-bottom:1em">
+				        <button id="submit" class="btn btn-success">Update Service</button>
+				        <button id="restore" class="btn btn-warning">Restore to Default</button>
+				        <!-- <span id="valid_indicator" class="label success">valid</span> -->
+				      </div>
+
+				    <div class="row"style="margin-left:auto;margin-right:auto">
+				      <div id="editor_holder" class="medium-12 columns">
+				      </div>
+				    </div>
+	 
+	            </div>
+          </div>
+       </div>
+     </div>
+
+<!-- /page content -->
+
+<!-- footer content -->
+        <footer>
+          <div class="pull-right">
+            CDV Service Editor
+          </div>
+          <div class="clearfix"></div>
+        </footer>
+<!-- /footer content -->
+      </div>
+    </div>
+
+    
+    <script>
+  		//infoPDF is assigned in preload.js
+		var localInfoPDF = sessionStorage.getItem("infoPDF");
+		//se la variabile di sessione è già stata valorizzata...
+		if(localInfoPDF){
+			console.log("infoPDF valorizzato...");
+			appendPDFields(localInfoPDF,1);
+		}
+		//sennò la si istanzia e valorizza
+		else{
+			getPDFields();
+		}
+    </script>
+    
+    <script>
+    	//Caricamento sequenziale dei rimanenti script per garanzia funzionamento globale
+    	$.getScript("vendors/bootstrap/distrib/js/bootstrap.min.js",function() {
+    		$.getScript("vendors/fastclick/lib_dir/fastclick.js", function(){
+    			//$.getScript("vendors/nprogress/nprogress.js");
+    			$.getScript("vendors/iCheck/icheck.min.js", function(){
+    				$.getScript("vendors/datatables.net/js/jquery.dataTables.js", function(){
+    					$.getScript("vendors/datatables.net-bs/js/dataTables.bootstrap.min.js", function(){
+    						$.getScript("vendors/datatables.net-buttons/js/dataTables.buttons.min.js", function(){
+    							$.getScript("vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js", function(){
+    								$.getScript("vendors/datatables.net-buttons/js/buttons.flash.min.js", function(){
+    									$.getScript("vendors/datatables.net-buttons/js/buttons.html5.min.js", function(){
+    										$.getScript("vendors/datatables.net-buttons/js/buttons.print.min.js", function(){
+    											$.getScript("vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js", function(){
+    												$.getScript("vendors/datatables.net-keytable/js/dataTables.keyTable.min.js", function(){
+    													$.getScript("vendors/datatables.net-responsive/js/dataTables.responsive.min.js", function(){
+    														$.getScript("vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js", function(){
+    															$.getScript("vendors/datatables.net-scroller/js/dataTables.scroller.js", function(){
+    																$.getScript("vendors/jszip/distrib/jszip.min.js", function(){
+    																	//$.getScript("vendors/pdfmake/build_dir/pdfmake.min.js");
+    															    	$.getScript("vendors/pdfmake/build_dir/vfs_fonts.js", function(){
+    															    		$.getScript("js/custom.min.js");
+    															    	})
+    																})
+    															})
+    														})
+    													})
+    												})
+    											})
+    										})
+    									})
+    								})
+    							})
+    						})
+    					})
+    				})
+    			})
+    		})
+    	})
+
+	    function CreateNewService(){
+	    	window.location.href = window.location.href+"services-list.html";
+	    };
+	    
+	</script>
+	<script src="vendors/pdfmake/build_dir/pdfmake.min.js"></script>
+
+  </body>
+  <script>
+    var serviceID=window.location.href;
+    var start = serviceID.indexOf("&");
+    
+    //PUT - UPDATE SELECTED SERVICE
+    if(start != -1){
+    	
+	    var len = serviceID.length - start - 1;
+	    serviceID = serviceID.substr(start+1, len);
+	    //console.log("id servizio estratto da path: "+serviceID);
+		var starting_value="{}"
+		$(function() {
+			//findById_apipath
+			var url = "http://"+app_parameters.host_param+":"+app_parameters.port_param+"/"+app_parameters.findById_apipath+serviceID;
+			console.log("composed url: "+url);
+	        $.get( url, function( data ) {
+	          starting_value=data;
+		      // Initialize the editor
+		      var editor = new JSONEditor(document.getElementById('editor_holder'),{
+		        // Enable fetching schemas via ajax
+		        ajax: true,
+		        
+		        // The schema for the editor
+		        schema: {
+		          $ref: schemaDir/*,
+		          format: "grid"*/ //no tab version
+		        },
+		        
+		        // Seed the form with a starting value
+		        startval: starting_value
+		      });
+		      
+		      // Hook up the submit button to log to the console
+		      document.getElementById('submit').addEventListener('click',function() {
+	
+		    	if (confirm('Il servizio verrà modificato, sei sicuro di voler procedere?')){
+		    		
+		    		var payload = editor.getValue();
+		    		
+		    		console.log("UPDATING SERVICE, submitting to CDV: ");
+		    		console.log(payload);
+		    		
+		    		//PUT - update_apipath
+		    		var url_ = "http://"+app_parameters.host_param+":"+app_parameters.port_param+"/"+app_parameters.update_apipath+serviceID;
+		    		console.log("composed url: "+url_);
+			        $.ajax({
+				        url: url_,
+				        method: 'PUT',
+				        contentType: "application/json",
+				        data: JSON.stringify(editor.getValue()),
+				    }).done(function(data) {
+				    	console.log("RIPOSTA PUT MODIFICA NUOVO SERVIZIO: "+data);
+				    	console.log(data);
+				    	
+				    	var nome = payload.publicServiceName.replace(" ","-");
+				    	window.location.href = window.location.origin+"/service-editor/edit-service.html?"+nome+"&"+payload.publicServiceID;
+				    
+				    }).fail(function() {
+				      alert( "Errors occurred in service update. Please be careful and try again..." );
+				    })
+		    	}
+		      });
+		      
+		      // Hook up the Restore to Default button
+		      document.getElementById('restore').addEventListener('click',function() {
+		        editor.setValue(starting_value);
+		      });
+		      
+		      // Hook up the validation indicator to update its status whenever the editor changes
+		      editor.on('change',function() {
+		        // Get an array of errors from the validator
+		        var errors = editor.validate();
+		        var indicator = document.getElementById('valid_indicator');
+		        
+		        // Not valid
+		        if(errors.length) {
+		          indicator.className = 'label alert';
+		          indicator.textContent = 'not valid';
+		        }
+		        // Valid
+		        else {
+		          indicator.className = 'label success';
+		          indicator.textContent = 'valid';
+		        }
+		      });
+	        });
+		  });
+    }
+    //POST - ADDING NEW SERVICE
+    else{
+    	  $('#submit').text("Create Service");
+	      // Initialize the editor
+	      var editor = new JSONEditor(document.getElementById('editor_holder'),{
+	        // Enable fetching schemas via ajax
+	        ajax: true,
+	        // The schema for the editor
+	        schema: {
+	          $ref: schemaDir/*,
+	          format: "grid"*/ //no tab version
+	        }
+	      });
+	      
+	      // Hook up the submit button to log to the console
+	      document.getElementById('submit').addEventListener('click',function() {
+
+	    	if (confirm( 'Il servizio verrà creato, sei sicuro di voler procedere?')){  
+	    		
+	    		var payload = editor.getValue();
+	    		
+	    		console.log("REGISTERING NEW SERVICE, submitting to CDV: ");
+	    		console.log(payload);
+	    		
+	    		//POST - create_apipath
+	    		var url_ = "http://"+app_parameters.host_param+":"+app_parameters.port_param+
+	    					"/"+app_parameters.create_apipath;
+		        $.ajax({
+			        url: url_,
+			        method: 'POST',
+			        contentType: "application/json",
+			        data: JSON.stringify(editor.getValue()),
+			        //success: function() {location.reload();}
+			    }).done(function(data) {
+			    	console.log("RIPOSTA POST REGISTRAZIONE NUOVO SERVIZIO: "+data);
+			    	console.log(data);
+			    	
+			    	var nome = payload.publicServiceName.replace(" ","-");
+			    	window.location.href = window.location.origin+"/service-editor/edit-service.html?"+nome+"&"+payload.publicServiceID;
+			    
+			    }).fail(function() {
+			      alert( "Errors occurred in service registration. Please be careful and try again..." );
+			    })
+	    	}
+	      });
+	      
+	      // Hook up the Restore to Default button
+	      document.getElementById('restore').addEventListener('click',function() {
+	        editor.setValue(starting_value);
+	      });
+	      
+	   	  // Hook up the Home button
+	      document.getElementById('home').addEventListener('click',function() {
+	    	  window.location.href = window.location.origin+"/service-editor/index.html";//window.location.origin+"/service-editor/";
+	      });
+	      
+	      // Hook up the validation indicator to update its status whenever the editor changes
+	      editor.on('change',function() {
+	        // Get an array of errors from the validator
+	        var errors = editor.validate();
+	        
+	        var indicator = document.getElementById('valid_indicator');
+	        
+	        // Not valid
+	        if(errors.length) {
+	          indicator.className = 'label alert';
+	          indicator.textContent = 'not valid';
+	        }
+	        // Valid
+	        else {
+	          indicator.className = 'label success';
+	          indicator.textContent = 'valid';
+	        }
+	      });
+    }
+  </script>
+</html>

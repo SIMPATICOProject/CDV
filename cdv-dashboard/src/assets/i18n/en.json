@@ -1,17 +1,18 @@
-{
+{ 
   "general": { 
+    "logo_text":"CDV",
     "home": "Home",
     "dashboard": {
-      "acquisitionChannels": "Acquisition Channels",
+      "pdataCategories": "Personal Data Categories",
       "usersByCountry": "Users by Country",
-      "revenue": "Revenue",
+      "pdataTraffic": "Request Traffic",
       "feed": "Feed",
       "toDoList": "To Do List",
       "calendar": "Calendar",
-      "newVisits": "New Visits",
-      "purchases": "Purchases",
-      "activeUsers": "Active Users",
-      "returned": "Returned"
+      "pdata": "Personal Data Stored",
+      "services": "Service Available",
+      "linkedServices": "Linked Services",
+      "consents": "Consents"
     },
     "forms": {
       "option1": "Option 1"
@@ -55,7 +56,13 @@
 	  "linkedservices": "Linked Services",
 	  "personaldata": "Personal Data",
 	  "configuration": "Configuration",
-	  "sign_out": "Sign out"
+	  "sign_out": "Sign out",
+	  "logs": "Data Logs",
+	  "consents": "Data Consents",
+	  "connectors": "Connectors",
+	  "dataconnectors":"Data Connectors",
+	  "registry": "Service Registries"
+	  
     },
 	"account":{
 	  "export_data": "Export Data",
@@ -127,6 +134,23 @@
 	  "data_processed": "Data Processed",
 	  "close": "Close",
 	  "url": "URL",
+	  "created": "Created",
+	  "data_consent": "Data Consent",
+	  "enabled": "Enabled",
+	  "disabled": "Disabled"  
+	  
+	},
+	"connectors":{
+	  "connector": "Connector",
+      "description": "Description",
+      "link": "Link",
+	  "keywords": "Keywords",
+	  "provider": "Provider",
+	  "purpose": "Purpose",
+	  "url_link": "Link",
+	  "data_processed": "Data Processed",
+	  "close": "Close",
+	  "url": "repository",
 	  "created": "Created",
 	  "data_consent": "Data Consent",
 	  "enabled": "Enabled",

@@ -1,3 +1,25 @@
+/*******************************************************************************
+ * The MIT License (MIT)
+ * Copyright (c) 2016, 2018  Engineering Ingegneria Informatica S.p.A
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *******************************************************************************/
 package it.eng.opsi.cdv.pdatamanager.service;
 
 import java.io.IOException;
@@ -7,7 +29,9 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.Consumes;
@@ -34,37 +58,80 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.stereotype.Service;
+
 import com.google.gson.reflect.TypeToken;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.SwaggerDefinition;
 import it.eng.opsi.cdv.pdatamanager.model.AccountManagerCallException;
+import it.eng.opsi.cdv.pdatamanager.model.ConsentManagerCallException;
 import it.eng.opsi.cdv.pdatamanager.model.DataMapping;
 import it.eng.opsi.cdv.pdatamanager.model.ErrorResponse;
 import it.eng.opsi.cdv.pdatamanager.model.ServiceManagerCallException;
+import it.eng.opsi.cdv.pdatamanager.utils.CoberturaIgnore;
 import it.eng.opsi.cdv.pdatamanager.utils.PDataConverter;
 import it.eng.opsi.cdv.pdatamanager.utils.PropertyManager;
 import it.eng.opsi.cdv.pdatarepository.api.PDataRepository;
 import it.eng.opsi.cdv.pdatarepository.model.PDataEntry;
 import it.eng.opsi.cdv.pdatarepository.model.PDataNotFoundException;
+import it.eng.opsi.cdv.pdatarepository.model.PDataReport;
 import it.eng.opsi.cdv.pdatarepository.model.PDataRepositoryException;
 import it.eng.opsi.cdv.pdatarepository.model.PDataUtilsException;
 import it.eng.opsi.cdv.pdatarepository.model.PDataWriteMode;
 import it.eng.opsi.cdv.pdatarepository.utils.DAOUtils;
 
-//@Component
+@Service("PDataService")
+
+
 @Path("/v1")
+@Api(value = "/PDataService")
+@SwaggerDefinition(
+        info = @io.swagger.annotations.Info(
+                description = "XXX",
+                version = "XXX",			//bypassato da web.xml
+                title = "PData Manager",	//bypassato da web.xml
+                termsOfService = "XXX",
+                contact = @io.swagger.annotations.Contact(
+                   name = "XXX", 
+                   email = "XXX", 
+                   url = "XXX"
+                ),
+                license = @io.swagger.annotations.License(
+                   name = "XXX", 
+                   url = "XXX"
+                )
+        ),
+        consumes = {"application/json", "application/xml"},
+        produces = {"application/json", "application/xml"},
+        schemes = {SwaggerDefinition.Scheme.HTTP, SwaggerDefinition.Scheme.HTTPS},
+        tags = {
+        		@io.swagger.annotations.Tag(name = "XXX", description = "XXX")
+        }, 
+        externalDocs = @io.swagger.annotations.ExternalDocs(value = "XXX", url = "XXX")
+)
 public class PDataService implements IPDataService {
 
 	private static PDataRepository repo = new PDataRepository(
 			PropertyManager.getProperty("PDATA_REPOSITORY_COLLECTION"), PropertyManager.getProperties());
+	
 	static final String api_version = "1.0";
-
+	
+	@CoberturaIgnore
 	@POST
 	@Path("/pData")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
 	@Override
-	public Response savePData(final String input, @HeaderParam("accountId") String accountId,
-			@QueryParam("mode") String modeString) {
+	public Response savePData(@ApiParam(name = "input", value = "descrizione", required = true) final String input, @ApiParam(name = "accountId", value = "descrizione", required = true) @HeaderParam("accountId") String accountId,
+			@ApiParam(name = "modeString", value = "descrizione", required = true) @QueryParam("mode") String modeString) {
 
 		if (StringUtils.isNotBlank(accountId)) {
 
@@ -131,11 +198,17 @@ public class PDataService implements IPDataService {
 		}
 	}
 
+	@CoberturaIgnore
 	@Override
 	@GET
 	@Path("/pData")
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN })
-	public Response getAllPData(@HeaderParam("accountId") String accountId, @QueryParam("format") String format) {
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public Response getAllPData(@ApiParam(name = "accountId", value = "descrizione", required = true) @HeaderParam("accountId") String accountId, @ApiParam(name = "format", value = "descrizione", required = true) @QueryParam("format") String format) {
 
 		List<PDataEntry> entries = null;
 		if (StringUtils.isNotBlank(accountId)) {
@@ -200,12 +273,18 @@ public class PDataService implements IPDataService {
 		}
 	}
 
+	@CoberturaIgnore
 	@Override
 	@GET
 	@Path("/pData/{conceptId}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getPData(@HeaderParam("accountId") String accountId, @PathParam("conceptId") String conceptId) {
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public Response getPData(@ApiParam(name = "accountId", value = "descrizione", required = true) @HeaderParam("accountId") String accountId, @ApiParam(name = "conceptId", value = "descrizione", required = true) @PathParam("conceptId") String conceptId) {
 
 		if (StringUtils.isNotBlank(accountId)) {
 			try {
@@ -250,11 +329,17 @@ public class PDataService implements IPDataService {
 		}
 	}
 
+	@CoberturaIgnore
 	@Override
 	@GET
 	@Path("/pData/download")
 	@Produces({ MediaType.APPLICATION_OCTET_STREAM, MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN })
-	public Response downloadAllPData(@HeaderParam("accountId") String accountId,
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public Response downloadAllPData(@ApiParam(name = "accountId", value = "descrizione", required = true) @HeaderParam("accountId") String accountId,
 			@QueryParam("fileFormat") String fileFormat) {
 
 		List<PDataEntry> entries = null;
@@ -343,12 +428,18 @@ public class PDataService implements IPDataService {
 		}
 	}
 
+	@CoberturaIgnore
 	@Override
 	@PUT
 	@Path("/pData")
 	@Produces({ "application/json" })
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public Response updatePData(final String input, @HeaderParam("accountId") String accountId,
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public Response updatePData(@ApiParam(name = "input", value = "descrizione", required = true) final String input, @ApiParam(name = "accountId", value = "descrizione", required = true) @HeaderParam("accountId") String accountId,
 			@QueryParam("mode") String modeString) {
 
 		if (StringUtils.isNotBlank(accountId)) {
@@ -418,13 +509,19 @@ public class PDataService implements IPDataService {
 		}
 	}
 
+	@CoberturaIgnore
 	@Override
 	@PUT
 	@Path("/pData/{conceptId}")
 	@Produces({ "application/json" })
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public Response updatePData(final String input, @HeaderParam("accountId") String accountId,
-			@PathParam("conceptId") String conceptId, @QueryParam("mode") String modeString) {
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public Response updatePData(@ApiParam(name = "input", value = "descrizione", required = true) final String input, @ApiParam(name = "accountId", value = "descrizione", required = true) @HeaderParam("accountId") String accountId,
+			@ApiParam(name = "conceptId", value = "descrizione", required = true) @PathParam("conceptId") String conceptId, @ApiParam(name = "modeString", value = "descrizione", required = true) @QueryParam("mode") String modeString) {
 
 		if (StringUtils.isNotBlank(accountId)) {
 
@@ -489,11 +586,17 @@ public class PDataService implements IPDataService {
 		}
 	}
 
+	@CoberturaIgnore
 	@Override
 	@DELETE
 	@Path("/pData/{conceptId}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response deletePData(@PathParam("conceptId") String conceptId, @HeaderParam("accountId") String accountId) {
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public Response deletePData(@ApiParam(name = "conceptId", value = "descrizione", required = true) @PathParam("conceptId") String conceptId, @ApiParam(name = "accountId", value = "descrizione", required = true) @HeaderParam("accountId") String accountId) {
 
 		if (StringUtils.isNotBlank(accountId)) {
 
@@ -537,12 +640,18 @@ public class PDataService implements IPDataService {
 		}
 	}
 
+	@CoberturaIgnore
 	@Override
 	@DELETE
 	@Path("/pData/{conceptId}/{value}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response deletePDataValue(@PathParam("conceptId") String conceptId,
-			@HeaderParam("accountId") String accountId, @PathParam("value") String value) {
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public Response deletePDataValue(@ApiParam(name = "conceptId", value = "descrizione", required = true) @PathParam("conceptId") String conceptId,
+			@ApiParam(name = "accountId", value = "descrizione", required = true) @HeaderParam("accountId") String accountId, @ApiParam(name = "value", value = "descrizione", required = true) @PathParam("value") String value) {
 
 		if (StringUtils.isNotBlank(accountId)) {
 
@@ -586,11 +695,17 @@ public class PDataService implements IPDataService {
 		}
 	}
 
+	@CoberturaIgnore
 	@Override
 	@DELETE
 	@Path("/pData")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response deleteAllPData(@HeaderParam("accountId") String accountId) {
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public Response deleteAllPData(@ApiParam(name = "accountId", value = "descrizione", required = true) @HeaderParam("accountId") String accountId) {
 
 		if (StringUtils.isNotBlank(accountId)) {
 
@@ -642,7 +757,12 @@ public class PDataService implements IPDataService {
 	@Path("/postPData")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response postServicePData(final String input, @QueryParam("mode") String modeString) {
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public Response postServicePData(@ApiParam(name = "input", value = "descrizione", required = true) final String input, @ApiParam(name = "modeString", value = "descrizione", required = true) @QueryParam("mode") String modeString) {
 
 		try {
 
@@ -736,12 +856,140 @@ public class PDataService implements IPDataService {
 
 	}
 
+	//JUNIT/MOCKITO TESTED
+	@Override
+	@POST
+	@Path("/postPDataByConsent")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON })
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public Response postServicePDataByConsent(@ApiParam(name = "input", value = "descrizione", required = true) final String input, @ApiParam(name = "modeString", value = "descrizione", required = true) @QueryParam("mode") String modeString) {
+
+		try {
+            System.out.println(input);
+			// INPUT
+			JSONObject in = new JSONObject(input);
+			String slrId = in.getString("slr_id");
+			String slrToken = in.getString("slr_token");
+			String userId = in.getString("user_id"); // userId is the surrogateId!
+			String crId = in.getString("cr_id");
+			String crToken = in.getString("cr_token");
+			JSONArray properties = in.getJSONArray("properties");
+			PDataWriteMode mode;
+
+			HashMap<String, PDataEntry> serviceMap;
+			HashMap<String, String> verifyResSLR;
+			HashMap<String, String> verifyResCR;
+			String accountId, verifySLRResult, verifyCRResult;
+
+			try {
+				mode = PDataWriteMode.valueOf(modeString.toUpperCase());
+			} catch (IllegalArgumentException | NullPointerException e) {
+				mode = PDataWriteMode.OVERWRITE;
+			}
+
+			// Verify SLR and get the related accountId from AccountManager
+			verifyResSLR = callVerifySLR(slrId, slrToken, userId);			
+			verifySLRResult = verifyResSLR.get("result");	
+
+			if (verifySLRResult.equalsIgnoreCase("success")) {
+					
+				// The accountId stored by the PData Manager is the Account
+				// username of Account Manager
+				accountId = verifyResSLR.get("username");
+
+				// verify consent receipt
+				verifyResCR = callVerifyCR(slrId, crId, crToken, userId, accountId);
+				verifyCRResult = verifyResCR.get("result");
+
+				if (verifyCRResult.equalsIgnoreCase("success")) {
+
+					List<DataMapping> responseList = (List<DataMapping>) DAOUtils
+							.json2Obj(verifyResCR.get("datamapping"), new TypeToken<List<DataMapping>>() {  
+							}.getType());
+
+					// Get the service Data Mapping from Service Consent
+					serviceMap = (HashMap<String, PDataEntry>) responseList.stream().collect(Collectors.toMap(
+							item -> item.getProperty(),
+							item -> new PDataEntry(item.getConceptId(), item.getName(), item.getType(), accountId)));
+
+					// Create a new PData, according to the matched property in
+					// service
+					// Data Mapping
+
+					List<PDataEntry> mappedPData = new ArrayList<PDataEntry>();
+
+					for (int i = 0; i < properties.length(); i++) {
+
+						JSONObject property = (JSONObject) properties.get(i);
+						PDataEntry resolved = serviceMap.get(property.getString("key"));
+						if (resolved != null) {
+							
+							resolved.setValues((List<String>) DAOUtils.json2Obj(property.get("values").toString(),new TypeToken<List<String>>(){}.getType()));
+							mappedPData.add(resolved);
+						}
+					}
+
+					repo.storePData(accountId, mappedPData, mode);
+
+				} else {
+					ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
+							"CRNotValid", verifyResCR.get("message"));
+					return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
+
+				}
+
+				return Response.status(Response.Status.OK).build();
+
+			} else {
+				ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
+						"SLRNotValid", verifyResSLR.get("message"));
+
+				return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
+
+			}
+
+		} catch (JSONException | PDataUtilsException e) {
+			e.printStackTrace();
+			ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
+					e.getClass().getSimpleName(), e.getMessage());
+			return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
+
+		} catch (AccountManagerCallException | ConsentManagerCallException | PDataRepositoryException e) {
+
+			e.printStackTrace();
+			ErrorResponse error = new ErrorResponse(
+					String.valueOf(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()), e.getClass().getSimpleName(),
+					e.getMessage());
+
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error.toJson()).build();
+
+		} catch (NullPointerException e) {
+
+			e.printStackTrace();
+			ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.NOT_FOUND.getStatusCode()),
+					e.getClass().getSimpleName(), e.getMessage());
+
+			return Response.status(Response.Status.NOT_FOUND).entity(error.toJson()).build();
+		}
+
+	}
+
 	@Override
 	@POST
 	@Path("/getPData")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getServicePData(String input) {
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public Response getServicePData(@ApiParam(name = "input", value = "descrizione", required = true) String input) {
 
 		try {
 			// INPUT
@@ -749,7 +997,7 @@ public class PDataService implements IPDataService {
 			String slrId = in.getString("slr_id");
 			String slrToken = in.getString("slr_token");
 			String userId = in.getString("user_id"); // userId is the
-														// surrogateId!
+			// surrogateId!
 			JSONArray propertiesKeys = in.getJSONArray("properties");
 
 			HashMap<String, PDataEntry> serviceMap;
@@ -774,7 +1022,7 @@ public class PDataService implements IPDataService {
 				// Data Mapping and return its values as key-value pair
 
 				JSONArray properties = new JSONArray();
-
+System.out.println("#############################"+propertiesKeys.length());
 				if (propertiesKeys.length() == 0) {
 					for (Entry<String, PDataEntry> entry : serviceMap.entrySet()) {
 
@@ -794,6 +1042,7 @@ public class PDataService implements IPDataService {
 					for (int i = 0; i < propertiesKeys.length(); i++) {
 
 						String property = (String) propertiesKeys.get(i);
+						
 						PDataEntry resolved = serviceMap.get(property);
 
 						if (resolved != null) {
@@ -850,7 +1099,149 @@ public class PDataService implements IPDataService {
 
 	}
 
-	private static HashMap<String, PDataEntry> callGetServiceMap(String serviceId, String accountId)
+	//JUNIT/MOCKITO TESTED
+	@Override
+	@POST
+	@Path("/getPDataByConsent")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON })
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public Response getServicePDataByConsent(@ApiParam(name = "input", value = "descrizione", required = true) String input) {
+
+		try {
+			// INPUT
+			JSONObject in = new JSONObject(input);
+			String slrId = in.getString("slr_id");
+			String slrToken = in.getString("slr_token");
+			String userId = in.getString("user_id"); // userId is the surrogateId!
+			String crId = in.getString("cr_id");
+			String crToken = in.getString("cr_token");
+			JSONArray propertiesKeys = in.getJSONArray("properties");
+
+			HashMap<String, PDataEntry> serviceMap;
+			HashMap<String, String> verifyResSLR;
+			HashMap<String, String> verifyResCR;
+			String accountId, serviceId, verifySLRResult, verifyCRResult;
+
+			// Verify SLR and CR and get the related accountId from AccountManager and
+			// Consent Manager
+
+			verifyResSLR = callVerifySLR(slrId, slrToken, userId);
+
+			verifySLRResult = verifyResSLR.get("result");
+
+			if (verifySLRResult.equalsIgnoreCase("success")) {			
+
+				// The accountId stored by the PData Manager is the Account
+				// username of Account Manager
+				accountId = verifyResSLR.get("username");
+				serviceId = verifyResSLR.get("serviceId");
+
+				// verify consent receipt
+				verifyResCR = callVerifyCR(slrId, crId, crToken, userId, accountId);
+				verifyCRResult = verifyResCR.get("result");
+
+				JSONArray properties = new JSONArray();
+
+				if (verifyCRResult.equalsIgnoreCase("success")) {					
+					List<DataMapping> responseList = (List<DataMapping>) DAOUtils.json2Obj(verifyResCR.get("datamapping"), new TypeToken<List<DataMapping>>(){}.getType());
+
+					// Get the service Data Mapping from Service Consent
+					serviceMap = (HashMap<String, PDataEntry>) responseList.stream().collect(Collectors.toMap(
+							item -> item.getProperty(),
+							item -> new PDataEntry(item.getConceptId(), item.getName(), item.getType(), accountId)));
+
+					// Get the service Data Mapping from Service Manager
+					// serviceMap = callGetServiceMap(serviceId, accountId);
+
+					if (propertiesKeys.length() == 0) {
+						for (Entry<String, PDataEntry> entry : serviceMap.entrySet()) {
+
+							try {
+								PDataEntry repoResult = repo.getPData(entry.getValue().getConceptId(), accountId);
+								JSONObject pair = new JSONObject();
+								pair.put("key", entry.getKey());
+								pair.put("values", repoResult.getValues());
+								properties.put(pair);
+
+							} catch (PDataNotFoundException e) {
+								System.out.println(e.getMessage());
+							}
+						}
+
+					} else {					
+						for (int i = 0; i < propertiesKeys.length(); i++) {
+
+							String property = (String) propertiesKeys.get(i);
+							PDataEntry resolved = serviceMap.get(property);
+
+							if (resolved != null) {
+								try {
+									PDataEntry repoResult = repo.getPData(resolved.getConceptId(), accountId);
+									JSONObject pair = new JSONObject();
+									pair.put("key", property);
+									pair.put("values", repoResult.getValues());
+									properties.put(pair);
+								} catch (PDataNotFoundException e) {
+									System.out.println(e.getMessage());
+								}
+							}
+						}
+					}
+
+				} else {	
+					ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
+							"CRNotValid", verifyResCR.get("message"));
+					return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
+
+				}
+
+				JSONObject result = new JSONObject();
+				result.put("slr_id", slrId);
+				result.put("user_id", userId);
+				result.put("properties", properties);
+
+				return Response.status(Response.Status.OK).entity(result.toString()).build();
+
+			} else {	
+				ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
+						"SLRNotValid", verifyResSLR.get("message"));
+				return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
+
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+			ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
+					e.getClass().getSimpleName(), e.getMessage());
+			return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
+
+		} catch (PDataUtilsException | ConsentManagerCallException | AccountManagerCallException
+				| PDataRepositoryException e) {
+			e.printStackTrace();
+			ErrorResponse error = new ErrorResponse(
+					String.valueOf(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()), e.getClass().getSimpleName(),
+					e.getMessage());
+
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error.toJson()).build();
+
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.NOT_FOUND.getStatusCode()),
+					e.getClass().getSimpleName(), e.getMessage());
+
+			return Response.status(Response.Status.NOT_FOUND).entity(error.toJson()).build();
+
+		}
+
+	}
+
+	
+	@CoberturaIgnore
+	public static HashMap<String, PDataEntry> callGetServiceMap(String serviceId, String accountId)
 			throws ServiceManagerCallException, PDataRepositoryException, PDataUtilsException {
 
 		Client client = ClientBuilder.newClient();
@@ -881,6 +1272,8 @@ public class PDataService implements IPDataService {
 
 	}
 
+	
+	@CoberturaIgnore
 	public static HashMap<String, String> callVerifySLR(String slrId, String slrToken, String surrogateId)
 			throws AccountManagerCallException {
 
@@ -907,7 +1300,6 @@ public class PDataService implements IPDataService {
 
 			if (status == 200) {
 				if (resJson.getString("result").equalsIgnoreCase("success")) {
-
 					result.put("accountId", resJson.getString("accountId"));
 					result.put("serviceId", resJson.getString("serviceId"));
 					result.put("username", resJson.getString("username"));
@@ -935,6 +1327,60 @@ public class PDataService implements IPDataService {
 		return result;
 	}
 
+	@CoberturaIgnore
+	public static HashMap<String, String> callVerifyCR(String slrId, String crId, String crToken, String surrogateId,
+			String accountId) throws ConsentManagerCallException {
+
+		HashMap<String, String> result = new HashMap<String, String>();
+
+		try {
+
+			Client client = ClientBuilder.newClient();
+			WebTarget webTarget = client
+					.target(PropertyManager.getProperty("CONSENTMANAGER_HOST") + "/api/internal/verifySinkConsent");
+
+			JSONObject payload = new JSONObject();
+			payload.put("cr_id", crId);
+			payload.put("slr_id", slrId);
+			payload.put("surrogateId", surrogateId);
+			payload.put("crToken", crToken);
+			payload.put("accountId", accountId);
+
+			Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
+			Response response = invocationBuilder.post(Entity.entity(payload.toString(), MediaType.APPLICATION_JSON));
+
+			int status = response.getStatus();
+			String res = response.readEntity(String.class);
+			response.close();
+			JSONObject resJson = new JSONObject(res);
+
+			if (status == 200) {
+				if (resJson.getString("result").equalsIgnoreCase("success")) {
+					result.put("result", resJson.getString("result"));
+					result.put("message", resJson.getString("message"));
+					result.put("datamapping", resJson.getString("datamapping"));
+
+				} else {
+
+					result.put("result", resJson.getString("result"));
+					result.put("message", resJson.getString("message"));
+
+				}
+			} else {
+				throw new ConsentManagerCallException(
+						"There was an error while verifying the CR against Consent Manager");
+
+			}
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+			throw new ConsentManagerCallException("There was an error while verifying the CR against Consent Manager ");
+		}
+
+		return result;
+	}
+
+	@CoberturaIgnore
 	public static HashMap<String, String> callVerifySLRByUsernameAndSurrogateId(String username, String surrogateId)
 			throws AccountManagerCallException {
 
@@ -988,6 +1434,7 @@ public class PDataService implements IPDataService {
 		return result;
 	}
 
+	@CoberturaIgnore
 	private static boolean callExistsAccount(String accountId) throws AccountManagerCallException {
 
 		try {
@@ -1021,45 +1468,66 @@ public class PDataService implements IPDataService {
 		}
 
 	}
+	
+	
+	@CoberturaIgnore
+	@Override
+	@GET
+	@Path("/pData/report")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON })
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST")}
+	)
+	public Response getPDataReport( @HeaderParam("accountId") String accountId) {
 
-	// Get the actual account Id from Account Manager, in order to retrieve the
-	// id starting from username
-	// private static String callGetRealAccountId(String accountId) throws
-	// AccountManagerCallException {
-	//
-	// try {
-	//
-	// Client client = ClientBuilder.newClient();
-	// WebTarget webTarget = client
-	// .target(PropertyManager.getProperty("ACCOUNTMANAGER_HOST") +
-	// "/api/v1/accounts/{accountId}")
-	// .resolveTemplate("accountId", accountId);
-	//
-	// Invocation.Builder invocationBuilder = webTarget.request();
-	// Response response = invocationBuilder.get();
-	//
-	// int status = response.getStatus();
-	// String res = response.readEntity(String.class);
-	// response.close();
-	//
-	//
-	// if (status == 200) {
-	// return DAOUtils.json2Obj(
-	//
-	// } else {
-	// throw new AccountManagerCallException(
-	// "There was an error while calling the existsAccount service of Account
-	// Manager");
-	//
-	// }
-	//
-	// } catch (JSONException e) {
-	// e.printStackTrace();
-	// throw new AccountManagerCallException(
-	// "There was an error while calling the existsAccount service of Account
-	// Manager");
-	// }
-	//
-	// }
+		List<PDataReport> entries = null;
+		if (StringUtils.isNotBlank(accountId)) {
+
+			try {
+
+				if (callExistsAccount(accountId)) {
+
+						entries = repo.getPDataReport(accountId);
+						return Response.status(Response.Status.OK)
+								.entity(DAOUtils.obj2Json(entries, new TypeToken<ArrayList<PDataReport>>() {
+								}.getType())).build();
+
+
+				} else {
+
+					ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.NOT_FOUND.getStatusCode()),
+							"AccountNotFound",
+							"The account with Id: " + accountId + " was not found in Account Manager");
+					return Response.status(Response.Status.NOT_FOUND).entity(error.toJson()).build();
+				}
+
+			} catch (PDataRepositoryException e) {
+				ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.NOT_FOUND.getStatusCode()),
+						e.getClass().getSimpleName(), e.getMessage());
+
+				return Response.status(Response.Status.NOT_FOUND).entity(error.toJson()).build();
+
+			} catch (Exception e) {
+
+				e.printStackTrace();
+				ErrorResponse error = new ErrorResponse(
+						String.valueOf(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()),
+						e.getClass().getSimpleName(), e.getMessage());
+
+				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error.toJson()).build();
+
+			}
+
+		} else {
+
+			ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
+					"AccountIdMissing", "The account Id is empty or missing");
+			return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
+
+		}
+	}
 
 }

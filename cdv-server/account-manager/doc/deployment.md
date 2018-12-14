@@ -48,18 +48,13 @@ In this folder you will find the CDV modules subfolders. In order to create all 
 
 ### Database creation
 
-The Account Manager relies on a MongoDB database to store all the accounts information.
+The Consent Manager relies on a MongoDB database to store all the consent related information.
 
-So before deploying the application, it is necessary to create a new database, by importing in the MongoDB server the provided dump file.
-- Open a command prompt and Execute the following commands to import the dump file:
-    - `cd CDV/account-manager`
-    - `mongorestore --db accountRepository dump\accountRepository`
+That information is stored in the same database of Account Manager 
 
-**NOTE:**
-- This dump already contains the statement that creates the **accountsCollection** collection automatically.
 
 ### Module WAR deployment
-After executing the [Create WAR packages](#create-war-package) step, all generated war packages will be located inside the module "target" subfolder. Copy the "account-manager.war" artifact to the “webapps” folder of Tomcat installation, start it up and wait until it is deployed.
+After executing the [Create WAR packages](#create-war-package) step, all generated war packages will be located inside the module "target" subfolder. Copy the "consent-manager.war" artifact to the “webapps” folder of Tomcat installation, start it up and wait until it is deployed.
 
 ### Configuration
 
@@ -67,11 +62,12 @@ Once all the WAR files are deployed and the server has started, modify
 the following configuration files, located in the deployed folders of
 Tomcat “webapps” folder.
 
--   **\account-manager\WEB-INF\classes\application.properties** change the properties:
+-   **\consent-manager\WEB-INF\classes\application.properties** change the properties:
     -  **SERVICEMANAGER_HOST** and **PDATAMANAGER_HOST**, with the URL where each module is available. By default, they are the same as the current module: 
             - http://localhost:8080/service-manager and http://localhost:8080/pdata-manager
     - **MONGO_DB_HOST**, **USER_MONGO**, **PASSWORD_MONGO** with the ones configured during the MongoDB installation. (e.g. for **MONGO_DB_HOST**: localhost:27017)
     - **AAC_URL** with the URL where the AAC is available ( e.g. http://localhost:8080/aac)
+	- **SERVICEMANAGER_HOST** the endpoint of service-manager module (e.g. http://localhost:8080/service-manager)
 
 
 ### Server Restart 
@@ -79,15 +75,15 @@ Tomcat “webapps” folder.
 
 In order to apply the previous changes, restart the Tomcat server. Once
 the server restarted, the module services will be exposed in
-*http://BASEPATH/account-manager*
+*http://BASEPATH/consent-manager*
 
 **Note**. Change the “BASEPATH” value with the actual host and port
 where is exposed the runtime environment
 
 ## Support / Contact / Contribution-
 
-[*vincenzo.savarino@eng.it*](mailto:vincenzo.savarino@eng.it)
+
 
 ## Copying and License
 
-This code is licensed under XXX licence
+This code is licensed under MIT licence

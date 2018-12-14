@@ -10,7 +10,7 @@
 		<!-- <relativePath>../CDV/pom.xml</relativePath> -->
 	</parent>
 	<artifactId>auth-manager</artifactId>
-	<name>auth-manager</name>
+	<name>CDV auth-manager</name>
 	<packaging>war</packaging>
 	<properties>
 		<compileSource>1.8</compileSource>

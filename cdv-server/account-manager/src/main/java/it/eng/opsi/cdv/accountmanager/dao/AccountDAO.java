@@ -1,3 +1,25 @@
+/*******************************************************************************
+ * The MIT License (MIT)
+ * Copyright (c) 2016, 2018  Engineering Ingegneria Informatica S.p.A
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *******************************************************************************/
 package it.eng.opsi.cdv.accountmanager.dao;
 
 import org.bson.Document;
@@ -6,6 +28,10 @@ import org.bson.types.ObjectId;
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.reflect.TypeToken;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
 import com.mongodb.MongoWriteException;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
@@ -33,7 +59,9 @@ import it.eng.opsi.cdv.accountmanager.connection.MongoDBConnection;
 import it.eng.opsi.cdv.accountmanager.model.Account;
 import it.eng.opsi.cdv.accountmanager.model.AccountAlreadyPresentException;
 import it.eng.opsi.cdv.accountmanager.model.AccountNotFoundException;
+import it.eng.opsi.cdv.accountmanager.model.AccountReport;
 import it.eng.opsi.cdv.accountmanager.model.AccountUtilsException;
+import it.eng.opsi.cdv.accountmanager.model.ConsentRecordNotFoundException;
 import it.eng.opsi.cdv.accountmanager.model.AccountManagerException;
 import it.eng.opsi.cdv.accountmanager.model.Contact;
 import it.eng.opsi.cdv.accountmanager.model.ContactNotFoundException;
@@ -50,22 +78,25 @@ import it.eng.opsi.cdv.accountmanager.model.TelephoneNotFoundException;
 import it.eng.opsi.cdv.accountmanager.utils.DAOUtils;
 import it.eng.opsi.cdv.accountmanager.utils.JWTUtils;
 
+
 public class AccountDAO {
 
 	private String collectionName;
 
-	 static Logger root = (Logger) LoggerFactory
-	 .getLogger(Logger.ROOT_LOGGER_NAME);
-	
-	 static {
-	 root.setLevel(Level.INFO);
-	 }
-	
+	static Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+
+	static {
+		root.setLevel(Level.INFO);
+	}
 
 	public AccountDAO(String collectionName) {
-		this.collectionName = collectionName;		
+		this.collectionName = collectionName;
+
+		
 
 	}
+	
+	
 
 	public Account storeAccount(Account account) throws AccountAlreadyPresentException, AccountManagerException {
 
@@ -74,9 +105,10 @@ public class AccountDAO {
 			MongoDatabase db = dbSingleton.getDB();
 			MongoCollection<Document> collection = db.getCollection(collectionName);
 			
+			
 			// Create unique index for username field
-		    Document keys = new Document("username", 1);
-		    collection.createIndex(keys, new IndexOptions().unique(true));
+			Document keys = new Document("username", 1);
+			collection.createIndex(keys, new IndexOptions().unique(true));
 
 			account.setCreated(ZonedDateTime.now(ZoneOffset.UTC));
 			Document doc = Document.parse(DAOUtils.obj2Json(account, Account.class));
@@ -159,7 +191,7 @@ public class AccountDAO {
 		}
 	}
 
-	public void deleteAccount(String accountId) throws AccountNotFoundException, AccountManagerException {
+	public int deleteAccount(String accountId) throws AccountNotFoundException, AccountManagerException {
 
 		DeleteResult result = null;
 		MongoCollection<Document> collection = null;
@@ -184,7 +216,7 @@ public class AccountDAO {
 
 		if (result.getDeletedCount() == 0)
 			throw new AccountNotFoundException("The account with id: " + accountId + " was not found");
-
+        return (int) result.getDeletedCount();
 	}
 
 	public Account getAccount(String accountId) throws AccountManagerException, AccountNotFoundException {
@@ -983,8 +1015,9 @@ public class AccountDAO {
 			ObjectId accountDocId = new ObjectId(accountId);
 
 			result = collection.updateOne(eq("_id", accountDocId),
-					new Document("$set", new Document("particular", docToAdd).append(
-							"modified", DAOUtils.formatDate(ZonedDateTime.now(ZoneOffset.UTC)))),
+					new Document("$set",
+							new Document("particular", docToAdd).append("modified",
+									DAOUtils.formatDate(ZonedDateTime.now(ZoneOffset.UTC)))),
 					new UpdateOptions().upsert(false));
 
 		} catch (IllegalArgumentException e) {
@@ -992,8 +1025,9 @@ public class AccountDAO {
 			// try with username as accountId
 			if (e.getMessage().contains("invalid hexadecimal representation of an ObjectId"))
 				result = collection.updateOne(eq("username", accountId),
-						new Document("$set", new Document("particular", docToAdd).append(
-								"modified", DAOUtils.formatDate(ZonedDateTime.now(ZoneOffset.UTC)))),
+						new Document("$set",
+								new Document("particular", docToAdd).append("modified",
+										DAOUtils.formatDate(ZonedDateTime.now(ZoneOffset.UTC)))),
 						new UpdateOptions().upsert(false));
 			else
 				throw new AccountManagerException("There was an error while getting the Account");
@@ -1724,8 +1758,7 @@ public class AccountDAO {
 
 	public void deleteServiceLinkRecordById(String accountId, String slrId)
 			throws AccountManagerException, ServiceLinkRecordNotFoundException {
-		;
-
+		
 		MongoCollection<Document> collection = null;
 		UpdateResult result = null;
 
@@ -1823,8 +1856,8 @@ public class AccountDAO {
 				match = new Document("$match",
 						new Document("$and",
 								Arrays.asList(new Document("_id", new ObjectId(accountId)),
-										new Document("serviceLinkRecords._id", slrId), new Document(
-												"serviceLinkRecords.serviceLinkStatusRecords._id", ssrId))));
+										new Document("serviceLinkRecords._id", slrId),
+										new Document("serviceLinkRecords.serviceLinkStatusRecords._id", ssrId))));
 
 				output = collection.aggregate(Arrays.asList(match, unwindSlr, unwindSsr));
 
@@ -1836,8 +1869,8 @@ public class AccountDAO {
 					match = new Document("$match",
 							new Document("$and",
 									Arrays.asList(new Document("username", accountId),
-											new Document("serviceLinkRecords._id", slrId), new Document(
-													"serviceLinkRecords.serviceLinkStatusRecords._id", ssrId))));
+											new Document("serviceLinkRecords._id", slrId),
+											new Document("serviceLinkRecords.serviceLinkStatusRecords._id", ssrId))));
 					output = collection.aggregate(Arrays.asList(match, unwindSlr, unwindSsr));
 
 				} else
@@ -1949,6 +1982,138 @@ public class AccountDAO {
 			else
 				throw new AccountManagerException("There was an error while getting the Account");
 		}
+	}
+	
+	
+	
+	public void deleteSinkConsentRecordBySLR(String accountId, String slrId)
+			throws AccountManagerException, ConsentRecordNotFoundException {
+		
+		MongoCollection<Document> collection = null;
+		UpdateResult result = null;
+
+		try {
+
+			MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
+			MongoDatabase db = dbSingleton.getDB();
+			collection = db.getCollection(collectionName);
+			ObjectId accountDocId = new ObjectId(accountId);
+
+			result = collection.updateOne(eq("_id", accountDocId),
+					new Document("$pull", new Document("sinkConsentRecords", new Document("common_part.slr_id", slrId))).append("$set",
+							new Document("modified", DAOUtils.formatDate(ZonedDateTime.now(ZoneOffset.UTC)))),
+					new UpdateOptions().upsert(false));
+
+		} catch (IllegalArgumentException e) {
+
+			// try with username as accountId
+			if (e.getMessage().contains("invalid hexadecimal representation of an ObjectId"))
+				result = collection.updateOne(eq("username", accountId),
+						new Document("$pull", new Document("sinkConsentRecords", new Document("common_part.slr_id", slrId))).append(
+								"$set",
+								new Document("modified", DAOUtils.formatDate(ZonedDateTime.now(ZoneOffset.UTC)))),
+						new UpdateOptions().upsert(false));
+
+			else
+				throw new AccountManagerException("There was an error while getting the Account");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new AccountManagerException("There was an error while getting the Consent Sink Record");
+		}
+
+		if (result.getModifiedCount() == 0)
+			throw new ConsentRecordNotFoundException("The Sink Consent Record with slr: " + slrId
+					+ " for the Account Id: " + accountId + " was not found");
+
+	}
+	
+	
+	public void deleteSourceConsentRecordBySLR(String accountId, String slrId)
+			throws AccountManagerException, ConsentRecordNotFoundException {
+		
+		MongoCollection<Document> collection = null;
+		UpdateResult result = null;
+
+		try {
+
+			MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
+			MongoDatabase db = dbSingleton.getDB();
+			collection = db.getCollection(collectionName);
+			ObjectId accountDocId = new ObjectId(accountId);
+
+			result = collection.updateOne(eq("_id", accountDocId),
+					new Document("$pull", new Document("sourceConsentRecords", new Document("common_part.slr_id", slrId))).append("$set",
+							new Document("modified", DAOUtils.formatDate(ZonedDateTime.now(ZoneOffset.UTC)))),
+					new UpdateOptions().upsert(false));
+
+		} catch (IllegalArgumentException e) {
+
+			// try with username as accountId
+			if (e.getMessage().contains("invalid hexadecimal representation of an ObjectId"))
+				result = collection.updateOne(eq("username", accountId),
+						new Document("$pull", new Document("sourceConsentRecords", new Document("common_part.slr_id", slrId))).append(
+								"$set",
+								new Document("modified", DAOUtils.formatDate(ZonedDateTime.now(ZoneOffset.UTC)))),
+						new UpdateOptions().upsert(false));
+
+			else
+				throw new AccountManagerException("There was an error while getting the Account");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new AccountManagerException("There was an error while getting the Consent Sink Record");
+		}
+
+		if (result.getModifiedCount() == 0)
+			throw new ConsentRecordNotFoundException("The Source Consent Record with slr: " + slrId
+					+ " for the Account Id: " + accountId + " was not found");
+
+	}
+	
+	public AccountReport getAccountReport_SL_CR(String accountId) throws AccountManagerException{
+		
+		AggregateIterable<Document> output = null;
+		MongoCollection<Document> collection = null;
+		Document match = null;
+		try {
+
+			MongoDBConnection dbSingleton = MongoDBConnection.getInstance();
+			MongoDatabase db = dbSingleton.getDB();
+			collection = db.getCollection(collectionName);
+            
+            Document project = new Document("$project", new Document("nslr", new Document("$size", "$serviceLinkRecords")).append("ncr", new Document("$size", "$sinkConsentRecords")));
+			
+			try {
+
+				match = new Document("$match", new Document("username", accountId));
+				output = collection.aggregate(Arrays.asList(match, project));
+			} catch (IllegalArgumentException e) {
+
+				
+					throw new AccountManagerException("There was an error while getting the Account");
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new AccountManagerException("There was an error while getting Account Report");
+		}
+
+		Document d = null;
+		if (output != null && (d = output.first()) != null) {
+
+			try {
+				return DAOUtils.json2Obj(d.toJson(), AccountReport.class);
+			} catch (AccountUtilsException e) {
+				e.printStackTrace();
+				throw new AccountManagerException("There was an error while getting report");
+			}
+
+		} else
+			throw new AccountManagerException(
+					"There was an error while getting report");
+		
 	}
 
 }

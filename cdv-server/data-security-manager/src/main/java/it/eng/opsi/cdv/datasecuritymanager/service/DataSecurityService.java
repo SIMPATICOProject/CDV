@@ -1,6 +1,29 @@
+/*******************************************************************************
+ * The MIT License (MIT)
+ * Copyright (c) 2016, 2018  Engineering Ingegneria Informatica S.p.A
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *******************************************************************************/
 package it.eng.opsi.cdv.datasecuritymanager.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -19,6 +42,7 @@ import it.eng.opsi.cdv.datasecuritymanager.crypt.annotation.Encryption.Encryptio
 import it.eng.opsi.cdv.datasecuritymanager.model.ErrorResponse;
 import it.eng.opsi.cdv.datasecuritymanager.model.PDataEntry;
 import it.eng.opsi.cdv.datasecuritymanager.model.PDataUtilsException;
+import it.eng.opsi.cdv.datasecuritymanager.model.AuditLog;
 import it.eng.opsi.cdv.datasecuritymanager.utils.DAOUtils;
 
 @Path("/internal")
@@ -149,6 +173,40 @@ public class DataSecurityService {
 	}
 
 	@POST
+	@Path("/decryptAuditLogList")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON })
+	public static Response decryptAuditLogList(String input, @HeaderParam("accountId") String accountId) {
+		try {
+			List<AuditLog> entries = DAOUtils.json2Obj(input, new TypeToken<List<AuditLog>>() {
+			}.getType());
+			String crypted;
+			String decrypted;
+			for (AuditLog entry : entries) {
+				crypted = entry.getObjectJson();
+				decrypted = (String) Crypto.decryptField((Object) crypted, EncryptionLevel.USER, "", accountId);
+				entry.setObjectJson(decrypted);
+			}
+			return Response.status(Response.Status.OK)
+					.entity(DAOUtils.obj2Json(entries, new TypeToken<List<AuditLog>>() {
+					}.getType())).build();
+
+		} catch (PDataUtilsException e) {
+			e.printStackTrace();
+			ErrorResponse error = new ErrorResponse(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()),
+					e.getClass().getSimpleName(), e.getMessage());
+			return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			ErrorResponse error = new ErrorResponse(
+					String.valueOf(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()), e.getClass().getSimpleName(),
+					e.getMessage());
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error.toJson()).build();
+		}
+
+	}
+
+	@POST
 	@Path("/encryptPDataList")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
@@ -204,7 +262,6 @@ public class DataSecurityService {
 			List<PDataEntry> entries = DAOUtils.json2Obj(input, new TypeToken<List<PDataEntry>>() {
 			}.getType());
 
-			
 			for (PDataEntry entry : entries) {
 				decValues = new ArrayList<String>();
 				for (String value : entry.getValues()) {

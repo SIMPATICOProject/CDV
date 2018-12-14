@@ -25,6 +25,8 @@ COPY docker_config/pdata-manager.properties cdv-server/pdata-manager/src/main/re
 COPY docker_config/security-manager-db.cfg.xml cdv-server/data-security-manager/src/main/resources/it/eng/opsi/cdv/datasecuritymanager/crypt/config/hibernate/hibernate.cfg.xml
 COPY docker_config/security-manager.properties cdv-server/data-security-manager/src/main/resources/application.properties
 COPY docker_config/service-manager.properties cdv-server/service-manager/src/main/resources/application.properties
+COPY docker_config/auditlog-manager.properties cdv-server/auditlog-manager/src/main/resources/application.properties
+COPY docker_config/consent-manager.properties cdv-server/consent-manager/src/main/resources/application.properties
 
 
 
@@ -34,6 +36,8 @@ CMD cd cdv-server \
 && cp pdata-manager/target/pdata-manager.war /application/apache-tomcat-8.5.31/webapps \
 && cp data-security-manager/target/data-security-manager.war /application/apache-tomcat-8.5.31/webapps \
 && cp service-manager/target/service-manager.war /application/apache-tomcat-8.5.31/webapps \
+&& cp auditlog-manager/target/auditlog-manager.war /application/apache-tomcat-8.5.31/webapps \
+&& cp consent-manager/target/consent-manager.war /application/apache-tomcat-8.5.31/webapps \
 && /application/apache-tomcat-8.5.31/bin/catalina.sh run
 
 EXPOSE 8080

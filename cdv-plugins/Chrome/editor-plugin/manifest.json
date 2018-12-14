@@ -1,0 +1,45 @@
+{
+    "name": "CDV Service Annotator",
+    "version": "1.0",
+    "manifest_version": 2,
+    "description": "To rapidly integrate new concept by word selection",
+    "homepage_url": "https://test.com",
+    "icons": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    },
+    "default_locale": "en",
+  	"permissions": [
+  		"*://*/*",
+  		"activeTab",
+  		"contextMenus"
+  	 ],
+    "background": {
+      "scripts": [
+        "src/bg/jquery.js",
+        "src/bg/background.js",
+        "src/lib_dir/options/js/manifest.js",
+		"src/lib_dir/options/js/vendor/underscore.js",
+		"src/lib_dir/options/js/background.js"
+      ],
+      "persistent": true
+    },
+    "options_page": "src/lib_dir/options/index.html",
+    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+  	"browser_action": {
+  	"default_icon": "icons/icon16.png",
+        "default_popup": "src/browser_action/popup.html"
+    },
+    "content_scripts": [
+      {
+        "matches": [
+            "*://*/*"
+        ],
+        "run_at": "document_end",
+        "js": [
+            "src/inject/content.js"
+        ]
+      }
+    ]
+}

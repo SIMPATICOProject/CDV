@@ -25,6 +25,7 @@ package it.eng.opsi.servicemanager.service;
 import it.eng.opsi.servicemanager.dao.ServiceEntryDAO;
 import it.eng.opsi.servicemanager.data.DataMapping;
 import it.eng.opsi.servicemanager.data.ServiceEntry;
+import it.eng.opsi.servicemanager.model.ServiceReport;
 
 import java.util.List;
 
@@ -38,13 +39,27 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.jhades.JHades;
 import org.springframework.stereotype.Service;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.SwaggerDefinition;
+
 @Service("ServiceRegistryService")
 
 @Path("/v1")
+@Api(value = "/ServiceRegistryService")
+@SwaggerDefinition(info = @io.swagger.annotations.Info(description = "XXX", version = "XXX", // bypassato da web.xml
+		title = "Service Manager ServiceRegistry", // bypassato da web.xml
+		termsOfService = "XXX", contact = @io.swagger.annotations.Contact(name = "XXX", email = "XXX", url = "XXX"), license = @io.swagger.annotations.License(name = "XXX", url = "XXX")), consumes = {
+				"application/json",
+				"application/xml" }, produces = { "application/json", "application/xml" }, schemes = {
+						SwaggerDefinition.Scheme.HTTP, SwaggerDefinition.Scheme.HTTPS }, tags = {
+								@io.swagger.annotations.Tag(name = "XXX", description = "XXX") }, externalDocs = @io.swagger.annotations.ExternalDocs(value = "XXX", url = "XXX"))
 public class ServiceRegistryService {
 	static final String api_version = "1.0";
 	ServiceEntryDAO dao = new ServiceEntryDAO();
@@ -55,6 +70,10 @@ public class ServiceRegistryService {
 	@GET
 	@Path("/services")
 	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST") })
 	public List<ServiceEntry> getServices() {
 		return dao.findAll();
 	}
@@ -63,29 +82,64 @@ public class ServiceRegistryService {
 	@Path("/services/")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public ServiceEntry create(ServiceEntry service) {
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST") })
+	public ServiceEntry create(
+			@ApiParam(name = "service", value = "descrizione", required = true) ServiceEntry service) {
 		return dao.create(service);
 	}
 
 	@GET
 	@Path("/services/search/")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<ServiceEntry> findServicesByName(@QueryParam("regex") String regex) {
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST") })
+	public List<ServiceEntry> findServicesByName(
+			@ApiParam(name = "regex", value = "descrizione", required = true) @QueryParam("regex") String regex) {
 		return dao.findByName(regex);
 	}
-
+	
+	
 	@GET
 	@Path("/services/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ServiceEntry findById(@PathParam("id") String id) {
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST") })
+	public ServiceEntry findById(
+			@ApiParam(name = "id", value = "descrizione", required = true) @PathParam("id") String id) {
 		return dao.findById(id);
+	}
+	
+
+	
+	@GET
+	@Path("/services/searchByUrl/")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST") })
+	public ServiceEntry findServiceByUrl(
+			@ApiParam(name = "url", value = "service url", required = true) @QueryParam("url") String url) {
+		return dao.findByURL(url);
 	}
 
 	@PUT
 	@Path("/services/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public ServiceEntry update(ServiceEntry service, @PathParam("id") String id) {
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST") })
+	public ServiceEntry update(@ApiParam(name = "service", value = "descrizione", required = true) ServiceEntry service,
+			@ApiParam(name = "id", value = "descrizione", required = true) @PathParam("id") String id) {
 		dao.update(service, id);
 		return service;
 	}
@@ -93,21 +147,48 @@ public class ServiceRegistryService {
 	@DELETE
 	@Path("/services/{id}")
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	public void remove(@PathParam("id") String id) {
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST") })
+	public void remove(@ApiParam(name = "id", value = "descrizione", required = true) @PathParam("id") String id) {
 		dao.remove(id);
 	}
 
 	@GET
 	@Path("/services/{id}/servicedatamapping")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<DataMapping> getServiceDataMapping(@PathParam("id") String id) {
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST") })
+	public List<DataMapping> getServiceDataMapping(
+			@ApiParam(name = "id", value = "descrizione", required = true) @PathParam("id") String id) {
 
 		return dao.getDataMapping(id);
 	}
 
-	public static void main(String[] args) {
-		new JHades().printClassLoaderNames().printClasspath().overlappingJarsReport().multipleClassVersionsReport();
-
+	@GET
+	@Path("/service_report/sector")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST") })
+	public List<ServiceReport> getServiceReportbySector() {
+		return dao.getServiceReportbySector();
 	}
 
+	@GET
+	@Path("/service_report/type")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@io.swagger.annotations.ApiResponses(value = {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST") })
+	public List<ServiceReport> getServiceReportbyType() {
+		return dao.getServiceReportbyType();
+	}
+
+	
 }

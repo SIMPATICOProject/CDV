@@ -12,7 +12,7 @@
 		<!-- Register resources and providers -->
 		<init-param>
 			<param-name>jersey.config.server.provider.packages</param-name>
-			<param-value>it.eng.opsi</param-value>
+			<param-value>io.swagger.jaxrs.listing,it.eng.opsi</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
@@ -22,7 +22,23 @@
 		<url-pattern>/api/*</url-pattern>
 	</servlet-mapping>
 
-
+	<servlet>
+       <servlet-name>Jersey2Config</servlet-name>
+       <servlet-class>io.swagger.jersey.config.JerseyJaxrsConfig</servlet-class>
+       <init-param>
+           <param-name>api.version</param-name>
+           <param-value>0.0.1-SNAPSHOT</param-value>
+       </init-param>
+       <init-param>
+           <param-name>swagger.api.title</param-name>
+           <param-value>Pdata Manager Module</param-value>
+       </init-param>
+       <init-param>
+           <param-name>swagger.api.basepath</param-name>
+           <param-value>http://localhost:8080/pdata-manager/</param-value>
+       </init-param>
+       <load-on-startup>2</load-on-startup>
+    </servlet>
 
 
 </web-app>

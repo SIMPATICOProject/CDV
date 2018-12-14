@@ -20,7 +20,7 @@ export const routes: Routes = [
     component: Pages,
     children: [
       { path: '', redirectTo: 'account', pathMatch: 'full' },
-      /*{ path: 'dashboard', loadChildren: 'app/pages/dashboard/dashboard.module#DashboardModule' },*/
+      { path: 'dashboard', loadChildren: 'app/pages/dashboard/dashboard.module#DashboardModule' },
       { path: 'editors', loadChildren: 'app/pages/editors/editors.module#EditorsModule' },
       { path: 'components', loadChildren: 'app/pages/components/components.module#ComponentsModule' },
       { path: 'charts', loadChildren: 'app/pages/charts/charts.module#ChartsModule' },
@@ -30,8 +30,12 @@ export const routes: Routes = [
       { path: 'maps', loadChildren: 'app/pages/maps/maps.module#MapsModule' },
 	  { path: 'account',  loadChildren: 'app/pages/account/account.module#AccountModule', canActivate: [AuthGuard] },
 	  { path: 'pdata',  loadChildren: 'app/pages/pdata/pdata.module#pDataModule', canActivate: [AuthGuard] },
+	  { path: 'logs',  loadChildren: 'app/pages/logs/logs.module#logsModule', canActivate: [AuthGuard]},      
+      { path: 'consents',  loadChildren: 'app/pages/consents/consents.module#consentsModule', canActivate: [AuthGuard] },
 	  { path: 'configuration',  loadChildren: 'app/pages/configuration/configuration.module#configurationModule', canActivate: [AuthGuard] },
-	  { path: 'services',  loadChildren: 'app/pages/services/services.module#servicesModule', canActivate: [AuthGuard] }
+	  { path: 'services',  loadChildren: 'app/pages/services/services.module#servicesModule', canActivate: [AuthGuard] },
+	  { path: 'connectors',  loadChildren: 'app/pages/connectors/services.module#servicesModule', canActivate: [AuthGuard] }
+	  
     ]
   }
 ];

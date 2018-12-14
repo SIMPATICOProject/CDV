@@ -10,11 +10,14 @@
 	"services":"/service-manager/api/v1/services",
     "clientId":"80e7a735-04bf-4737-b6ca-46caac64f823",
     "authority":"google",
+    "auditlog":"/auditlog-manager/api/v1/",
+    "consent":"/consent-manager/api/v1/",   
     "cdvDashboardUrl":"/cdv-dashboard/simp_login/login2.html",
-    "disable_auth":"false"
+    "disable_auth":"false",
+	"logo_text":"CDV"
   },
   "i18n":{
-  	"locale": "it"
+  	"locale": "en"
   }
 }
 

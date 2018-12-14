@@ -18,8 +18,6 @@
 		</repository>
 	</repositories>
 
-
-
 	<properties>
 		<jersey.version>2.25</jersey.version>
 		<commons-lang3.version>3.5</commons-lang3.version>
@@ -38,11 +36,6 @@
 		<servlet-version>3.0.1</servlet-version>
 		<!-- ____________________ -->
 	</properties>
-
-
-
-
-
 
 	<dependencies>
 
@@ -66,11 +59,11 @@
 
 
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
-			<scope>test</scope>
-		</dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
 		<dependency>
 			<groupId>asm</groupId>
 			<artifactId>asm-all</artifactId>
@@ -151,6 +144,7 @@
 			<artifactId>jhades</artifactId>
 			<version>1.0.4</version>
 		</dependency>
+
 		<!-- MOCKITO TESTING -->
 
 		<dependency>
@@ -190,7 +184,23 @@
 		    <artifactId>powermock-module-junit4</artifactId>
 		    <version>1.7.4</version>
 		    <scope>test</scope>
-		</dependency>				  
+		</dependency>
+		
+		<!-- SWAGGER INTEGRATION -->
+		<!-- https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-jaxrs2 -->
+		<dependency>
+		    <groupId>io.swagger.core.v3</groupId>
+		    <artifactId>swagger-jaxrs2</artifactId>
+		    <version>2.0.5</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/io.swagger/swagger-annotations -->
+		<dependency>
+		    <groupId>io.swagger</groupId>
+		    <artifactId>swagger-annotations</artifactId>
+		    <version>1.5.21</version>
+		</dependency>
+
 
 		<!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
 		<dependency>
@@ -609,6 +619,7 @@
 		</dependency>
 
 	</dependencies>
+	
 	<build>
 		<finalName>account-manager</finalName>
 		<plugins>
@@ -632,9 +643,11 @@
                     </formats>
                     <check />
 					<instrumentation>
+					   <ignoreTrivial>true</ignoreTrivial>
+					   <ignoreMethodAnnotation>it.eng.opsi.cdv.accountmanager.utils.CoberturaIgnore</ignoreMethodAnnotation>
 					   <includes>
 					      <include>it/eng/opsi/cdv/accountmanager/service/AccountService.class</include>
-						   <include>it/eng/opsi/cdv/accountmanager/utils/DAOUtils.class</include>
+					     					      
                           </includes>
 					   <excludes>
                             <exclude>it/eng/opsi/cdv/accountmanager/dao/*</exclude>                            

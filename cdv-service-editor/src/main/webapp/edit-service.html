@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Service Editor</title>
+
+    <!-- Bootstrap -->
+    <link href="vendors/bootstrap/distrib/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- Datatables -->
+    <link href="vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+    <link href="vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+    <link href="vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+    <link href="vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+    <link href="vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+    <!-- Custom Theme Style -->
+    <link href="css/custom.css" rel="stylesheet">
+    
+    <!-- File di configurazione -->
+	<script src="js/config.properties.js"></script>
+    
+    <script src="vendors/jquery/distrib/jquery.min.js"></script>
+    <script src="vendors/jsoneditor/jsoneditor.min.js"></script>
+    <script src="js/preload.js"></script>
+	
+	<!-- select2 for editor -->
+	<script src="vendors/select2/select2.min.js"></script>
+	<link rel="stylesheet" href="vendors/select2/select2.css">
+	<link rel="stylesheet" href="vendors/select2/select2-bootstrap.css">
+	
+	<link rel="stylesheet" href="css/simple-scrollbar.css">
+	<script src="js/simple-scrollbar.js"></script>
+	
+	<script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.6/dist/loadingoverlay.min.js"></script>
+	
+    <script>
+    // Set the default CSS theme and icon library globally
+    JSONEditor.defaults.theme = 'bootstrap3';
+    JSONEditor.defaults.iconlib = 'fontawesome4';
+    var schemaDir = "json/service-entry.json";
+	
+	// Disable additional properties
+    JSONEditor.defaults.options.no_additional_properties= true;
+	JSONEditor.defaults.options.disable_properties=true;
+	JSONEditor.defaults.options.prompt_before_delete=true;
+	
+    </script>
+
+  </head>
+  
+  <style>
+  	input[type="text"]{
+  		height: auto !important;
+  	} 
+  </style>
+  
+  <body class="nav-md footer_fixed">
+  
+<!-- Large modal -->
+    <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+          <div class="modal-header" style="border-bottom: none;padding-bottom: 0 !important;">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+            </button>
+            <h1 class="modal-title" id="service-title">TITLE</h1>
+          </div>
+          <div class="modal-body">
+            <p id="service-description-content"></p>
+          </div>
+<!-- SERVICE-LIST SECTION -->
+          <div id="service-div-1" class="modal-body" style="border-top: 1px solid #e5e5e5;">
+            <h2 id="service-keyword-title">Keywords: </h2>
+            <p id="service-keyword-content"></p>
+            </br>
+            <h2 id="service-puropose-title">Provider: </h2>
+            <p id="service-puropose-content"></p>
+            </br>
+            <h2 id="service-purpose-title">Purpose: </h2>
+            <p id="service-purpose-content"></p>
+            </br>
+            <h2 id="service-link-title">Link: </h2>
+            <a style="font-size: 20px;cursor: pointer;color:#0055FF" id="service-link-content"></a>
+          </div>
+          <div  id="service-div-2" class="keywords-set modal-body" style="border-top: 1px solid #e5e5e5;word-break: break-all;">
+          	<h2 id="service-data-title" style="font-style: normal">Data Processed: </h2>
+          </div>
+<!-- SERVICE-LIST SECTION -->
+<!-- PDFIELDS SECTION -->
+			<div id="pdf-div" class="modal-body" style="border-top: 1px solid #e5e5e5;">
+				<h2 id="pdf-id-title">ID: </h2>
+            	<p id="pdf-id-content"></p>
+            	</br>
+            	<h2 id="pdf-category-title">Category: </h2>
+            	<p id="pdf-category-content"></p>
+            	</br>
+            	<h2 id="pdf-privatePData-title">Private PData: </h2>
+            	<p id="pdf-privatePData-content"></p>
+            	</br>
+            	<h2 id="pdf-semanticType-title">Semantic Type: </h2>
+            	<p id="pdf-semanticType-content"></p>
+            	</br>
+            	<h2 id="pdf-uri-title">URI: </h2>
+            	<p id="pdf-uri-content"></p>
+            	</br>
+			</div>
+<!-- PDFIELDS SECTION -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+<!-- Large modal -->
+  
+  
+    <div class="container body">
+      <div class="main_container">
+        <div class="col-md-3 left_col menu_fixed">
+          <div class="left_col scroll-view sidebar-scroll-y ss-container" id="trest">
+            <div class="navbar nav_title" style="border: 0;">
+              <a href="index.html" class="site_title"><i class="fa fa-edit"></i> <span>Service Editor</span></a>
+            </div>
+
+            <div class="clearfix"></div>
+            <br />
+
+<!-- sidebar menu -->
+            <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+              <div class="menu_section">
+                 <ul class="nav side-menu">
+                  <li><a href="index.html"><i class="fa fa-home"></i> Home </a></li>
+                  <li><a><i class="fa fa-edit"></i> Services <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="services-list.html">Available Services</a></li>
+                      <li><a href="edit-service.html">Add New Service</a></li>
+                    </ul>
+                  </li>
+                  <li><a><i class="fa fa-key"></i>PDataFields<span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu" id="pdf-section">
+
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+
+            </div>
+<!-- /sidebar menu -->
+
+          </div>
+        </div>
+
+<!-- top navigation -->
+        <div class="top_nav">
+          <div class="nav_menu">
+            <nav>
+              <div class="nav toggle">
+                <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+              </div>
+
+              <ul class="nav navbar-nav navbar-right">
+                 <li class="">
+                  <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    <img src="images/no-photo.png" alt="">
+                    
+                  </a>
+                  <ul class="dropdown-menu dropdown-usermenu pull-right">
+                    <li><a href="javascript:;"> Profile</a></li>
+                    <li><a href="login.html"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
+                  </ul>
+                </li>
+              
+              </ul>
+            </nav>
+          </div>
+        </div>
+<!-- /top navigation -->
+
+<!-- page content -->
+        <div class="right_col" role="main">
+          <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                <h1>Service Editor</h1>
+              </div>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="row">
+            
+	            <div class="col-md-12 col-sm-12 col-xs-12">
+	                <div class="x_panel">
+            
+				      <div class="medium-6 columns" style="padding-top:1em;padding-bottom:1em">
+				        <button id="submit" class="btn btn-success">Update Service</button>
+				        <button id="restore" class="btn btn-warning">Restore to Default</button>
+				        <!-- <button id="import" class="btn btn-info">Import JSON</button> -->
+				        <input type="file" id="import" style="display: initial !important;" class="btn btn-info" multiple size="30" onchange="uploadJSON()">
+				    
+				    <div class="row"style="margin-left:auto;margin-right:auto">
+				      <div id="editor_holder" class="medium-12 columns">
+				      </div>
+				    </div>
+	 
+	            </div>
+          </div>
+       </div>
+     </div>
+
+<!-- /page content -->
+
+<!-- footer content -->
+        <footer>
+          <div class="pull-right">
+            Service Editor
+          </div>
+          <div class="clearfix"></div>
+        </footer>
+<!-- /footer content -->
+      </div>
+    </div>
+    
+    <script>
+    	//SPINNER
+		//$("#editor_holder").LoadingOverlay("show", {
+		$.LoadingOverlay("show", {
+			 image       : "",
+			 fontawesome : "fa fa-cog fa-spin",
+			 fade: [100,800]
+		});
+		
+  		//SESION VAR - infoPDF is assigned in preload.js
+		var localInfoPDF = sessionStorage.getItem("infoPDF");
+		if(localInfoPDF){
+			//console.log("infoPDF valorizzato...");
+			appendPDFields(localInfoPDF,1);
+		}
+		else{
+			getPDFields();
+		}
+
+    	//CASCADE SCRIPT LOADING
+    	$.getScript("vendors/bootstrap/distrib/js/bootstrap.min.js",function() {
+    		$.getScript("vendors/datatables.net/js/jquery.dataTables.js", function(){
+    			$.getScript("vendors/datatables.net-buttons/js/dataTables.buttons.min.js", function(){
+    				$.getScript("vendors/datatables.net-responsive/js/dataTables.responsive.min.js", function(){
+    					$.getScript("js/custom.min.js", function(){
+    						$.getScript("js/edit_service_supplier.js")
+    					});
+					})
+    			})
+    		})
+    	})
+	    
+	    /*function uploadJSON()*/
+	    
+	    //RESTORE BUTTON ACTION
+	    document.getElementById('restore').addEventListener('click',function() {
+	    	console.log("CLICKED RESTORE BUTTON");
+	    	location.reload();
+		});
+	</script>
+	<script src="vendors/pdfmake/build_dir/pdfmake.min.js"></script>
+	<script src="js/edit_service_supplier.js"></script>
+
+  </body>
+  
+  <script>
+  	editManager();
+  
+	$(document).ready(function(){
+		$(window).scroll(function () {
+	    	if ($(this).scrollTop() > 50) {
+	        	$('#back-to-top').fadeIn();
+	            }
+	    	else{
+	        	$('#back-to-top').fadeOut();
+	        }
+	     });
+	     // scroll body to 0px on click
+	     $('#back-to-top').click(function () {
+	     	$('#back-to-top').tooltip('hide');
+	        $('body,html').animate({
+	        	scrollTop: 0
+	        }, 800);
+	        return false;
+	      });
+	        
+	      //SPINNER HIDE
+	      //$("#editor_holder").LoadingOverlay("hide", true); //over a single DOM elements
+	      $.LoadingOverlay("hide", true); //over the entire page
+	      
+		});
+	  
+	  //SIMPLESCROLLBAR PLUGIN - Scrollbar for Firefox
+	  var el = document.querySelector('.ss-container');
+	  SimpleScrollbar.initEl(el);
+	</script>
+	
+	<a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button" title="Click to return on the top page" data-toggle="tooltip" data-placement="left"><span class="glyphicon glyphicon-chevron-up"></span></a>
+ 
+</html>

@@ -53,9 +53,9 @@ So before deploying the application, it is necessary to create a new database, b
 - Open a command prompt and Execute the following commands to import the dump file:
     - `cd CDV/service-manager`
     - `mongorestore --db personalDataMB dump\personalDataMB`
-		or
-	- `mongoimport --db personalDataMB --collection personalDataMB --file dump\pdatafields.json --jsonArray`	
- 
+
+**NOTE:**
+- This dump already contains the statement that creates the **pDataFields** and **serviceRegistry** collection automatically. Same service description are already stored. A Service Description sample is provided in [service-descriptions](service-descriptions/). 
 
 ### Module WAR deployment
 After executing the [Create WAR packages](#create-war-package) step, all generated war packages will be located inside the module "target" subfolder. Copy the "account-manager.war" artifact to the “webapps” folder of Tomcat installation, start it up and wait until it is deployed.
