@@ -26,6 +26,7 @@ CDV Components are split to their own folders
 - [ Account Manager ](cdv-server/account-manager/README.md)
 - [ Service Manager ](cdv-server/service-manager/)
 - [ Consent Manager ](cdv-server/consent-Manager/)
+- [ AuditLog Manager ](cdv-server/auditlog-Manager/)
 - [ PData Manager ](cdv-server/pdata-manager/)
 - [ Auth Manager ](cdv-server/auth-manager/)
 - [ PData Repository ](cdv-server/pdata-repository/)
@@ -83,6 +84,8 @@ Currently the implemented and mandatory modules are the following:
     -   data-security-manager.war
     -   pdata-manager.war
     -   service-manager.war
+	-   consent-manager.war
+	-	auditlog-manager.war
 
 -   CDV Dashboard
     -   cdv-dashboard
