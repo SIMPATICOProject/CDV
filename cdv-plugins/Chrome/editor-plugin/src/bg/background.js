@@ -159,9 +159,17 @@ for (var i = 0; i < contexts.length; i++) {
 /*CHECK ON REFRESH/LOAD_COMPLETE*/
 chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
 
+	
+	chrome.storage.local.get(['pluginSwitch'], function(result) {
+
+		if(result.pluginSwitch){
+	
+	
+	
+	
 	  if(changeInfo.status == 'complete' && tab.active) {
 		  	
-		    console.log("EPPUR SI MOVE");
+		    console.log("E PUR SI MOVE");
 		    
 			//if(!listenerON || (tabListenerON != "" && tabListenerON != tabId)){
 				
@@ -249,7 +257,16 @@ chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
   else{
 	  console.log("void cycle because of tab's loading incomplete");
   }
+	  
+	  
+	  
+	  
+		}
+	});
+	  
+	  
 })
+
 //DOMEG
 
 /*if(selectionON){

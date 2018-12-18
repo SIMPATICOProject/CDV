@@ -4,7 +4,7 @@
     "manifest_version": 2,
     "description": "To rapidly integrate new concept by word selection",
     "homepage_url": "https://test.com",
-    "content_security_policy": "script-src 'self' http://localhost:8080/account-manager/ https://code.jquery.com/ https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/; object-src 'self'",
+    "content_security_policy": "script-src 'self' http://localhost:8080/account-manager/ https://code.jquery.com/ https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/ 'unsafe-eval'; object-src 'self'",
     "icons": {
       "16": "icons/icon16.png",
       "48": "icons/icon48.png",

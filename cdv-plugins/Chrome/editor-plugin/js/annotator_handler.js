@@ -116,7 +116,7 @@ function deleteConcept(i){
 	}
 }
 
-/*Permits single concept update calling the DIALOG*/
+/*Single concept update (using DIALOG)*/
 function editConcept(i){
 	console.log("VALORE PARAMETRO: "+i)
 	//La DIALOG si apre con PROPERTY: data.publicServiceIsDescribedAt[0].dataMapping[i].conceptId
@@ -125,25 +125,27 @@ function editConcept(i){
 	var conceptAnn = null;
 	
 	chrome.storage.local.get(['jsonActiveService'], function(result) {
+		
 		console.log("Valore JSON chrome storage EDIT: ");
 		console.log(result.jsonActiveService);
-	
 		console.log(result.jsonActiveService.publicServiceIsDescribedAt[0]);
 		console.log(result.jsonActiveService.publicServiceIsDescribedAt[0].dataMapping[i]);
 		console.log(i);
 		
-		conceptAnn = result.jsonActiveService.publicServiceIsDescribedAt[0].dataMapping[i].conceptId;
-		nameAnn = result.jsonActiveService.publicServiceIsDescribedAt[0].dataMapping[i].name;
+		var conceptAnn = result.jsonActiveService.publicServiceIsDescribedAt[0].dataMapping[i].conceptId;
+		var nameAnn = result.jsonActiveService.publicServiceIsDescribedAt[0].dataMapping[i].name;
+		var serviceId = $("#service-id").val();
 	    
 	    var win = window.open("", "Title", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=450,height=350,top="+(200)+",left="+(400));
+	    
 	    win.document.head.innerHTML = "<head><title>Selected Field</title>"
 	    	+" <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css\"/> <link data-require=\"select2@*\" data-semver=\"3.5.1\" rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2.css\"/> <link data-require=\"select2@*\" data-semver=\"3.5.1\" rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2-bootstrap.css\"/> <link rel=\"stylesheet\" href=\"http://localhost:8080/account-manager/style.css\"/>";
 	    //+"<script src=\"https://code.jquery.com/jquery-2.1.3.min.js\"></script> <script src=\"https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2.js\"></script>";
 	    
 	    win.document.body.innerHTML = "<div class=\"container-fluid\"> <h1>Annotation</h1> <form> <div class=\"form-group\"> <label for=\"inputProperty\">Property</label>"
 	    	+"<input type=\"input\" class=\"form-control\" id=\"inputProperty\"placeholder=\"Enter field id\" value=\""+conceptAnn+"\"> </div><div class=\"form-group\"> <label for=\"inputConcept\">Concept</label> <input type=\"hidden\" class=\"form-control\" id=\"inputConcept\" placeholder=\"Select concept\"> </div><div class=\"form-group\"> <label for=\"inputConcept\">Name</label>"
-	    	+"<input type=\"input\" class=\"form-control\" id=\"inputName\" placeholder=\"Name\" value=\""+nameAnn+"\"> </div><button type=\"submit\" class=\"btn btn-primary\">Save</button></form></div>"+
-	    	"</body>"+
+	    	+"<input type=\"input\" class=\"form-control\" id=\"inputName\" placeholder=\"Name\" value=\""+nameAnn+"\"></div></form><button id=\"save-bt\" class=\"btn btn-primary\">Save</button></div>"+
+	    	"<div id=\"hidNumCon\" hidden>"+i+"</div><div id=\"hidNumServ\" hidden>"+serviceId+"</div></body>"+
 	    	"</html>";
 	
 	    //JS loading //Only read from CDN
@@ -162,7 +164,6 @@ function editConcept(i){
 	    script3.async = false;
 	    win.document.body.appendChild(script3);
     
-
 	});
 }
 
