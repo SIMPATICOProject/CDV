@@ -33,6 +33,13 @@ var pos = "about:blank";
 
 function selectionOnClick(){
 	
+	chrome.storage.local.get(['pluginSwitch'], function(result) {
+		
+		if(result.pluginSwitch){
+			
+		
+	
+	
 	var selected_word = "";
 	var parCode = "";
 	var nodeId = "";
@@ -136,6 +143,16 @@ function selectionOnClick(){
 			});
 		});
 	});
+	
+	
+	
+		}
+		else{
+			alert("Enable the extension before to select concepts");
+		}
+	});
+	
+	
 }
 
 //ORIGINAL VERSION WITH COMPLETE CONTEXTS
@@ -160,9 +177,9 @@ for (var i = 0; i < contexts.length; i++) {
 chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
 
 	
-	chrome.storage.local.get(['pluginSwitch'], function(result) {
+	//chrome.storage.local.get(['pluginSwitch'], function(result) {
 
-		if(result.pluginSwitch){
+		//if(result.pluginSwitch){
 	
 	
 	
@@ -211,7 +228,7 @@ chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
 								selectionON = -1;
 							}
 						}
-						else{		//content alert SERVICE REGISTERED
+						else{
 							console.log("il servizio è registrato");
 							msg = "alert_ok_serv";
 							
@@ -261,8 +278,8 @@ chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
 	  
 	  
 	  
-		}
-	});
+		//}
+	//});
 	  
 	  
 })

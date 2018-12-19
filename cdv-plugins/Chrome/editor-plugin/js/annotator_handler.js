@@ -140,14 +140,15 @@ function editConcept(i){
 	    
 	    win.document.head.innerHTML = "<head><title>Selected Field</title>"
 	    	+" <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css\"/> <link data-require=\"select2@*\" data-semver=\"3.5.1\" rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2.css\"/> <link data-require=\"select2@*\" data-semver=\"3.5.1\" rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2-bootstrap.css\"/> <link rel=\"stylesheet\" href=\"http://localhost:8080/account-manager/style.css\"/>";
-	    //+"<script src=\"https://code.jquery.com/jquery-2.1.3.min.js\"></script> <script src=\"https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2.js\"></script>";
+	    	//+"<script>var localJSON = "+JSON.stringify(result.jsonActiveService)+";</script></head>";
 	    
-	    win.document.body.innerHTML = "<div class=\"container-fluid\"> <h1>Annotation</h1> <form> <div class=\"form-group\"> <label for=\"inputProperty\">Property</label>"
+	    win.document.body.innerHTML = "<script>var window.localJSON = "+sessionStorage.setItem("localJSON", JSON.stringify(result.jsonActiveService))+";</script><div class=\"container-fluid\"> <h1>Annotation</h1> <form> <div class=\"form-group\"> <label for=\"inputProperty\">Property</label>"
 	    	+"<input type=\"input\" class=\"form-control\" id=\"inputProperty\"placeholder=\"Enter field id\" value=\""+conceptAnn+"\"> </div><div class=\"form-group\"> <label for=\"inputConcept\">Concept</label> <input type=\"hidden\" class=\"form-control\" id=\"inputConcept\" placeholder=\"Select concept\"> </div><div class=\"form-group\"> <label for=\"inputConcept\">Name</label>"
 	    	+"<input type=\"input\" class=\"form-control\" id=\"inputName\" placeholder=\"Name\" value=\""+nameAnn+"\"></div></form><button id=\"save-bt\" class=\"btn btn-primary\">Save</button></div>"+
-	    	"<div id=\"hidNumCon\" hidden>"+i+"</div><div id=\"hidNumServ\" hidden>"+serviceId+"</div></body>"+
+	    	"<div id=\"hidNumCon\" hidden>"+i+"</div><div id=\"hidNumServ\" hidden>"+serviceId+"</div>"
+	    	+"</body>"+
 	    	"</html>";
-	
+	    
 	    //JS loading //Only read from CDN
 	    var script = document.createElement('script');
 	    script.src = 'https://code.jquery.com/jquery-2.1.3.min.js';

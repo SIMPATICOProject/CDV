@@ -27,11 +27,16 @@ document.addEventListener('DOMContentLoaded', function () {
 /*Checking actual plugin state*/
 chrome.storage.local.get(['pluginSwitch'], function(result) {
 	try{
+		
+		//ATTIVA IL PLUGIN
 		if(result.pluginSwitch){
 			$('.optionalRow').show();
 			switchON.checked = true;
 			switchOFF.checked = false;
+			
+			//chrome.contextMenus.create({"title": "Save the selection like a CDV concept", "id": "contMenu", "contexts":"selection","onclick": selectionOnClick});
 		}
+		
 	}catch(err){
 		console.log("pluginSwitch not stored yet");
 	}
@@ -43,13 +48,18 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 
 function changeHandler(){
+	
+	//ATTIVA PLUGIN
 	if(switchON.checked){
 	  $('.optionalRow').show();
 	  chrome.storage.local.set({"pluginSwitch": true}, function() {});
+	  //chrome.contextMenus.create({"title": "Save the selection like a CDV concept", "id": "contMenu", "contexts":"selection"});
 	}
+	//DISATTIVA PLUGIN
 	else{
 	  $('.optionalRow').hide();
 	  chrome.storage.local.set({"pluginSwitch": false}, function() {});
+	  //chrome.contextMenus.remove("contMenu");
 	}
 }
 
