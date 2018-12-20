@@ -51,19 +51,13 @@ import com.google.gson.reflect.TypeToken;
 
 import io.jsonwebtoken.MalformedJwtException;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiKeyAuthDefinition;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.BasicAuthDefinition;
 import io.swagger.annotations.SwaggerDefinition;
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
-import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.security.SecurityScheme;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import it.eng.opsi.cdv.accountmanager.dao.AccountDAO;
 import it.eng.opsi.cdv.accountmanager.model.Account;
 import it.eng.opsi.cdv.accountmanager.model.AccountAlreadyPresentException;
@@ -93,51 +87,40 @@ import it.eng.opsi.cdv.accountmanager.utils.DAOUtils;
 import it.eng.opsi.cdv.accountmanager.utils.JWTUtils;
 import it.eng.opsi.cdv.accountmanager.utils.PropertyManager;
 
-@Service("AccountService") //MOCKITO
+@Service("AccountService") // MOCKITO
 
 @Path("/v1")
 @Api(value = "/AccountService")
-@SwaggerDefinition(
-        info = @io.swagger.annotations.Info(
-                description = "XXX",
-                version = "XXX",			//bypassato da web.xml
-                title = "Account Manager",	//bypassato da web.xml
-                termsOfService = "XXX",
-                contact = @io.swagger.annotations.Contact(
-                   name = "XXX", 
-                   email = "XXX", 
-                   url = "XXX"
-                ),
-                license = @io.swagger.annotations.License(
-                   name = "XXX", 
-                   url = "XXX"
-                )
-        ),
-        consumes = {"application/json", "application/xml"},
-        produces = {"application/json", "application/xml"},
-        schemes = {SwaggerDefinition.Scheme.HTTP, SwaggerDefinition.Scheme.HTTPS},
-/*        tags = {
-        		@io.swagger.annotations.Tag(name = "Nome_Tag", description = "Descrizione del tag")
-        }, */
-        externalDocs = @io.swagger.annotations.ExternalDocs(value = "XXX", url = "XXX")
-)
+@SwaggerDefinition(info = @io.swagger.annotations.Info(description = "Technical specification of Account Manager APIs. This APis provide functionalities for managing the Account Owner's account. In addition, they provide functionalities for performing the linking process between a Service and the Account Owner's account.", 
+                   version = "1.2", 
+                   title = "Account Manager APIs", 
+                   termsOfService = "", 
+                   contact = @io.swagger.annotations.Contact(name = "", email = "", url = ""), 
+                   license = @io.swagger.annotations.License(name = "The MIT License (MIT)", url = "")), 
+                   basePath = "/account-manager/api/", consumes = {
+		"application/json", "application/xml" }, produces = { "application/json", "application/xml" }, schemes = {
+				SwaggerDefinition.Scheme.HTTP,
+				SwaggerDefinition.Scheme.HTTPS })
 public class AccountService implements IAccountService {
 
 	private static AccountDAO dao = new AccountDAO(PropertyManager.getProperty("ACCOUNT_REPOSITORY_COLLECTION"));
-	
+
 	@Override
 	@POST
 	@Path("/accounts")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "Creates a new Account", notes = "Creates a new Account", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST"),
-			@io.swagger.annotations.ApiResponse(code = 409, message = "CONFLICT"),
-			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
-	)
-	public Response createAccount(@ApiParam(name = "input", value = "descrizione", required = true) final String input) {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "Successful Response; the Account was created successfully", response = Account.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "Bad request", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 409, message = "Conflict - Account already present with the same username", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error", response = ErrorResponse.class) })
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "input", value = "Object representing the Account to be created", required = true, dataTypeClass = Account.class, paramType = "body")
+
+	})
+	public Response createAccount(final String input) {
 
 		try {
 			Account account = DAOUtils.json2Obj(input, Account.class);
@@ -178,12 +161,19 @@ public class AccountService implements IAccountService {
 	@Path("/accounts/{accountId}")
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Consumes({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "Updates an existing Account", notes = "Updates an existing Account", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
-	)
-	public Response updateAccount(@ApiParam(name = "input", value = "descrizione", required = true) String input, @ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId) {
+			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Account.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 404, message = "Acount Not Found", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error", response = ErrorResponse.class) })
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "input", value = "Object representing the Account to be updated", required = true, dataTypeClass = Account.class, paramType = "body"),
+			@ApiImplicitParam(name = "accountId", value = "The unique identifier of the Account to be updated", required = true, dataType = "string", paramType = "path")
+
+	})
+	public Response updateAccount(String input, @PathParam("accountId") String accountId) {
 
 		try {
 			Account account = DAOUtils.json2Obj(input, Account.class);
@@ -220,12 +210,17 @@ public class AccountService implements IAccountService {
 	@DELETE
 	@Path("/accounts/{accountId}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "Deletes an existing Account and all related Personal Data", notes = "Deletes an existing Account and all related Personal Data", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
-	)
-	public Response deleteAccount(@ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId) {
+			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS, Account deleted", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 404, message = "Account Not Found", response = ErrorResponse.class) })
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "accountId", value = "The unique identifier of the Account to be deleted", required = true, dataType = "string", paramType = "path")
+
+	})
+	public Response deleteAccount(@PathParam("accountId") String accountId) {
 
 		try {
 			// Delete PData by calling the internal PData Manager API
@@ -256,12 +251,19 @@ public class AccountService implements IAccountService {
 	@GET
 	@Path("/accounts/{accountId}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "Get an existing Account", notes = "Gets an existing Account, with optionally all the related Personal Data", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
-	)
-	public Response getAccount(@ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId, @ApiParam(name = "withPData", value = "descrizione", required = true) @QueryParam("withPData") boolean withPData) {
+			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS, Account returned", response = Account.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 404, message = "Account Not Found", response = ErrorResponse.class) })
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "accountId", value = "The unique identifier of the Account to get", required = true, dataType = "string", paramType = "path"),
+			@ApiImplicitParam(name = "withPData", value = "The flag (True/False) to retrieve the Personal Data related to the requested account", required = false, dataType = "boolean", paramType = "query")
+
+	})
+	public Response getAccount(@PathParam("accountId") String accountId, @QueryParam("withPData") boolean withPData) {
 
 		try {
 
@@ -309,12 +311,18 @@ public class AccountService implements IAccountService {
 	@GET
 	@Path("/accounts/{accountId}/download")
 	@Produces({ MediaType.APPLICATION_OCTET_STREAM, MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN })
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "Download the dump file of an existing Account", notes = "Download the dump file of an existing Account with all the related Personal Data, in JSON format", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
-	)
-	public Response downloadAccountAndPData(@ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId) {
+			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS, Accountd data returned", response = Account.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 404, message = "Account Not Found", response = ErrorResponse.class) })
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "accountId", value = "The unique identifier of the Account to download", required = true, dataType = "string", paramType = "path")
+
+	})
+	public Response downloadAccountAndPData(@PathParam("accountId") String accountId) {
 
 		try {
 
@@ -359,12 +367,15 @@ public class AccountService implements IAccountService {
 	@GET
 	@Path("/accounts/{accountId}/exists")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "verify if specific account exist", notes = "verify if specific account exist", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
-	)
-	public Response existsAccount(@ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId) {
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error", response = ErrorResponse.class) })
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "accountId", value = "The unique identifier of the Account to verify", required = true, dataType = "string", paramType = "path")
+
+	})
+	public Response existsAccount(@PathParam("accountId") String accountId) {
 
 		try {
 
@@ -390,12 +401,19 @@ public class AccountService implements IAccountService {
 	@Path("/accounts/{accountId}/telephones")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "Add telephone to account", notes = "Add telephone to account", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
-	)
-	public Response addTelephone(@ApiParam(name = "input", value = "descrizione", required = true) String input, @ApiParam(name = "accountId", value = "descrizione", required = true)  @PathParam("accountId") String accountId) {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "SUCCESS, Account Telephone added", response = Telephone.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 404, message = "Account Not Found", response = ErrorResponse.class) })
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "accountId", value = "The unique identifier of the Account to add phone", required = true, dataType = "string", paramType = "path"),
+			@ApiImplicitParam(name = "input", value = "telephone info to add", required = true, dataTypeClass = Telephone.class, paramType = "body")
+
+	})
+	public Response addTelephone(String input, @PathParam("accountId") String accountId) {
 
 		Telephone phone;
 
@@ -434,13 +452,20 @@ public class AccountService implements IAccountService {
 	@GET
 	@Path("/accounts/{accountId}/telephones/{telephoneId}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "get specific phone for account", notes = "get specific phone for account", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
-	)
-	public Response getTelephone(@ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId,
-			@ApiParam(name = "telephoneId", value = "descrizione", required = true) @PathParam("telephoneId") String telephoneId) {
+			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Telephone.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 404, message = "Account/Phone Not Found", response = ErrorResponse.class) })
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "accountId", value = "The unique identifier of the Account", required = true, dataType = "string", paramType = "path"),
+			@ApiImplicitParam(name = "telephoneId", value = "telephone iid", required = true, dataType = "string", paramType = "path")
+
+	})
+	public Response getTelephone(@PathParam("accountId") String accountId,
+			@PathParam("telephoneId") String telephoneId) {
 
 		try {
 
@@ -479,12 +504,18 @@ public class AccountService implements IAccountService {
 	@GET
 	@Path("/accounts/{accountId}/telephones")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "get all phone numbers for an Account", notes = "get all phone numbers for an Account", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
-	)
-	public Response getTelephones(@ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId) {
+			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Telephone.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 404, message = "Account", response = ErrorResponse.class) })
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "accountId", value = "The unique identifier of the Account", required = true, dataType = "string", paramType = "path")
+
+	})
+	public Response getTelephones(@PathParam("accountId") String accountId) {
 
 		try {
 
@@ -526,13 +557,21 @@ public class AccountService implements IAccountService {
 	@Path("/accounts/{accountId}/telephones/{telephoneId}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "Modify existing phone number", notes = "Modify existing phone number", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
-	)
-	public Response updateTelephone( @ApiParam(name = "accountId", value = "input", required = true) String input, @ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId,
-			@ApiParam(name = "telephoneId", value = "descrizione", required = true) @PathParam("telephoneId") String telephoneId) {
+			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS, Account Telephone modified", response = Telephone.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 404, message = "Account/ Not Found", response = ErrorResponse.class) })
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "accountId", value = "The unique identifier of the Account to add phone", required = true, dataType = "string", paramType = "path"),
+			@ApiImplicitParam(name = "telephoneId", value = "phone id", required = true, dataType = "string", paramType = "path"),
+			@ApiImplicitParam(name = "input", value = "telephone info to update", required = true, dataTypeClass = Telephone.class, paramType = "body")
+
+	})
+	public Response updateTelephone(String input, @PathParam("accountId") String accountId,
+			@PathParam("telephoneId") String telephoneId) {
 
 		try {
 
@@ -572,13 +611,20 @@ public class AccountService implements IAccountService {
 	@DELETE
 	@Path("/accounts/{accountId}/telephones/{telephoneId}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "deletes account telephone", notes = "deletes account telephone", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
-	)
-	public Response deleteTelephone(@ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId,
-			@ApiParam(name = "telephoneId", value = "descrizione", required = true) @PathParam("telephoneId") String telephoneId) {
+			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS, Account Telephone deleted", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 404, message = "Account/ Not Found", response = ErrorResponse.class) })
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "accountId", value = "The unique identifier of the Account", required = true, dataType = "string", paramType = "path"),
+			@ApiImplicitParam(name = "telephoneId", value = "phone id", required = true, dataType = "string", paramType = "path")
+
+	})
+	public Response deleteTelephone(@PathParam("accountId") String accountId,
+			@PathParam("telephoneId") String telephoneId) {
 
 		try {
 			dao.deleteTelephone(telephoneId, accountId);
@@ -608,12 +654,19 @@ public class AccountService implements IAccountService {
 	@Path("/accounts/{accountId}/contacts")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "add contact to Account", notes = "add contact to Account", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
-	)
-	public Response addContact(@ApiParam(name = "input", value = "descrizione", required = true) String input, @ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId) {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "SUCCESS, Account contact added", response = Contact.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 404, message = "Account Not Found", response = ErrorResponse.class) })
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "accountId", value = "The unique identifier of the Account to add contact", required = true, dataType = "string", paramType = "path"),
+			@ApiImplicitParam(name = "input", value = "contact info to add", required = true, dataTypeClass = Contact.class, paramType = "body")
+
+	})
+	public Response addContact(String input, @PathParam("accountId") String accountId) {
 
 		Contact contact;
 
@@ -652,12 +705,19 @@ public class AccountService implements IAccountService {
 	@GET
 	@Path("/accounts/{accountId}/contacts/{contactId}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "get Account contact by id", notes = "get Account contact by id", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
-	)
-	public Response getContact(@ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId, @ApiParam(name = "contactId", value = "descrizione", required = true) @PathParam("contactId") String contactId) {
+			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Contact.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 404, message = "Account Not Found", response = ErrorResponse.class) })
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "accountId", value = "The unique identifier of the Account to add contact", required = true, dataType = "string", paramType = "path"),
+			@ApiImplicitParam(name = "contactId", value = "contact id", required = true, dataType = "string", paramType = "path")
+
+	})
+	public Response getContact(@PathParam("accountId") String accountId, @PathParam("contactId") String contactId) {
 
 		try {
 
@@ -696,12 +756,17 @@ public class AccountService implements IAccountService {
 	@GET
 	@Path("/accounts/{accountId}/contacts")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "gets contacts", notes = "get contacts of specified Account", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
-	)
-	public Response getContacts(@ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId) {
+			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Contact.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 404, message = "Account Not Found", response = ErrorResponse.class) })
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "accountId", value = "The unique identifier of the Account ", required = true, dataType = "string", paramType = "path") })
+
+	public Response getContacts(@PathParam("accountId") String accountId) {
 
 		try {
 
@@ -743,13 +808,21 @@ public class AccountService implements IAccountService {
 	@Path("/accounts/{accountId}/contacts/{contactId}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "modifies account contact", notes = "modifies account contact", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
-	)
-	public Response updateContact(@ApiParam(name = "input", value = "descrizione", required = true) String input, @ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId,
-			@ApiParam(name = "contactId", value = "descrizione", required = true) @PathParam("contactId") String contactId) {
+			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS, Account contact modified", response = Contact.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 404, message = "Account/ Not Found", response = ErrorResponse.class) })
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "accountId", value = "The unique identifier of the Account ", required = true, dataType = "string", paramType = "path"),
+			@ApiImplicitParam(name = "contactId", value = "contact id", required = true, dataType = "string", paramType = "path"),
+			@ApiImplicitParam(name = "input", value = "contact info to update", required = true, dataTypeClass = Contact.class, paramType = "body")
+
+	})
+	public Response updateContact(String input, @PathParam("accountId") String accountId,
+			@PathParam("contactId") String contactId) {
 
 		try {
 
@@ -789,12 +862,19 @@ public class AccountService implements IAccountService {
 	@DELETE
 	@Path("/accounts/{accountId}/contacts/{contactId}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "deletes account contact", notes = "deletes account contact", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
-	)
-	public Response deleteContact(@ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId, @ApiParam(name = "contactId", value = "descrizione", required = true) @PathParam("contactId") String contactId) {
+			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS, Account contact removed", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 404, message = "Account/ Not Found", response = ErrorResponse.class) })
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "accountId", value = "The unique identifier of the Account to delete contact", required = true, dataType = "string", paramType = "path"),
+			@ApiImplicitParam(name = "contactId", value = "contact id", required = true, dataType = "string", paramType = "path")
+
+	})
+	public Response deleteContact(@PathParam("accountId") String accountId, @PathParam("contactId") String contactId) {
 
 		try {
 			dao.deleteContact(contactId, accountId);
@@ -824,12 +904,19 @@ public class AccountService implements IAccountService {
 	@Path("/accounts/{accountId}/emails")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "adds Account mail", notes = "adds Account mail", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
-	)
-	public Response addEmail(@ApiParam(name = "input", value = "descrizione", required = true) String input, @ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId) {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "SUCCESS, Account email added", response = Email.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 404, message = "Account Not Found", response = ErrorResponse.class) })
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "accountId", value = "The unique identifier of the Account to add contact", required = true, dataType = "string", paramType = "path"),
+			@ApiImplicitParam(name = "input", value = "email info to add", required = true, dataTypeClass = Email.class, paramType = "body")
+
+	})
+	public Response addEmail(String input, @PathParam("accountId") String accountId) {
 
 		Email email;
 
@@ -863,18 +950,26 @@ public class AccountService implements IAccountService {
 
 	}
 
-	
 	@CoberturaIgnore
 	@Override
 	@GET
 	@Path("/accounts/{accountId}/emails/{emailId}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "gets Account mail", notes = "gets Account mail", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
-	)
-	public Response getEmail(@ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId, @ApiParam(name = "emailId", value = "descrizione", required = true) @PathParam("emailId") String emailId) {
+			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Email.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 404, message = "Account Not Found", response = ErrorResponse.class) })
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "accountId", value = "The unique identifier of the Account", required = true, dataType = "string", paramType = "path"),
+			@ApiImplicitParam(name = "emailId", value = "email id", required = true, dataType = "string", paramType = "path")
+
+	})
+	public Response getEmail(
+			@ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId,
+			@ApiParam(name = "emailId", value = "descrizione", required = true) @PathParam("emailId") String emailId) {
 
 		try {
 
@@ -913,12 +1008,16 @@ public class AccountService implements IAccountService {
 	@GET
 	@Path("/accounts/{accountId}/emails")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "gets emails", notes = "gets emails", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
-	)
-	public Response getEmails(@ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId) {
+			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Email.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 404, message = "Account Not Found", response = ErrorResponse.class) })
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "accountId", value = "The unique identifier of the Account ", required = true, dataType = "string", paramType = "path") })
+	public Response getEmails(@PathParam("accountId") String accountId) {
 
 		try {
 
@@ -960,13 +1059,21 @@ public class AccountService implements IAccountService {
 	@Path("/accounts/{accountId}/emails/{emailId}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "updates email", notes = "updates email", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
-	)
-	public Response updateEmail(@ApiParam(name = "input", value = "descrizione", required = true) String input, @ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId,
-			@ApiParam(name = "emailId", value = "descrizione", required = true) @PathParam("emailId") String emailId) {
+			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS, Account contact modified", response = Email.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 404, message = "Account/ Not Found", response = ErrorResponse.class) })
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "accountId", value = "The unique identifier of the Account ", required = true, dataType = "string", paramType = "path"),
+			@ApiImplicitParam(name = "emailId", value = "mail id", required = true, dataType = "string", paramType = "path"),
+			@ApiImplicitParam(name = "input", value = "mail info to update", required = true, dataTypeClass = Email.class, paramType = "body")
+
+	})
+	public Response updateEmail(String input, @PathParam("accountId") String accountId,
+			@PathParam("emailId") String emailId) {
 
 		try {
 
@@ -1006,12 +1113,19 @@ public class AccountService implements IAccountService {
 	@DELETE
 	@Path("/accounts/{accountId}/emails/{emailId}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "deletes mail", notes = "deletes mail", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
-	)
-	public Response deleteEmail(@ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId, @ApiParam(name = "emailId", value = "descrizione", required = true) @PathParam("emailId") String emailId) {
+			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS, Account email removed", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 404, message = "Account Not Found", response = ErrorResponse.class) })
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "accountId", value = "The unique identifier of the Account to delete email", required = true, dataType = "string", paramType = "path"),
+			@ApiImplicitParam(name = "emailId", value = "contact id", required = true, dataType = "string", paramType = "path")
+
+	})
+	public Response deleteEmail(@PathParam("accountId") String accountId, @PathParam("emailId") String emailId) {
 
 		try {
 			dao.deleteEmail(emailId, accountId);
@@ -1041,12 +1155,19 @@ public class AccountService implements IAccountService {
 	@Path("/accounts/{accountId}/particular")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "adds Account particular", notes = "adds Account particular", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
-	)
-	public Response addParticular(@ApiParam(name = "input", value = "descrizione", required = true) String input, @ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId) {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "SUCCESS, Account particular added", response = Particular.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 404, message = "Account Not Found", response = ErrorResponse.class) })
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "accountId", value = "The unique identifier of the Account to add particular", required = true, dataType = "string", paramType = "path"),
+			@ApiImplicitParam(name = "input", value = "particular info to add", required = true, dataTypeClass = Particular.class, paramType = "body")
+
+	})
+	public Response addParticular(String input, @PathParam("accountId") String accountId) {
 
 		Particular particular;
 
@@ -1085,12 +1206,18 @@ public class AccountService implements IAccountService {
 	@GET
 	@Path("/accounts/{accountId}/particular")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "gets Account particular", notes = "gets Account particular", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
-	)
-	public Response getParticular(@ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId) {
+			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Particular.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 404, message = "Account Not Found", response = ErrorResponse.class) })
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "accountId", value = "The unique identifier of the Account", required = true, dataType = "string", paramType = "path")
+
+	})
+	public Response getParticular(@PathParam("accountId") String accountId) {
 
 		try {
 
@@ -1124,19 +1251,23 @@ public class AccountService implements IAccountService {
 
 	}
 
-	
-
 	@CoberturaIgnore
 	@Override
 	@DELETE
 	@Path("/accounts/{accountId}/particular")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "deletes particular", notes = "deletes particular", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
-	)
-	public Response deleteParticular(@ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId) {
+			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS, Account particular removed", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 404, message = "Account Not Found", response = ErrorResponse.class) })
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "accountId", value = "The unique identifier of the Account to delete particular", required = true, dataType = "string", paramType = "path")
+
+	})
+	public Response deleteParticular(@PathParam("accountId") String accountId) {
 
 		try {
 			dao.deleteParticular(accountId);
@@ -1160,18 +1291,25 @@ public class AccountService implements IAccountService {
 
 	}
 
-	
 	@Override
 	@POST
 	@Path("/accounts/{accountId}/serviceLinks")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "creates Service Link record", notes = "creates Service Link record", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
-	)
-	public Response createServiceLinkRecord(@ApiParam(name = "input", value = "descrizione", required = true) String input, @ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId) {
+			@io.swagger.annotations.ApiResponse(code = 201, message = "SUCCESS, slr added", response = ServiceLinkRecord.class),
+			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS, slr active", response = ServiceLinkRecord.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 404, message = "Account Not Found", response = ErrorResponse.class) })
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "accountId", value = "The unique identifier of the Account", required = true, dataType = "string", paramType = "path"),
+			@ApiImplicitParam(name = "input", value = "slr plain json info: serviceId, serviceUri, serviceName, userId", required = true, dataType ="string", paramType = "body")
+
+	})
+	public Response createServiceLinkRecord(String input, @PathParam("accountId") String accountId) {
 
 		try {
 			// INPUT
@@ -1192,7 +1330,7 @@ public class AccountService implements IAccountService {
 				if (dao.existsServiceLinkRecord(accountId, serviceId)) {
 
 					record = dao.getServiceLinkRecordByServiceId(accountId, serviceId);
-					List<ServiceLinkStatusRecord> ssrList = record.getServiceLinkStatusRecords();	
+					List<ServiceLinkStatusRecord> ssrList = record.getServiceLinkStatusRecords();
 
 					ServiceLinkStatusEnum lastStatus = ssrList.get(ssrList.size() - 1).getServiceLinkStatus();
 
@@ -1259,13 +1397,21 @@ public class AccountService implements IAccountService {
 	@PUT
 	@Path("/accounts/{accountId}/serviceLinks/{slrId}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "disables Service Link record", notes = "disables Service Link record", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
-	)
-	public Response disableServiceLinkRecord(@ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId,
-			@ApiParam(name = "slrId", value = "descrizione", required = true) @PathParam("slrId") String slrId) {
+
+			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS, slr disabled", response = Response.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 409, message = "Conflict, slr is already disabled", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 404, message = "Account Not Found", response = ErrorResponse.class) })
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "accountId", value = "The unique identifier of the Account", required = true, dataType = "string", paramType = "path"),
+			@ApiImplicitParam(name = "slrId", value = "The unique identifier of service Link", required = true, dataType = "string", paramType = "path")
+
+	})
+	public Response disableServiceLinkRecord(@PathParam("accountId") String accountId,
+			@PathParam("slrId") String slrId) {
 
 		try {
 
@@ -1310,12 +1456,18 @@ public class AccountService implements IAccountService {
 	@GET
 	@Path("/accounts/{accountId}/serviceLinks")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "gets Account Service Links", notes = "gets Account Service Links", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
-	)
-	public Response getServiceLinkRecords(@ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId) {
+			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = ServiceLinkRecord.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 404, message = "Account Not Found", response = ErrorResponse.class) })
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "accountId", value = "The unique identifier of the Account", required = true, dataType = "string", paramType = "path")
+
+	})
+	public Response getServiceLinkRecords(@PathParam("accountId") String accountId) {
 
 		try {
 
@@ -1355,12 +1507,19 @@ public class AccountService implements IAccountService {
 	@GET
 	@Path("/accounts/{accountId}/serviceLinks/{slrId}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "gets Account Service Link", notes = "gets Account Service Link", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
-	)
-	public Response getServiceLinkRecord(@ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId, @ApiParam(name = "slrId", value = "descrizione", required = true) @PathParam("slrId") String slrId) {
+			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = ServiceLinkRecord.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 404, message = "Account Not Found", response = ErrorResponse.class) })
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "accountId", value = "The unique identifier of the Account", required = true, dataType = "string", paramType = "path"),
+			@ApiImplicitParam(name = "slrId", value = "The unique identifier of the SLR", required = true, dataType = "string", paramType = "path")
+
+	})
+	public Response getServiceLinkRecord(@PathParam("accountId") String accountId, @PathParam("slrId") String slrId) {
 
 		try {
 
@@ -1399,13 +1558,20 @@ public class AccountService implements IAccountService {
 	@GET
 	@Path("/accounts/{accountId}/services/{serviceId}/serviceLinks")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "gets Account Service Link by service id", notes = "gets Account Service Link by service id", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
-	)
-	public Response getServiceLinkRecordByServiceId(@ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId,
-			@ApiParam(name = "serviceId", value = "descrizione", required = true) @PathParam("serviceId") String serviceId) {
+			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = ServiceLinkRecord.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 404, message = "Account Not Found", response = ErrorResponse.class) })
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "accountId", value = "The unique identifier of the Account", required = true, dataType = "string", paramType = "path"),
+			@ApiImplicitParam(name = "serviceId", value = "The unique identifier of the service linked", required = true, dataType = "string", paramType = "path")
+
+	})
+	public Response getServiceLinkRecordByServiceId(@PathParam("accountId") String accountId,
+			@PathParam("serviceId") String serviceId) {
 
 		try {
 
@@ -1445,13 +1611,20 @@ public class AccountService implements IAccountService {
 	@GET
 	@Path("/users/{surrogateId}/services/{serviceId}/serviceLink")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "gets Account Service Link by service id and surrogateid", notes = "gets Account Service Link by service id and surrogateid", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
-	)
-	public Response getServiceLinkRecordBySurrogateIdAndServiceId(@ApiParam(name = "surrogateId", value = "descrizione", required = true) @PathParam("surrogateId") String surrogateId,
-			@ApiParam(name = "serviceId", value = "descrizione", required = true) @PathParam("serviceId") String serviceId) {
+			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = ServiceLinkRecord.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 404, message = "Account Not Found", response = ErrorResponse.class) })
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "surrogateId", value = "surrogate id related to user in service", required = true, dataType = "string", paramType = "path"),
+			@ApiImplicitParam(name = "serviceId", value = "The unique identifier of the service linked", required = true, dataType = "string", paramType = "path")
+
+	})
+	public Response getServiceLinkRecordBySurrogateIdAndServiceId(@PathParam("surrogateId") String surrogateId,
+			@PathParam("serviceId") String serviceId) {
 
 		try {
 
@@ -1495,12 +1668,16 @@ public class AccountService implements IAccountService {
 	@GET
 	@Path("/users/{surrogateId}/serviceLink")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "gets Account Service Link by surrogateid", notes = "gets Account Service Link  surrogateid", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
-	)
-	public Response getServiceLinkRecordBySurrogateId(@ApiParam(name = "surrogateId", value = "descrizione", required = true) @PathParam("surrogateId") String surrogateId) {
+			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = ServiceLinkRecord.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 404, message = "Account Not Found", response = ErrorResponse.class) })
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "surrogateId", value = "surrogate id related to user in service", required = true, dataType = "string", paramType = "path") })
+	public Response getServiceLinkRecordBySurrogateId(@PathParam("surrogateId") String surrogateId) {
 
 		try {
 
@@ -1544,13 +1721,21 @@ public class AccountService implements IAccountService {
 	@GET
 	@Path("/accounts/{accountId}/serviceLinks/{slrId}/statuses")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "gets Account Service Link status records", notes = "gets Account Service Link status records", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
-	)
-	public Response getServiceLinkStatusRecords(@ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId,
-			@ApiParam(name = "slrId", value = "descrizione", required = true) @PathParam("slrId") String slrId) {
+			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = ServiceLinkStatusRecord.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 404, message = "Account Not Found", response = ErrorResponse.class) })
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "accountId", value = "The unique identifier of the Account", required = true, dataType = "string", paramType = "path"),
+			@ApiImplicitParam(name = "slrId", value = "The unique identifier of the SLR", required = true, dataType = "string", paramType = "path")
+
+	})
+	public Response getServiceLinkStatusRecords(
+			 @PathParam("accountId") String accountId,
+			 @PathParam("slrId") String slrId) {
 
 		try {
 
@@ -1591,16 +1776,23 @@ public class AccountService implements IAccountService {
 	@DELETE
 	@Path("/accounts/{accountId}/serviceLinks/{slrId}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "deletes Account Service Link", notes = "deletes Account Service Link", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
-	)
-	public Response deleteServiceLinkRecordById(@ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId,
-			@ApiParam(name = "slrId", value = "descrizione", required = true) @PathParam("slrId") String slrId) {
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 404, message = "Account Not Found", response = ErrorResponse.class) })
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "accountId", value = "The unique identifier of the Account", required = true, dataType = "string", paramType = "path"),
+			@ApiImplicitParam(name = "slrId", value = "The unique identifier of the SLR", required = true, dataType = "string", paramType = "path")
+
+	})
+	public Response deleteServiceLinkRecordById(
+			 @PathParam("accountId") String accountId,
+			 @PathParam("slrId") String slrId) {
 
 		try {
-			
+
 			try {
 				dao.deleteSourceConsentRecordBySLR(accountId, slrId);
 				dao.deleteSinkConsentRecordBySLR(accountId, slrId);
@@ -1635,13 +1827,21 @@ public class AccountService implements IAccountService {
 	@DELETE
 	@Path("/users/{surrogateId}/services/{serviceId}/serviceLink")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	
+	@ApiOperation(value = "deletes Account Service Link by surrogate Id and Service id", notes = "deletes Account Service Link by surrogate Id and Service id", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
-	)
-	public Response deleteServiceLinkRecordBySurrogateIdAndServiceId(@ApiParam(name = "surrogateId", value = "descrizione", required = true) @PathParam("surrogateId") String surrogateId,
-			@ApiParam(name = "serviceId", value = "descrizione", required = true) @PathParam("serviceId") String serviceId) {
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 404, message = "Account Not Found", response = ErrorResponse.class) })
+
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "surrogateId", value = "surrogate id related to user in service", required = true, dataType = "string", paramType = "path"),
+		@ApiImplicitParam(name = "serviceId", value = "The unique identifier of the service linked", required = true, dataType = "string", paramType = "path")
+
+	})
+	public Response deleteServiceLinkRecordBySurrogateIdAndServiceId(
+			 @PathParam("surrogateId") String surrogateId,
+			 @PathParam("serviceId") String serviceId) {
 
 		try {
 			dao.deleteServiceLinkRecordBySurrogateIdAndServiceId(surrogateId, serviceId);
@@ -1671,13 +1871,24 @@ public class AccountService implements IAccountService {
 	@GET
 	@Path("/accounts/{accountId}/serviceLinks/{slrId}/statuses/{ssrId}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	
+	@ApiOperation(value = "gets Account Service Link status records", notes = "gets Account Service Link status records", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
-	)
-	public Response getServiceLinkStatusRecord(@ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId,
-			@ApiParam(name = "slrId", value = "descrizione", required = true) @PathParam("slrId") String slrId, @ApiParam(name = "ssrId", value = "descrizione", required = true) @PathParam("ssrId") String ssrId) {
+			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = ServiceLinkStatusRecord.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 404, message = "Account Not Found", response = ErrorResponse.class) })
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "accountId", value = "The unique identifier of the Account", required = true, dataType = "string", paramType = "path"),
+			@ApiImplicitParam(name = "slrId", value = "The unique identifier of the SLR", required = true, dataType = "string", paramType = "path"),
+			@ApiImplicitParam(name = "ssrId", value = "The unique identifier of the SSR", required = true, dataType = "string", paramType = "path")
+
+	})
+	public Response getServiceLinkStatusRecord(
+			@ApiParam(name = "accountId", value = "descrizione", required = true) @PathParam("accountId") String accountId,
+			@ApiParam(name = "slrId", value = "descrizione", required = true) @PathParam("slrId") String slrId,
+			@ApiParam(name = "ssrId", value = "descrizione", required = true) @PathParam("ssrId") String ssrId) {
 
 		try {
 
@@ -1717,12 +1928,20 @@ public class AccountService implements IAccountService {
 	@POST
 	@Path("/verifySLR")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "verifies Service Link record", notes = "verifies Service Link record", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
-	)
-	public Response verifyServiceLinkRecord(@ApiParam(name = "input", value = "descrizione", required = true) final String input) {
+			
+			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS, verified", response = ServiceLinkRecord.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class) })
+
+	@ApiImplicitParams({
+			
+			@ApiImplicitParam(name = "input", value = "slr plain json info: slrId, slrToken, surrogateId", required = true, dataType = "string", paramType = "body")
+
+	})
+	public Response verifyServiceLinkRecord(
+			 final String input) {
 
 		try {
 
@@ -1804,7 +2023,7 @@ public class AccountService implements IAccountService {
 
 		}
 
-	} 
+	}
 
 	@CoberturaIgnore
 	private static void callDeletePData(String accountId) throws PDataManagerCallException {
@@ -1878,18 +2097,24 @@ public class AccountService implements IAccountService {
 		}
 
 	}
-	
+
 	@CoberturaIgnore
 	@Override
 	@GET
 	@Path("/accounts/{accountId}/report")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	
+	@ApiOperation(value = "Get an existing Account report", notes = "Gets a report info about Account: services linked, consents ect", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error")}
-	)
-	public Response getAccountReport( @PathParam("accountId") String accountId) {
+			@io.swagger.annotations.ApiResponse(code = 200, message = "SUCCESS, Account returned", response = AccountReport.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal server error", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
+			@io.swagger.annotations.ApiResponse(code = 404, message = "Account Not Found", response = ErrorResponse.class) })
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "accountId", value = "The unique identifier of the Account to get", required = true, dataType = "string", paramType = "path")
+	})
+	public Response getAccountReport(@PathParam("accountId") String accountId) {
 
 		try {
 

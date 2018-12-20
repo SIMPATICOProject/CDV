@@ -27,25 +27,20 @@
         <servlet-class>io.swagger.jersey.config.JerseyJaxrsConfig</servlet-class>
         <init-param>
             <param-name>api.version</param-name>
-            <param-value>0.0.1-SNAPSHOT</param-value>
+            <param-value>1.2</param-value>
         </init-param>
         <init-param>
             <param-name>swagger.api.title</param-name>
-            <param-value>Account Manager Module</param-value>
+            <param-value>Account Manager APIs</param-value>
         </init-param>
         <init-param>
             <param-name>swagger.api.basepath</param-name>
-            <param-value>http://localhost:8080/account-manager/</param-value>
+            <param-value>/account-manager/api/</param-value>
         </init-param>
         <load-on-startup>2</load-on-startup>
     </servlet>
     
-    <servlet>
-        <servlet-name>SwaggerBootstrap</servlet-name>
-        <servlet-class>io.swagger.api.util.Bootstrap</servlet-class>
-        <load-on-startup>2</load-on-startup>
-    </servlet>
-
+    
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
     <welcome-file>index.htm</welcome-file>

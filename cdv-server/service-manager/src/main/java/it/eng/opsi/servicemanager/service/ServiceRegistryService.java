@@ -22,6 +22,7 @@
  *******************************************************************************/
 package it.eng.opsi.servicemanager.service;
 
+
 import it.eng.opsi.servicemanager.dao.ServiceEntryDAO;
 import it.eng.opsi.servicemanager.data.DataMapping;
 import it.eng.opsi.servicemanager.data.ServiceEntry;
@@ -41,7 +42,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.jhades.JHades;
 import org.springframework.stereotype.Service;
 
 import io.swagger.annotations.Api;
@@ -53,13 +53,18 @@ import io.swagger.annotations.SwaggerDefinition;
 
 @Path("/v1")
 @Api(value = "/ServiceRegistryService")
-@SwaggerDefinition(info = @io.swagger.annotations.Info(description = "XXX", version = "XXX", // bypassato da web.xml
-		title = "Service Manager ServiceRegistry", // bypassato da web.xml
-		termsOfService = "XXX", contact = @io.swagger.annotations.Contact(name = "XXX", email = "XXX", url = "XXX"), license = @io.swagger.annotations.License(name = "XXX", url = "XXX")), consumes = {
+@SwaggerDefinition(
+		info = @io.swagger.annotations.Info(description = "Technical specification of Service Manager APIs", 
+		version = "1.2", 
+		title = "Service Manager APIs", 
+		termsOfService = "", 
+		license = @io.swagger.annotations.License(name = "The MIT License (MIT)", url = "")), 
+        consumes = {
 				"application/json",
-				"application/xml" }, produces = { "application/json", "application/xml" }, schemes = {
-						SwaggerDefinition.Scheme.HTTP, SwaggerDefinition.Scheme.HTTPS }, tags = {
-								@io.swagger.annotations.Tag(name = "XXX", description = "XXX") }, externalDocs = @io.swagger.annotations.ExternalDocs(value = "XXX", url = "XXX"))
+				"application/xml" }, 
+        produces = { "application/json", "application/xml" }, 
+        schemes = {
+				SwaggerDefinition.Scheme.HTTP, SwaggerDefinition.Scheme.HTTPS })
 public class ServiceRegistryService {
 	static final String api_version = "1.0";
 	ServiceEntryDAO dao = new ServiceEntryDAO();
@@ -70,10 +75,11 @@ public class ServiceRegistryService {
 	@GET
 	@Path("/services")
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "Gets Service List", notes = "Gets Service List", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST") })
+			@io.swagger.annotations.ApiResponse(code = 200, message = "Success", response = ServiceEntry.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error") })
+	
 	public List<ServiceEntry> getServices() {
 		return dao.findAll();
 	}
@@ -82,24 +88,25 @@ public class ServiceRegistryService {
 	@Path("/services/")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "Create new service", notes = "Create new service", response = ServiceEntry.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST") })
+			@io.swagger.annotations.ApiResponse(code = 200, message = "Success", response = ServiceEntry.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error") })
+	
 	public ServiceEntry create(
-			@ApiParam(name = "service", value = "descrizione", required = true) ServiceEntry service) {
+			@ApiParam(name = "service", value = "service model", required = true) ServiceEntry service) {
 		return dao.create(service);
 	}
 
 	@GET
 	@Path("/services/search/")
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "finds services by name", notes = "finds services by name", response = ServiceEntry.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST") })
+			@io.swagger.annotations.ApiResponse(code = 200, message = "Success", response = ServiceEntry.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error") })
 	public List<ServiceEntry> findServicesByName(
-			@ApiParam(name = "regex", value = "descrizione", required = true) @QueryParam("regex") String regex) {
+			@ApiParam(name = "regex", value = "string criteria to search files", required = true) @QueryParam("regex") String regex) {
 		return dao.findByName(regex);
 	}
 	
@@ -107,12 +114,12 @@ public class ServiceRegistryService {
 	@GET
 	@Path("/services/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "finds services by id", notes = "finds services by id", response = ServiceEntry.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST") })
+			@io.swagger.annotations.ApiResponse(code = 200, message = "Success", response = ServiceEntry.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error") })
 	public ServiceEntry findById(
-			@ApiParam(name = "id", value = "descrizione", required = true) @PathParam("id") String id) {
+			@ApiParam(name = "id", value = "service id", required = true) @PathParam("id") String id) {
 		return dao.findById(id);
 	}
 	
@@ -121,10 +128,10 @@ public class ServiceRegistryService {
 	@GET
 	@Path("/services/searchByUrl/")
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "finds services by url", notes = "finds services by url", response = ServiceEntry.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST") })
+			@io.swagger.annotations.ApiResponse(code = 200, message = "Success", response = ServiceEntry.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error") })
 	public ServiceEntry findServiceByUrl(
 			@ApiParam(name = "url", value = "service url", required = true) @QueryParam("url") String url) {
 		return dao.findByURL(url);
@@ -134,12 +141,12 @@ public class ServiceRegistryService {
 	@Path("/services/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "Updates a service", notes = "Updates a service", response = ServiceEntry.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST") })
-	public ServiceEntry update(@ApiParam(name = "service", value = "descrizione", required = true) ServiceEntry service,
-			@ApiParam(name = "id", value = "descrizione", required = true) @PathParam("id") String id) {
+			@io.swagger.annotations.ApiResponse(code = 200, message = "Success", response = ServiceEntry.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error") })
+	public ServiceEntry update(@ApiParam(name = "service", value = "updated service model", required = true) ServiceEntry service,
+			@ApiParam(name = "id", value = "service id", required = true) @PathParam("id") String id) {
 		dao.update(service, id);
 		return service;
 	}
@@ -147,23 +154,23 @@ public class ServiceRegistryService {
 	@DELETE
 	@Path("/services/{id}")
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "remove a service", notes = "remove a service", response = Response.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST") })
-	public void remove(@ApiParam(name = "id", value = "descrizione", required = true) @PathParam("id") String id) {
+			@io.swagger.annotations.ApiResponse(code = 200, message = "Success", response = ServiceEntry.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error") })
+	public void remove(@ApiParam(name = "id", value = "service id", required = true) @PathParam("id") String id) {
 		dao.remove(id);
 	}
 
 	@GET
 	@Path("/services/{id}/servicedatamapping")
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "gets service datamapping by id", notes = "gets service datamapping by id", response = DataMapping.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST") })
+			@io.swagger.annotations.ApiResponse(code = 200, message = "Success", response = DataMapping.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error") })
 	public List<DataMapping> getServiceDataMapping(
-			@ApiParam(name = "id", value = "descrizione", required = true) @PathParam("id") String id) {
+			@ApiParam(name = "id", value = "service id", required = true) @PathParam("id") String id) {
 
 		return dao.getDataMapping(id);
 	}
@@ -171,10 +178,10 @@ public class ServiceRegistryService {
 	@GET
 	@Path("/service_report/sector")
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "get services report per sector", notes = "get services report per sector", response = ServiceReport.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST") })
+			@io.swagger.annotations.ApiResponse(code = 200, message = "Success", response = ServiceReport.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error") })
 	public List<ServiceReport> getServiceReportbySector() {
 		return dao.getServiceReportbySector();
 	}
@@ -182,10 +189,10 @@ public class ServiceRegistryService {
 	@GET
 	@Path("/service_report/type")
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "XXX", notes = "XXX", response = Response.class)
+	@ApiOperation(value = "get services report per type", notes = "get services report per type", response = ServiceReport.class)
 	@io.swagger.annotations.ApiResponses(value = {
-			@io.swagger.annotations.ApiResponse(code = 201, message = "CREATED", response = Response.class),
-			@io.swagger.annotations.ApiResponse(code = 400, message = "BAD REQUEST") })
+			@io.swagger.annotations.ApiResponse(code = 200, message = "Success", response = ServiceReport.class),
+			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error") })
 	public List<ServiceReport> getServiceReportbyType() {
 		return dao.getServiceReportbyType();
 	}
