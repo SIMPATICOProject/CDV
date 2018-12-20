@@ -1,9 +1,10 @@
 
-/*Reset the service info to the stored ones*/
+/*Reset the service info to the stored ones - ANNOTATOR_UP*/
 function resetInfo(){
 	chrome.storage.local.get(['jsonActiveService'], function(result) {
-		console.log("Valore JSON chrome storage: ");
-		console.log(result.jsonActiveService);
+		
+console.log("Valore JSON chrome storage: ");
+console.log(result.jsonActiveService);
 		
 		try{
 			var id = result.jsonActiveService.publicServiceID;
@@ -26,7 +27,7 @@ function resetInfo(){
 		});
 }
 
-/*Update the service*/
+/*Update the service - ANNOTATOR_UP*/
 function submitInfo(){
 	var r = confirm("Sei sicuro di voler modificare il servizio?");
 	if(r == true){
@@ -37,7 +38,7 @@ function submitInfo(){
 		chrome.storage.local.set({"idActiveService": actualID}, function() {});
 		
 		chrome.storage.local.get(['jsonActiveService'], function(result) {
-			//se presente
+
 			if(result.jsonActiveService){
 				try{
 					result.jsonActiveService.publicServiceID = $("#service-id").val();
@@ -66,7 +67,7 @@ function submitInfo(){
 					contentType: "application/json",
 					data: JSON.stringify(result.jsonActiveService),
 				}).done(function(data) {
-					//location.reload();
+
 				}).fail(function() {
 				  alert( "Errors occurred in service update. Please be careful and try again..." );
 				})
@@ -82,19 +83,20 @@ function submitInfo(){
 	}
 }
 
-/*Delete a concept from the service*/
+/*Delete a concept from the service - ANNOTATOR_DOWN*/
 function deleteConcept(i){
 	
 	var r = confirm("Se sicuro di voler eliminare l'annotazione dal servizio?");
 	if(r == true){
 		chrome.storage.local.get(['jsonActiveService'], function(result) {
-			//se presente
+
 			if(result.jsonActiveService){
 				var njson = result.jsonActiveService.publicServiceIsDescribedAt[0].dataMapping.splice(i,1);
-				console.log("JSON POST MODIFICA SPLICE: ");
-				console.log(njson);
-				console.log(JSON.stringify(njson));
-				console.log(JSON.stringify(result.jsonActiveService));
+				
+console.log("JSON POST MODIFICA SPLICE: ");
+console.log(njson);
+console.log(JSON.stringify(njson));
+console.log(JSON.stringify(result.jsonActiveService));
 				
 				//PUT - update_apipath
 				var url_ = "http://"+app_parameters.host_param+":"+app_parameters.port_param+"/"+app_parameters.update_apipath+serviceID;
@@ -116,21 +118,24 @@ function deleteConcept(i){
 	}
 }
 
-/*Single concept update (using DIALOG)*/
+/*Single concept update (using DIALOG) - ANNOTATOR_DOWN*/
 function editConcept(i){
-	console.log("VALORE PARAMETRO: "+i)
-	//La DIALOG si apre con PROPERTY: data.publicServiceIsDescribedAt[0].dataMapping[i].conceptId
-	//CONCEPT già selezionato in menu a tendina
-	//NAME già iscritto con valore selezionato in CONCEPT
+	
+console.log("VALORE PARAMETRO: "+i);
+	
+	//La DIALOG si apre con:
+	//PROPERTY - data.publicServiceIsDescribedAt[0].dataMapping[i].conceptId
+	//CONCEPT - già selezionato in menu a tendina
+	//NAME - già iscritto con valore selezionato in CONCEPT
 	var conceptAnn = null;
 	
 	chrome.storage.local.get(['jsonActiveService'], function(result) {
 		
-		console.log("Valore JSON chrome storage EDIT: ");
-		console.log(result.jsonActiveService);
-		console.log(result.jsonActiveService.publicServiceIsDescribedAt[0]);
-		console.log(result.jsonActiveService.publicServiceIsDescribedAt[0].dataMapping[i]);
-		console.log(i);
+console.log("Valore JSON chrome storage EDIT: ");
+console.log(result.jsonActiveService);
+console.log(result.jsonActiveService.publicServiceIsDescribedAt[0]);
+console.log(result.jsonActiveService.publicServiceIsDescribedAt[0].dataMapping[i]);
+console.log(i);
 		
 		var conceptAnn = result.jsonActiveService.publicServiceIsDescribedAt[0].dataMapping[i].conceptId;
 		var nameAnn = result.jsonActiveService.publicServiceIsDescribedAt[0].dataMapping[i].name;
@@ -143,7 +148,8 @@ function editConcept(i){
 	    	//+"<script>var localJSON = "+JSON.stringify(result.jsonActiveService)+";</script></head>";
 	    
 	    win.document.body.innerHTML = "<script>var window.localJSON = "+sessionStorage.setItem("localJSON", JSON.stringify(result.jsonActiveService))+";</script><div class=\"container-fluid\"> <h1>Annotation</h1> <form> <div class=\"form-group\"> <label for=\"inputProperty\">Property</label>"
-	    	+"<input type=\"input\" class=\"form-control\" id=\"inputProperty\"placeholder=\"Enter field id\" value=\""+conceptAnn+"\"> </div><div class=\"form-group\"> <label for=\"inputConcept\">Concept</label> <input type=\"hidden\" class=\"form-control\" id=\"inputConcept\" placeholder=\"Select concept\"> </div><div class=\"form-group\"> <label for=\"inputConcept\">Name</label>"
+	    	+"<input type=\"input\" class=\"form-control\" id=\"inputProperty\"placeholder=\"Enter field id\" value=\""+conceptAnn+"\"> </div><div class=\"form-group\"><label for=\"inputConcept\">Concept</label>"
+	    	+"<input type=\"hidden\" class=\"form-control\" id=\"inputConcept\" placeholder=\"Select concept\"> </div><div class=\"form-group\"> <label for=\"inputConcept\">Name</label>"
 	    	+"<input type=\"input\" class=\"form-control\" id=\"inputName\" placeholder=\"Name\" value=\""+nameAnn+"\"></div></form><button id=\"save-bt\" class=\"btn btn-primary\">Save</button></div>"+
 	    	"<div id=\"hidNumCon\" hidden>"+i+"</div><div id=\"hidNumServ\" hidden>"+serviceId+"</div>"
 	    	+"</body>"+
@@ -169,28 +175,25 @@ function editConcept(i){
 }
 
 
-/*Function: getAnnotatorData*/
+/*Fills the ANNOTATOR page*/
 var serviceID = "";
 var delHandlerON = false;
 var editHandlerON = false;
 var numConcept = 0;
 
 chrome.storage.local.get(['idActiveService'], function(result) {
-    console.log('Value currently is ' + result.idActiveService);
+	
+console.log('Value currently is ' + result.idActiveService);
+    
     serviceID = result.idActiveService;
-    console.log("dato: "+serviceID);
+    
+console.log("dato: "+serviceID);
   
 //GET - getServices_apipath
 var url_ = "http://"+app_parameters.host_param+":"+app_parameters.port_param+"/"+app_parameters.findById_apipath+serviceID;
 $.ajax({
     url: url_
 }).then(function(data) {
-	
-/*	var servcontent = JSON.stringify(data);
-	//console.log(servcontent.length);
-	
-	var jobj = JSON.parse(servcontent);
-	services_info = jobj;*/
 	
 	chrome.storage.local.set({"jsonActiveService": data}, function() {});
 
@@ -205,29 +208,32 @@ $.ajax({
 	try{
 		id = data.publicServiceID;
 		$("#service-id").val(id);
-		//console.log("id ok: "+id);
+
 	}catch(err){
 		console.log("Service missing publicServiceID, Error: "+err.message);
 	}
 	try{
 		name = data.publicServiceName;
 		$("#service-name").val(name);
-		//console.log("name ok: "+name);
+
 	}catch(err){
 		console.log("Service missing publicServiceName, Error: "+err.message);
 	}
 	try{
 		descr = data.humanReadableDescription[0].description;
 		$("#service-descr").val(descr);
+		
 	}catch(err){
 		console.log("Service missing description, Error: "+err.message);
 	}
-	console.log(url_);
-	console.log(data);
+console.log(url_);
+console.log(data);
 	
 	numConcept = data.publicServiceIsDescribedAt[0].dataMapping.length;
-	console.log("numero di concetti internoooooooooooooooooooooooooooo:");
-	console.log(numConcept);
+	
+console.log("numero di concetti interno:");
+console.log(numConcept);
+	
 	//scorro i concetti
 	for(i = 0; i < numConcept; i++){
 
@@ -260,12 +266,10 @@ $.ajax({
 			+"<button id=\"delete"+i+"\" value=\""+nameAnn+"\" class=\"btn btn-danger delete-class\">DELETE</button></td></tr>");
 		
 	}//for
-	//addListeners();
    });
 });//getStorage
 
 
-console.log("Before cascade...");
 //CASCADE SCRIPT LOADING
 $.getScript("../vendors/bootstrap/distrib/js/bootstrap.min.js", function(){
 	console.log("cascade eins");
@@ -298,19 +302,22 @@ $.getScript("../vendors/bootstrap/distrib/js/bootstrap.min.js", function(){
 		//})
 	})
 })
-console.log("After cascade...");
 
 $(document).on('click', '.delete-class', function() {
     var idL = $(this).attr("id");
     idL = idL.substring(6,idL.length);
-    console.log("CLASSES: "+idL);
+    
+console.log("CLASSES: "+idL);
+    
 	deleteConcept(idL);
 });
 
 $(document).on('click', '.edit-class', function() {
     var idL = $(this).attr("id");
     idL = idL.substring(4,idL.length);
-    console.log("EDITS: "+idL);
+    
+console.log("EDITS: "+idL);
+    
 	editConcept(idL);
 });
 
