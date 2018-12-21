@@ -94,16 +94,21 @@ console.log(formEl.attr("id"));
 							    	console.log("Concepts: ");
 							    	console.log(jconc);*/
 									
-									var dialogPkg = {
-											property: nodeId,
-											//concepts: jconc	//non utile perchè la stessa funzione è sviluppata da SELECT2
-									};
+								chrome.storage.local.get(['activeService'], function(result) {
+								
+										var dialogPkg = {
+												property: nodeId,
+												jsonActiveService: result.activeService 
+												//concepts: jconc	//non utile perchè la stessa funzione è sviluppata da SELECT2
+										};
+										
+										/*Sending selected node id to CONTENT-SCRIPT for DIALOG*/
+										chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+											  chrome.tabs.sendMessage(tabs[0].id, {greeting: dialogPkg}, function(response) {
+											  });
+										});
 									
-									/*Sending selected node id to CONTENT-SCRIPT for DIALOG*/
-									chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-										  chrome.tabs.sendMessage(tabs[0].id, {greeting: dialogPkg}, function(response) {
-										  });
-									});
+								});
 							}
 							else{
 								//E' stato selezionato un elemento che non possiede l'attributo id
@@ -196,6 +201,9 @@ console.log("il servizio è registrato");
 console.log('Value is set to ' + idS);
 					          
 					        });
+						
+						//Salvo intero servizio in sessione
+						chrome.storage.local.set({"activeService": servcontent}, function(){});
 						
 						//Abilito il menu contestuale
 						selectionON = selectionON+1;
