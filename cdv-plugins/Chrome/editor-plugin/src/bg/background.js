@@ -168,9 +168,12 @@ console.log("E PUR SI MOVE");
 					var servcontent = JSON.stringify(data);
 					
 console.log("risposta servizio ricerca per url:");
-//console.log(servcontent);	//too verbose
+console.log(servcontent);	//too verbose
 					
 					var jobj = JSON.parse(servcontent);
+console.log("test_2");
+console.log(servcontent);
+					
 					var msg = "";
 					//Servizio non registrato
 					if(jobj.publicServiceID == null){

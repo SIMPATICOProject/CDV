@@ -40,6 +40,7 @@ console.log("mex inviato");
 		    	+"</div><div class=\"form-group\"> <label for=\"inputConcept\">Concept</label> <input type=\"hidden\" class=\"form-control\" id=\"inputConcept\" placeholder=\"Select concept\">"
 		    	+"</div><div class=\"form-group\"> <label for=\"inputConcept\">Name</label> <input type=\"input\" class=\"form-control\" id=\"inputName\" placeholder=\"Name\"> </div>"
 		    	+"</form><button id=\"save-sel-bt\" class=\"btn btn-primary\">Save</button></div>"+
+		    	"<div id=\"selectConcHid\" hidden></div>"
 		    	"</body>"+
 		    	"</html>";
 			    
