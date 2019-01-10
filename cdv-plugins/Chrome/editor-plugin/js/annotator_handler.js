@@ -314,11 +314,11 @@ console.log("CLASSES: "+idL);
 
 $(document).on('click', '.edit-class', function() {
     var idL = $(this).attr("id");
-    idL = idL.substring(4,idL.length);
+    var idL2 = idL.substring(4,idL.length);
     
-console.log("EDITS: "+idL);
+console.log("EDITS: "+idL2);
     
-	editConcept(idL);
+	editConcept(idL2);
 });
 
 $(document).on('click', '#reset-bt', function() {

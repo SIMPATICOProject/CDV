@@ -80,19 +80,6 @@ console.log(formEl.attr("id"));
 								
 							//COMPOSIZIONE DATI per visualizzazione in DIALOG
 							if(nodeId){
-	
-								/*var jconc = null;
-							    //GET - getPDataCategoryTree_apipath
-							    var url_ = "http://"+app_parameters.host_param+":"+app_parameters.port_param+
-							    			"/"+app_parameters.getPDataCategoryTree_apipath;
-							    $.ajax({
-							        url: url_
-							    }).then(function(data) {
-							    	//List creation
-							    	var servcontent = JSON.stringify(data);
-							    	jconc = JSON.parse(servcontent);
-							    	console.log("Concepts: ");
-							    	console.log(jconc);*/
 									
 								chrome.storage.local.get(['activeService'], function(result) {
 								
@@ -175,6 +162,7 @@ console.log("test_2");
 console.log(servcontent);
 					
 					var msg = "";
+					
 					//Servizio non registrato
 					if(jobj.publicServiceID == null){
 
@@ -191,7 +179,10 @@ console.log("rimozione menu contestuale perchè pagina non-servizio");
 							selectionON = -1;
 						}
 					}
-					//Servizio registrato
+					
+					
+					//Servizio registrato //100119 - insieme al msg bisogna passare la lista FOCUSABLE_ANN (ottenere body 
+					//come in getselection e cercarvi all'interno tutte le annotazioni registrate nel servizio corrente)
 					else{
 						
 console.log("il servizio è registrato");
@@ -230,9 +221,15 @@ console.log("'" + context + "' item:" + id);
 console.log("selectionON2 true");
 console.log(selectionON);
 					
+					//aggiungere a dpkg la lista dei nodi input del servizio corrente aventi riscontro in pdatafields su 
+					//server (RIF. domcontent:46)
+					dpkg = {
+						jas: servcontent,
+						msg: msg
+					};
 					/*Sending to CONTENT-SCRIPT call to DIALOG*/
 					chrome.tabs.query({active: true, currentWindow: true,  highlighted: true}, function(tabs) {
-						  chrome.tabs.sendMessage(tabId, {greeting: msg}, function(response) {
+						  chrome.tabs.sendMessage(tabId, {greeting: dpkg}, function(response) {
 						  });
 					});
 					if(chrome.runtime.lastError){
