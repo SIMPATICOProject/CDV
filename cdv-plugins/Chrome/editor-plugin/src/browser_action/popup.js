@@ -53,13 +53,22 @@ function changeHandler(){
 	if(switchON.checked){
 	  $('.optionalRow').show();
 	  chrome.storage.local.set({"pluginSwitch": true}, function() {});
-	  //chrome.contextMenus.create({"title": "Save the selection like a CDV concept", "id": "contMenu", "contexts":"selection"});
+	  
+	  //to reload service tab when switching to ON
+	  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+		  chrome.tabs.reload(tabs[0].id);
+	  });
+
 	}
 	//DISATTIVA PLUGIN
 	else{
 	  $('.optionalRow').hide();
 	  chrome.storage.local.set({"pluginSwitch": false}, function() {});
-	  //chrome.contextMenus.remove("contMenu");
+	  
+	  //to reload service tab when switching to OFF
+	  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+		  chrome.tabs.reload(tabs[0].id);
+	  });
 	}
 }
 

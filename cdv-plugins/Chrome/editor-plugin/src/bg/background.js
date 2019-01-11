@@ -7,13 +7,13 @@ var app_parameters={
 		getPDataCategoryTree_apipath: 'service-manager/api/v1/pdatafields/category/tree',
 		findById_apipath: 'service-manager/api/v1/services/'
 };
-var selectionON = -1; //quando 0 permette di selezionare annotazioni nella pagina
+//var selectionON = -1; //quando 0 permette di selezionare annotazioni nella pagina
 var listenerON = false;
 var tabListenerON = "";
 var pos = "about:blank";
 
 
-function selectionOnClick(){
+/*function selectionOnClick(){
 	
 	// ON/OFF EXTENSION SWITCH FEATURE: se l'estensione è spenta non permette di elaborare i termini selezionati
 	chrome.storage.local.get(['pluginSwitch'], function(result) {
@@ -47,7 +47,7 @@ console.log("è stata selezionata la parola: "+selected_word);
 					
 console.log("FORMCHECK - Visited page: ");
 console.log(domContent);
-					
+
 					var html = "<html>"+domContent.toString()+"</html>";
 					var formEl = $(html).find(":contains('"+selected_word+"')" ).closest("form");
 					
@@ -89,7 +89,7 @@ console.log(formEl.attr("id"));
 												//concepts: jconc	//non utile perchè la stessa funzione è sviluppata da SELECT2
 										};
 										
-										/*Sending selected node id to CONTENT-SCRIPT for DIALOG*/
+										Sending selected node id to CONTENT-SCRIPT for DIALOG
 										chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 											  chrome.tabs.sendMessage(tabs[0].id, {greeting: dialogPkg}, function(response) {
 											  });
@@ -99,7 +99,7 @@ console.log(formEl.attr("id"));
 							}
 							else{
 								//E' stato selezionato un elemento che non possiede l'attributo id
-								/*Sending error to CONTENT-SCRIPT*/
+								Sending error to CONTENT-SCRIPT
 								chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 									  chrome.tabs.sendMessage(tabs[0].id, {greeting: "element_without_id"}, function(response) {
 									  });
@@ -112,7 +112,7 @@ console.log(formEl.attr("id"));
 				}//if formEl
 				else{
 					//E' stato selezionato un elemento che non appartiene a un form
-					/*Sending error to CONTENT-SCRIPT*/
+					Sending error to CONTENT-SCRIPT
 					chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 						  chrome.tabs.sendMessage(tabs[0].id, {greeting: "not_form_element"}, function(response) {
 						  });
@@ -126,6 +126,7 @@ console.log(formEl.attr("id"));
 		}
 	});
 }
+*/
 
 /*CHECK ON REFRESH/LOAD_COMPLETE*/
 chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
@@ -137,6 +138,9 @@ console.log("E PUR SI MOVE");
 			listenerON = true;
 			tabListenerON = tabId;
 		    
+			//salvo tabId in sessione
+			//chrome.storage.local.set({"idActiveTab": tabId}, function(){});
+			
 		    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 
 		        // since only one tab should be active and in the current window at once
@@ -170,73 +174,109 @@ console.log("il servizio visitato non è registrato");
 
 						msg = "alert_fail_serv";
 						
-						if(selectionON > -1){
-							
-console.log("rimozione menu contestuale perchè pagina non-servizio");
-
+/*						if(selectionON > -1){	
+						console.log("rimozione menu contestuale perchè pagina non-servizio");
 							//Disabilito selezione note
 							chrome.contextMenus.remove("contMenu");
 							selectionON = -1;
-						}
+						}*/
 					}
 					
-					
-					//Servizio registrato //100119 - insieme al msg bisogna passare la lista FOCUSABLE_ANN (ottenere body 
-					//come in getselection e cercarvi all'interno tutte le annotazioni registrate nel servizio corrente)
+					//Servizio registrato //100119 - insieme al msg bisogna passare la lista FOCUSABLE_ANN
 					else{
 						
 console.log("il servizio è registrato");
 
-						msg = "alert_ok_serv";
-						//Salvo id in sessione
-						var idS = jobj.publicServiceID;
-						chrome.storage.local.set({"idActiveService": idS}, function() {
-							
-console.log('Value is set to ' + idS);
-					          
-					        });
+
+						// ON/OFF EXTENSION SWITCH FEATURE: se l'estensione è spenta non permette di elaborare i termini selezionati
+						chrome.storage.local.get(['pluginSwitch'], function(result) {
+							console.log("dentro nuovo storage");
+							if(result.pluginSwitch){
+console.log("dentro if pluginswitch");
+
 						
-						//Salvo intero servizio in sessione
-						chrome.storage.local.set({"activeService": servcontent}, function(){});
-						
-						//Abilito il menu contestuale
-						selectionON = selectionON+1;
-						
-console.log("selectionON1 true");
-console.log(selectionON);
-						
-						if(selectionON == 0){
-							var contexts = ["selection"];
-							for (var i = 0; i < contexts.length; i++) {
-								var context = contexts[i];
-								var title = "Save the '" + context + "' like a CDV concept";
-								var id = chrome.contextMenus.create({"title": title, "id": "contMenu", "contexts":[context],"onclick": selectionOnClick});
 								
-console.log("'" + context + "' item:" + id);
-
-							}
-						}
-					}
+								msg = "alert_ok_serv";
+								//Salvo id in sessione
+								var idS = jobj.publicServiceID;
+								chrome.storage.local.set({"idActiveService": idS}, function() {
+									
+		console.log("idservice: " + idS);
+							          
+							        });
+								
+								//Salvo intero servizio in sessione
+								chrome.storage.local.set({"activeService": servcontent}, function(){});
+								
+		/*						//Abilito il menu contestuale
+								selectionON = selectionON+1;
+								
+		console.log("selectionON1 true");
+		console.log(selectionON);
+								
+								if(selectionON == 0){
+									var contexts = ["selection"];
+									for (var i = 0; i < contexts.length; i++) {
+										var context = contexts[i];
+										var title = "Save the '" + context + "' like a CDV concept";
+										var id = chrome.contextMenus.create({"title": title, "id": "contMenu", "contexts":[context],"onclick": selectionOnClick});
+										
+		console.log("'" + context + "' item:" + id);
+		
+									}
+								}*/
+							
+		/*					
+		console.log("selectionON2 true");
+		console.log(selectionON);*/
+							
+							//calcolo lista dei nodi input del servizio corrente aventi riscontro in pdatafields su server
+							chrome.tabs.executeScript( {
+							    code: "window.document.body.parentElement.innerHTML"
+							}, function(domContent) {
+								
+								var inputsList = [];
+								
+								console.log("CONTENUTO PAGINA CORRENTE: ");
+								console.log(domContent);
+								
+								var html = "<html>"+domContent.toString()+"</html>";
+								var domEl = $(html).find("input,select");
+								
+								console.log("domel: ");
+								console.log(domEl);
+								console.log("array version");
+								console.log(inputsList);
+								
+								for(i = 0; i < domEl.length; i++){
+									ap = domEl[i];
+									a = $(ap).attr("id");
+									inputsList.push(a);
+								}
+								console.log("lista di input nodes: ");
+								console.log(inputsList);
+			
+								dpkg = {
+									jas: servcontent,
+									msg: msg,
+									iList: inputsList
+								};
+								/*Sending to CONTENT-SCRIPT call to DIALOG*/
+								chrome.tabs.query({active: true, currentWindow: true,  highlighted: true}, function(tabs) {
+									  chrome.tabs.sendMessage(tabId, {greeting: dpkg}, function(response) {
+									  });
+								});
+								if(chrome.runtime.lastError){
+									console.log("error runtime")
+									console.log(chrome.runtime.lastError);
+								}
+							});//executeSript:domcontent
+							
 					
-console.log("selectionON2 true");
-console.log(selectionON);
+							}//if pluginswitch
+						});//storage pluginswitch
 					
-					//aggiungere a dpkg la lista dei nodi input del servizio corrente aventi riscontro in pdatafields su 
-					//server (RIF. domcontent:46)
-					dpkg = {
-						jas: servcontent,
-						msg: msg
-					};
-					/*Sending to CONTENT-SCRIPT call to DIALOG*/
-					chrome.tabs.query({active: true, currentWindow: true,  highlighted: true}, function(tabs) {
-						  chrome.tabs.sendMessage(tabId, {greeting: dpkg}, function(response) {
-						  });
-					});
-					if(chrome.runtime.lastError){
-						console.log("error runtime")
-						console.log(chrome.runtime.lastError);
-					}
-
+					}//else
 				});//AJAX
 		    });
   }
@@ -246,80 +286,4 @@ console.log("void cycle because of tab's loading incomplete");
 
   }
 })
-
-//ORIGINAL VERSION WITH COMPLETE CONTEXTS
-/*//Create one test item for each context type.
-var contexts = ["page","selection","editable","video","image","link"
-             "audio"];
-for (var i = 0; i < contexts.length; i++) {
-	var context = contexts[i];
-	var title = "Test '" + context + "' menu item";
-	var id = chrome.contextMenus.create({"title": title, "contexts":[context],
-	                                    "onclick": genericOnClick});
-	console.log("'" + context + "' item:" + id);
-}*/
-
-/*if(selectionON){
-	//Create one custom context menu item
-	var contexts = ["selection"];
-	
-		for (var i = 0; i < contexts.length; i++) {
-			var context = contexts[i];
-			var title = "Save the '" + context + "' like a CDV concept";
-			var id = chrome.contextMenus.create({"title": title, "contexts":[context],"onclick": selectionOnClick});
-			
-			console.log("'" + context + "' item:" + id);
-		
-	}
-}*/
-
-/*//Create a parent item and two children.
-var parent = chrome.contextMenus.create({"title": "Test parent item"});
-var child1 = chrome.contextMenus.create(
-{"title": "Child 1", "parentId": parent, "onclick": genericOnClick});
-var child2 = chrome.contextMenus.create(
-{"title": "Child 2", "parentId": parent, "onclick": genericOnClick});
-console.log("parent:" + parent + " child1:" + child1 + " child2:" + child2);
-
-
-//Create some radio items.
-function radioOnClick(info, tab) {
-console.log("radio item " + info.menuItemId +
-           " was clicked (previous checked state was "  +
-           info.wasChecked + ")");
-}
-
-var radio1 = chrome.contextMenus.create({"title": "Radio 1", "type": "radio",
-                                      "onclick":radioOnClick});
-var radio2 = chrome.contextMenus.create({"title": "Radio 2", "type": "radio",
-                                      "onclick":radioOnClick});
-console.log("radio1:" + radio1 + " radio2:" + radio2);
-
-
-//Create some checkbox items.
-function checkboxOnClick(info, tab) {
-console.log(JSON.stringify(info));
-console.log("checkbox item " + info.menuItemId +
-           " was clicked, state is now: " + info.checked +
-           "(previous state was " + info.wasChecked + ")");
-
-}
-
-var checkbox1 = chrome.contextMenus.create(
-{"title": "Checkbox1", "type": "checkbox", "onclick":checkboxOnClick});
-var checkbox2 = chrome.contextMenus.create(
-{"title": "Checkbox2", "type": "checkbox", "onclick":checkboxOnClick});
-console.log("checkbox1:" + checkbox1 + " checkbox2:" + checkbox2);*/
-
-
-/*//Intentionally create an invalid item, to show off error checking in the
-//create callback.
-console.log("About to try creating an invalid item - an error about " +
-         "item 999 should show up");
-chrome.contextMenus.create({"title": "Oops", "parentId":999}, function() {
-if (chrome.extension.lastError) {
- console.log("Got expected error: " + chrome.extension.lastError.message);
-}
-});*/
-
 

@@ -4,19 +4,18 @@ chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
 console.log("content in ascolto per messaggi...");
 			
 		if(request.greeting.msg == "alert_ok_serv"){
-			alert("Il servizio che stai visitando è registrato in CDV");
-			//Sezione per highlighting campi registrati
-			//style="border: 3px solid #209e91;"
-			//mi basta ottenere la lista dei campi e ciclare getelementbyid
-			//IDEA MIGLIORE: durante lo scorrimento degli elementi per evidenziarli, assegnare a questi una classe specifica.
-			//questa classe sarà usata come identificatore per getelementbyclass unico, definito qui dentro ma fuori tutti gli
-			//scope. Tutti i dati utili per la DIALOG_SELECTION devono essere mantenuti presso i nodi DOM, cosicchè al click
-			//la funzione sulla classe possa, tramite il this, accedervi -> completare la DIALOG -> visualizzarla come prima
-			focus_ann = ["AventeTitolo_Nome","AventeTitolo_CodiceFiscale"]; //qui dovranno trovarsi gli elementi passati da bg.js
+			alert("Plugin CDV attivo");
+			console.log("Il servizio che stai visitando è registrato in CDV");
+			
+			//Highlighting campi registrati: durante lo scorrimento degli elementi per evidenziarli, assegnare a questi una classe specifica.
+			//Questa classe sarà usata come identificatore per getElementByClass unico.
+			
+			//Gli elementi passati da bg.js
+			var focus_ann = request.greeting.iList; 
 			var el = null;
 			
 			for(i = 0; i < focus_ann.length; i++){
-				console.log("ciclo di for: "+i);
+
 				el = document.getElementById(focus_ann[i]);
 				el.style.border = "3px solid #209e91";
 				el.classList.add("focusable-annotation-group-cdv-plugin");
@@ -46,7 +45,8 @@ console.log("content in ascolto per messaggi...");
 
 		}
 		else if(request.greeting == "alert_fail_serv"){
-			alert("Il servizio che stai visitando NON è registrato in CDV");
+			//alert("Il servizio che stai visitando NON è registrato in CDV");
+			console.log("Il servizio che stai visitando NON è registrato in CDV");
 		}
 		else if (request.greeting == "dispatch_page"){
 				
@@ -66,10 +66,10 @@ console.log("mex inviato");
 		else if(request.greeting == "element_without_id"){
 			alert("Attenzione, l'elemento selezionato non possiede l'attributo id. Impossibile procedere con le operazioni su questo elemento.");
 		}
-	    else{
+		/*else{
 	    	var dataPkg = request.greeting;
 	    	
-/*	    	var win = window.open("", "Title", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=450,height=350,top="+(200)+",left="+(400));
+	    	var win = window.open("", "Title", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=450,height=350,top="+(200)+",left="+(400));
 		    win.document.head.innerHTML = "<head><meta charset=\"UTF-8\"><title>Selected Field</title>"
 		    	+" <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css\"/>"
 		    	+" <link data-require=\"select2@*\" data-semver=\"3.5.1\" rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2.css\"/> "
@@ -105,8 +105,8 @@ console.log(dataPkg.concepts);
 		    var script3 = document.createElement('script');
 		    script3.src = 'http://localhost:8080/account-manager/script.js';
 		    script3.async = false;
-		    win.document.body.appendChild(script3);*/
-	    }
+		    win.document.body.appendChild(script3);
+	    }*/
 });
 
 
