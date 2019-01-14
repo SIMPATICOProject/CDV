@@ -7,8 +7,8 @@ console.log("content in ascolto per messaggi...");
 			alert("Plugin CDV attivo");
 			console.log("Il servizio che stai visitando è registrato in CDV");
 			
-			//Highlighting campi registrati: durante lo scorrimento degli elementi per evidenziarli, assegnare a questi una classe specifica.
-			//Questa classe sarà usata come identificatore per getElementByClass unico.
+			//Highlighting campi registrati: durante lo scorrimento degli elementi per evidenziarli assegno a questi una classe specifica.
+			//Questa classe è usata come identificatore per getElementByClass unico.
 			
 			//Gli elementi passati da bg.js
 			var focus_ann = request.greeting.iList; 
