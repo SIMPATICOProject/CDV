@@ -118,6 +118,14 @@ function dialog_selection(dataPkg){
 	 * ]
 	 * */
 	
+/*	//chiudo eventuale DIALOG già aperta
+	var od = sessionStorage.getItem("openedDIALOG");
+	if(od){
+		console.log("OD: ");
+		console.log(od);
+		od.close();
+	}*/
+	
 	var win = window.open("", "Title", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=450,height=350,top="+(200)+",left="+(400));
     win.document.head.innerHTML = "<head><meta charset=\"UTF-8\"><title>Selected Field</title>"
     	+" <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css\"/>"
@@ -127,7 +135,7 @@ function dialog_selection(dataPkg){
     
     
     win.document.body.innerHTML = "<script>var window.localJSON = "+sessionStorage.setItem("localSelJSON", JSON.stringify(dataPkg.jsonActiveService))+";</script><div class=\"container-fluid\"> <h1>Annotation</h1> <form> <div class=\"form-group\"> <label for=\"inputProperty\">Property</label>"
-    	+"<input type=\"input\" class=\"form-control\" id=\"inputProperty\"placeholder=\"Enter field id\" value=\""+dataPkg.property+"\">"
+    	+"<input type=\"input\" class=\"form-control\" id=\"inputProperty\"placeholder=\"Enter field id\" value=\""+dataPkg.property+"\" disabled>"
     	+"</div><div class=\"form-group\"> <label for=\"inputConcept\">Concept</label> <input type=\"hidden\" class=\"form-control\" id=\"inputConcept\" placeholder=\"Select concept\">"
     	+"</div><div class=\"form-group\"> <label for=\"inputConcept\">Name</label> <input type=\"input\" class=\"form-control\" id=\"inputName\" placeholder=\"Name\"> </div>"
     	+"</form><button id=\"save-sel-bt\" class=\"btn btn-primary\">Save</button></div>"+
@@ -155,6 +163,9 @@ console.log("Concepts:");
     script3.src = 'http://localhost:8080/account-manager/script.js';
     script3.async = false;
     win.document.body.appendChild(script3);
+    
+/*    //salvo la finestra in sessione
+    sessionStorage.setItem("openedDIALOG", win);*/
 }
 
 

@@ -138,9 +138,13 @@ console.log(result.jsonActiveService.publicServiceIsDescribedAt[0].dataMapping[i
 console.log(i);
 		
 		var conceptAnn = result.jsonActiveService.publicServiceIsDescribedAt[0].dataMapping[i].conceptId;
+		var propertyAnn = result.jsonActiveService.publicServiceIsDescribedAt[0].dataMapping[i].property;
 		var nameAnn = result.jsonActiveService.publicServiceIsDescribedAt[0].dataMapping[i].name;
 		var serviceId = $("#service-id").val();
 	    
+		//chiudo eventuale DIALOG già aperta
+		window.close();
+		
 	    var win = window.open("", "Title", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=450,height=350,top="+(200)+",left="+(400));
 	    
 	    win.document.head.innerHTML = "<head><title>Selected Field</title>"
@@ -148,7 +152,7 @@ console.log(i);
 	    	//+"<script>var localJSON = "+JSON.stringify(result.jsonActiveService)+";</script></head>";
 	    
 	    win.document.body.innerHTML = "<script>var window.localJSON = "+sessionStorage.setItem("localJSON", JSON.stringify(result.jsonActiveService))+";</script><div class=\"container-fluid\"> <h1>Annotation</h1> <form> <div class=\"form-group\"> <label for=\"inputProperty\">Property</label>"
-	    	+"<input type=\"input\" class=\"form-control\" id=\"inputProperty\"placeholder=\"Enter field id\" value=\""+conceptAnn+"\"> </div><div class=\"form-group\"><label for=\"inputConcept\">Concept</label>"
+	    	+"<input type=\"input\" class=\"form-control\" id=\"inputProperty\"placeholder=\"Enter field id\" value=\""+propertyAnn+"\" disabled> </div><div class=\"form-group\"><label for=\"inputConcept\">Concept</label>"
 	    	+"<input type=\"hidden\" class=\"form-control\" id=\"inputConcept\" placeholder=\"Select concept\"> </div><div class=\"form-group\"> <label for=\"inputConcept\">Name</label>"
 	    	+"<input type=\"input\" class=\"form-control\" id=\"inputName\" placeholder=\"Name\" value=\""+nameAnn+"\"></div></form><button id=\"save-bt\" class=\"btn btn-primary\">Save</button></div>"+
 	    	"<div id=\"hidNumCon\" hidden>"+i+"</div><div id=\"hidNumServ\" hidden>"+serviceId+"</div>"
