@@ -170,82 +170,94 @@ console.log(servcontent);
 					
 					//Servizio non registrato
 					if(jobj.publicServiceID == null){
-
-console.log("il servizio visitato non è registrato");
-
-						msg = "alert_fail_serv";
 						
-/*						if(selectionON > -1){	
-						console.log("rimozione menu contestuale perchè pagina non-servizio");
-							//Disabilito selezione note
-							chrome.contextMenus.remove("contMenu");
-							selectionON = -1;
-						}*/
-						
-						/*Sending to CONTENT-SCRIPT call to DIALOG*/
-						chrome.tabs.query({active: true, currentWindow: true,  highlighted: true}, function(tabs) {
-							  chrome.tabs.sendMessage(tabId, {greeting: msg}, function(response) {
-							  });
-						});
-						if(chrome.runtime.lastError){
-							console.log("error runtime")
-							console.log(chrome.runtime.lastError);
-						}
-						
-		            	//Anzichè metter su un processo ad hoc per i servizi non registrati sarebbe meglio realizzare le 
-		            	//operazioni iniziali necessarie per poi far convergere il flusso di operazioni REGISTRAZIONE nel
-		            	//flusso di operazioni già istanziato per MODIFICA. In questo senso basterebbe, una volta atterrati, 
-		            	//chiedere all'utente se vuole registrare il portale visitato come servizio, registrarlo e rinfrescare
-		            	//la pagina. Al refresh il plugin riconoscerà il servizio come registrato e si procederà normalmente
-		            	//sul flusso MODIFICA.
-						
-						//var res = confirm("Il servizio che stai visitando NON è registrato in CDV. Vuoi registrarlo adesso?");
-						
-						//if(res){
+						chrome.storage.local.get(['pluginSwitch'], function(result) {
 							
-							//preparo in sessione la struttura json servizio generico
-							$.getJSON("../json/service-entry.json", function(data) {
-				            	console.log("DEFAULT JSON SERVICE: ");
-				            	console.log(data);
-				            	console.log(JSON.stringify(data));
-				            	
-				            	//inserisco serviceuri
-				            	var effJson = data.properties;
-				            	effJson.serviceUri = pos;
-				            	effJson.publicServiceID  = "000";
-				            	effJson.publicServiceName = "New_Service";
-				            	
-				            	console.log("EFFJSON: ");
-				            	console.log(effJson);
-				            	console.log(JSON.stringify(effJson));
-				            	
-				            	//registro il servizio presso CDV
-				    			//POST - create_apipath
-				    			var url_ = "http://"+app_parameters.host_param+":"+app_parameters.port_param+"/"+app_parameters.create_apipath;
-				    			$.ajax({
-				    				url: url_,
-				    				method: 'POST',
-				    				contentType: "application/json",
-				    				data: effJson,
-				    			}).done(function(data) {
-				    				console.log("Nuovo servizio registrato correttamente");
-				    			
-				    			}).fail(function() {
-				    			  alert( "Errors occurred in service registration. Please be careful and try again..." );
-				    			})
-				            	
-				            	
-	/*							chrome.storage.local.set({"defJsonService": JSON.stringify(effJson)}, function() {
-									console.log("default json service stored");
-									console.log(effJson);
-								});*/
+							console.log("dentro nuovo storage REGISTRAZIONE");
+							
+							if(result.pluginSwitch){
+
+								console.log("il servizio visitato non è registrato");
+		
+								msg = "alert_fail_serv";
 								
-								})
-							
-					/*	}
-						else{
-							//servizio non registrato che non deve essere registrato
-						}*/
+		/*						if(selectionON > -1){	
+								console.log("rimozione menu contestuale perchè pagina non-servizio");
+									//Disabilito selezione note
+									chrome.contextMenus.remove("contMenu");
+									selectionON = -1;
+								}*/
+								
+								/*Sending to CONTENT-SCRIPT call to DIALOG*/
+								chrome.tabs.query({active: true, currentWindow: true,  highlighted: true}, function(tabs) {
+									  chrome.tabs.sendMessage(tabId, {greeting: msg}, function(response) {
+									  });
+								});
+								if(chrome.runtime.lastError){
+									console.log("error runtime")
+									console.log(chrome.runtime.lastError);
+								}
+								
+				            	//Anzichè metter su un processo ad hoc per i servizi non registrati sarebbe meglio realizzare le 
+				            	//operazioni iniziali necessarie per poi far convergere il flusso di operazioni REGISTRAZIONE nel
+				            	//flusso di operazioni già istanziato per MODIFICA. In questo senso basterebbe, una volta atterrati, 
+				            	//chiedere all'utente se vuole registrare il portale visitato come servizio, registrarlo e rinfrescare
+				            	//la pagina. Al refresh il plugin riconoscerà il servizio come registrato e si procederà normalmente
+				            	//sul flusso MODIFICA.
+								
+/*								chrome.extension.onConnect.addListener(function(port) {
+								    console.log("Connected .....");
+								    port.postMessage("reg_hint_on");
+								    port.onMessage.addListener(function(msg) {
+								        console.log("message recieved " + msg);
+								        port.postMessage("Hi Popup.js");
+								    });
+								});*/
+									
+									//preparo in sessione la struttura json servizio generico
+									$.getJSON("../json/service-entry2.json", function(data) {
+						            	console.log("DEFAULT JSON SERVICE: ");
+						            	console.log(data);
+						            	console.log(JSON.stringify(data));
+						            	
+						            	//inserisco serviceuri
+						            	var effJson = data;//.properties;
+						            	effJson.serviceUri = pos;
+						            	effJson.publicServiceID  = "000";
+						            	effJson.publicServiceName = "New_Service";
+						            	
+						            	console.log("EFFJSON: ");
+						            	console.log(effJson);
+						            	console.log(JSON.stringify(effJson));
+						            	
+/*						            	//registro il servizio presso CDV
+						    			//POST - create_apipath
+						    			var url_ = "http://"+app_parameters.host_param+":"+app_parameters.port_param+"/"+app_parameters.create_apipath;
+						    			$.ajax({
+						    				url: url_,
+						    				method: 'POST',
+						    				contentType: "application/json",
+						    				data: JSON.stringify(effJson),
+						    			}).done(function(data) {
+						    				console.log("Nuovo servizio registrato correttamente");
+						    			
+						    			}).fail(function() {
+						    			  alert( "Errors occurred in service registration. Please be careful and try again..." );
+						    			})*/
+						            	
+						            	var aj = JSON.stringify(effJson);
+						            	console.log("prima: ");
+						            	console.log(aj);
+										chrome.storage.local.set({"defJsonService": aj}, function() {
+											console.log("default json service stored");
+											console.log(effJson);
+											console.log(aj);
+										});
+										
+										})
+										
+							}//if pluginswitch
+						});//storage pluginswitch
 							
 					}
 					

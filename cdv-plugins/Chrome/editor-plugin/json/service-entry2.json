@@ -1,0 +1,40 @@
+{
+  "publicServiceID": "",
+  "publicServiceName": "",
+  "serviceUri": "",
+  "serviceDescriptionVersion": "",
+  "publicServiceKeyword": "",
+  "publicServiceStatus": "",
+  "serviceProviderId": "",
+  "organizationId": "",
+  "serviceType": "",
+  "technicalDescriptionId": "",
+  "spatial": "",
+  "lifeEvent": "",
+  "businessEvent": "",
+  "publicServiceSector": [],
+  "publicServiceTypeProp": [],
+  "publicServiceLanguage": [],
+  "humanReadableDescription": [
+    {
+      "locale": "",
+      "description": ""
+    }
+  ],
+  "publicServiceIsDescribedAt": [
+    {
+      "publicServiceDatasetID": "",
+      "serviceDataDescriptionUri": "",
+      "taxonomy": "",
+      "title": "",
+      "issued": 0,
+      "modified": 0,
+      "purpose": [
+      ],
+      "serviceDataType": "",
+      "dataStructureSpecification": [],
+      "dataMapping": [
+      ]
+    }
+  ]
+}

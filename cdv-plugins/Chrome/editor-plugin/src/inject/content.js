@@ -4,7 +4,7 @@ chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
 console.log("content in ascolto per messaggi...");
 			
 		if(request.greeting.msg == "alert_ok_serv"){
-			alert("Plugin CDV attivo");
+			alert("Il servizio che stai visitando è registrato in CDV");
 			console.log("Il servizio che stai visitando è registrato in CDV");
 			
 			//Highlighting campi registrati: durante lo scorrimento degli elementi per evidenziarli assegno a questi una classe specifica.
@@ -47,7 +47,7 @@ console.log("content in ascolto per messaggi...");
 		else if(request.greeting == "alert_fail_serv"){
 			
 			console.log("Il servizio che stai visitando NON è registrato in CDV");
-			alert("Il servizio che stai visitando NON è registrato in CDV");
+			//alert("Il servizio che stai visitando NON è registrato in CDV");
 			
 /*            $.ajax({
                 url: "../json/service-entry.json",
