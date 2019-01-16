@@ -41,6 +41,15 @@
         "js": [
             "src/inject/content.js"
         ]
+      },
+            {
+        "matches": [
+            "*://*/*"
+        ],
+        "run_at": "document_start",
+        "js": [
+            "src/bg/jquery.js"
+        ]
       }
     ]
 }

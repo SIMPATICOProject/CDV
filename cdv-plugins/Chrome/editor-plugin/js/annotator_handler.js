@@ -143,7 +143,7 @@ console.log(i);
 		var serviceId = $("#service-id").val();
 	    
 		//chiudo eventuale DIALOG già aperta
-		window.close();
+		//
 		
 	    var win = window.open("", "Title", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=450,height=350,top="+(200)+",left="+(400));
 	    

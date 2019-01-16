@@ -5,7 +5,8 @@ var app_parameters={
 		port_param: '8082',
 		getServByUrl_apipath: 'service-manager/api/v1/services/searchByUrl?url=',
 		getPDataCategoryTree_apipath: 'service-manager/api/v1/pdatafields/category/tree',
-		findById_apipath: 'service-manager/api/v1/services/'
+		findById_apipath: 'service-manager/api/v1/services/',
+		create_apipath: 'service-manager/api/v1/services/'
 };
 //var selectionON = -1; //quando 0 permette di selezionare annotazioni nella pagina
 var listenerON = false;
@@ -180,6 +181,72 @@ console.log("il servizio visitato non è registrato");
 							chrome.contextMenus.remove("contMenu");
 							selectionON = -1;
 						}*/
+						
+						/*Sending to CONTENT-SCRIPT call to DIALOG*/
+						chrome.tabs.query({active: true, currentWindow: true,  highlighted: true}, function(tabs) {
+							  chrome.tabs.sendMessage(tabId, {greeting: msg}, function(response) {
+							  });
+						});
+						if(chrome.runtime.lastError){
+							console.log("error runtime")
+							console.log(chrome.runtime.lastError);
+						}
+						
+		            	//Anzichè metter su un processo ad hoc per i servizi non registrati sarebbe meglio realizzare le 
+		            	//operazioni iniziali necessarie per poi far convergere il flusso di operazioni REGISTRAZIONE nel
+		            	//flusso di operazioni già istanziato per MODIFICA. In questo senso basterebbe, una volta atterrati, 
+		            	//chiedere all'utente se vuole registrare il portale visitato come servizio, registrarlo e rinfrescare
+		            	//la pagina. Al refresh il plugin riconoscerà il servizio come registrato e si procederà normalmente
+		            	//sul flusso MODIFICA.
+						
+						//var res = confirm("Il servizio che stai visitando NON è registrato in CDV. Vuoi registrarlo adesso?");
+						
+						//if(res){
+							
+							//preparo in sessione la struttura json servizio generico
+							$.getJSON("../json/service-entry.json", function(data) {
+				            	console.log("DEFAULT JSON SERVICE: ");
+				            	console.log(data);
+				            	console.log(JSON.stringify(data));
+				            	
+				            	//inserisco serviceuri
+				            	var effJson = data.properties;
+				            	effJson.serviceUri = pos;
+				            	effJson.publicServiceID  = "000";
+				            	effJson.publicServiceName = "New_Service";
+				            	
+				            	console.log("EFFJSON: ");
+				            	console.log(effJson);
+				            	console.log(JSON.stringify(effJson));
+				            	
+				            	//registro il servizio presso CDV
+				    			//POST - create_apipath
+				    			var url_ = "http://"+app_parameters.host_param+":"+app_parameters.port_param+"/"+app_parameters.create_apipath;
+				    			$.ajax({
+				    				url: url_,
+				    				method: 'POST',
+				    				contentType: "application/json",
+				    				data: effJson,
+				    			}).done(function(data) {
+				    				console.log("Nuovo servizio registrato correttamente");
+				    			
+				    			}).fail(function() {
+				    			  alert( "Errors occurred in service registration. Please be careful and try again..." );
+				    			})
+				            	
+				            	
+	/*							chrome.storage.local.set({"defJsonService": JSON.stringify(effJson)}, function() {
+									console.log("default json service stored");
+									console.log(effJson);
+								});*/
+								
+								})
+							
+					/*	}
+						else{
+							//servizio non registrato che non deve essere registrato
+						}*/
+							
 					}
 					
 					//Servizio registrato //100119 - insieme al msg bisogna passare la lista FOCUSABLE_ANN
