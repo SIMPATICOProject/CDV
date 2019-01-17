@@ -150,219 +150,219 @@ console.log("E PUR SI MOVE");
 		        var activeTabId = activeTab.id;
 		        pos = activeTab.url;
 			    
-/*CHECK IF SERVICE IS REGISTERED*/
-				var url_ = "http://"+app_parameters.host_param+":"+app_parameters.port_param+"/"+app_parameters.getServByUrl_apipath+pos;
-				console.log("url request: ");
-				console.log(url_);
-				$.ajax({
-				    url: url_
-				}).then(function(data) {
-					var servcontent = JSON.stringify(data);
-					
-console.log("risposta servizio ricerca per url:");
-console.log(servcontent);	//too verbose
-					
-					var jobj = JSON.parse(servcontent);
-console.log("test_2");
-console.log(servcontent);
-					
-					var msg = "";
-					
-					//Servizio non registrato
-					if(jobj.publicServiceID == null){
+		        if(pos!=undefined){
+		        	
+		        	console.log("pagina non appartenente al plugin");
+	/*CHECK IF SERVICE IS REGISTERED*/
+					var url_ = "http://"+app_parameters.host_param+":"+app_parameters.port_param+"/"+app_parameters.getServByUrl_apipath+pos;
+					console.log("url request: ");
+					console.log(url_);
+					$.ajax({
+					    url: url_
+					}).then(function(data) {
+						var servcontent = JSON.stringify(data);
 						
-						chrome.storage.local.get(['pluginSwitch'], function(result) {
-							
-							console.log("dentro nuovo storage REGISTRAZIONE");
-							
-							if(result.pluginSwitch){
-
-								console.log("il servizio visitato non è registrato");
-		
-								msg = "alert_fail_serv";
-								
-		/*						if(selectionON > -1){	
-								console.log("rimozione menu contestuale perchè pagina non-servizio");
-									//Disabilito selezione note
-									chrome.contextMenus.remove("contMenu");
-									selectionON = -1;
-								}*/
-								
-								/*Sending to CONTENT-SCRIPT call to DIALOG*/
-								chrome.tabs.query({active: true, currentWindow: true,  highlighted: true}, function(tabs) {
-									  chrome.tabs.sendMessage(tabId, {greeting: msg}, function(response) {
-									  });
-								});
-								if(chrome.runtime.lastError){
-									console.log("error runtime")
-									console.log(chrome.runtime.lastError);
-								}
-								
-				            	//Anzichè metter su un processo ad hoc per i servizi non registrati sarebbe meglio realizzare le 
-				            	//operazioni iniziali necessarie per poi far convergere il flusso di operazioni REGISTRAZIONE nel
-				            	//flusso di operazioni già istanziato per MODIFICA. In questo senso basterebbe, una volta atterrati, 
-				            	//chiedere all'utente se vuole registrare il portale visitato come servizio, registrarlo e rinfrescare
-				            	//la pagina. Al refresh il plugin riconoscerà il servizio come registrato e si procederà normalmente
-				            	//sul flusso MODIFICA.
-								
-/*								chrome.extension.onConnect.addListener(function(port) {
-								    console.log("Connected .....");
-								    port.postMessage("reg_hint_on");
-								    port.onMessage.addListener(function(msg) {
-								        console.log("message recieved " + msg);
-								        port.postMessage("Hi Popup.js");
-								    });
-								});*/
-									
-									//preparo in sessione la struttura json servizio generico
-									$.getJSON("../json/service-entry2.json", function(data) {
-						            	console.log("DEFAULT JSON SERVICE: ");
-						            	console.log(data);
-						            	console.log(JSON.stringify(data));
-						            	
-						            	//inserisco serviceuri
-						            	var effJson = data;//.properties;
-						            	effJson.serviceUri = pos;
-						            	effJson.publicServiceID  = "000";
-						            	effJson.publicServiceName = "New_Service";
-						            	
-						            	console.log("EFFJSON: ");
-						            	console.log(effJson);
-						            	console.log(JSON.stringify(effJson));
-						            	
-/*						            	//registro il servizio presso CDV
-						    			//POST - create_apipath
-						    			var url_ = "http://"+app_parameters.host_param+":"+app_parameters.port_param+"/"+app_parameters.create_apipath;
-						    			$.ajax({
-						    				url: url_,
-						    				method: 'POST',
-						    				contentType: "application/json",
-						    				data: JSON.stringify(effJson),
-						    			}).done(function(data) {
-						    				console.log("Nuovo servizio registrato correttamente");
-						    			
-						    			}).fail(function() {
-						    			  alert( "Errors occurred in service registration. Please be careful and try again..." );
-						    			})*/
-						            	
-						            	var aj = JSON.stringify(effJson);
-						            	console.log("prima: ");
-						            	console.log(aj);
-										chrome.storage.local.set({"defJsonService": aj}, function() {
-											console.log("default json service stored");
-											console.log(effJson);
-											console.log(aj);
-										});
-										
-										})
-										
-							}//if pluginswitch
-						});//storage pluginswitch
-							
-					}
-					
-					//Servizio registrato //100119 - insieme al msg bisogna passare la lista FOCUSABLE_ANN
-					else{
+	console.log("risposta servizio ricerca per url:");
+	console.log(servcontent);	//too verbose
 						
-console.log("il servizio è registrato");
-
-
-						// ON/OFF EXTENSION SWITCH FEATURE: se l'estensione è spenta non permette di elaborare i termini selezionati
-						chrome.storage.local.get(['pluginSwitch'], function(result) {
-							console.log("dentro nuovo storage");
-							if(result.pluginSwitch){
-console.log("dentro if pluginswitch");
-
+						var jobj = JSON.parse(servcontent);
+	console.log("test_2");
+	console.log(servcontent);
 						
-								
-								msg = "alert_ok_serv";
-								//Salvo id in sessione
-								var idS = jobj.publicServiceID;
-								chrome.storage.local.set({"idActiveService": idS}, function() {
-									
-		console.log("idservice: " + idS);
-							          
-							        });
-								
-								//Salvo intero servizio in sessione
-								chrome.storage.local.set({"activeService": servcontent}, function(){});
-								
-		/*						//Abilito il menu contestuale
-								selectionON = selectionON+1;
-								
-		console.log("selectionON1 true");
-		console.log(selectionON);
-								
-								if(selectionON == 0){
-									var contexts = ["selection"];
-									for (var i = 0; i < contexts.length; i++) {
-										var context = contexts[i];
-										var title = "Save the '" + context + "' like a CDV concept";
-										var id = chrome.contextMenus.create({"title": title, "id": "contMenu", "contexts":[context],"onclick": selectionOnClick});
-										
-		console.log("'" + context + "' item:" + id);
-		
-									}
-								}*/
+						var msg = "";
+						
+						//Servizio non registrato
+						if(jobj.publicServiceID == null){
 							
-		/*					
-		console.log("selectionON2 true");
-		console.log(selectionON);*/
-							
-							//calcolo lista dei nodi input del servizio corrente aventi riscontro in pdatafields su server
-							chrome.tabs.executeScript( {
-							    code: "window.document.body.parentElement.innerHTML"
-							}, function(domContent) {
+							chrome.storage.local.get(['pluginSwitch'], function(result) {
 								
-								var inputsList = [];
+								console.log("dentro nuovo storage REGISTRAZIONE");
 								
-								console.log("CONTENUTO PAGINA CORRENTE: ");
-								console.log(domContent);
-								
-								var html = "<html>"+domContent.toString()+"</html>";
-								var domEl = $(html).find("input,select");
-								
-								console.log("domel: ");
-								console.log(domEl);
-								console.log("array version");
-								console.log(inputsList);
-								
-								for(i = 0; i < domEl.length; i++){
-									ap = domEl[i];
-									a = $(ap).attr("id");
-									inputsList.push(a);
-								}
-								console.log("lista di input nodes: ");
-								console.log(inputsList);
+//								if(result.pluginSwitch){
+	
+	console.log("il servizio visitato non è registrato");
 			
-								dpkg = {
-									jas: servcontent,
-									msg: msg,
-									iList: inputsList
-								};
-								/*Sending to CONTENT-SCRIPT call to DIALOG*/
-								chrome.tabs.query({active: true, currentWindow: true,  highlighted: true}, function(tabs) {
-									  chrome.tabs.sendMessage(tabId, {greeting: dpkg}, function(response) {
-									  });
-								});
-								if(chrome.runtime.lastError){
-									console.log("error runtime")
-									console.log(chrome.runtime.lastError);
-								}
-							});//executeSript:domcontent
+									msg = "alert_fail_serv";
+									
+	/*								chrome.extension.onConnect.addListener(function(port) {
+									    console.log("Connected .....");
+									    port.postMessage("reg_hint_on");
+									    port.onMessage.addListener(function(msg) {
+									        console.log("message recieved " + msg);
+									        port.postMessage("Hi Popup.js");
+									    });
+									});*/
+										
+										//preparo in sessione la struttura json servizio generico
+										$.getJSON("../json/service-entry2.json", function(data) {
+							            	console.log("DEFAULT JSON SERVICE: ");
+							            	console.log(data);
+							            	console.log(JSON.stringify(data));
+							            	
+							            	//inserisco serviceuri
+							            	var effJson = data;//.properties;
+							            	effJson.serviceUri = pos;
+							            	effJson.publicServiceID  = "000";
+							            	effJson.publicServiceName = "New_Service";
+							            	
+							            	console.log("EFFJSON: ");
+							            	console.log(effJson);
+							            	console.log(JSON.stringify(effJson));
+							            	
+	/*						            	//registro il servizio presso CDV
+							    			//POST - create_apipath
+							    			var url_ = "http://"+app_parameters.host_param+":"+app_parameters.port_param+"/"+app_parameters.create_apipath;
+							    			$.ajax({
+							    				url: url_,
+							    				method: 'POST',
+							    				contentType: "application/json",
+							    				data: JSON.stringify(effJson),
+							    			}).done(function(data) {
+							    				console.log("Nuovo servizio registrato correttamente");
+							    			
+							    			}).fail(function() {
+							    			  alert( "Errors occurred in service registration. Please be careful and try again..." );
+							    			})*/
+							            	
+							            	var aj = JSON.stringify(effJson);
+							            	console.log("prima: ");
+							            	console.log(aj);
+											chrome.storage.local.set({"defJsonService": aj}, function() {
+												console.log("default json service stored");
+												console.log(effJson);
+												console.log(aj);
+											});
+										})//getjson
+										if(result.pluginSwitch){
+											
+											/*Sending to CONTENT-SCRIPT call to DIALOG*/
+											chrome.tabs.query({active: true, currentWindow: true,  highlighted: true}, function(tabs) {
+												  chrome.tabs.sendMessage(tabId, {greeting: msg}, function(response) {
+												  });
+											});
+											if(chrome.runtime.lastError){
+												console.log("error runtime")
+												console.log(chrome.runtime.lastError);
+											}
+											
+											
+											chrome.storage.local.set({"jsonActiveService": aj}, function(){
+												console.log("default json service stored in jsonActiveService");
+											});
+											
+											chrome.storage.local.set({"idActiveService": effJson.publicServiceID}, function(){
+												console.log("default json service idActiveService update");
+											});
+											
+								}//if pluginswitch
+							});//storage pluginswitch
+								
+						}
+						
+						//Servizio registrato 
+						else{
 							
-					
-							}//if pluginswitch
-						});//storage pluginswitch
-					
-					}//else
-				});//AJAX
-		    });
+	console.log("il servizio è registrato");
+	
+							//Elimino eventuale servizio non registrato presente in sessione (è permesso un solo 
+							//servizio per volta in sessione, seppure risiedano in variabili differenti)
+							chrome.storage.local.set({"defJsonService": false}, function() {});
+	
+	
+							// ON/OFF EXTENSION SWITCH FEATURE: se l'estensione è spenta non permette di elaborare i termini selezionati
+							chrome.storage.local.get(['pluginSwitch'], function(result) {
+								console.log("dentro nuovo storage");
+								if(result.pluginSwitch){
+	console.log("dentro if pluginswitch");
+	
+									msg = "alert_ok_serv";
+									
+									//Salvo id in sessione
+									var idS = jobj.publicServiceID;
+									chrome.storage.local.set({"idActiveService": idS}, function() {
+										console.log("idservice: " + idS);
+								    });
+								
+									
+									//Salvo intero servizio in sessione
+									chrome.storage.local.set({"jsonActiveService": servcontent}, function(){});  //da activeServbice a jsonActiveService in 170119
+									
+			/*						//Abilito il menu contestuale
+									selectionON = selectionON+1;
+									
+			console.log("selectionON1 true");
+			console.log(selectionON);
+									
+									if(selectionON == 0){
+										var contexts = ["selection"];
+										for (var i = 0; i < contexts.length; i++) {
+											var context = contexts[i];
+											var title = "Save the '" + context + "' like a CDV concept";
+											var id = chrome.contextMenus.create({"title": title, "id": "contMenu", "contexts":[context],"onclick": selectionOnClick});
+											
+			console.log("'" + context + "' item:" + id);
+			
+										}
+									}*/
+								
+			/*					
+			console.log("selectionON2 true");
+			console.log(selectionON);*/
+								
+								//calcolo lista dei nodi input del servizio corrente aventi riscontro in pdatafields su server
+								chrome.tabs.executeScript( {
+								    code: "window.document.body.parentElement.innerHTML"
+								}, function(domContent) {
+									
+									var inputsList = [];
+									
+									console.log("CONTENUTO PAGINA CORRENTE: ");
+									console.log(domContent);
+									
+									var html = "<html>"+domContent.toString()+"</html>";
+									var domEl = $(html).find("input,select");
+									
+									console.log("domel: ");
+									console.log(domEl);
+									console.log("array version");
+									console.log(inputsList);
+									
+									for(i = 0; i < domEl.length; i++){
+										ap = domEl[i];
+										a = $(ap).attr("id");
+										inputsList.push(a);
+									}
+									console.log("lista di input nodes: ");
+									console.log(inputsList);
+				
+									dpkg = {
+										jas: servcontent,
+										msg: msg,
+										iList: inputsList
+									};
+									/*Sending to CONTENT-SCRIPT call to DIALOG*/
+									chrome.tabs.query({active: true, currentWindow: true,  highlighted: true}, function(tabs) {
+										  chrome.tabs.sendMessage(tabId, {greeting: dpkg}, function(response) {
+										  });
+									});
+									if(chrome.runtime.lastError){
+										console.log("error runtime")
+										console.log(chrome.runtime.lastError);
+									}
+									});//executeSript:domcontent
+								}//if pluginswitch
+							});//storage pluginswitch
+						}//else:servizio registrato
+					});//AJAX
+		        }//if:pos!=undefined
+		        else{
+		        	//dentro pagine del plugin, nessuna operazione da eseguire
+		        	console.log("dentro pagine del plugin, nessuna operazione da eseguire");
+		        }
+		    });//tabs.query.currentwindow
   }
   else{
-	  
-console.log("void cycle because of tab's loading incomplete");
-
+	  console.log("void cycle because of tab's loading incomplete");
   }
 })
 

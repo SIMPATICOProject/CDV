@@ -45,25 +45,7 @@ console.log("content in ascolto per messaggi...");
 
 		}
 		else if(request.greeting == "alert_fail_serv"){
-			
-			console.log("Il servizio che stai visitando NON è registrato in CDV");
-			//alert("Il servizio che stai visitando NON è registrato in CDV");
-			
-/*            $.ajax({
-                url: "../json/service-entry.json",
-                //method: 'PUT',
-                async: false,
-                global: false,
-                contentType: "application/json",
-                //data: JSON.stringify(ljo),
-            }).done(function(data) {
-            	console.log("DEFAULT JSON SERVICE: ");
-            	console.log(data);
-            	console.log(JSON.stringify(data));
-            }).fail(function() {
-              alert( "Errors occurred in default json retrieving. Please try again..." );
-            })*/
-			
+			console.log("Il servizio che stai visitando NON è registrato in CDV");	
 		}
 		else if (request.greeting == "dispatch_page"){
 				

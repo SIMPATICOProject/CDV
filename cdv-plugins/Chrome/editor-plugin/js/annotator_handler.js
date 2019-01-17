@@ -32,54 +32,138 @@ function submitInfo(){
 	var r = confirm("Sei sicuro di voler modificare il servizio?");
 	if(r == true){
 		
-		var actualID = $("#service-id").val();
-		
-		//UPDATING SERVICE_ID STORED IN SESSION (because of id)
-		chrome.storage.local.set({"idActiveService": actualID}, function() {});
-		
-		chrome.storage.local.get(['jsonActiveService'], function(result) {
-
-			if(result.jsonActiveService){
-				try{
-					result.jsonActiveService.publicServiceID = $("#service-id").val();
-					
-				}catch(err){
-					console.log("Service missing publicServiceID, Error: "+err.message);
-				}
-				try{
-					result.jsonActiveService.publicServiceName = $("#service-name").val();
-
-				}catch(err){
-					console.log("Service missing publicServiceName, Error: "+err.message);
-				}
-				try{
-					result.jsonActiveService.humanReadableDescription[0].description = $("#service-descr").val();
-					
-				}catch(err){
-					console.log("Service missing description, Error: "+err.message);
-				}
-				
-				//PUT - update_apipath
-				var url_ = "http://"+app_parameters.host_param+":"+app_parameters.port_param+"/"+app_parameters.update_apipath+serviceID;
-				$.ajax({
-					url: url_,
-					method: 'PUT',
-					contentType: "application/json",
-					data: JSON.stringify(result.jsonActiveService),
-				}).done(function(data) {
-
-				}).fail(function() {
-				  alert( "Errors occurred in service update. Please be careful and try again..." );
-				})
-				
-				//UPDATING SERVICE STORED IN SESSION
-				chrome.storage.local.set({"jsonActiveService": result.jsonActiveService}, function() {});
-				
+		chrome.storage.local.get(['idActiveService'], function(result) {
+			
+			var actualID = $("#service-id").val();
+			var servname = $("#service-name").val();
+			
+			console.log("NEW VALUES");
+			console.log(actualID);
+			console.log(servname);
+			
+			if(actualID == "000"){
+				alert("L'ID possiede ancora il valore di default, inserisci il suo valore effettivo per favore");
+				return false;
+			}else if(servname == "New_Service"){
+				alert("Il NAME possiede ancora il valore di default, inserisci il suo valore effettivo per favore"); 
+				return false;
 			}
+			else if(result.idActiveService == "000"){
+				
+				console.log("registration...");
+				
+				chrome.storage.local.set({"idActiveService": actualID}, function() {});
+				
+				chrome.storage.local.get(['jsonActiveService'], function(result) {
+
+					if(result.jsonActiveService){
+						
+						var appJS = JSON.parse(result.jsonActiveService);
+						try{
+							appJS.publicServiceID = actualID;
+							console.log("actualids: ");
+							console.log(actualID);
+							
+						}catch(err){
+							console.log("Service missing publicServiceID, Error: "+err.message);
+						}
+						try{
+							appJS.publicServiceName = servname;
+
+						}catch(err){
+							console.log("Service missing publicServiceName, Error: "+err.message);
+						}
+						try{
+							appJS.humanReadableDescription[0].description = $("#service-descr").val();
+
+						}catch(err){
+							console.log("Service missing description, Error: "+err.message);
+						}
+						
+						console.log("new service post updated: ");
+						console.log(appJS);
+						
+						//POST - create_apipath
+						var url_ = "http://"+app_parameters.host_param+":"+app_parameters.port_param+"/"+app_parameters.create_apipath;
+						$.ajax({
+							url: url_,
+							method: 'POST',
+							contentType: "application/json",
+							data: JSON.stringify(appJS)
+						}).then(function(data) {
+							console.log("Nuovo servizio registrato correttamente");
+							alert("Registrazione avvenuta con successo. Ritorna in questa pagina dopo che avrai annotato il servizio");
+							
+						}).fail(function() {
+						  alert( "Errors occurred in service registration. Try again later" );
+						})
+						
+						//UPDATING SERVICE STORED IN SESSION
+						chrome.storage.local.set({"jsonActiveService": appJS}, function() {});
+					}
+					else{
+						alert("Descrizione json del servizio non disponibile, impossibile salvare il servizio");
+					}
+				});
+			}
+			//UPDATING
 			else{
-				alert("Descrizione json del servizio non disponibile, impossibile eliminare il concetto");
-			}
-		});
+				console.log("updating...");
+				
+				//UPDATING SERVICE_ID STORED IN SESSION (because of id)
+				chrome.storage.local.set({"idActiveService": actualID}, function() {});
+				
+				chrome.storage.local.get(['jsonActiveService'], function(result) {
+		
+					if(result.jsonActiveService){
+						try{
+							result.jsonActiveService.publicServiceID = $("#service-id").val();
+							
+						}catch(err){
+							console.log("Service missing publicServiceID, Error: "+err.message);
+						}
+						try{
+							result.jsonActiveService.publicServiceName = $("#service-name").val();
+		
+						}catch(err){
+							console.log("Service missing publicServiceName, Error: "+err.message);
+						}
+						try{
+							result.jsonActiveService.humanReadableDescription[0].description = $("#service-descr").val();
+							
+						}catch(err){
+							console.log("Service missing description, Error: "+err.message);
+						}
+						
+						
+						//PUT - update_apipath
+						var url_ = "http://"+app_parameters.host_param+":"+app_parameters.port_param+"/"+app_parameters.update_apipath+serviceID;
+						$.ajax({
+							url: url_,
+							method: 'PUT',
+							contentType: "application/json",
+							data: JSON.stringify(result.jsonActiveService),
+						}).done(function(data) {
+							alert("Servizio modificato con successo");
+						}).fail(function() {
+						  alert( "Errors occurred in service update. Please be careful and try again..." );
+						})
+						
+						//UPDATING SERVICE STORED IN SESSION
+						chrome.storage.local.set({"jsonActiveService": result.jsonActiveService}, function() {}); //dovrebbe andare in done
+						
+					}
+					else{
+						alert("Descrizione json del servizio non disponibile, impossibile salvare il servizio");
+					}
+				});
+			}//UPDATING
+			console.log("TESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSTTTTTTTTTTTTTTTTTTTT");
+		});//storage.local.idactiveservice
+	}
+	else{
+		//sottomissione annullata
+		return false;
 	}
 }
 
@@ -199,77 +283,110 @@ $.ajax({
     url: url_
 }).then(function(data) {
 	
-	chrome.storage.local.set({"jsonActiveService": data}, function() {});
-
-	var name = "";
-	var id = "";
-	var descr = "";
-	var fieldAnn = "";		//publicServiceIsDescribedAt.dataMapping[i].property
-	var nameAnn = "";		//publicServiceIsDescribedAt.dataMapping[i].name
-	var conceptAnn = "";	//publicServiceIsDescribedAt.dataMapping[i].conceptId
-	var typeAnn = "";		//publicServiceIsDescribedAt.dataMapping[i].type
-
-	try{
-		id = data.publicServiceID;
-		$("#service-id").val(id);
-
-	}catch(err){
-		console.log("Service missing publicServiceID, Error: "+err.message);
-	}
-	try{
-		name = data.publicServiceName;
-		$("#service-name").val(name);
-
-	}catch(err){
-		console.log("Service missing publicServiceName, Error: "+err.message);
-	}
-	try{
-		descr = data.humanReadableDescription[0].description;
-		$("#service-descr").val(descr);
+	console.log("DATA:");
+	console.log(data.publicServiceID);
+	//UPDATING
+	if(data.publicServiceID){
+		console.log("UPDATING MODE");
+		chrome.storage.local.set({"jsonActiveService": data}, function() {});
+	
+		var name = "";
+		var id = "";
+		var descr = "";
+		var fieldAnn = "";		//publicServiceIsDescribedAt.dataMapping[i].property
+		var nameAnn = "";		//publicServiceIsDescribedAt.dataMapping[i].name
+		var conceptAnn = "";	//publicServiceIsDescribedAt.dataMapping[i].conceptId
+		var typeAnn = "";		//publicServiceIsDescribedAt.dataMapping[i].type
+	
+		try{
+			id = data.publicServiceID;
+			$("#service-id").val(id);
+	
+		}catch(err){
+			console.log("Service missing publicServiceID, Error: "+err.message);
+		}
+		try{
+			name = data.publicServiceName;
+			$("#service-name").val(name);
+	
+		}catch(err){
+			console.log("Service missing publicServiceName, Error: "+err.message);
+		}
+		try{
+			descr = data.humanReadableDescription[0].description;
+			$("#service-descr").val(descr);
+			
+		}catch(err){
+			console.log("Service missing description, Error: "+err.message);
+		}
+	console.log(url_);
+	console.log(data);
 		
-	}catch(err){
-		console.log("Service missing description, Error: "+err.message);
-	}
-console.log(url_);
-console.log(data);
-	
-	numConcept = data.publicServiceIsDescribedAt[0].dataMapping.length;
-	
-console.log("numero di concetti interno:");
-console.log(numConcept);
-	
-	//scorro i concetti
-	for(i = 0; i < numConcept; i++){
-
-		try{
-			fieldAnn = data.publicServiceIsDescribedAt[0].dataMapping[i].property;
-		}catch(err){
-			
-		}
-		try{
-			nameAnn = data.publicServiceIsDescribedAt[0].dataMapping[i].name;
-		}catch(err){
-			
-		}
-		try{
-			conceptAnn = data.publicServiceIsDescribedAt[0].dataMapping[i].conceptId;
-		}catch(err){
-			
-		}
-		try{
-			typeAnn = data.publicServiceIsDescribedAt[0].dataMapping[i].type;
-		}catch(err){
-			
-		}
-
-		$('#datatable-buttons').append("<tr id=\"info-row-"+i+"\"><td>"+i+"</td><td>"+fieldAnn+"</td><td>"
-			+nameAnn+"</td><td>"+conceptAnn+"</td>"+
-			"<td>"+typeAnn+"</td>"+"<td style=\"text-align: center\">"
-			+"<button style=\"margin-right: 2em;\" id=\"edit"+
-			i+"\" value=\""+nameAnn+"\" class=\"btn btn-primary edit-class\">EDIT</button>"
-			+"<button id=\"delete"+i+"\" value=\""+nameAnn+"\" class=\"btn btn-danger delete-class\">DELETE</button></td></tr>");
+		numConcept = data.publicServiceIsDescribedAt[0].dataMapping.length;
 		
-	}//for
+	console.log("numero di concetti interno:");
+	console.log(numConcept);
+		
+		//scorro i concetti
+		for(i = 0; i < numConcept; i++){
+	
+			try{
+				fieldAnn = data.publicServiceIsDescribedAt[0].dataMapping[i].property;
+			}catch(err){
+				
+			}
+			try{
+				nameAnn = data.publicServiceIsDescribedAt[0].dataMapping[i].name;
+			}catch(err){
+				
+			}
+			try{
+				conceptAnn = data.publicServiceIsDescribedAt[0].dataMapping[i].conceptId;
+			}catch(err){
+				
+			}
+			try{
+				typeAnn = data.publicServiceIsDescribedAt[0].dataMapping[i].type;
+			}catch(err){
+				
+			}
+	
+			$('#datatable-buttons').append("<tr id=\"info-row-"+i+"\"><td>"+i+"</td><td>"+fieldAnn+"</td><td>"
+				+nameAnn+"</td><td>"+conceptAnn+"</td>"+
+				"<td>"+typeAnn+"</td>"+"<td style=\"text-align: center\">"
+				+"<button style=\"margin-right: 2em;\" id=\"edit"+
+				i+"\" value=\""+nameAnn+"\" class=\"btn btn-primary edit-class\">EDIT</button>"
+				+"<button id=\"delete"+i+"\" value=\""+nameAnn+"\" class=\"btn btn-danger delete-class\">DELETE</button></td></tr>");
+			
+		}//for
+	}
+	//REGISTRATION
+	else{
+		console.log("REGISTRATION MODE");
+		chrome.storage.local.get(['jsonActiveService'], function(result) {
+			
+			console.log(result.jsonActiveService);
+			
+			var app = JSON.parse(result.jsonActiveService);
+			
+			try{
+				var id = app.publicServiceID;
+				$("#service-id").val(id);
+				console.log("service-id updating");
+				console.log(id);
+			}catch(err){
+				console.log("Service missing publicServiceID, Error: "+err.message);
+			}
+			try{
+				var name = app.publicServiceName;
+				$("#service-name").val(name);
+		
+			}catch(err){
+				console.log("Service missing publicServiceName, Error: "+err.message);
+			}
+		});
+	}
+	
    });
 });//getStorage
 
@@ -330,7 +447,7 @@ $(document).on('click', '#reset-bt', function() {
 });
 
 $(document).on('click', '#submit-bt', function() {
-	submitInfo();
+	return submitInfo();
 });
 
 
