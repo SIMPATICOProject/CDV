@@ -15,7 +15,8 @@
   		"*://*/*",
   		"activeTab",
   		"contextMenus",
-  		"storage"
+  		"storage",
+  		"file://*/*"
   	 ],
     "background": {
       "scripts": [
