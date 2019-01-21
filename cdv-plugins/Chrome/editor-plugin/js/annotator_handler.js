@@ -215,11 +215,11 @@ console.log("VALORE PARAMETRO: "+i);
 	
 	chrome.storage.local.get(['jsonActiveService'], function(result) {
 		
-console.log("Valore JSON chrome storage EDIT: ");
+/*console.log("Valore JSON chrome storage EDIT: ");
 console.log(result.jsonActiveService);
 console.log(result.jsonActiveService.publicServiceIsDescribedAt[0]);
 console.log(result.jsonActiveService.publicServiceIsDescribedAt[0].dataMapping[i]);
-console.log(i);
+console.log(i);*/
 		
 		var conceptAnn = result.jsonActiveService.publicServiceIsDescribedAt[0].dataMapping[i].conceptId;
 		var propertyAnn = result.jsonActiveService.publicServiceIsDescribedAt[0].dataMapping[i].property;
@@ -233,7 +233,6 @@ console.log(i);
 	    
 	    win.document.head.innerHTML = "<head><title>Selected Field</title>"
 	    	+" <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css\"/> <link data-require=\"select2@*\" data-semver=\"3.5.1\" rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2.css\"/> <link data-require=\"select2@*\" data-semver=\"3.5.1\" rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2-bootstrap.css\"/> <link rel=\"stylesheet\" href=\"http://localhost:8080/account-manager/style.css\"/>";
-	    	//+"<script>var localJSON = "+JSON.stringify(result.jsonActiveService)+";</script></head>";
 	    
 	    win.document.body.innerHTML = "<script>var window.localJSON = "+sessionStorage.setItem("localJSON", JSON.stringify(result.jsonActiveService))+";</script><div class=\"container-fluid\"> <h1>Annotation</h1> <form> <div class=\"form-group\"> <label for=\"inputProperty\">Property</label>"
 	    	+"<input type=\"input\" class=\"form-control\" id=\"inputProperty\"placeholder=\"Enter field id\" value=\""+propertyAnn+"\" disabled> </div><div class=\"form-group\"><label for=\"inputConcept\">Concept</label>"
@@ -262,6 +261,64 @@ console.log(i);
 	});
 }
 
+/*Single concept update (using DIALOG) - ANNOTATOR_DOWN*/
+function editConcept_1(result){
+	
+	var i = result.property;
+	
+console.log("VALORE PARAMETRO: "+i);
+	
+	//La DIALOG si apre con:
+	//PROPERTY - data.publicServiceIsDescribedAt[0].dataMapping[i].conceptId
+	//CONCEPT - già selezionato in menu a tendina
+	//NAME - già iscritto con valore selezionato in CONCEPT
+	var conceptAnn = null;
+	
+		
+console.log("Valore JSON chrome storage EDITCONCEPT_1 ");
+console.log(result.jsonActiveService);
+console.log(result.jsonActiveService.publicServiceIsDescribedAt[0]);
+console.log(result.jsonActiveService.publicServiceIsDescribedAt[0].dataMapping[i]);
+console.log(i);
+		
+		var conceptAnn = result.jsonActiveService.publicServiceIsDescribedAt[0].dataMapping[i].conceptId;
+		var propertyAnn = result.jsonActiveService.publicServiceIsDescribedAt[0].dataMapping[i].property;
+		var nameAnn = result.jsonActiveService.publicServiceIsDescribedAt[0].dataMapping[i].name;
+		var serviceId = $("#service-id").val();
+	    
+		//chiudo eventuale DIALOG già aperta
+		//
+		
+	    var win = window.open("", "Title", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=450,height=350,top="+(200)+",left="+(400));
+	    
+	    win.document.head.innerHTML = "<head><title>Selected Field</title>"
+	    	+" <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css\"/> <link data-require=\"select2@*\" data-semver=\"3.5.1\" rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2.css\"/> <link data-require=\"select2@*\" data-semver=\"3.5.1\" rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2-bootstrap.css\"/> <link rel=\"stylesheet\" href=\"http://localhost:8080/account-manager/style.css\"/>";
+	    
+	    win.document.body.innerHTML = "<script>var window.localJSON = "+sessionStorage.setItem("localJSON", JSON.stringify(result.jsonActiveService))+";</script><div class=\"container-fluid\"> <h1>Annotation</h1> <form> <div class=\"form-group\"> <label for=\"inputProperty\">Property</label>"
+	    	+"<input type=\"input\" class=\"form-control\" id=\"inputProperty\"placeholder=\"Enter field id\" value=\""+propertyAnn+"\" disabled> </div><div class=\"form-group\"><label for=\"inputConcept\">Concept</label>"
+	    	+"<input type=\"hidden\" class=\"form-control\" id=\"inputConcept\" placeholder=\"Select concept\"> </div><div class=\"form-group\"> <label for=\"inputConcept\">Name</label>"
+	    	+"<input type=\"input\" class=\"form-control\" id=\"inputName\" placeholder=\"Name\" value=\""+nameAnn+"\"></div></form><button id=\"save-bt\" class=\"btn btn-primary\">Save</button></div>"+
+	    	"<div id=\"hidNumCon\" hidden>"+i+"</div><div id=\"hidNumServ\" hidden>"+serviceId+"</div>"
+	    	+"</body>"+
+	    	"</html>";
+	    
+	    //JS loading //Only read from CDN
+	    var script = document.createElement('script');
+	    script.src = 'https://code.jquery.com/jquery-2.1.3.min.js';
+	    script.async = false;
+	    win.document.head.appendChild(script);
+	    
+	    var script2 = document.createElement('script');
+	    script2.src = 'https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2.js';
+	    script2.async = false;
+	    win.document.head.appendChild(script2);
+	    
+	    var script3 = document.createElement('script');
+	    script3.src = 'http://localhost:8080/account-manager/script.js';
+	    script3.async = false;
+	    win.document.body.appendChild(script3);
+    
+}
 
 /*Fills the ANNOTATOR page*/
 var serviceID = "";
@@ -354,12 +411,84 @@ $.ajax({
 			$('#datatable-buttons').append("<tr id=\"info-row-"+i+"\"><td>"+i+"</td><td>"+fieldAnn+"</td><td>"
 				+nameAnn+"</td><td>"+conceptAnn+"</td>"+
 				"<td>"+typeAnn+"</td>"+"<td style=\"text-align: center\">"
-				+"<button style=\"margin-right: 2em;\" id=\"edit"+
-				i+"\" value=\""+nameAnn+"\" class=\"btn btn-primary edit-class\">EDIT</button>"
+				+"<div style=\"margin-right: 2em;\" id=\"edit"+
+				i+"\" value=\""+nameAnn+"\" class=\"btn btn-primary edit-class\">EDIT</div>"
 				+"<button id=\"delete"+i+"\" value=\""+nameAnn+"\" class=\"btn btn-danger delete-class\">DELETE</button></td></tr>");
 			
 		}//for
-	}
+
+		var el = document.getElementsByClassName("edit-class");
+		console.log("valore di element: ");
+		console.log(el);
+		
+		for(i = 0; i < numConcept; i++){
+			if(el[i]){
+				el[i].onclick = function(){
+					
+					console.log("clicked annotation:"+this.getAttribute("id"));
+					var idl = this.getAttribute("id");
+					var ide = idl.substring(4,idl.length);
+					
+					console.log("VALORE PARAMETRO: "+ide);
+					var conceptAnn = null;
+						
+					console.log("Valore JSON chrome storage EDITCONCEPT_1 ");
+					console.log(data);
+					console.log(data.publicServiceIsDescribedAt[0]);
+					console.log(data.publicServiceIsDescribedAt[0].dataMapping[ide]);
+					console.log(ide);
+							
+					var conceptAnn = data.publicServiceIsDescribedAt[0].dataMapping[ide].conceptId;
+					var propertyAnn = data.publicServiceIsDescribedAt[0].dataMapping[ide].property;
+					var nameAnn = data.publicServiceIsDescribedAt[0].dataMapping[ide].name;
+					var serviceId = $("#service-id").val();
+				    var datastr = JSON.stringify(data);
+				    
+					//chiudo eventuale DIALOG già aperta
+					//
+				
+				    var win = window.open("", "Title", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=450,height=350,top="+(200)+",left="+(400));
+				 
+		            window.setTimeout(() => {
+
+		            	console.log("dentro test: ");
+		            	console.log(datastr);
+				    	
+				        console.log("inside onload " + new Date($.now()));
+					    win.document.head.innerHTML = "<head><title>Selected Field</title>"
+					    	+" <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css\"/> <link data-require=\"select2@*\" data-semver=\"3.5.1\" rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2.css\"/> <link data-require=\"select2@*\" data-semver=\"3.5.1\" rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2-bootstrap.css\"/> <link rel=\"stylesheet\" href=\"http://localhost:8080/account-manager/style.css\"/>";
+								    
+					    //JS loading //Only read from CDN
+					    var script = document.createElement('script');
+					    script.src = 'https://code.jquery.com/jquery-2.1.3.min.js';
+					    script.async = false;
+					    win.document.head.appendChild(script);
+					    
+					    var script2 = document.createElement('script');
+					    script2.src = 'https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2.js';
+					    script2.async = false;
+					    win.document.head.appendChild(script2);
+					    
+					    win.document.body.innerHTML = "<div class=\"container-fluid\"> <h1>Annotation</h1> <form> <div class=\"form-group\"> <label for=\"inputProperty\">Property</label>"
+				    	+"<input type=\"input\" class=\"form-control\" id=\"inputProperty\"placeholder=\"Enter field id\" value=\""+propertyAnn+"\" disabled> </div><div class=\"form-group\"><label for=\"inputConcept\">Concept</label>"
+				    	+"<input type=\"hidden\" class=\"form-control\" id=\"inputConcept\" placeholder=\"Select concept\"> </div><div class=\"form-group\"> <label for=\"inputConcept\">Name</label>"
+				    	+"<input type=\"input\" class=\"form-control\" id=\"inputName\" placeholder=\"Name\" value=\""+nameAnn+"\"></div></form><button id=\"save-bt\" class=\"btn btn-primary\">Save</button></div>"+
+				    	"<div id=\"hidNumCon\" hidden>"+ide+"</div><div id=\"hidNumServ\" hidden>"+serviceId+"</div><div id=\"hidServ\" hidden>"+datastr+"</div>"
+				    	+"</body>"+
+				    	"</html>";
+					    window.setTimeout(() => {
+					    var script3 = document.createElement('script');
+					    script3.src = 'http://localhost:8080/account-manager/script.js';
+					    script3.async = false;
+					    win.document.body.appendChild(script3);
+					    }, 100) 
+					    
+		            }, 400)  // USING A TIMEOUT IS THE SOLUTION
+
+				};//el[i]
+			}//if(el[i])
+		}//for
+	}//if updating
 	//REGISTRATION
 	else{
 		console.log("REGISTRATION MODE");
@@ -433,14 +562,14 @@ console.log("CLASSES: "+idL);
 	deleteConcept(idL);
 });
 
-$(document).on('click', '.edit-class', function() {
+/*$(document).on('click', '.edit-class', function() {
     var idL = $(this).attr("id");
     var idL2 = idL.substring(4,idL.length);
     
-console.log("EDITS: "+idL2);
+//console.log("EDITS: "+idL2);
     
 	editConcept(idL2);
-});
+});*/
 
 $(document).on('click', '#reset-bt', function() {
 	resetInfo();
