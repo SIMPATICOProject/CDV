@@ -421,6 +421,8 @@ $.ajax({
 		console.log("valore di element: ");
 		console.log(el);
 		
+		var winTest = null;
+		
 		for(i = 0; i < numConcept; i++){
 			if(el[i]){
 				el[i].onclick = function(){
@@ -443,20 +445,38 @@ $.ajax({
 					var nameAnn = data.publicServiceIsDescribedAt[0].dataMapping[ide].name;
 					var serviceId = $("#service-id").val();
 				    var datastr = JSON.stringify(data);
+					 
+				    //svuoto eventuale DIALOG già aperta
+					console.log("WIIIIIIIIIIINTEST: ");
+					console.log(winTest);
+					var checkRE = false;
+					if(winTest){
+						if(winTest.closed){
+							winTest = null;
+							console.log("rilevato vecchia finestra chiusa");
+						}
+						else{
+							console.log("prima di chiusura finestra old");
+							winTest.document.body.innerHTML = "";
+							checkRE = true;
+						}
+					}
+					var win = null;
+					window.setTimeout(() => {
+					    win = window.open("", "Title", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=450,height=350,top="+(200)+",left="+(400));
+					    winTest = win;   
+					}, 300) 
 				    
-					//chiudo eventuale DIALOG già aperta
-					//
-				
-				    var win = window.open("", "Title", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=450,height=350,top="+(200)+",left="+(400));
-				 
+				    
 		            window.setTimeout(() => {
 
 		            	console.log("dentro test: ");
 		            	console.log(datastr);
 				    	
 				        console.log("inside onload " + new Date($.now()));
-					    win.document.head.innerHTML = "<head><title>Selected Field</title>"
-					    	+" <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css\"/> <link data-require=\"select2@*\" data-semver=\"3.5.1\" rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2.css\"/> <link data-require=\"select2@*\" data-semver=\"3.5.1\" rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2-bootstrap.css\"/> <link rel=\"stylesheet\" href=\"http://localhost:8080/account-manager/style.css\"/>";
+				        if(!checkRE){
+						    win.document.head.innerHTML = "<head><title>Selected Field</title>"
+						    	+" <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css\"/> <link data-require=\"select2@*\" data-semver=\"3.5.1\" rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2.css\"/> <link data-require=\"select2@*\" data-semver=\"3.5.1\" rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2-bootstrap.css\"/> <link rel=\"stylesheet\" href=\"http://localhost:8080/account-manager/style.css\"/>";
 								    
 					    //JS loading //Only read from CDN
 					    var script = document.createElement('script');
@@ -468,7 +488,7 @@ $.ajax({
 					    script2.src = 'https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2.js';
 					    script2.async = false;
 					    win.document.head.appendChild(script2);
-					    
+				        }
 					    win.document.body.innerHTML = "<div class=\"container-fluid\"> <h1>Annotation</h1> <form> <div class=\"form-group\"> <label for=\"inputProperty\">Property</label>"
 				    	+"<input type=\"input\" class=\"form-control\" id=\"inputProperty\"placeholder=\"Enter field id\" value=\""+propertyAnn+"\" disabled> </div><div class=\"form-group\"><label for=\"inputConcept\">Concept</label>"
 				    	+"<input type=\"hidden\" class=\"form-control\" id=\"inputConcept\" placeholder=\"Select concept\"> </div><div class=\"form-group\"> <label for=\"inputConcept\">Name</label>"
@@ -481,9 +501,9 @@ $.ajax({
 					    script3.src = 'http://localhost:8080/account-manager/script.js';
 					    script3.async = false;
 					    win.document.body.appendChild(script3);
-					    }, 100) 
-					    
-		            }, 400)  // USING A TIMEOUT IS THE SOLUTION
+					    }, 100)
+				        
+		            }, 400)
 
 				};//el[i]
 			}//if(el[i])

@@ -49,7 +49,7 @@
         ],
         "run_at": "document_start",
         "js": [
-            "src/bg/jquery.js"
+            "src/bg/jquery.js", "js/script.js"
         ]
       }
     ]
