@@ -10,3 +10,5 @@ var app_parameters={
 		getServiceReportbySector_apipath: 'service-manager/api/v1/service_report/sector',
 		getServByUrl_apipath: 'service-manager/api/v1/services/searchByUrl?url='
 };
+
+//Other network configurations present in: background.js (local) & script.js (CDN)

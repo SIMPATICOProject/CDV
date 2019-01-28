@@ -7,7 +7,7 @@ console.log("content in ascolto per messaggi...");
 			
 		if(request.greeting.msg == "alert_ok_serv"){
 			
-			alert("Il servizio che stai visitando è registrato in CDV");
+			//alert("Il servizio che stai visitando è registrato in CDV");
 			console.log("Il servizio che stai visitando è registrato in CDV");
 			
 			//Highlighting campi registrati: durante lo scorrimento degli elementi per evidenziarli assegno a questi una classe specifica.
@@ -22,6 +22,7 @@ console.log("content in ascolto per messaggi...");
 			
 			for(i = 0; i < focus_ann.length; i++){
 
+				//RESTRINGERE CONDIZIONE IF SU SOLE NOTAZIONI REGISTRATE IN SERVIZIO!!!!
 				if(focus_ann[i]){
 					el = document.getElementById(focus_ann[i]);
 					el.style.border = "3px solid #209e91";
@@ -151,7 +152,7 @@ function dialog_selection(dataPkg){
 	    win.document.body.innerHTML = "<div class=\"container-fluid\"> <h1>Annotation</h1> <form> <div class=\"form-group\"> <label for=\"inputProperty\">Property</label>"
     	+"<input type=\"input\" class=\"form-control\" id=\"inputProperty\"placeholder=\"Enter field id\" value=\""+dataPkg.property+"\" disabled>"
     	+"</div><div class=\"form-group\"> <label for=\"inputConcept\">Concept</label> <input type=\"hidden\" class=\"form-control\" id=\"inputConcept\" placeholder=\"Select concept\">"
-    	+"</div><div class=\"form-group\"> <label for=\"inputConcept\">Name</label> <input type=\"input\" class=\"form-control\" id=\"inputName\" placeholder=\"Name\"> </div>"
+    	+"</div><div class=\"form-group\"> <label for=\"inputConcept\">Name</label> <input type=\"input\" class=\"form-control\" id=\"inputName\" placeholder=\"\" disabled> </div>"
     	+"</form><button id=\"save-sel-bt\" class=\"btn btn-primary\">Save</button></div>"+
     	"<div id=\"selectConcHid\" hidden></div><div id=\"hidServ\" hidden>"+ap+"</div><div id=\"hidDid\" hidden>SEL</div>"
     	"</body>"+

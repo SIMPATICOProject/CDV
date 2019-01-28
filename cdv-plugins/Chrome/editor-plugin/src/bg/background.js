@@ -1,5 +1,4 @@
-
-/*GLOBAL VARIABLES*/
+/*GLOBAL CONFIG VARIABLE*/
 var app_parameters={
 		host_param: 'localhost',
 		port_param: '8082',
@@ -178,7 +177,7 @@ console.log("E PUR SI MOVE");
 								
 								console.log("dentro nuovo storage REGISTRAZIONE");
 	
-	console.log("il servizio visitato non è registrato");
+console.log("SERVIZIO NON REGISTRATO");
 			
 									msg = "alert_fail_serv";
 									
@@ -249,7 +248,7 @@ console.log("E PUR SI MOVE");
 						//Servizio registrato 
 						else{
 							
-	console.log("il servizio è registrato");
+console.log("IL SERVIZIO È REGISTRATO");
 	
 							//Elimino eventuale servizio non registrato presente in sessione (è permesso un solo 
 							//servizio per volta in sessione, seppure risiedano in variabili differenti)

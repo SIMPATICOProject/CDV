@@ -15,18 +15,11 @@ port.postMessage("Hi BackGround");
 port.onMessage.addListener(function(msg) {
     console.log("message recieved" + msg);
 });*/
-var app_parameters={
-		host_param: 'localhost',
-		port_param: '8082',
-		getServByUrl_apipath: 'service-manager/api/v1/services/searchByUrl?url=',
-		getPDataCategoryTree_apipath: 'service-manager/api/v1/pdatafields/category/tree',
-		findById_apipath: 'service-manager/api/v1/services/',
-		create_apipath: 'service-manager/api/v1/services/'
-};
 
 /*Se defJsonService contiene un json allora il servizio corrente non è registrato.
  * Il frammento seguente aggiunge al menu popup la possibilità di salvare il servizio
  * o di non considerare il portale visitato come servizio da registrare.*/
+
 function showHintReg(){
 	
 	chrome.storage.local.get(['defJsonService'], function(result) {
@@ -40,7 +33,7 @@ function showHintReg(){
 		if(nj.publicServiceName){
 			console.log("Dentro re_hint_on");
 		    
-			var html_1 = "<tr id=\"add_1\" class=\"optionalRow\"><td style=\"padding-bottom: 1em;padding-top: 1em;\">Vuoi registrare il servizio <span style=\"color:#1abb9c;font-weight:600\">"+nj.publicServiceName+"</span>?</td></tr>";
+			var html_1 = "<tr id=\"add_1\" class=\"optionalRow\"><td style=\"padding-bottom: 1em;padding-top: 1em;\">Servizio non registrato, vuoi <span style=\"color:#1abb9c;font-weight:600\">registrarlo adesso</span>?</td></tr>";
 			var html_2 = "<tr id=\"add_2\" class=\"optionalRow\"><td style=\"padding-bottom: 1em;border-bottom: 1px solid #F0F0F0;text-align: center;\">"
 				+"<button style=\"margin-right: 15px;\" id=\"yes-ch\" type=\"button\">Si</button>"
 				+"<button id=\"no-ch\" type=\"button\">No</button></td></tr>";
@@ -48,9 +41,12 @@ function showHintReg(){
 		}
 		else{
 			console.log("dentro else ");
-			//rimozione forzata, nel caso in si sia cambiata tab
-			$("#add_1").remove();
-			$("#add_2").remove();
+			//rimozione forzata, nel caso in cui si sia cambiata tab
+/*			$("#add_1").remove();
+			$("#add_2").remove();*/
+			
+			var html_1 = "<tr id=\"add_1\" class=\"optionalRow\"><td style=\"padding-top: 1em;\">Servizio già registrato in CDV</td></tr>";
+			$('#optionTable tr:eq(1)').after(html_1);
 		}
 
 	});
@@ -136,24 +132,6 @@ function saveNewService(){
 	chrome.storage.local.get(['defJsonService'], function(result) {
 	
 		console.log(result.defJsonService);
-		
-/*		//registro il servizio presso CDV
-		//POST - create_apipath
-		var url_ = "http://"+app_parameters.host_param+":"+app_parameters.port_param+"/"+app_parameters.create_apipath;
-		$.ajax({
-			url: url_,
-			method: 'POST',
-			contentType: "application/json",
-			data: result.defJsonService,
-		}).done(function(data) {
-			console.log("Nuovo servizio registrato correttamente");
-			//stacca la sezione SI/NO dall'html, svuota la variabile di sessione defJsonService e lancia un alert dove da conferma di avvenuta registrazione
-			emptyDefJS();
-			alert("Registrazione avvenuta con successo. Passa a Show All Annotations per perfezionare gli attributi del servizio");
-			
-		}).fail(function() {
-		  alert( "Errors occurred in service registration. Please be careful and try again..." );
-		})*/
 		
 		emptyDefJS();
 		
