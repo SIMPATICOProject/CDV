@@ -14,31 +14,35 @@ console.log("content in ascolto per messaggi...");
 			//Questa classe è usata come identificatore per getElementByClass unico.
 			
 			//Gli elementi passati da bg.js
-			var focus_ann = request.greeting.iList; 
+			var focus_ann = request.greeting.iList;
+			var focus_ann2 = request.greeting.highList; 
 			var el = null;
 			
 			console.log("LISTA CONTENT: ");
 			console.log(focus_ann);
 			
+			//ASSOCIAZIONE CLASSE
 			for(i = 0; i < focus_ann.length; i++){
 
-				//RESTRINGERE CONDIZIONE IF SU SOLE NOTAZIONI REGISTRATE IN SERVIZIO!!!!
 				if(focus_ann[i]){
 					el = document.getElementById(focus_ann[i]);
-					el.style.border = "3px solid #209e91";
+					//el.style.border = "3px solid #209e91";
 					el.classList.add("focusable-annotation-group-cdv-plugin");
-					
-					/*el.onclick = function(){
-						console.log("clicked annotation:"+focus_ann[i]);
-						var win = window.open("", "Title", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=450,height=350,top="+(200)+",left="+(400));
-					};*/
 				}
-
 			}
+			
+			for(i = 0; i < focus_ann2.length; i++){
+				if(focus_ann[i]){
+					el = document.getElementById(focus_ann2[i]);
+					el.style.border = "3px solid #209e91";
+				}
+			}
+			
 			var el = document.getElementsByClassName("focusable-annotation-group-cdv-plugin");
 			console.log("valore di element: ");
 			console.log(el);
 			
+			//CLICK FUNCTIONING
 			for(i = 0; i < focus_ann.length; i++){
 				if(el[i]){
 					el[i].onclick = function(){
@@ -88,12 +92,6 @@ function dialog_selection(dataPkg){
 	 * property: l'id dell'input, coincidente con una notation CDV
 	 * ]
 	 * */
-	
-/*	sessionStorage.setItem("localSelJSON", ""); //svuoto la variabile di sessione prima che venga riempita con altri valori
-	var lj = sessionStorage.getItem("localSelJSON");
-	console.log("localSelJSON: ");
-	console.log(lj);
-	sessionStorage.setItem("localSelJSON", ap);*/
 	
 	console.log("CONTENT CHECK: ");
 	console.log(dataPkg.jsonActiveService);
@@ -149,14 +147,16 @@ function dialog_selection(dataPkg){
 	    win.document.head.appendChild(script2);
         }
        
-	    win.document.body.innerHTML = "<div class=\"container-fluid\"> <h1>Annotation</h1> <form> <div class=\"form-group\"> <label for=\"inputProperty\">Property</label>"
-    	+"<input type=\"input\" class=\"form-control\" id=\"inputProperty\"placeholder=\"Enter field id\" value=\""+dataPkg.property+"\" disabled>"
-    	+"</div><div class=\"form-group\"> <label for=\"inputConcept\">Concept</label> <input type=\"hidden\" class=\"form-control\" id=\"inputConcept\" placeholder=\"Select concept\">"
-    	+"</div><div class=\"form-group\"> <label for=\"inputConcept\">Name</label> <input type=\"input\" class=\"form-control\" id=\"inputName\" placeholder=\"\" disabled> </div>"
-    	+"</form><button id=\"save-sel-bt\" class=\"btn btn-primary\">Save</button></div>"+
-    	"<div id=\"selectConcHid\" hidden></div><div id=\"hidServ\" hidden>"+ap+"</div><div id=\"hidDid\" hidden>SEL</div>"
-    	"</body>"+
-    	"</html>";
+	    window.setTimeout(() => {
+		    win.document.body.innerHTML = "<div class=\"container-fluid\"> <h1>Annotation</h1> <form> <div class=\"form-group\"> <label for=\"inputProperty\">Property</label>"
+	    	+"<input type=\"input\" class=\"form-control\" id=\"inputProperty\"placeholder=\"Enter field id\" value=\""+dataPkg.property+"\" disabled>"
+	    	+"</div><div class=\"form-group\"> <label for=\"inputConcept\">Concept</label> <input type=\"hidden\" class=\"form-control\" id=\"inputConcept\" placeholder=\"Select concept\">"
+	    	+"</div><div class=\"form-group\"> <label for=\"inputConcept\">Name</label> <input type=\"input\" class=\"form-control\" id=\"inputName\" placeholder=\"\" disabled> </div>"
+	    	+"</form><button id=\"save-sel-bt\" class=\"btn btn-primary\">Save</button></div>"+
+	    	"<div id=\"selectConcHid\" hidden></div><div id=\"hidServ\" hidden>"+ap+"</div><div id=\"hidDid\" hidden>SEL</div><div id=\"spinner_holder\"></div>"
+	    	"</body>"+
+	    	"</html>";
+	    }, 100) 
 	    
 	    window.setTimeout(() => {
 		    var script3 = document.createElement('script');

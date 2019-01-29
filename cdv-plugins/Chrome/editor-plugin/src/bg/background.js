@@ -280,6 +280,7 @@ console.log("dentro if pluginswitch");
 									}, function(domContent) {
 										
 										var inputsList = [];
+										var inputsListEvid = [];
 										
 										console.log("CONTENUTO PAGINA CORRENTE: ");
 										console.log(domContent);
@@ -292,10 +293,20 @@ console.log("dentro if pluginswitch");
 										console.log("array version");
 										console.log(inputsList);
 										
+										//Restringo a concept già registrati
+										scp = JSON.parse(servcontent);
+										savedConc = scp.publicServiceIsDescribedAt[0].dataMapping;//[j].property;
+										
 										for(i = 0; i < domEl.length; i++){
 											ap = domEl[i];
 											a = $(ap).attr("id");
 											inputsList.push(a);
+											for(j = 0; j < savedConc.length; j++){
+												if(a == savedConc[j].property){
+													inputsListEvid.push(a);
+												}
+											}
+											
 										}
 										console.log("lista di input nodes: ");
 										console.log(inputsList);
@@ -303,7 +314,8 @@ console.log("dentro if pluginswitch");
 										dpkg = {
 											jas: servcontent,
 											msg: msg,
-											iList: inputsList
+											iList: inputsList,
+											highList: inputsListEvid
 										};
 										/*Sending to CONTENT-SCRIPT call to DIALOG*/
 										chrome.tabs.query({active: true, currentWindow: true,  highlighted: true}, function(tabs) {
