@@ -1,3 +1,37 @@
+			
+/*GLOBAL CONFIG VARIABLE*/
+var app_parameters={
+		dialog_host: '',
+		dialog_port: '',
+		dialog_style: '',
+		dialog_script: '',
+		create_apipath: '',
+		update_apipath: '',
+		findById_apipath: '',
+		port_param: '',
+		host_param: ''
+};
+
+//CARICO JSON CONFIG
+//CARICO JSON CONFIG
+chrome.storage.local.get(['configJson'], function(result) {
+	console.log("valore dello storage chrome per json config ANNOTATORHANDLERJS: ");
+	console.log(result.configJson);
+	
+	//assegnazione valori json a variabili locali
+	app_parameters.dialog_host = result.configJson.dialog_host;
+	app_parameters.dialog_port = result.configJson.dialog_port;
+	app_parameters.dialog_style = result.configJson.dialog_style;
+	app_parameters.dialog_script = result.configJson.dialog_script;
+	app_parameters.create_apipath = result.configJson.create_apipath;
+	app_parameters.update_apipath = result.configJson.update_apipath;
+	app_parameters.findById_apipath = result.configJson.findById_apipath;
+	app_parameters.port_param = result.configJson.port_param;
+	app_parameters.host_param = result.configJson.host_param;
+	
+});
+
+
 
 /*Reset the service info to the stored ones - ANNOTATOR_UP*/
 function resetInfo(){
@@ -201,8 +235,8 @@ console.log(JSON.stringify(result.jsonActiveService));
 		});
 	}
 }
-
-/*Single concept update (using DIALOG) - ANNOTATOR_DOWN*/
+/*
+Single concept update (using DIALOG) - ANNOTATOR_DOWN
 function editConcept(i){
 	
 console.log("VALORE PARAMETRO: "+i);
@@ -215,11 +249,11 @@ console.log("VALORE PARAMETRO: "+i);
 	
 	chrome.storage.local.get(['jsonActiveService'], function(result) {
 		
-/*console.log("Valore JSON chrome storage EDIT: ");
+console.log("Valore JSON chrome storage EDIT: ");
 console.log(result.jsonActiveService);
 console.log(result.jsonActiveService.publicServiceIsDescribedAt[0]);
 console.log(result.jsonActiveService.publicServiceIsDescribedAt[0].dataMapping[i]);
-console.log(i);*/
+console.log(i);
 		
 		var conceptAnn = result.jsonActiveService.publicServiceIsDescribedAt[0].dataMapping[i].conceptId;
 		var propertyAnn = result.jsonActiveService.publicServiceIsDescribedAt[0].dataMapping[i].property;
@@ -232,7 +266,10 @@ console.log(i);*/
 	    var win = window.open("", "Title", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=450,height=350,top="+(200)+",left="+(400));
 	    
 	    win.document.head.innerHTML = "<head><title>Selected Field</title>"
-	    	+" <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css\"/> <link data-require=\"select2@*\" data-semver=\"3.5.1\" rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2.css\"/> <link data-require=\"select2@*\" data-semver=\"3.5.1\" rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2-bootstrap.css\"/> <link rel=\"stylesheet\" href=\"http://localhost:8080/account-manager/style.css\"/>";
+	    	+" <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css\"/>"
+	    	+" <link data-require=\"select2@*\" data-semver=\"3.5.1\" rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2.css\"/>"
+	    	+" <link data-require=\"select2@*\" data-semver=\"3.5.1\" rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2-bootstrap.css\"/>"
+	    	+" <link rel=\"stylesheet\" href=\"http://localhost:8080/account-manager/style.css\"/>";
 	    
 	    win.document.body.innerHTML = "<script>var window.localJSON = "+sessionStorage.setItem("localJSON", JSON.stringify(result.jsonActiveService))+";</script><div class=\"container-fluid\"> <h1>Annotation</h1> <form> <div class=\"form-group\"> <label for=\"inputProperty\">Property</label>"
 	    	+"<input type=\"input\" class=\"form-control\" id=\"inputProperty\"placeholder=\"Enter field id\" value=\""+propertyAnn+"\" disabled> </div><div class=\"form-group\"><label for=\"inputConcept\">Concept</label>"
@@ -261,7 +298,7 @@ console.log(i);*/
 	});
 }
 
-/*Single concept update (using DIALOG) - ANNOTATOR_DOWN*/
+Single concept update (using DIALOG) - ANNOTATOR_DOWN
 function editConcept_1(result){
 	
 	var i = result.property;
@@ -320,11 +357,16 @@ console.log(i);
     
 }
 
+*/
+
+
+
 /*Fills the ANNOTATOR page*/
 var serviceID = "";
 var delHandlerON = false;
 var editHandlerON = false;
 var numConcept = 0;
+
 
 chrome.storage.local.get(['idActiveService'], function(result) {
 	
@@ -477,7 +519,13 @@ $.ajax({
 				        
 				        if(!checkRE){
 						    win.document.head.innerHTML = "<head><title>Selected Field</title>"
-						    	+" <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css\"/> <link data-require=\"select2@*\" data-semver=\"3.5.1\" rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2.css\"/> <link data-require=\"select2@*\" data-semver=\"3.5.1\" rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2-bootstrap.css\"/> <link rel=\"stylesheet\" href=\"http://localhost:8080/account-manager/style.css\"/>";
+						    	+" <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css\"/>"
+						    	+" <link data-require=\"select2@*\" data-semver=\"3.5.1\" rel=\"stylesheet\""
+						    	+" href=\"https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2.css\"/> "
+						    	+"<link data-require=\"select2@*\" data-semver=\"3.5.1\" rel=\"stylesheet\" "+
+						    	"href=\"https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2-bootstrap.css\"/> "
+						    	+"<link rel=\"stylesheet\" href=\"http://"+app_parameters.dialog_host+":"+app_parameters.dialog_port+"/"+app_parameters.dialog_style+"\"/>";
+						    //http://localhost:8080/account-manager/style.css
 								    
 						    //JS loading //Only read from CDN
 						    var script = document.createElement('script');
@@ -503,7 +551,8 @@ $.ajax({
 				        
 					    window.setTimeout(() => {
 						    var script3 = document.createElement('script');
-						    script3.src = 'http://localhost:8080/account-manager/script.js';
+//						    script3.src = 'http://localhost:8080/account-manager/script.js';
+						    script3.src = 'http://'+app_parameters.dialog_host+':'+app_parameters.dialog_port+'/'+app_parameters.dialog_script;
 						    script3.async = false;
 						    win.document.body.appendChild(script3);
 					    }, 100)

@@ -1,12 +1,35 @@
+		
 /*GLOBAL CONFIG VARIABLE*/
 var app_parameters={
-		host_param: 'localhost',
-		port_param: '8082',
-		getServByUrl_apipath: 'service-manager/api/v1/services/searchByUrl?url=',
-		getPDataCategoryTree_apipath: 'service-manager/api/v1/pdatafields/category/tree',
-		findById_apipath: 'service-manager/api/v1/services/',
-		create_apipath: 'service-manager/api/v1/services/'
+		host_param: '',
+		port_param: '',
+		getServByUrl_apipath: '',
+		getPDataCategoryTree_apipath: '',
+		findById_apipath: '',
+		create_apipath: ''
 };
+
+//carico config.json in sessione
+$.getJSON("json/config.json", function(jsonFile) {
+	chrome.storage.local.set({"configJson":  jsonFile}, function(){});
+	console.log("contenuto jsonfile: ");
+	console.log(jsonFile);
+	
+	//assegnazione valori json a variabili locali
+	app_parameters.host_param = jsonFile.host_param;
+	app_parameters.port_param = jsonFile.port_param;
+	app_parameters.getServByUrl_apipath = jsonFile.getServByUrl_apipath;
+	app_parameters.getPDataCategoryTree_apipath = jsonFile.getPDataCategoryTree_apipath;
+	app_parameters.findById_apipath = jsonFile.findById_apipath;
+	app_parameters.create_apipath = jsonFile.create_apipath;
+
+});
+console.log("verifica modifica fra scope di host_param: "+app_parameters.host_param);
+/*chrome.storage.local.get(['configJson'], function(result) {
+console.log("valore dello storage chrome per json config BACKGROUNDJS: ");
+console.log(result.configJson);
+});*/
+
 //var selectionON = -1; //quando 0 permette di selezionare annotazioni nella pagina
 var listenerON = false;
 var tabListenerON = "";
@@ -140,7 +163,7 @@ console.log("E PUR SI MOVE");
 		    
 			//salvo tabId in sessione
 			//chrome.storage.local.set({"idActiveTab": tabId}, function(){});
-			
+
 		    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 
 		        // since only one tab should be active and in the current window at once

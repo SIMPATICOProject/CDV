@@ -1,6 +1,11 @@
-// Code goes here
-
-//var selectChange = false;
+/*GLOBAL CONFIG VARIABLE*/
+var app_parameters={
+        host_param: "localhost",
+        port_param: "8082",
+        search_pdf: "service-manager/api/v1/pdatafields/search",
+        update_apipath: "service-manager/api/v1/services/",
+        pdf_conc: "service-manager/api/v1/pdatafields/"
+};
 
 var nameC_rem = "";
 var conceptID_rem = "";
@@ -12,21 +17,22 @@ $("#inputConcept").on("change", function (e) {
 
     //var data = e.params.data;
     console.log("dentro if change");
-    console.log(e.added.id);
-    $("#inputName").val(e.added.id);
+    console.log(e.added.text);
+    $("#inputName").val(e.added.text);
 
 });
-
 
 $("#inputConcept").select2({
 
   ajax: {
-    url: "http://localhost:8080/service-manager/api/v1/pdatafields/search",
+    url: "http://"+app_parameters.host_param+":"+app_parameters.port_param+"/"+app_parameters.search_pdf,
     dataType: 'json',
     delay: 250,
     data: function (regex) {
+            var ap = regex.replace(/ /g, '_');
+            console.log("suggest result: "+ap);
             return {
-                regex: regex
+                regex: ap
             };
         },
     results: function (data) {
@@ -34,12 +40,13 @@ $("#inputConcept").select2({
                 results: $.map(data, function (item) {
                     return {
                         text: item.name,
-                        id: item.name
+                        id: item.id
                     }
                 })
             };
     }
   }
+
 });
 
 
@@ -104,6 +111,7 @@ $(document).ready(function() {
         for(i = 0; i < storedIDArray.length; i++){
             console.log(i);
             console.log(storedIDArray[i].property);
+
             if(storedIDArray[i].property == propConc_loc){
                 storedID = i;
                 nameC_rem = storedIDArray[i].name;
@@ -176,7 +184,8 @@ $(document).ready(function() {
     var conceptSelect = $('#inputConcept');
     var concID = conceptID_rem;//non è la property ma il conceptId che trovo accanto property in datamapping 
     //nel servizio corrente registrato//$("#inputProperty").val();
-    var url_ = 'http://localhost:8080/service-manager/api/v1/pdatafields/' + concID;
+    //var url_ = 'http://localhost:8080/service-manager/api/v1/pdatafields/' + concID;
+    var url_ = "http://"+app_parameters.host_param+":"+app_parameters.port_param+"/"+app_parameters.pdf_conc+concID;
    
 console.log("url pdf: "+url_);
 console.log("concid: "+ concID);
@@ -193,7 +202,11 @@ console.log("DATA");
 console.log(data);
 console.log("DATAPROP");
 console.log(data.name);
+
 var did = data.name;
+if(did == undefined){
+    did = "Select a concept";
+}
 
    $('#inputConcept').select2('data', {id: '123', text: did});
 
@@ -202,21 +215,13 @@ var did = data.name;
 
 
 function saveConcept(){
+
 console.log("DENTRO SAVE CONCEPT (ANNOTATOR)");
-    //chrome.storage.local.get(['jsonActiveService'], function(result) {
 
-        var app_parameters={
-        host_param: 'localhost',
-        port_param: '8082',
-        update_apipath: 'service-manager/api/v1/services/'
-        };
-
-        //var lj = sessionStorage.getItem("localJSON");
         lj = $("#hidServ").text();
         console.log("valore memorizzato in DIALOG_ANNOTATOR");
         console.log(lj);
-        //se presente
-        //if(result.jsonActiveService){
+
         if(lj){
 console.log("SAVE_CONCEPT: trovato json service in chrome storage");
             var i = $("#hidNumCon").text();
@@ -228,9 +233,9 @@ console.log("Valore di serviceID DIALOG_ANNOTATOR: ");
 console.log(serviceID);
 
             var ljo = JSON.parse(lj);
-            ljo.publicServiceIsDescribedAt[0].dataMapping[i].property = $("#inputProperty").val();
+            //ljo.publicServiceIsDescribedAt[0].dataMapping[i].property = $("#inputProperty").val();
             ljo.publicServiceIsDescribedAt[0].dataMapping[i].name = $("#inputName").val();
-            //Concept non modificabile percvhè espone NAME//ljo.publicServiceIsDescribedAt[0].dataMapping[i].conceptId = $(".select2-drop").select2('data').text;
+            ljo.publicServiceIsDescribedAt[0].dataMapping[i].conceptId = $(".select2-drop").select2('data').id;
 
             //aggiornamento servizio in sessione
             sessionStorage.setItem("localJSON", JSON.stringify(ljo));
@@ -270,23 +275,16 @@ console.log(serviceID);
 }
 
 function saveSelConcept(){
+
 console.log("DENTRO SAVESEL CONCEPT (SELECTION)");
-    //chrome.storage.local.get(['jsonActiveService'], function(result) {
 
-        var app_parameters={
-        host_param: 'localhost',
-        port_param: '8082',
-        update_apipath: 'service-manager/api/v1/services/'
-        };
-
-        //var lj = sessionStorage.getItem("localSelJSON");
         lj = $("#hidServ").text();
+
 console.log("valore memorizzato in DIALOG_SELECTION");
 console.log(lj);
 
         var mex = "";
         //se presente
-        //if(result.jsonActiveService){
         if(lj){
 console.log("SAVE_CONCEPT: trovato json service in chrome storage");
 
@@ -296,7 +294,9 @@ console.log("SAVE_CONCEPT: trovato json service in chrome storage");
             //MODIFICA LJO
             var nameC_loc = $("#inputName").val();
             $("#inputName").val(nameC_loc);
-            var conceptID_loc = $(".select2-drop").select2('data').text;
+            var conceptID_loc = $(".select2-drop").select2('data').id;
+            console.log("conceptid local:");
+            console.log(conceptID_loc);
             var propConc_loc = $("#inputProperty").val();
 
             var storedIDArray = ljo.publicServiceIsDescribedAt[0].dataMapping;
@@ -306,7 +306,7 @@ console.log("SAVE_CONCEPT: trovato json service in chrome storage");
             var storedIDRep = -1;
 
             for(i = 0; i < storedIDArray.length; i++){
-                if(storedIDArray[i].conceptId == propConc_loc){
+                if(storedIDArray[i].conceptId == conceptID_loc){
                     storedIDRep = i;
                     console.log("concetto trovato in posizione: "+i);
                     break; //siccome, se presente, è univoco allora la prima occorrenza è anche l'unica
@@ -318,10 +318,12 @@ console.log("SAVE_CONCEPT: trovato json service in chrome storage");
 
                 ljo.publicServiceIsDescribedAt[0].dataMapping[storedID].name = nameC_loc;
                 //ljo.publicServiceIsDescribedAt[0].dataMapping[storedID].property = propConc_loc;
-                //per il momento spento perchè ilk servizio riporta NAME anzichè CONCEPT//ljo.publicServiceIsDescribedAt[0].dataMapping[storedID].conceptId = conceptID_loc;
+                //per il momento spento perchè il servizio riporta NAME anzichè CONCEPT
+                ljo.publicServiceIsDescribedAt[0].dataMapping[storedID].conceptId = conceptID_loc;
                 mex = "Il servizio è stato aggiornato";
             }
-            else{ //il concetto non appartiene ancora al servizio
+            //il concetto non appartiene ancora al servizio
+            else{ 
                 console.log("Concetto attualmente non presente nel servizio");
                 console.log("namec: ");
                 console.log(nameC_loc);
@@ -331,7 +333,7 @@ console.log("SAVE_CONCEPT: trovato json service in chrome storage");
                 console.log(propConc_loc);
 
                 //posso memorizzare il nuovo concetto SOLAMENTE SE nel servizio non siano già 
-                //presenti altri concetti con il medesimo id (univoco)
+                //presenti altri concetti con il medesimo property (univoco)
                 if(storedIDRep < 0){
                     ljo.publicServiceIsDescribedAt[0]['dataMapping'].push({
                     "conceptId": conceptID_loc,"name": nameC_loc,"property": propConc_loc,"required": 0,"sensitive": 0,"type": "string"

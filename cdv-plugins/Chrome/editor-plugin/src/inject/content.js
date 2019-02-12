@@ -1,5 +1,25 @@
 var winTest = null;
 
+/*GLOBAL CONFIG VARIABLE*/
+var app_parameters={
+		dialog_host: '',
+		dialog_port: '',
+		dialog_style: '',
+		dialog_script: ''
+};
+
+//CARICO JSON CONFIG
+chrome.storage.local.get(['configJson'], function(result) {
+	console.log("valore dello storage chrome per json config CONTENTJS: ");
+	console.log(result.configJson);
+	
+	//assegnazione valori json a variabili locali
+	app_parameters.dialog_host = result.configJson.dialog_host;
+	app_parameters.dialog_port = result.configJson.dialog_port;
+	app_parameters.dialog_style = result.configJson.dialog_style;
+	app_parameters.dialog_script = result.configJson.dialog_script;
+});
+
 /*Listen from EXTENSION (BACKGROUND.JS)*/
 chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
 			  
@@ -20,6 +40,8 @@ console.log("content in ascolto per messaggi...");
 			
 			console.log("LISTA CONTENT: ");
 			console.log(focus_ann);
+			console.log("LISTA CONTENTGREEN: ");
+			console.log(focus_ann2);
 			
 			//ASSOCIAZIONE CLASSE
 			for(i = 0; i < focus_ann.length; i++){
@@ -32,7 +54,7 @@ console.log("content in ascolto per messaggi...");
 			}
 			
 			for(i = 0; i < focus_ann2.length; i++){
-				if(focus_ann[i]){
+				if(focus_ann2[i]){
 					el = document.getElementById(focus_ann2[i]);
 					el.style.border = "3px solid #209e91";
 				}
@@ -131,8 +153,9 @@ function dialog_selection(dataPkg){
 	    	+" <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css\"/>"
 	    	+" <link data-require=\"select2@*\" data-semver=\"3.5.1\" rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2.css\"/> "
 	    	+"<link data-require=\"select2@*\" data-semver=\"3.5.1\" rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2-bootstrap.css\"/>"
-	    	+" <link rel=\"stylesheet\" href=\"http://localhost:8080/account-manager/style.css\"/>";
-		    
+	    	+" <link rel=\"stylesheet\" href=\"http://"+app_parameters.dialog_host+":"+app_parameters.dialog_port+"/"+app_parameters.dialog_style+"\"/>";
+	    	//http://localhost:8080/account-manager/style.css
+	    
 	    //JS loading, Only read from CDN!!!!!
 	    var script = document.createElement('script');
 	    script.src = 'https://code.jquery.com/jquery-2.1.3.min.js';
@@ -160,7 +183,8 @@ function dialog_selection(dataPkg){
 	    
 	    window.setTimeout(() => {
 		    var script3 = document.createElement('script');
-		    script3.src = 'http://localhost:8080/account-manager/script.js';
+		    //script3.src = 'http://localhost:8080/account-manager/script.js';
+		    script3.src = 'http://'+app_parameters.dialog_host+":"+app_parameters.dialog_port+"/"+app_parameters.dialog_script;
 		    //script3.src = 'js/script.js';
 		    script3.async = false;
 		    win.document.body.appendChild(script3);

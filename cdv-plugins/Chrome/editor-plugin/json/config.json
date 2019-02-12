@@ -1,0 +1,15 @@
+{
+   	"host_param": "localhost",
+	"port_param": "8082",
+	"getServByUrl_apipath": "service-manager/api/v1/services/searchByUrl?url=",
+	"getPDataCategoryTree_apipath": "service-manager/api/v1/pdatafields/category/tree",
+	"findById_apipath": "service-manager/api/v1/services/",
+	"create_apipath": "service-manager/api/v1/services/",
+	"search_pdf": "service-manager/api/v1/pdatafields/search",
+    "update_apipath": "service-manager/api/v1/services/",
+    "pdf_conc": "service-manager/api/v1/pdatafields/",
+    "dialog_host": "localhost",
+	"dialog_port": "8080",
+	"dialog_style": "account-manager/style.css",
+	"dialog_script": "account-manager/script.js"
+}
