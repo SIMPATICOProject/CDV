@@ -25,7 +25,7 @@ services:
 
     mongo_db:
         container_name: "cdv-mongo-db"
-        image: mongo
+        image: mongo:3.4
         restart: always
         env_file:
             - ./cdv.env
